@@ -1,0 +1,10 @@
+[submodule "Vectrix/extern/spdlog"]
+	path = Vectrix/extern/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Vectrix/extern/GLFW"]
+	path = Vectrix/extern/GLFW
+	url = https://github.com/glfw/glfw
+[submodule "Vectrix/extern/imgui"]
+	path = Vectrix/extern/imgui
+	url = https://github.com/ocornut/imgui/
+	branch = docking

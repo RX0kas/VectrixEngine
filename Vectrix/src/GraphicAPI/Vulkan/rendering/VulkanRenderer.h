@@ -1,0 +1,79 @@
+#pragma once
+
+#include "GraphicAPI/Vulkan/rendering/Device.h"
+#include "GraphicAPI/Vulkan/rendering/SwapChain.h"
+#include "Vectrix/Window.h"
+
+// std
+#include <memory>
+#include <vector>
+
+#include <glm/vec4.hpp>
+
+// Debug Widget
+#include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
+
+namespace Vectrix {
+    class Renderer {
+    public:
+        Renderer(Window& window, Device& device);
+
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
+
+        ~Renderer();
+
+        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
+        [[nodiscard]] size_t getSwapChainImageCount() const { return swapChain->imageCount();}
+        [[nodiscard]] VkFormat getImageFormat() { return swapChain->getSwapChainImageFormat(); }
+        [[nodiscard]] bool isFrameInProgress() const { return isFrameStarted; }
+        [[nodiscard]] VkImageView getSwapChainImageView(int i) {return swapChain->getImageView(i);}
+
+        [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() { return swapChain->getFrameBuffer(swapChain->getFrameIndex()); }
+
+        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const {
+            VC_CORE_ASSERT(isFrameStarted, "Frame not started: can't get command buffer");
+            VC_CORE_ASSERT(currentImageIndex <= commandBuffers.size(), "currentImageIndex out of bounds");
+            return commandBuffers[currentImageIndex];
+        }
+
+        [[nodiscard]] uint32_t getCurrentImageIndex() const {return currentImageIndex;}
+
+        [[nodiscard]] int getFrameIndex() const {
+            VC_CORE_ASSERT(isFrameStarted, "Cannot get frame index when frame not in progress");
+            return swapChain->getFrameIndex();
+        }
+
+        VkCommandBuffer beginFrame();
+        void endFrame();
+        void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        [[nodiscard]] float getAspectRatio() const { return swapChain->extentAspectRatio(); }
+        [[nodiscard]] VkExtent2D getSwapChainExtent() const {return swapChain->getSwapChainExtent();}
+        void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
+
+        void makeClearColor(const glm::vec4& color) {
+            clearValue.color.float32[0] = color.r;
+            clearValue.color.float32[1] = color.g;
+            clearValue.color.float32[2] = color.b;
+            clearValue.color.float32[3] = color.a;
+        }
+
+    private:
+        friend class VulkanDebugWidget;
+        DebugFrameInfo getCurrentFrameInfo();
+        void createCommandBuffers();
+        void freeCommandBuffers();
+        void recreateSwapChain();
+        void cleanupSwapChain();
+
+        Window& window;
+        Device& device;
+        std::unique_ptr<SwapChain> swapChain;
+        std::vector<VkCommandBuffer> commandBuffers;
+
+        uint32_t currentImageIndex{ 0 };
+        bool isFrameStarted{ false };
+
+        VkClearValue clearValue = { 0.01f, 0.01f, 0.01f, 1.0f };
+    };
+}
