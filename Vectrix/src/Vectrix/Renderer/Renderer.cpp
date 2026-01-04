@@ -1,3 +1,5 @@
+#include "Renderer.h"
+
 #include "vcpch.h"
 #include "Renderer.h"
 
@@ -5,7 +7,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
-	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
+	std::unique_ptr<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<Renderer::SceneData>();
 
 	void Renderer::BeginScene(PerspectiveCamera& camera)
 	{

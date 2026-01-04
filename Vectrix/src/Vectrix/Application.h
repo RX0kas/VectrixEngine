@@ -37,7 +37,6 @@ namespace Vectrix {
 
 		static Application& instance() { return *_instance; }
 		void renderImGui();
-		[[nodiscard]] PerspectiveCamera& getCamera() const {return *m_Camera;}
 	private:
 		std::unique_ptr<Window> _window;
 		std::unique_ptr<ShaderManager> p_shaderManager;
@@ -45,13 +44,6 @@ namespace Vectrix {
 		bool _running = true;
 
 		LayerStack _layerStack;
-
-		std::unique_ptr<PerspectiveCamera> m_Camera;
-
-		std::shared_ptr<VertexArray> m_vertexArray;
-
-		std::unique_ptr<Shader> _shader;
-		const char* p_defaultName = "default";
 	private:
 		static Application* _instance;
 	};

@@ -1,4 +1,6 @@
 #include "CameraPush.h"
+
+#include "Renderer.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
 
@@ -16,7 +18,7 @@ namespace Vectrix {
 
     void CameraPush::sendPush(VkCommandBuffer cmd,VkPipelineLayout layout) {
         CameraPushData push{};
-        push.transform  = Application::instance().getCamera().getTransformationMatrix();
+        push.transform  = Renderer::getSceneData().camera->getTransformationMatrix();
 
         vkCmdPushConstants(
             cmd,
