@@ -35,7 +35,6 @@ namespace Vectrix {
         buffer = std::make_unique<Buffer>(vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
-        VulkanContext::instance().p_VertexBuffer.push_back(this);
     }
 
     void VulkanVertexBuffer::draw() {
@@ -87,7 +86,6 @@ namespace Vectrix {
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
-        VulkanContext::instance().p_IndexBuffer.push_back(this);
     }
 
 

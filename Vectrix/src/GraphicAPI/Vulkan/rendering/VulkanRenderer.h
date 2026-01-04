@@ -14,14 +14,14 @@
 #include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
 
 namespace Vectrix {
-    class Renderer {
+    class VulkanRenderer {
     public:
-        Renderer(Window& window, Device& device);
+        VulkanRenderer(Window& window, Device& device);
 
-        Renderer(const Renderer&) = delete;
-        Renderer& operator=(const Renderer&) = delete;
+        VulkanRenderer(const VulkanRenderer&) = delete;
+        VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
-        ~Renderer();
+        ~VulkanRenderer();
 
         [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
         [[nodiscard]] size_t getSwapChainImageCount() const { return swapChain->imageCount();}

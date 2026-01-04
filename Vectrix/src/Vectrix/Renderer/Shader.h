@@ -32,6 +32,7 @@ namespace Vectrix {
 		bool _enable = true;
 		friend class VulkanContext;
 		friend class ShaderManager;
+		friend class Renderer;
 		// Info
 		const char* name;
 	};

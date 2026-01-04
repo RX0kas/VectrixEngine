@@ -1,27 +1,36 @@
 #pragma once
 
 #include "RendererAPI.h"
+#include "VertexArray.h"
 
 namespace Vectrix
 {
 	class RenderCommand
 	{
 	public:
-		inline static void SetClearColor(const glm::vec4& color)
+		static void setClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);
 		}
 
-		inline static void Clear()
+		static void clear()
 		{
 			s_RendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const std::vector<Vertex>& vertexArray)
+		static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 	private:
+		friend class Renderer;
+
+		static void setupScene() {
+			s_RendererAPI->setupScene();
+		}
+		static void sendScene() {
+			s_RendererAPI->sendScene();
+		}
 		static RendererAPI* s_RendererAPI;
 	};
 }

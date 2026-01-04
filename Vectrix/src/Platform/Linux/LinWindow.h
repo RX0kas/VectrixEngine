@@ -4,10 +4,11 @@
 #include "Vectrix/Window.h"
 #include "Vectrix/Renderer/GraphicsContext.h"
 
-// That's an internal class to handle the window things on Linux
+
 namespace Vectrix {
 	class LinWindow : public Window
 	{
+		// That's an internal class to handle the window things on Linux
 	public:
 		LinWindow();
 

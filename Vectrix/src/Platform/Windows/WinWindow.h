@@ -4,10 +4,12 @@
 #include "Vectrix/Window.h"
 #include "Vectrix/Renderer/GraphicsContext.h"
 
-// That's an internal class to handle the window things on Windows
+
 namespace Vectrix {
+
 	class WinWindow : public Window
 	{
+		// That's an internal class to handle the window things on Windows
 	public:
 		WinWindow();
 

@@ -12,6 +12,7 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Renderer/PerspectiveCamera.h"
 #include "Renderer/ShaderManager.h"
+#include "Renderer/VertexArray.h"
 
 #include "Vectrix/Renderer/Shader.h"
 #include "Vectrix/Renderer/Buffer.h"
@@ -47,11 +48,10 @@ namespace Vectrix {
 
 		std::unique_ptr<PerspectiveCamera> m_Camera;
 
-		unsigned int _vertexArray;
+		std::shared_ptr<VertexArray> m_vertexArray;
+
 		std::unique_ptr<Shader> _shader;
 		const char* p_defaultName = "default";
-		std::unique_ptr<VertexBuffer> _vertexBuffer;
-		std::unique_ptr<IndexBuffer> _indexBuffer;
 	private:
 		static Application* _instance;
 	};

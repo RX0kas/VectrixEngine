@@ -43,7 +43,7 @@ private:
 	private:
         Device& device;
         Window& window;
-        Renderer* renderer;
+        VulkanRenderer* renderer;
         //VkPipelineCache g_PipelineCache = VK_NULL_HANDLE;
         VkRenderPass imGuiRenderPass;
         VkDescriptorPool descriptorPool = nullptr;

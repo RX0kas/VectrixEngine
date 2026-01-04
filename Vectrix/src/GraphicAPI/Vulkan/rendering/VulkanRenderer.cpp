@@ -13,7 +13,7 @@ VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRender
 
 namespace Vectrix {
 
-	Renderer::Renderer(Window& window, Device& device)
+	VulkanRenderer::VulkanRenderer(Window& window, Device& device)
 		: window{ window }, device{ device } {
 		VC_CORE_INFO("Initializing Renderer");
 		recreateSwapChain();
@@ -23,11 +23,11 @@ namespace Vectrix {
 		device.setImageFormat(f);
 	}
 
-	Renderer::~Renderer() {
+	VulkanRenderer::~VulkanRenderer() {
 		freeCommandBuffers();
 	}
 
-	void Renderer::recreateSwapChain() {
+	void VulkanRenderer::recreateSwapChain() {
 #if defined(VC_PLATFORM_WINDOWS)
 		WinWindow& w = dynamic_cast<WinWindow&>(window);
 #elif defined(VC_PLATFORM_LINUX)
@@ -58,11 +58,11 @@ namespace Vectrix {
 		createCommandBuffers();
 	}
 
-	void Renderer::cleanupSwapChain() {
+	void VulkanRenderer::cleanupSwapChain() {
 		swapChain->cleanup();
 	}
 
-	void Renderer::createCommandBuffers() {
+	void VulkanRenderer::createCommandBuffers() {
 		commandBuffers.resize(swapChain->imageCount());
 
 		VkCommandBufferAllocateInfo allocInfo{};
@@ -77,7 +77,7 @@ namespace Vectrix {
 		}
 	}
 
-	void Renderer::freeCommandBuffers() {
+	void VulkanRenderer::freeCommandBuffers() {
 		if (commandBuffers.empty()) return;
 		vkFreeCommandBuffers(
 			device.device(),
@@ -87,7 +87,7 @@ namespace Vectrix {
 		commandBuffers.clear();
 	}
 
-	VkCommandBuffer Renderer::beginFrame() {
+	VkCommandBuffer VulkanRenderer::beginFrame() {
 		VC_CORE_ASSERT(!isFrameStarted, "Can't call beginFrame while already in progress");
 
 		auto result = swapChain->acquireNextImage(&currentImageIndex);
@@ -98,7 +98,7 @@ namespace Vectrix {
 			recreateSwapChain();
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
-			return VK_NULL_HANDLE;
+			return beginFrame(); // TODO: can be source of errors need to verify
 		}
 
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
@@ -130,7 +130,7 @@ namespace Vectrix {
 
 
 
-	void Renderer::endFrame() {
+	void VulkanRenderer::endFrame() {
 #if defined(VC_PLATFORM_WINDOWS)
 		WinWindow& w = dynamic_cast<WinWindow&>(window);
 #elif defined(VC_PLATFORM_LINUX)
@@ -161,7 +161,7 @@ namespace Vectrix {
 		isFrameStarted = false;
 	}
 
-	void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 		VC_CORE_ASSERT(isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(
 			commandBuffer == getCurrentCommandBuffer(),
@@ -195,7 +195,7 @@ namespace Vectrix {
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	}
 
-	void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 		VC_CORE_ASSERT(isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(
 			commandBuffer == getCurrentCommandBuffer(),
@@ -203,7 +203,7 @@ namespace Vectrix {
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	DebugFrameInfo Renderer::getCurrentFrameInfo() {
+	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() {
 		DebugFrameInfo f{};
 		f.frameIndex = swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;

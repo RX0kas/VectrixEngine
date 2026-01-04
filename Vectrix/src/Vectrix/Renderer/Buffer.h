@@ -1,5 +1,5 @@
 #pragma once
-#include "GraphicAPI/Vulkan/rendering/Vertex.h"
+#include "Vertex.h"
 
 namespace Vectrix {
 	enum class ShaderDataType

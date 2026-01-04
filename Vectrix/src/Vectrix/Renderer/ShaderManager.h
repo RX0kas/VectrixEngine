@@ -13,15 +13,15 @@ namespace Vectrix {
     public:
         ShaderManager();
         ~ShaderManager();
-        Shader* get(const std::string& name);
+        std::shared_ptr<Shader> get(const std::string& name);
         static ShaderManager& instance() { return *p_instance; }
         static void createShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath, BufferLayout layout);
     private:
         friend class Shader;
         friend class VulkanContext;
         bool remove(const std::string& name);
-        void add(const std::string& name,std::unique_ptr<Shader> shader);
-        std::unordered_map<std::string,std::unique_ptr<Shader>,XXH3> p_cache;
+        void add(const std::string& name,std::shared_ptr<Shader> shader);
+        std::unordered_map<std::string,std::shared_ptr<Shader>,XXH3> p_cache;
 
     private:
         static ShaderManager* p_instance;

@@ -2,7 +2,7 @@
 
 #include "vulkan/vulkan.h"
 #include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/Vertex.h"
+#include "../../../Vectrix/Renderer/Vertex.h"
 
 #include "Vectrix/Renderer/Buffer.h"
 
@@ -74,13 +74,13 @@ namespace Vectrix {
         //virtual void unbind();
         static std::vector<VkVertexInputBindingDescription> getBindingDescriptions(const BufferLayout& layout);
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(const BufferLayout& layout);
-        [[nodiscard]] const BufferLayout& getLayout() const override { return _Layout; }
-        void setLayout(const BufferLayout& layout) override { _Layout = layout; }
+        [[nodiscard]] const BufferLayout& getLayout() const override { return m_Layout; }
+        void setLayout(const BufferLayout& layout) override { m_Layout = layout; }
     private:
         uint32_t _vertexCount{ 0 };
         std::unique_ptr<Buffer> buffer;
         bool _enable = false;
-        BufferLayout _Layout;
+        BufferLayout m_Layout;
     };
 
     class VulkanIndexBuffer : public IndexBuffer {

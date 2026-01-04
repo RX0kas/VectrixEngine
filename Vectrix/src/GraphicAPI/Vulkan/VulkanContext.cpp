@@ -19,36 +19,11 @@ namespace Vectrix {
 		
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		p_device = std::make_unique<Device>(Application::instance().window());
-		p_renderer = std::make_unique<Renderer>(Application::instance().window(),*p_device);
+		p_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*p_device);
 	}
 
 	void VulkanContext::swapBuffers()
 	{
 		glfwPollEvents();
-	}
-
-	void VulkanContext::render() {
-		if (auto commandBuffer = p_renderer->beginFrame()) {
-			p_renderer->beginSwapChainRenderPass(commandBuffer);
-
-			for (const auto& [key, shader] : ShaderManager::instance().p_cache) {
-				if (shader->_enable) {
-					shader->bind();
-					CameraPush::sendPush(commandBuffer,shader->_pipelineLayout);
-				}
-			}
-
-			for (auto buffer : p_VertexBuffer) buffer->bind();
-
-			for (auto buffer : p_IndexBuffer) buffer->bind();
-
-			for (auto buffer : p_IndexBuffer) buffer->draw();
-
-			for (auto buffer : p_VertexBuffer) buffer->draw();
-			p_renderer->endSwapChainRenderPass(commandBuffer);
-
-			VulkanImGuiManager::instance().render();
-			p_renderer->endFrame();
-		}
 	}
 }

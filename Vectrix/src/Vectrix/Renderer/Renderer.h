@@ -4,6 +4,7 @@
 
 #include "PerspectiveCamera.h"
 #include "Shader.h"
+#include "VertexArray.h"
 
 namespace Vectrix {
 	class Renderer
@@ -11,14 +12,13 @@ namespace Vectrix {
 	public:
 		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
+		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
 
-		static void Submit(const std::shared_ptr<Shader>& shader, const std::vector<Vertex>& vertexArray);
-
-		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	private:
 		struct SceneData
 		{
-			glm::mat4 ViewProjectionMatrix;
+			PerspectiveCamera* camera;
 		};
 
 		static SceneData* m_SceneData;

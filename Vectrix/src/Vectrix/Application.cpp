@@ -4,10 +4,9 @@
 
 #include <memory>
 
-#include "imgui.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "Input/Input.h"
-#include "Input/KeyCodes.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
 
 
 namespace Vectrix {
@@ -87,15 +86,16 @@ namespace Vectrix {
 
 
 
-		_vertexBuffer.reset(VertexBuffer::create(verticesVec, static_cast<uint32_t>(verticesVec.size())));
-
+		std::shared_ptr<VertexBuffer> vertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::create(verticesVec, static_cast<uint32_t>(verticesVec.size())));
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float4, "a_Color" }
 		};
 
-		_vertexBuffer->setLayout(layout);
+		vertexBuffer->setLayout(layout);
 		
+		m_vertexArray = std::shared_ptr<VertexArray>(VertexArray::create());
+		m_vertexArray->addVertexBuffer(vertexBuffer);
 
 		//uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
 		//_indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
@@ -130,8 +130,14 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		std::shared_ptr<Shader> def = ShaderManager::instance().get(p_defaultName);
 		while (_running) {
-			VulkanContext::instance().render();
+			Renderer::BeginScene(*m_Camera);
+
+			Renderer::Submit(def,m_vertexArray);
+			RenderCommand::drawIndexed(m_vertexArray);
+
+			Renderer::EndScene();
 
 			for (Layer* layer : _layerStack)
 				layer->OnUpdate();
