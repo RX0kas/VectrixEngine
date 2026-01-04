@@ -1,21 +1,17 @@
 #include "vcpch.h"
 #include "Shader.h"
 
-#include <glm/gtc/type_ptr.hpp>
 #include <utility>
 
+#include "PerspectiveCamera.h"
+#include "ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
-	struct SimplePushConstantData {
-
-	};
-
-	Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath, BufferLayout layout) : _device(VulkanContext::instance().getDevice())
+	Shader::Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath, BufferLayout layout) : _device(VulkanContext::instance().getDevice()), name{name.c_str()}
 	{
 		createPipelineLayout();
 		createPipeline(VulkanContext::instance().getRenderer().getSwapChainRenderPass(), vertexPath, fragmentPath, std::move(layout));
-		VulkanContext::instance()._Shaders.push_back(this);
 	}
 	
 	Shader::~Shader()
@@ -42,6 +38,7 @@ namespace Vectrix {
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = _pipelineLayout;
 		pipelineConfig.layout = std::move(layout);
+
 		_pipeline = std::make_unique<Pipeline>(
 			_device,
 			vertexPath,
@@ -63,22 +60,18 @@ namespace Vectrix {
 		pushConstantRange.offset = 0;
 		pushConstantRange.size = roundToFitValidUsage(sizeof(SimplePushConstantData));*/
 
+		VkPushConstantRange pushConstantRange = CameraPush::createPushConstantRange();
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 0;
 		pipelineLayoutInfo.pSetLayouts = nullptr;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr/*&pushConstantRange*/;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		VkResult result = vkCreatePipelineLayout(_device.device(), &pipelineLayoutInfo, nullptr, &_pipelineLayout);
 		if (result != VK_SUCCESS) {
 			VC_CORE_CRITICAL("failed to create pipeline layout: {0}",result);
 			VC_DEBUGBREAK();
 		}
-	}
-
-	void Shader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix)
-	{
-		//GLint location = glGetUniformLocation(m_RendererID, name.c_str());
-		//glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }

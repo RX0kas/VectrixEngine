@@ -1,7 +1,11 @@
 #include "vcpch.h"
 #include "Pipeline.h"
 
+#include "../../../Vectrix/Renderer/ShaderManager.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/rendering/VulkanBuffer.h"
+
+#define NO_CULLING
 
 namespace Vectrix {
 
@@ -137,7 +141,13 @@ namespace Vectrix {
         configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
         configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
         configInfo.rasterizationInfo.lineWidth = 1.0f;
+#ifdef NO_CULLING
+        VC_CORE_WARN("No culling mode enable");
+        configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
+#else
         configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+#endif
+
         configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
         configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
         configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional

@@ -15,15 +15,12 @@ namespace Vectrix {
 	class Shader
 	{
 	public:
-		Shader(const std::string& vertexSrc, const std::string& fragmentSrc, BufferLayout layout);
 		~Shader();
 
 		void bind() const;
 		void unbind();
-
-		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix);
-
 	private:
+		Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath, BufferLayout layout);
 		void createPipelineLayout();
 		void createPipeline(VkRenderPass renderPass, const std::string& vertexSrc, const std::string& fragmentSrc, BufferLayout layout);
 
@@ -34,6 +31,9 @@ namespace Vectrix {
 
 		bool _enable = true;
 		friend class VulkanContext;
+		friend class ShaderManager;
+		// Info
+		const char* name;
 	};
 
 }

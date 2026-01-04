@@ -2,14 +2,14 @@
 
 #include "Vectrix/Renderer/RendererAPI.h"
 
-#include "OrthographicCamera.h"
+#include "PerspectiveCamera.h"
 #include "Shader.h"
 
 namespace Vectrix {
 	class Renderer
 	{
 	public:
-		static void BeginScene(OrthographicCamera& camera);
+		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
 
 		static void Submit(const std::shared_ptr<Shader>& shader, const std::vector<Vertex>& vertexArray);

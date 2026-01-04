@@ -3,7 +3,6 @@
 #include "Core.h"
 #include "Window.h"
 #include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/Vertex.h"
 
 #include "Vectrix/Layers/LayerStack.h"
 #include "Events/Event.h"
@@ -11,6 +10,8 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
+#include "Renderer/PerspectiveCamera.h"
+#include "Renderer/ShaderManager.h"
 
 #include "Vectrix/Renderer/Shader.h"
 #include "Vectrix/Renderer/Buffer.h"
@@ -35,15 +36,20 @@ namespace Vectrix {
 
 		static Application& instance() { return *_instance; }
 		void renderImGui();
+		[[nodiscard]] PerspectiveCamera& getCamera() const {return *m_Camera;}
 	private:
 		std::unique_ptr<Window> _window;
-		ImGuiLayer* _ImGuiLayer;
+		std::unique_ptr<ShaderManager> p_shaderManager;
+		ImGuiLayer* p_ImGuiLayer;
 		bool _running = true;
 
 		LayerStack _layerStack;
 
+		std::unique_ptr<PerspectiveCamera> m_Camera;
+
 		unsigned int _vertexArray;
 		std::unique_ptr<Shader> _shader;
+		const char* p_defaultName = "default";
 		std::unique_ptr<VertexBuffer> _vertexBuffer;
 		std::unique_ptr<IndexBuffer> _indexBuffer;
 	private:

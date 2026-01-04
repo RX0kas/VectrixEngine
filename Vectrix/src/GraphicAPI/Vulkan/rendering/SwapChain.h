@@ -21,7 +21,7 @@ namespace Vectrix {
         SwapChain(const SwapChain&) = delete;
         void operator=(const SwapChain&) = delete;
 
-        VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
+        [[nodiscard]] VkFramebuffer getFrameBuffer(int index) const { return swapChainFramebuffers[index]; }
         void destroyFrameBuffers() {
             if (!swapChainFramebuffers.empty()) {
                 for (auto framebuffer : swapChainFramebuffers) {
@@ -34,19 +34,19 @@ namespace Vectrix {
 
         }
 
-        VkSwapchainKHR swapChain() {return _swapChain;}
+        [[nodiscard]] VkSwapchainKHR swapChain() const {return _swapChain;}
 
 
-        VkRenderPass getRenderPass() { return renderPass; }
-        VkImageView getImageView(int index) { return swapChainImageViews[index]; }
+        [[nodiscard]] VkRenderPass getRenderPass() const { return renderPass; }
+        [[nodiscard]] VkImageView getImageView(int index) const { return swapChainImageViews[index]; }
         std::vector<VkImageView> getImageViews() { return swapChainImageViews; }
-        size_t imageCount() { return swapChainImages.size(); }
-        VkFormat getSwapChainImageFormat() const { return swapChainImageFormat; }
-        VkExtent2D getSwapChainExtent() { return swapChainExtent; }
-        uint32_t width() { return swapChainExtent.width; }
-        uint32_t height() { return swapChainExtent.height; }
+        [[nodiscard]] size_t imageCount() const { return swapChainImages.size(); }
+        [[nodiscard]] VkFormat getSwapChainImageFormat() const { return swapChainImageFormat; }
+        [[nodiscard]] VkExtent2D getSwapChainExtent() const { return swapChainExtent; }
+        [[nodiscard]] uint32_t width() const { return swapChainExtent.width; }
+        [[nodiscard]] uint32_t height() const { return swapChainExtent.height; }
 
-        float extentAspectRatio() {
+        [[nodiscard]] float extentAspectRatio() const {
             return static_cast<float>(swapChainExtent.width) / static_cast<float>(swapChainExtent.height);
         }
         VkFormat findDepthFormat();
@@ -54,7 +54,7 @@ namespace Vectrix {
         VkResult acquireNextImage(uint32_t* imageIndex);
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
-		bool compareSwapFormats(const SwapChain& swapChain) const {
+		[[nodiscard]] bool compareSwapFormats(const SwapChain& swapChain) const {
 			return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
 				swapChain.swapChainImageFormat == swapChainImageFormat;
 		}
@@ -92,7 +92,7 @@ namespace Vectrix {
             }
         }
 
-	    int getFrameIndex() const {return static_cast<int>(currentFrame);}
+	    [[nodiscard]] int getFrameIndex() const {return static_cast<int>(currentFrame);}
     private:
         void destroyImageviews() {
             if (!swapChainImageViews.empty()) {

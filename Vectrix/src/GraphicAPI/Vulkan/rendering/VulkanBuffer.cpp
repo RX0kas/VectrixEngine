@@ -10,14 +10,13 @@
  */
 
 namespace Vectrix {
-    // VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment = 1
+
+    // Vertex && Index Buffer
     VulkanVertexBuffer::VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size)
     {
-        //VC_CORE_ASSERT(sizeof(vert) >= 3, "Vertex count must be at least 3");
-        //VC_CORE_ASSERT(sizeof(vert)%3==0, "Vertex count must be a multiple of 3");
+        VC_CORE_ASSERT(size>=3, "Vertex count must be at least 3");
+        VC_CORE_ASSERT(size%3==0, "Vertex count must be a multiple of 3");
 
-
-        VC_CORE_TRACE("vertex: {0}", vertices);
 
         _vertexCount = static_cast<uint32_t>(vertices.size());
         VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
@@ -36,7 +35,7 @@ namespace Vectrix {
         buffer = std::make_unique<Buffer>(vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
-        VulkanContext::instance()._VertexBuffer.push_back(this);
+        VulkanContext::instance().p_VertexBuffer.push_back(this);
     }
 
     void VulkanVertexBuffer::draw() {
@@ -88,7 +87,7 @@ namespace Vectrix {
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
-        VulkanContext::instance()._IndexBuffer.push_back(this);
+        VulkanContext::instance().p_IndexBuffer.push_back(this);
     }
 
 
@@ -100,33 +99,6 @@ namespace Vectrix {
     ////////////////////////////////////
     //             Vertex             //
     ////////////////////////////////////
-
-    /*std::vector<VkVertexInputBindingDescription> Vertex::getBindingDescriptions() {
-        std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
-        bindingDescriptions[0].binding = 0;
-        bindingDescriptions[0].stride = sizeof(Vertex);
-        bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-        return bindingDescriptions;
-    }
-
-
-	// Returns the attribute descriptions for the vertex input
-	// So the layout of the vertex shader
-    std::vector<VkVertexInputAttributeDescription> Vertex::getAttributeDescriptions() {
-		std::vector<VkVertexInputAttributeDescription> attributeDescriptions(2); // Position and Color
-        attributeDescriptions[0].binding = 0;
-        attributeDescriptions[0].location = 0;
-        attributeDescriptions[0].format = VULKAN_FORMAT_VEC2;
-        attributeDescriptions[0].offset = offsetof(Vertex, position);
-
-        attributeDescriptions[1].binding = 0;
-        attributeDescriptions[1].location = 1;
-        attributeDescriptions[1].format = VULKAN_FORMAT_VEC2;
-        attributeDescriptions[1].offset = offsetof(Vertex, color);
-
-        return attributeDescriptions;
-    }*/
-
     // Describes at which rate to load data from memory throughout the vertices. 
     // It specifies the number of bytes between data entries and whether to move to the next data entry after each vertex or after each instance.
     std::vector<VkVertexInputBindingDescription> VulkanVertexBuffer::getBindingDescriptions(const BufferLayout& layout) {
@@ -142,7 +114,6 @@ namespace Vectrix {
     // So the layout of the vertex shader
     std::vector<VkVertexInputAttributeDescription> VulkanVertexBuffer::getAttributeDescriptions(const BufferLayout& layout) {
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions(layout.getElements().size());
-        VC_CORE_TRACE("getAttributeDescriptions size: {0}", layout.getElements().size());
         for (size_t i = 0; i < layout.getElements().size(); i++) {
             const auto& element = layout.getElements()[i];
             attributeDescriptions[i].binding = 0;
@@ -150,7 +121,6 @@ namespace Vectrix {
             attributeDescriptions[i].format = shaderDataTypeToVkFormat(element.Type);
             attributeDescriptions[i].offset = element.Offset;
 		}
-        VC_CORE_TRACE(attributeDescriptions.data()->format);
 		return attributeDescriptions;
     }
 
@@ -238,7 +208,7 @@ namespace Vectrix {
             memcpy(mapped, data, bufferSize);
         }
         else {
-            char* memOffset = (char*)mapped;
+            auto memOffset = (char*)mapped;
             memOffset += offset;
             memcpy(memOffset, data, size);
         }

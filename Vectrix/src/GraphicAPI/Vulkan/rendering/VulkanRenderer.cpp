@@ -134,7 +134,7 @@ namespace Vectrix {
 #if defined(VC_PLATFORM_WINDOWS)
 		WinWindow& w = dynamic_cast<WinWindow&>(window);
 #elif defined(VC_PLATFORM_LINUX)
-		LinWindow& w = dynamic_cast<LinWindow&>(window);
+		auto &w = dynamic_cast<LinWindow&>(window);
 #else
 		VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRenderer can't end the frame");
 #endif

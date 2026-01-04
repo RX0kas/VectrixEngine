@@ -302,14 +302,14 @@ namespace Vectrix {
         for (size_t i = 0; i < imageCount(); i++) {
             std::array<VkImageView, 2> attachments = { swapChainImageViews[i], depthImageViews[i] };
 
-            VkExtent2D swapChainExtent = getSwapChainExtent();
+            VkExtent2D newSwapChainExtent = getSwapChainExtent();
             VkFramebufferCreateInfo framebufferInfo = {};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = renderPass;
             framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
             framebufferInfo.pAttachments = attachments.data();
-            framebufferInfo.width = swapChainExtent.width;
-            framebufferInfo.height = swapChainExtent.height;
+            framebufferInfo.width = newSwapChainExtent.width;
+            framebufferInfo.height = newSwapChainExtent.height;
             framebufferInfo.layers = 1;
 
             if (vkCreateFramebuffer(
@@ -326,7 +326,7 @@ namespace Vectrix {
     void SwapChain::createDepthResources() {
         VkFormat depthFormat = findDepthFormat();
         swapChainDepthFormat = depthFormat;
-        VkExtent2D swapChainExtent = getSwapChainExtent();
+        VkExtent2D newSwapChainExtent = getSwapChainExtent();
 
         depthImages.resize(imageCount());
         depthImageMemorys.resize(imageCount());
@@ -336,8 +336,8 @@ namespace Vectrix {
             VkImageCreateInfo imageInfo{};
             imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
             imageInfo.imageType = VK_IMAGE_TYPE_2D;
-            imageInfo.extent.width = swapChainExtent.width;
-            imageInfo.extent.height = swapChainExtent.height;
+            imageInfo.extent.width = newSwapChainExtent.width;
+            imageInfo.extent.height = newSwapChainExtent.height;
             imageInfo.extent.depth = 1;
             imageInfo.mipLevels = 1;
             imageInfo.arrayLayers = 1;
@@ -438,17 +438,17 @@ namespace Vectrix {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
             return capabilities.currentExtent;
         }
-        else {
-            VkExtent2D actualExtent = windowExtent;
-            actualExtent.width = std::max(
-                capabilities.minImageExtent.width,
-                std::min(capabilities.maxImageExtent.width, actualExtent.width));
-            actualExtent.height = std::max(
-                capabilities.minImageExtent.height,
-                std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
-            return actualExtent;
-        }
+        VkExtent2D actualExtent = windowExtent;
+        actualExtent.width = std::max(
+            capabilities.minImageExtent.width,
+            std::min(capabilities.maxImageExtent.width, actualExtent.width));
+        actualExtent.height = std::max(
+            capabilities.minImageExtent.height,
+            std::min(capabilities.maxImageExtent.height, actualExtent.height));
+
+        return actualExtent;
+
     }
 
     VkFormat SwapChain::findDepthFormat() {

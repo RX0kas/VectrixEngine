@@ -22,10 +22,8 @@ namespace Vectrix {
 		case ShaderDataType::Int3:     return 4 * 3;
 		case ShaderDataType::Int4:     return 4 * 4;
 		case ShaderDataType::Bool:     return 4;  // Typically 4 bytes for alignment
+			default: VC_CORE_ERROR( "Unknown ShaderDataType!");
 		}
-
-		VC_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
 	}
 
 	static VkFormat shaderDataTypeToVkFormat(ShaderDataType type)
@@ -36,8 +34,8 @@ namespace Vectrix {
 		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
 		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
 		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ShaderDataType::Mat3:     return VK_FORMAT_UNDEFINED; // TODO: Matrices are not supported in Vulkan directly,
-		case ShaderDataType::Mat4:     return VK_FORMAT_UNDEFINED; // A mat3 or mat4 matrix must be sent as multiple vectors in multiple consecutive locations
+		case ShaderDataType::Mat3:     VC_CORE_ERROR("Matrices are not supported in Vulkan directly"); return VK_FORMAT_UNDEFINED; // TODO: Matrices are not supported in Vulkan directly,
+		case ShaderDataType::Mat4:     VC_CORE_ERROR("Matrices are not supported in Vulkan directly"); return VK_FORMAT_UNDEFINED; // A mat3 or mat4 matrix must be sent as multiple vectors in multiple consecutive locations
 		case ShaderDataType::Int:      return VK_FORMAT_R32_SINT;
 		case ShaderDataType::Int2:     return VK_FORMAT_R32G32_SINT;
 		case ShaderDataType::Int3:     return VK_FORMAT_R32G32B32_SINT;
@@ -81,8 +79,7 @@ namespace Vectrix {
 			case ShaderDataType::Bool:    return 1;
 			}
 
-			VC_CORE_ASSERT(false, "Unknown ShaderDataType!");
-			return 0;
+			VC_CORE_ERROR( "Unknown ShaderDataType!");
 		}
 	};
 

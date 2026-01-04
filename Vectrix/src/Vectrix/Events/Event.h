@@ -28,28 +28,29 @@ namespace Vectrix {
 
 	// A macro to not have to rewrite those tree function every time we create a new event
 #define EVENT_CLASS_TYPE(type) \
-	static EventType GetStaticType() { return EventType::type; } \
-	virtual EventType GetEventType() const override { return GetStaticType(); } \
-	virtual const char* GetName() const override { return #type; }
+	static EventType getStaticType() { return EventType::type; } \
+	virtual EventType getEventType() const override { return getStaticType(); } \
+	virtual const char* getName() const override { return #type; }
 
 
 //  A macro to not have to rewrite the getCategoryFlags function every time we create a new event
-#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
+#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category; }
 
 
 	class Vectrix_API Event
 	{
 	public:
+		virtual ~Event() = default;
 		bool Handled = false;
 
-		virtual EventType GetEventType() const = 0;
-		virtual const char* GetName() const = 0;
-		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
+		[[nodiscard]] virtual EventType getEventType() const = 0;
+		[[nodiscard]] virtual const char* getName() const = 0;
+		[[nodiscard]] virtual int getCategoryFlags() const = 0;
+		[[nodiscard]] virtual std::string toString() const { return getName(); }
 
-		inline bool IsInCategory(EventCategory category)
+		[[nodiscard]] bool isInCategory(EventCategory category) const
 		{
-			return GetCategoryFlags() & category;
+			return getCategoryFlags() & category;
 		}
 	};
 
@@ -66,9 +67,9 @@ namespace Vectrix {
 		template<typename T>
 		bool Dispatch(EventFn<T> func)
 		{
-			if (m_Event.GetEventType() == T::GetStaticType())
+			if (m_Event.getEventType() == T::getStaticType())
 			{
-				m_Event.Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(*static_cast<T *>(&m_Event));
 				return true;
 			}
 			return false;
@@ -79,7 +80,7 @@ namespace Vectrix {
 
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)
 	{
-		return os << e.ToString();
+		return os << e.toString();
 	}
 }
 
@@ -87,7 +88,7 @@ template <>
 struct fmt::formatter<Vectrix::Event> : fmt::formatter<std::string> {
 	template <typename FormatContext>
 	auto format(const Vectrix::Event& e, FormatContext& ctx) const {
-		return fmt::formatter<std::string>::format(e.ToString(), ctx);
+		return fmt::formatter<std::string>::format(e.toString(), ctx);
 	}
 };
 

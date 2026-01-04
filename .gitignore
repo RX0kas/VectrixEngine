@@ -7,6 +7,11 @@
 *.vcxproj.filters
 *.sln
 
+# CMake
+GLOB
+GLOB_RECURSE
+*.graphml
+
 # User-specific files
 *.rsuser
 *.suo

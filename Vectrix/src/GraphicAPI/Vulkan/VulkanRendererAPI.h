@@ -7,10 +7,10 @@ namespace Vectrix {
 	class VulkanRendererAPI : public RendererAPI
 	{
 	public:
-		virtual void SetClearColor(const glm::vec4& color) override;
-		virtual void Clear() override;
+		void SetClearColor(const glm::vec4& color) override;
+		void Clear() override;
 
-		virtual void DrawIndexed(const std::vector<Vertex>& vertexArray) override;
+		void DrawIndexed(const std::vector<Vertex>& vertexArray) override;
 	};
 
 

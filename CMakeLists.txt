@@ -34,6 +34,10 @@ add_subdirectory(Vectrix/extern/GLFW)
 # spdlog
 add_subdirectory(Vectrix/extern/spdlog)
 
+# xxHash
+set(XXHASH_BUILD_XXHSUM OFF)
+add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
+
 # Librairie Vectrix
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
@@ -75,7 +79,7 @@ file(GLOB_RECURSE GRAPHICS_API_SOURCES
 list(APPEND Vectrix_SOURCES ${PLATFORM_SOURCES})
 list(APPEND Vectrix_SOURCES ${GRAPHICS_API_SOURCES})
 
-add_library(Vectrix STATIC ${TORKEL_SOURCES})
+add_library(Vectrix STATIC ${Vectrix_SOURCES})
 
 if(MSVC)
     target_precompile_headers(Vectrix PRIVATE
@@ -111,16 +115,19 @@ file(GLOB IMGUI_SOURCES
 target_sources(Vectrix PRIVATE ${IMGUI_SOURCES})
 
 if (UNIX AND NOT APPLE)
+    # For Linux we need X11
     find_package(X11 REQUIRED)
     target_link_libraries(Vectrix
             glfw
             Vulkan::Vulkan
             X11::X11
+            xxHash::xxhash
     )
 else()
 target_link_libraries(Vectrix
         glfw
         Vulkan::Vulkan
+        xxHash::xxhash
 )
 endif()
 
@@ -158,6 +165,7 @@ target_link_libraries(Sandbox
         glfw
         Vulkan::Vulkan
         spdlog
+        xxHash::xxhash
 )
 
 if(MSVC)

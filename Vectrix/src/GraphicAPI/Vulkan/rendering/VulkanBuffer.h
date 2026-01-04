@@ -12,10 +12,6 @@
 #include <vulkan/generated/vk_enum_string_helper.h>
 
 
-//Format of the attributeDescriptions
-#define VULKAN_FORMAT_VEC2 VK_FORMAT_R32G32_SFLOAT
-#define VULKAN_FORMAT_VEC3 VK_FORMAT_R32G32B32_SFLOAT
-
 namespace Vectrix {
     class Buffer {
     public:
@@ -70,7 +66,7 @@ namespace Vectrix {
     class VulkanVertexBuffer : public VertexBuffer {
     public:
         VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size);
-        virtual ~VulkanVertexBuffer();
+        ~VulkanVertexBuffer() override;
 
         void draw();
 
@@ -79,7 +75,7 @@ namespace Vectrix {
         static std::vector<VkVertexInputBindingDescription> getBindingDescriptions(const BufferLayout& layout);
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(const BufferLayout& layout);
         [[nodiscard]] const BufferLayout& getLayout() const override { return _Layout; }
-        void setLayout(const BufferLayout& layout) override { VC_CORE_TRACE(layout); _Layout = layout; }
+        void setLayout(const BufferLayout& layout) override { _Layout = layout; }
     private:
         uint32_t _vertexCount{ 0 };
         std::unique_ptr<Buffer> buffer;
@@ -104,6 +100,11 @@ namespace Vectrix {
         bool _enable = false;
     };
 
+    class VulkanUniformBuffer {
+    public:
+        VulkanUniformBuffer();
+
+    };
 }
 
 template <>

@@ -6,12 +6,14 @@ namespace Vectrix {
 	class Vectrix_API Input
 	{
 	public:
-		inline static bool isKeyPressed(int keycode) { return _instance->isKeyPressedImpl(keycode); }
+		virtual ~Input() = default;
 
-		inline static bool isMouseButtonPressed(int button) { return _instance->isMouseButtonPressedImpl(button); }
-		inline static std::pair<float, float> getMousePosition() { return _instance->getMousePositionImpl(); }
-		inline static float getMouseX() { return _instance->getMouseXImpl(); }
-		inline static float getMouseY() { return _instance->getMouseYImpl(); }
+		static bool isKeyPressed(int keycode) { return _instance->isKeyPressedImpl(keycode); }
+
+		static bool isMouseButtonPressed(int button) { return _instance->isMouseButtonPressedImpl(button); }
+		static std::pair<float, float> getMousePosition() { return _instance->getMousePositionImpl(); }
+		static float getMouseX() { return _instance->getMouseXImpl(); }
+		static float getMouseY() { return _instance->getMouseYImpl(); }
 	protected:
 		virtual bool isKeyPressedImpl(int keycode) = 0;
 

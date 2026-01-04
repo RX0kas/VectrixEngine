@@ -4,7 +4,10 @@
 
 #include <memory>
 
+#include "imgui.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Input/Input.h"
+#include "Input/KeyCodes.h"
 
 
 namespace Vectrix {
@@ -20,12 +23,70 @@ namespace Vectrix {
 		_window = std::unique_ptr<Window>(Window::create());
 		_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		_window->init();
+		p_shaderManager = std::make_unique<ShaderManager>();
 
+		m_Camera = std::make_unique<PerspectiveCamera>();
+		m_Camera->setPosition({0.0f,0.0f,-2.5f});
+
+		
 		std::vector<Vertex> verticesVec{
-	    	{ glm::vec3(0.5f, -0.5f, 0.0f), glm::vec4(1.0f) },
-			{ glm::vec3(0.5f,  0.5f, 0.0f), glm::vec4(1.0f) },
-			{ glm::vec3(0.0f, -0.5f, 0.0f), glm::vec4(1.0f) }
+		    // LEFT (-X)
+		    { {-0.5f, -0.5f, -0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+		    { {-0.5f, -0.5f,  0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+		    { {-0.5f,  0.5f,  0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+
+		    { {-0.5f, -0.5f, -0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+		    { {-0.5f,  0.5f,  0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+		    { {-0.5f,  0.5f, -0.5f}, {0.9f, 0.9f, 0.9f, 1.0f} },
+
+		    // RIGHT (+X)
+		    { { 0.5f, -0.5f, -0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f, -0.5f,  0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+
+		    { { 0.5f, -0.5f, -0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f, -0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.8f, 0.8f, 0.1f, 1.0f} },
+
+		    // TOP (-Y) (Vulkan Y vers le bas)
+		    { {-0.5f, -0.5f, -0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+		    { {-0.5f, -0.5f,  0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+		    { { 0.5f, -0.5f,  0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+
+		    { {-0.5f, -0.5f, -0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+		    { { 0.5f, -0.5f,  0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+		    { { 0.5f, -0.5f, -0.5f}, {0.9f, 0.6f, 0.1f, 1.0f} },
+
+		    // BOTTOM (+Y)
+		    { {-0.5f,  0.5f, -0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+		    { {-0.5f,  0.5f,  0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+
+		    { {-0.5f,  0.5f, -0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f, -0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.8f, 0.1f, 0.1f, 1.0f} },
+
+		    // FRONT (+Z)
+		    { {-0.5f, -0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+		    { {-0.5f,  0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+
+		    { {-0.5f, -0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+		    { { 0.5f,  0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+		    { { 0.5f, -0.5f,  0.5f}, {0.1f, 0.1f, 0.8f, 1.0f} },
+
+		    // BACK (-Z)
+		    { {-0.5f, -0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
+		    { {-0.5f,  0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
+
+		    { {-0.5f, -0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f, -0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
+		    { { 0.5f,  0.5f, -0.5f}, {0.1f, 0.8f, 0.1f, 1.0f} },
 		};
+
+
+
 		_vertexBuffer.reset(VertexBuffer::create(verticesVec, static_cast<uint32_t>(verticesVec.size())));
 
 		BufferLayout layout = {
@@ -36,25 +97,29 @@ namespace Vectrix {
 		_vertexBuffer->setLayout(layout);
 		
 
-		uint32_t indices[3] = { 0, 2, 1 };
+		//uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
+		//_indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
 
-		_indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(indices)));
 
-		// TODO: Find a better way to store shaders
 #ifdef VC_PLATFORM_WINDOWS
-		_shader.reset(new Shader("E:\\v.vert.spv", "E:\\f.frag.spv", layout));
+		ShaderManager::createShader(p_defaultName,"E:\\v.vert.spv", "E:\\f.frag.spv",layout);
 #elif defined(VC_PLATFORM_LINUX)
-		_shader = std::make_unique<Shader>("./shaders/v.vert.spv", "./shaders/f.frag.spv", layout);
+		ShaderManager::createShader(p_defaultName,"./shaders/v.vert.spv", "./shaders/f.frag.spv",layout);
 #endif
 
-		_ImGuiLayer = new ImGuiLayer();
-		PushOverlay(_ImGuiLayer);
+		p_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(p_ImGuiLayer);
 	}
+
 	Application::~Application() = default;
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>([this](auto && PH1) { return onWindowClose(std::forward<decltype(PH1)>(PH1)); });
+
+		if (e.getEventType()==EventType::WindowResize)
+			m_Camera->recalculateMatrices();
+
 
 		for (auto it = _layerStack.end(); it != _layerStack.begin(); )
 		{

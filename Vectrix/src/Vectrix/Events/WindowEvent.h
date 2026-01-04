@@ -18,10 +18,10 @@ namespace Vectrix {
 			: m_Width(width), m_Height(height) {
 		}
 
-		unsigned int GetWidth() const { return m_Width; }
-		unsigned int GetHeight() const { return m_Height; }
+		[[nodiscard]] unsigned int getWidth() const { return m_Width; }
+		[[nodiscard]] unsigned int getHeight() const { return m_Height; }
 
-		std::string ToString() const override
+		[[nodiscard]] std::string toString() const override
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;

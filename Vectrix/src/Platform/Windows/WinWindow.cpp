@@ -144,9 +144,7 @@ namespace Vectrix {
 	}
 
 	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
-		VK_CHECK(
-		glfwCreateWindowSurface(instance, window, nullptr, surface),"Could not create a WindowSurface"
-	);
+		VC_CHECK_VK_SUCCESS(glfwCreateWindowSurface(instance, window, nullptr, surface),"Could not create a WindowSurface");
 	}
 
 	void WinWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {

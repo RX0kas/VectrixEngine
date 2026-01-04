@@ -25,14 +25,14 @@ namespace Vectrix {
 
 		void resetWindowResizedFlag() { framebufferResized = false; }
 
-		inline virtual void* getNativeWindow() const { return window; }
+		void* getNativeWindow() const override { return window; }
 
-		inline void setEventCallback(const EventCallbackFn& callback) override { data.EventCallback = callback; }
+		void setEventCallback(const EventCallbackFn& callback) override { data.EventCallback = callback; }
 
 		void setVSync(bool enabled) override;
 
 		bool isVSync() const override;
-		virtual void init(const WindowAttributes& data = WindowAttributes());
+		void init(const WindowAttributes& data = WindowAttributes()) override;
 	private:
 		virtual void shutdown();
 

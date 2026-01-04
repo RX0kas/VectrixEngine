@@ -122,7 +122,11 @@ namespace Vectrix {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+#ifndef VC_PLATFORM_LINUX
+    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport
+#else
+    	VC_CORE_WARN("Multi-Viewport is disabled on Linux due to numerous compatibility issues.");
+#endif
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
