@@ -1,6 +1,4 @@
-#include "Vectrix/Renderer/ShaderManager.h"
-
-#include <stdexcept>
+#include "Vectrix/Renderer/Shaders/ShaderManager.h"
 
 namespace Vectrix {
     ShaderManager* ShaderManager::p_instance = nullptr;

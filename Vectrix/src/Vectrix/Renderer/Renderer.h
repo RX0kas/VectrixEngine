@@ -2,9 +2,10 @@
 
 #include "Vectrix/Renderer/RendererAPI.h"
 
-#include "PerspectiveCamera.h"
-#include "Shader.h"
-#include "VertexArray.h"
+#include "Camera/PerspectiveCamera.h"
+#include "Models/Model.h"
+#include "Shaders/Shader.h"
+#include "Models/VertexArray.h"
 
 namespace Vectrix {
 	class Renderer
@@ -14,9 +15,11 @@ namespace Vectrix {
 		{
 			PerspectiveCamera* camera;
 		};
-		static void BeginScene(PerspectiveCamera& camera);
+		static bool BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
-		static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray);
+		static void Submit(const Shader& shader, const VertexArray& vertexArray);
+		static void Submit(const Shader& shader, const VertexArray& vertexArray,const Transform& transform);
+		static void Submit(const Shader& shader, const Model& model);
 
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		static SceneData& getSceneData() {return *m_SceneData;}

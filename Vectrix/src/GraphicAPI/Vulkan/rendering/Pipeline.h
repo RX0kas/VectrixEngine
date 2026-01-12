@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "../../../Vectrix/Renderer/Vertex.h"
+#include "../../../Vectrix/Renderer/Models/Vertex.h"
 
 #include <string>
 #include <vector>

@@ -183,10 +183,10 @@ namespace Vectrix {
         VkSwapchainKHR _swapChain;
 		std::shared_ptr<SwapChain> oldSwapChain;
 
-        std::vector<VkSemaphore> imageAvailableSemaphores;
-        std::vector<VkSemaphore> renderFinishedSemaphores;
-        std::vector<VkFence> inFlightFences;
-        std::vector<VkFence> imagesInFlight;
+        std::vector<VkSemaphore> imageAvailableSemaphores; // par frame
+        std::vector<VkSemaphore> renderFinishedSemaphores; // par image
+        std::vector<VkFence> inFlightFences; // par frame
+        std::vector<VkFence> imagesInFlight; // par image
 	    std::vector<VkSemaphore> renderFinishedSemaphoresPerImage;
 
         size_t currentFrame = 0;

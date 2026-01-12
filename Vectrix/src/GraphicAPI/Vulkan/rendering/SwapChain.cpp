@@ -77,72 +77,80 @@ namespace Vectrix {
         inFlightFences.clear();
     }
 
-
     VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
-        vkWaitForFences(
-            device.device(),
-            1,
-            &inFlightFences[currentFrame],
-            VK_TRUE,
-            std::numeric_limits<uint64_t>::max());
+        // Wait for the current frame's fence to ensure the CPU isn't overlapping frame usage
+        vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         VkResult result = vkAcquireNextImageKHR(
             device.device(),
             _swapChain,
-            std::numeric_limits<uint64_t>::max(),
-            imageAvailableSemaphores[currentFrame],  // must be a not signaled semaphore
+            UINT64_MAX,
+            imageAvailableSemaphores[currentFrame], // signal when image is available
             VK_NULL_HANDLE,
             imageIndex);
 
+        // The caller should handle VK_ERROR_OUT_OF_DATE_KHR or VK_SUBOPTIMAL_KHR
         return result;
     }
 
+
     VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex) {
-        VC_CORE_ASSERT(*imageIndex<imagesInFlight.size(),"imageIndex too high for the size of imagesInFlight ({})",*imageIndex,imagesInFlight.size());
+        // Sanity checks
+        VC_CORE_ASSERT(imageIndex != nullptr, "imageIndex null");
+        VC_CORE_ASSERT(*imageIndex < imagesInFlight.size(), "imageIndex out of bounds");
+
+        // If a previous frame is still using this image, wait for its fence.
         if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
+
+        // Mark this image as now being in flight on the current frame's fence
         imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
 
-        VkSubmitInfo submitInfo = {};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
+        // Submit info: wait for the "image available" semaphore of current frame,
+        // signal the renderFinished semaphore specific to this image.
         VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
         VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[*imageIndex] };
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
-
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = buffers;
-
-        VkSemaphore signalSemaphores[] = { renderFinishedSemaphoresPerImage[*imageIndex] };
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
+        // Reset the fence for this frame and submit
         vkResetFences(device.device(), 1, &inFlightFences[currentFrame]);
-        if (vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-            throw std::runtime_error("failed to submit draw command buffer!");
+
+        VkResult submitRes = vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]);
+        if (submitRes != VK_SUCCESS) {
+            VC_CORE_CRITICAL("vkQueueSubmit failed: {0}", submitRes);
+            return submitRes;
         }
 
-        VkPresentInfoKHR presentInfo = {};
+        // Present using the same per-image renderFinished semaphore
+        VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
         presentInfo.waitSemaphoreCount = 1;
-        presentInfo.pWaitSemaphores = &renderFinishedSemaphoresPerImage[*imageIndex];
-
-        VkSwapchainKHR swapChains[] = { _swapChain };
+        presentInfo.pWaitSemaphores = signalSemaphores;
         presentInfo.swapchainCount = 1;
-        presentInfo.pSwapchains = swapChains;
-
+        presentInfo.pSwapchains = &_swapChain;
         presentInfo.pImageIndices = imageIndex;
+        presentInfo.pResults = nullptr;
 
-        auto result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
+        VkResult presentRes = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 
+        // Advance to next frame index only if submit/present didn't indicate swapchain recreation needed.
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 
-        return result;
+        // Handle special cases upstream: VK_ERROR_OUT_OF_DATE_KHR, VK_SUBOPTIMAL_KHR, etc.
+        return presentRes;
     }
+
 
     void SwapChain::createSwapChain() {
         SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
@@ -207,6 +215,7 @@ namespace Vectrix {
         // retrieve the handles.
         vkGetSwapchainImagesKHR(device.device(), _swapChain, &imageCount, nullptr);
         imagesInFlight.clear();
+        imagesInFlight.resize(imageCount, VK_NULL_HANDLE);
         swapChainImages.resize(imageCount);
         vkGetSwapchainImagesKHR(device.device(), _swapChain, &imageCount, swapChainImages.data());
 
@@ -374,33 +383,34 @@ namespace Vectrix {
 
     void SwapChain::createSyncObjects() {
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(imageCount()); // one semaphore per swapchain image
+
         imagesInFlight.resize(imageCount(), VK_NULL_HANDLE);
 
-        VkSemaphoreCreateInfo semaphoreInfo = {};
+        VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+        semaphoreInfo.flags = 0;
 
-        VkFenceCreateInfo fenceInfo = {};
+        VkFenceCreateInfo fenceInfo{};
         fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT; // start signaled so first vkWaitForFences returns immediately
 
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
             if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-                vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
                 vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
-            }
+                throw std::runtime_error("failed to create per-frame sync objects!");
+                }
         }
 
-        renderFinishedSemaphoresPerImage.resize(imageCount());
-
-        for (auto & i : renderFinishedSemaphoresPerImage) {
-            if (vkCreateSemaphore(device.device(),&semaphoreInfo,nullptr,&i) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create renderFinished semaphore per image!");
+        // create one render finished semaphore per swapchain image
+        for (size_t i = 0; i < renderFinishedSemaphores.size(); ++i) {
+            if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to create per-image renderFinished semaphore!");
             }
         }
     }
+
 
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
         const std::vector<VkSurfaceFormatKHR>& availableFormats) {

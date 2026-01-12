@@ -13,7 +13,7 @@ namespace Vectrix {
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnImGuiRender() override;
-		void OnUpdate() override;
+		void OnUpdate(DeltaTime deltaTime) override;
 	private:
 		VulkanImGuiManager manager;
 	};

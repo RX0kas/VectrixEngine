@@ -1,11 +1,11 @@
 #include "vcpch.h"
 #include "Pipeline.h"
 
-#include "../../../Vectrix/Renderer/ShaderManager.h"
+#include "../../../Vectrix/Renderer/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/rendering/VulkanBuffer.h"
 
-#define NO_CULLING
+//#define NO_CULLING
 
 namespace Vectrix {
 
@@ -147,7 +147,6 @@ namespace Vectrix {
 #else
         configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 #endif
-
         configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
         configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
         configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional

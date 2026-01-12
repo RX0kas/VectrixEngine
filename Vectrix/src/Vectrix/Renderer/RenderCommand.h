@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
-#include "VertexArray.h"
+#include "Models/VertexArray.h"
 
 namespace Vectrix
 {
@@ -18,15 +18,15 @@ namespace Vectrix
 			s_RendererAPI->Clear();
 		}
 
-		static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+		static void drawIndexed(const VertexArray& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 	private:
 		friend class Renderer;
 
-		static void setupScene() {
-			s_RendererAPI->setupScene();
+		static bool setupScene() {
+			return s_RendererAPI->setupScene();
 		}
 		static void sendScene() {
 			s_RendererAPI->sendScene();

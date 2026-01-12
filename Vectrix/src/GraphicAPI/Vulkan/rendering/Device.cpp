@@ -2,7 +2,7 @@
 #include "Device.h"
 
 #include "Platform/Windows/WinWindow.h"
-#include "Vectrix/Log.h"
+#include "../../../Vectrix/Core/Log.h"
 
 
 namespace Vectrix {

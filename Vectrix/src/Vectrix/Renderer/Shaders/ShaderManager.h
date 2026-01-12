@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "GraphicAPI/Vulkan/rendering/Pipeline.h"
-#include "Vectrix/Renderer/Shader.h"
+#include "Shader.h"
 
 #include "Vectrix/Utils/Hashing.h"
 

@@ -13,7 +13,7 @@ namespace Vectrix {
 
 	ImGuiLayer::~ImGuiLayer() = default;
 
-	void ImGuiLayer::OnUpdate() {
+	void ImGuiLayer::OnUpdate(DeltaTime deltaTime) {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 		// Update and Render additional Platform Windows

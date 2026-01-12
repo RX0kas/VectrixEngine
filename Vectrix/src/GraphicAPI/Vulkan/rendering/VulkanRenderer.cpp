@@ -46,12 +46,16 @@ namespace Vectrix {
 			swapChain = std::make_unique<SwapChain>(device, extent);
 		}
 		else {
+			vkDeviceWaitIdle(device.device()); // OK ICI seulement
+			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(swapChain);
 			swapChain = std::make_unique<SwapChain>(device, extent, oldSwapChain);
+			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
 			if (!oldSwapChain->compareSwapFormats(*swapChain)) {
 				throw std::runtime_error("Swap chain image(or depth) format has changed!");
 			}
+			oldSwapChain.reset();
 		}
 
 		freeCommandBuffers();
@@ -88,42 +92,26 @@ namespace Vectrix {
 	}
 
 	VkCommandBuffer VulkanRenderer::beginFrame() {
-		VC_CORE_ASSERT(!isFrameStarted, "Can't call beginFrame while already in progress");
+		VC_CORE_ASSERT(!isFrameStarted, "Frame already started");
 
-		auto result = swapChain->acquireNextImage(&currentImageIndex);
+		VkResult result = swapChain->acquireNextImage(&currentImageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			vkDeviceWaitIdle(device.device());
-			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
-			recreateSwapChain();
-			VulkanImGuiManager::instance().createImGuiFramebuffers();
-
-			return beginFrame(); // TODO: can be source of errors need to verify
+			return VK_NULL_HANDLE;
 		}
 
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-			VC_CORE_CRITICAL("failed to acquire swap chain image!");
-			VC_DEBUGBREAK();
+			throw std::runtime_error("failed to acquire swap chain image!");
 		}
-
-		VC_CORE_ASSERT(currentImageIndex < commandBuffers.size(), "currentImageIndex out of bounds");
 
 		isFrameStarted = true;
 
-		auto commandBuffer = getCurrentCommandBuffer();
-		if (commandBuffer == VK_NULL_HANDLE) {
-			throw std::runtime_error("Command buffer is null!");
-		}
-
-		// Reset the buffer before reuse
+		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
 		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-		if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-			throw std::runtime_error("failed to begin recording command buffer!");
-		}
+		vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 		return commandBuffer;
 	}
@@ -131,30 +119,25 @@ namespace Vectrix {
 
 
 	void VulkanRenderer::endFrame() {
-#if defined(VC_PLATFORM_WINDOWS)
-		WinWindow& w = dynamic_cast<WinWindow&>(window);
-#elif defined(VC_PLATFORM_LINUX)
-		auto &w = dynamic_cast<LinWindow&>(window);
-#else
-		VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRenderer can't end the frame");
-#endif
+		VC_CORE_ASSERT(isFrameStarted, "Frame not started");
 
-		VC_CORE_ASSERT(isFrameStarted, "Can't call endFrame while frame is not in progress");
-		auto commandBuffer = getCurrentCommandBuffer();
-		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-			throw std::runtime_error("failed to record command buffer!");
+		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
+		vkEndCommandBuffer(commandBuffer);
+
+		VkResult result = swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
+
+		bool needRecreate =
+			result == VK_ERROR_OUT_OF_DATE_KHR ||
+			result == VK_SUBOPTIMAL_KHR ||
+			window.wasWindowResized();
+
+		if (needRecreate) {
+			window.resetWindowResizedFlag();
+			isFrameStarted = false;
+			return;
 		}
 
-		auto result = swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
-		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || w.wasWindowResized()) {
-			w.resetWindowResizedFlag();
-			vkDeviceWaitIdle(device.device());
-			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
-			recreateSwapChain();
-			VulkanImGuiManager::instance().createImGuiFramebuffers();
-
-		}
-		else if (result != VK_SUCCESS) {
+		if (result != VK_SUCCESS) {
 			throw std::runtime_error("failed to present swap chain image!");
 		}
 

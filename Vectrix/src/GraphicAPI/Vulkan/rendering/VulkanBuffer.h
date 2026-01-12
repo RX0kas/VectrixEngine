@@ -2,7 +2,7 @@
 
 #include "vulkan/vulkan.h"
 #include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "../../../Vectrix/Renderer/Vertex.h"
+#include "../../../Vectrix/Renderer/Models/Vertex.h"
 
 #include "Vectrix/Renderer/Buffer.h"
 
@@ -46,7 +46,7 @@ namespace Vectrix {
         VkBufferUsageFlags getUsageFlags() const { return usageFlags; }
         VkMemoryPropertyFlags getMemoryPropertyFlags() const { return memoryPropertyFlags; }
         VkDeviceSize getBufferSize() const { return bufferSize; }
-
+        VkDeviceMemory getMemory() const {return memory;}
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
@@ -85,7 +85,7 @@ namespace Vectrix {
 
     class VulkanIndexBuffer : public IndexBuffer {
     public:
-        VulkanIndexBuffer(uint32_t* indices, uint32_t count);
+        VulkanIndexBuffer(const uint32_t* indices, uint32_t count);
         ~VulkanIndexBuffer() override;
 
         void draw();
@@ -119,39 +119,6 @@ struct fmt::formatter<glm::vec2> {
     }
 };
 
-
-template <>
-struct fmt::formatter<Vectrix::Vertex> {
-    constexpr auto parse(format_parse_context& ctx) {
-        return ctx.begin();
-    }
-
-    template <typename FormatContext>
-    auto format(const Vectrix::Vertex& e, FormatContext& ctx) const {
-        return fmt::format_to(
-            ctx.out(),
-            "Position: {}; Color: {}",
-            e.position,
-            e.color
-        );
-    }
-};
-
-
-template <>
-struct fmt::formatter<std::vector<Vectrix::Vertex>> : fmt::formatter<std::string> {
-    template <typename FormatContext>
-    auto format(const std::vector<Vectrix::Vertex>& e, FormatContext& ctx) const {
-        std::stringstream s;
-		s << "Vertices {";
-        for (const auto& vertex : e) {
-            s << "\nPosition: [" << vertex.position.x << ";" << vertex.position.y << "] Color: [" << vertex.color.x << ";" << vertex.color.y << ";" << vertex.color.z << "]";
-		}
-		s << "\n}";
-
-        return fmt::formatter<std::string>::format(s.str(), ctx);
-    }
-};
 
 template <>
 struct fmt::formatter<Vectrix::BufferLayout> {

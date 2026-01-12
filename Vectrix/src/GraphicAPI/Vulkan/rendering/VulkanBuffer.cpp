@@ -1,7 +1,6 @@
 #include "vcpch.h"
 
 #include "VulkanBuffer.h"
-
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 /*
@@ -14,10 +13,6 @@ namespace Vectrix {
     // Vertex && Index Buffer
     VulkanVertexBuffer::VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size)
     {
-        VC_CORE_ASSERT(size>=3, "Vertex count must be at least 3");
-        VC_CORE_ASSERT(size%3==0, "Vertex count must be a multiple of 3");
-
-
         _vertexCount = static_cast<uint32_t>(vertices.size());
         VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
         uint32_t vertexSize = sizeof(vertices[0]);
@@ -42,6 +37,7 @@ namespace Vectrix {
     }
 
     void VulkanVertexBuffer::bind() {
+        VC_CORE_ASSERT(m_Layout.getStride() == sizeof(Vertex), "Vertex stride mismatch: layout != sizeof(Vertex): layout = {}, sizeof(Vertex)={}",m_Layout.getStride(),sizeof(Vertex));
         VkBuffer buffers[] = {buffer->getBuffer() };
         VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(), 0, 1, buffers, offsets);
@@ -50,43 +46,58 @@ namespace Vectrix {
 
     void VulkanIndexBuffer::draw() {
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
-        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE,"CommandBuffer invalide");
+        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
+        VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer invalide");
+        VC_CORE_ASSERT(_IndexCount > 0, "IndexCount invalide");
+
         vkCmdDrawIndexed(cmd, _IndexCount, 1, 0, 0, 0);
     }
 
+
     void VulkanIndexBuffer::bind() {
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
-        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE,"CommandBuffer invalide");
+        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
+        VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer VkBuffer invalide");
+        VC_CORE_ASSERT(_IndexCount > 0, "IndexCount invalide");
+
+
         vkCmdBindIndexBuffer(cmd, buffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
         _enable = true;
     }
 
-    VulkanIndexBuffer::VulkanIndexBuffer(uint32_t* indices, uint32_t count) {
-        _IndexCount = static_cast<uint32_t>(sizeof(indices));
 
-        VC_CORE_ASSERT(_IndexCount > 0,"Indices array is empty");
+    VulkanIndexBuffer::VulkanIndexBuffer(const uint32_t* indices, uint32_t count) {
+        VC_CORE_ASSERT(indices != nullptr, "indices pointer is null");
+        VC_CORE_ASSERT(count > 0, "Indices array is empty");
 
+        _IndexCount = count;
         VkDeviceSize bufferSize = sizeof(indices[0]) * _IndexCount;
-        uint32_t indexSize = sizeof(indices[0]);
 
+        // Utiliser Buffer comme pour VertexBuffer
         Buffer stagingBuffer{
-            indexSize,
+            sizeof(indices[0]),
             _IndexCount,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
 
         stagingBuffer.map();
-        stagingBuffer.writeToBuffer(indices);
+        stagingBuffer.writeToBuffer((void*)indices);
+        stagingBuffer.unmap(); // Important: unmapper après écriture
 
         buffer = std::make_unique<Buffer>(
-            indexSize,
+            sizeof(indices[0]),
             _IndexCount,
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
+        VulkanContext::instance().getDevice().copyBuffer(
+            stagingBuffer.getBuffer(),
+            buffer->getBuffer(),
+            bufferSize);
+
     }
+
 
 
     VulkanIndexBuffer::~VulkanIndexBuffer() = default;
@@ -100,27 +111,49 @@ namespace Vectrix {
     // Describes at which rate to load data from memory throughout the vertices. 
     // It specifies the number of bytes between data entries and whether to move to the next data entry after each vertex or after each instance.
     std::vector<VkVertexInputBindingDescription> VulkanVertexBuffer::getBindingDescriptions(const BufferLayout& layout) {
-        std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
-        bindingDescriptions[0].binding = 0;
-        bindingDescriptions[0].stride = layout.getStride();
-        bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-        return bindingDescriptions;
+        VkVertexInputBindingDescription binding{};
+        binding.binding = 0;
+        binding.stride = layout.getStride(); // DOIT être sizeof(Vertex)
+        binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return { binding };
     }
+
 
 
     // Returns the attribute descriptions for the vertex input
     // So the layout of the vertex shader
     std::vector<VkVertexInputAttributeDescription> VulkanVertexBuffer::getAttributeDescriptions(const BufferLayout& layout) {
-        std::vector<VkVertexInputAttributeDescription> attributeDescriptions(layout.getElements().size());
-        for (size_t i = 0; i < layout.getElements().size(); i++) {
-            const auto& element = layout.getElements()[i];
-            attributeDescriptions[i].binding = 0;
-            attributeDescriptions[i].location = static_cast<uint32_t>(i);
-            attributeDescriptions[i].format = shaderDataTypeToVkFormat(element.Type);
-            attributeDescriptions[i].offset = element.Offset;
-		}
-		return attributeDescriptions;
+        std::vector<VkVertexInputAttributeDescription> attributes;
+
+        uint32_t location = 0;
+        for (const auto& element : layout.getElements()) {
+            VkVertexInputAttributeDescription attr{};
+            attr.binding = 0;
+            attr.location = location++;
+            attr.offset = element.Offset;
+
+            switch (element.Type) {
+                case ShaderDataType::Float:
+                    attr.format = VK_FORMAT_R32_SFLOAT;
+                    break;
+                case ShaderDataType::Float2:
+                    attr.format = VK_FORMAT_R32G32_SFLOAT;
+                    break;
+                case ShaderDataType::Float3:
+                    attr.format = VK_FORMAT_R32G32B32_SFLOAT;
+                    break;
+                case ShaderDataType::Float4:
+                    attr.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+                    break;
+            }
+
+            attributes.push_back(attr);
+        }
+
+        return attributes;
     }
+
 
     ////////////////////////////////////
     //          Buffer Class          //

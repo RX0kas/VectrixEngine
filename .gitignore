@@ -19,6 +19,7 @@ GLOB_RECURSE
 *.userosscache
 *.sln.docstates
 .idea/
+*.ini
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

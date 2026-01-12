@@ -17,19 +17,33 @@ namespace Vectrix {
 		VC_CORE_WARN("VulkanRendererAPI::Clear() is not implemented");
 	}
 
-	void VulkanRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
+	void VulkanRendererAPI::DrawIndexed(const VertexArray& vertexArray)
 	{
-		auto i = dynamic_cast<VulkanIndexBuffer*>(vertexArray->getIndexBuffer().get());
-		if (i)
-			i->draw();
-		for (auto& v : vertexArray->getVertexBuffers())
-			dynamic_cast<VulkanVertexBuffer*>(v.get())->draw();
+		if (vertexArray.getIndexBuffer()) {
+			// Si nous avons un index buffer, utilisez-le
+			auto i = dynamic_cast<VulkanIndexBuffer*>(vertexArray.getIndexBuffer().get());
+			if (i) {
+				i->draw();
+			}
+		} else {
+			// Sinon, dessinez chaque vertex buffer sans index
+			for (auto& v : vertexArray.getVertexBuffers()) {
+				dynamic_cast<VulkanVertexBuffer*>(v.get())->draw();
+			}
+		}
 	}
 
-	void VulkanRendererAPI::setupScene() {
+	bool VulkanRendererAPI::setupScene() {
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
 		auto commandBuffer = renderer.beginFrame();
+
+		if (commandBuffer == VK_NULL_HANDLE) {
+			renderer.recreateSwapChain();
+			return false;
+		}
+
 		renderer.beginSwapChainRenderPass(commandBuffer);
+		return true;
 	}
 
 	void VulkanRendererAPI::sendScene() {

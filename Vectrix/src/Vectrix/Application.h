@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "Core/Core.h"
 #include "Window.h"
 #include "GraphicAPI/Vulkan/rendering/Device.h"
 
@@ -10,11 +10,11 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
-#include "Renderer/PerspectiveCamera.h"
-#include "Renderer/ShaderManager.h"
-#include "Renderer/VertexArray.h"
+#include "Renderer/Camera/PerspectiveCamera.h"
+#include "Renderer/Shaders/ShaderManager.h"
+#include "Renderer/Models/VertexArray.h"
 
-#include "Vectrix/Renderer/Shader.h"
+#include "Renderer/Shaders/Shader.h"
 #include "Vectrix/Renderer/Buffer.h"
 
 namespace Vectrix {
@@ -32,20 +32,21 @@ namespace Vectrix {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
-		Window& window() { return *_window; }
+		Window& window() { return *m_window; }
 		static Device& device() { return VulkanContext::instance().getDevice(); }
 
-		static Application& instance() { return *_instance; }
+		static Application& instance() { return *s_instance; }
 		void renderImGui();
 	private:
-		std::unique_ptr<Window> _window;
-		std::unique_ptr<ShaderManager> p_shaderManager;
-		ImGuiLayer* p_ImGuiLayer;
-		bool _running = true;
+		std::unique_ptr<Window> m_window;
+		std::unique_ptr<ShaderManager> m_shaderManager;
+		ImGuiLayer* m_ImGuiLayer;
+		bool m_running = true;
 
-		LayerStack _layerStack;
+		LayerStack m_layerStack;
+		float m_LastFrameTime = 0.0f;
 	private:
-		static Application* _instance;
+		static Application* s_instance;
 	};
 
 	// TODO: to be defined in the client

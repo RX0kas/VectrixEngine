@@ -83,6 +83,8 @@ namespace Vectrix {
 		m_ProjectionMatrix[2][2] = FAR / (FAR - NEAR);
 		m_ProjectionMatrix[2][3] = 1.f;
 		m_ProjectionMatrix[3][2] = -(FAR * NEAR) / (FAR - NEAR);
+
+		m_ProjectionMatrix[1][1] *= -1;
 	}
 
 	void PerspectiveCamera::setViewDirection(glm::vec3 position, glm::vec3 direction) {

@@ -4,7 +4,7 @@
 
 #include "vcpch.h"
 
-#include "Vectrix/Core.h"
+#include "Core/Core.h"
 #include "Vectrix/Events/Event.h"
 
 namespace Vectrix {
@@ -42,7 +42,8 @@ namespace Vectrix {
 		[[nodiscard]] virtual bool isVSync() const = 0;
 
 		[[nodiscard]] virtual void* getNativeWindow() const = 0;
-
+		[[nodiscard]] virtual bool wasWindowResized() const = 0;
+		virtual void resetWindowResizedFlag() = 0;
 		static Window* create();
 	};
 }

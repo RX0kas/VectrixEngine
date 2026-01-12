@@ -1,6 +1,6 @@
 #include "VulkanVertexArray.h"
 
-#include "Vectrix/Log.h"
+#include "../../../Vectrix/Core/Log.h"
 
 namespace Vectrix {
     VulkanVertexArray::VulkanVertexArray() {
@@ -23,12 +23,13 @@ namespace Vectrix {
     }
 
     void VulkanVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer) {
-        VC_CORE_ASSERT(vertexBuffer->getLayout().getElements().size(), "Vertex Buffer has no layout!");
+        VC_CORE_ASSERT(!vertexBuffer->getLayout().getElements().empty(),"Vertex Buffer has no layout!");
 
         m_VertexBuffers.push_back(vertexBuffer);
     }
 
     void VulkanVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer) {
-
+        m_IndexBuffer.reset();
+        m_IndexBuffer = indexBuffer;
     }
 } // Vectrix

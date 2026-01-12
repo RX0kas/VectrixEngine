@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vcpch.h"
-#include "Vectrix/Core.h"
+#include "../Core/Core.h"
 #include "vulkan/generated/vk_enum_string_helper.h"
 
 namespace Vectrix {

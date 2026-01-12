@@ -1,6 +1,6 @@
 #include "VertexArray.h"
 
-#include "Renderer.h"
+#include "../Renderer.h"
 #include "GraphicAPI/Vulkan/rendering/VulkanVertexArray.h"
 
 namespace Vectrix {

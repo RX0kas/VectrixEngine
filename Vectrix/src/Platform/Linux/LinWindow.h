@@ -22,9 +22,9 @@ namespace Vectrix {
 
 		void onUpdate() override;
 
-		[[nodiscard]] bool wasWindowResized() const { return framebufferResized; }
+		[[nodiscard]] bool wasWindowResized() const override { return data.windowResized; }
 
-		void resetWindowResizedFlag() { framebufferResized = false; }
+		void resetWindowResizedFlag() override { data.windowResized = false; }
 
 		[[nodiscard]] void* getNativeWindow() const override { return window; }
 
@@ -41,8 +41,6 @@ namespace Vectrix {
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
-		bool framebufferResized;
-
 		GLFWwindow* window;
 		GraphicsContext* _context;
 
@@ -51,7 +49,7 @@ namespace Vectrix {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-
+			bool windowResized;
 			EventCallbackFn EventCallback;
 		};
 

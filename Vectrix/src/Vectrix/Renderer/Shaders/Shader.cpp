@@ -3,8 +3,8 @@
 
 #include <utility>
 
-#include "PerspectiveCamera.h"
-#include "ShaderManager.h"
+#include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
+#include "Vectrix/Renderer/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {

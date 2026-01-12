@@ -154,7 +154,7 @@ namespace Vectrix {
 		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 		data.Width = width;
 		data.Height = height;
-		//data.FramebufferResized = true;
+		data.windowResized = true;
 		// TODO: implement that
 	}
 

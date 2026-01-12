@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vectrix/Core.h"
+#include "../Core/Core.h"
 
 namespace Vectrix {
 	class Vectrix_API Input

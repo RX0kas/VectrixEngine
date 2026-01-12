@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Vectrix/Core.h"
+#include "../Core/Core.h"
+#include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Events/Event.h"
 
 namespace Vectrix {
@@ -12,7 +13,7 @@ namespace Vectrix {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(DeltaTime deltaTime) {}
 		virtual void OnRender() {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}

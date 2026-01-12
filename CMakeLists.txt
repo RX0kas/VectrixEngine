@@ -48,6 +48,7 @@ list(APPEND Vectrix_SOURCES
         Vectrix/src/vcpch.cpp
         Vectrix/src/vcpch.h
         Vectrix/src/Vectrix.h
+        Vectrix/src/tinyobj_loader.cpp
 )
 
 
@@ -93,6 +94,7 @@ target_include_directories(Vectrix PUBLIC
         Vectrix/extern/spdlog/include
         Vectrix/extern/glm
         Vectrix/extern/imgui
+        Vectrix/extern/include
         ${Vulkan_INCLUDE_DIRS}
 )
 
