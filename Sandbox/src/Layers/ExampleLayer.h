@@ -16,10 +16,14 @@ public:
 
 		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/suzanne.obj"));
 
+		Vectrix::ShaderUniformLayout layout;
+		layout.add("time", Vectrix::ShaderUniformType::Float);
+		layout.finalize();
+
 #ifdef VC_PLATFORM_WINDOWS
 		ShaderManager::createShader(p_defaultName, "E:\\v.vert.spv", "E:\\f.frag.spv", layout);
 #elif defined(VC_PLATFORM_LINUX)
-		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv", Vectrix::getTinyObjLayout());
+		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout());
 #endif
 		def = Vectrix::ShaderManager::instance().get(p_defaultName);
 	}
@@ -60,7 +64,7 @@ public:
 
 	void OnRender() override {
 		if (Vectrix::Renderer::BeginScene(*m_Camera)) {
-
+			def->setUniform1f("time",glfwGetTime());
 			Vectrix::Renderer::Submit(*def.get(),*m_model);
 
 			Vectrix::Renderer::EndScene();
@@ -87,13 +91,13 @@ public:
 	}
 
 private:
-	std::unique_ptr<Vectrix::PerspectiveCamera> m_Camera;
+	Vectrix::Scope<Vectrix::PerspectiveCamera> m_Camera;
 
-	std::shared_ptr<Vectrix::VertexArray> m_vertexArray;
+	Vectrix::Ref<Vectrix::VertexArray> m_vertexArray;
 
-	std::unique_ptr<Vectrix::Shader> _shader;
-	std::shared_ptr<Vectrix::Shader> def;
-	std::unique_ptr<Vectrix::Model> m_model;
+	Vectrix::Scope<Vectrix::Shader> _shader;
+	Vectrix::Ref<Vectrix::Shader> def;
+	Vectrix::Scope<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";
 };
 

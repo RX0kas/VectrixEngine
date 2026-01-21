@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 
 #ifdef VC_PLATFORM_WINDOWS
 	#if HZ_DYNAMIC_LINK
@@ -37,3 +38,13 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+namespace Vectrix {
+
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+
+}

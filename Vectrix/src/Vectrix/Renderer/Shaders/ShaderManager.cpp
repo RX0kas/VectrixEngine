@@ -18,17 +18,22 @@ namespace Vectrix {
 
 
 
-    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath, BufferLayout layout) {
-        std::shared_ptr<Shader> shader(new Shader(name, vertexPath, fragmentPath, layout));
+    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout) {
+        if (!uniformLayout.isFinalized()) {
+            VC_CORE_WARN("Trying to create a shader with a non finalized uniform layout");
+            uniformLayout.finalize();
+        }
+
+        Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,uniformLayout, layout));
         instance().add(name,std::move(shader));
     }
 
-    void ShaderManager::add(const std::string& name, std::shared_ptr<Shader> shader) {
+    void ShaderManager::add(const std::string& name, Ref<Shader> shader) {
         p_cache.emplace(name, std::move(shader));
         VC_CORE_INFO("Shader \"{}\" registered",name);
     }
 
-    std::shared_ptr<Shader> ShaderManager::get(const std::string& name) {
+    Ref<Shader> ShaderManager::get(const std::string& name) {
         auto it = p_cache.find(name);
         if (it == p_cache.end()) {
             VC_CORE_ERROR("Shader with the name \"{}\" doesn't exist", name);

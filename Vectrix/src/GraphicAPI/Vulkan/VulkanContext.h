@@ -21,8 +21,8 @@ namespace Vectrix {
 		static VulkanContext& instance() { return *s_instance; }
 	private:
 		GLFWwindow* p_WindowHandle;
-		std::unique_ptr<Device> p_device;
-		std::unique_ptr<VulkanRenderer> p_renderer;
+		Ref<Device> p_device;
+		Ref<VulkanRenderer> p_renderer;
 		
 		friend class Shader;
 		friend class VulkanVertexBuffer;

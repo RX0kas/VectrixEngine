@@ -26,7 +26,7 @@ namespace Vectrix {
     private:
         Model(const std::vector<Vertex>& vertices, const BufferLayout& layout);
         Model(const std::vector<Vertex>& vertices,std::vector<uint32_t> indices, const BufferLayout& layout);
-        std::unique_ptr<VertexArray> m_vertexArray;
+        Ref<VertexArray> m_vertexArray;
         BufferLayout m_layout;
         // TODO: Maybe put it somewhere else
         Transform m_transform;

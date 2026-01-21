@@ -3,6 +3,14 @@
 #include "Vectrix/Window.h"
 
 namespace Vectrix {
+    struct DescriptorPoolConfig {
+        uint32_t uboCount;
+        uint32_t ssboCount;
+        uint32_t samplerCount;
+        uint32_t maxSets;
+    };
+
+
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;
@@ -21,28 +29,30 @@ namespace Vectrix {
 	{
     public:
         #ifdef VC_DEBUG
-            const bool enableValidationLayers = true;
+            constexpr static bool enableValidationLayers = true;
         #else
-            const bool enableValidationLayers = false;
+            constexpr static bool enableValidationLayers = false;
         #endif
 
-        Device(Window& window);
+        Device(Window& window,DescriptorPoolConfig cfg);
         ~Device();
 
 
 
-        VkCommandPool getCommandPool() { return commandPool; }
-        VkDevice device() { return device_; }
-        VkPhysicalDevice physicalDevice() { return physicalDevice_; }
-        VkInstance instance() { return instance_; }
-        VkSurfaceKHR surface() { return surface_; }
-        VkQueue graphicsQueue() { return graphicsQueue_; }
-        VkQueue presentQueue() { return presentQueue_; }
-        VkFormat imageFormat() { return imageFormat_; }
+        VkCommandPool getCommandPool() { return m_commandPool; }
+        VkDevice device() { return m_device; }
+        VkPhysicalDevice physicalDevice() { return m_physicalDevice; }
+        VkInstance instance() { return m_instance; }
+        VkSurfaceKHR surface() { return m_surface; }
+        VkQueue graphicsQueue() { return m_graphicsQueue; }
+        VkQueue presentQueue() { return m_presentQueue; }
+        VkFormat imageFormat() { return m_imageFormat; }
+	    VkDescriptorPool descriptorPool() { return m_descriptorPool; }
+	    VkDescriptorSetLayout descriptorSetLayout() {return m_descriptorSetLayout;}
 
-        SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice_); }
+        SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_physicalDevice); }
         uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-        QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice_); }
+        QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(m_physicalDevice); }
         VkFormat findSupportedFormat(
             const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
@@ -68,9 +78,10 @@ namespace Vectrix {
         VkPhysicalDeviceProperties properties;
 
         void setImageFormat(VkFormat format) {
-            imageFormat_ = format;
+            m_imageFormat = format;
         }
 
+	    VkDescriptorSetLayout createFrameSSBOLayout();
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -78,6 +89,7 @@ namespace Vectrix {
         void pickPhysicalDevice();
         void createLogicalDevice();
         void createCommandPool();
+	    void createDescriptorPool(const DescriptorPoolConfig& cfg);
 
         // helper functions
         bool isDeviceSuitable(VkPhysicalDevice device);
@@ -90,17 +102,19 @@ namespace Vectrix {
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
 
-        VkDebugUtilsMessengerEXT debugMessenger;
-        Window& window;
-        VkCommandPool commandPool;
+        VkDebugUtilsMessengerEXT m_debugMessenger;
+        Window& m_window;
+        VkCommandPool m_commandPool;
 
-        VkDevice device_;
-        VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
-        VkInstance instance_;
-        VkSurfaceKHR surface_;
-        VkQueue graphicsQueue_;
-        VkQueue presentQueue_;
-        VkFormat imageFormat_;
+        VkDevice m_device;
+        VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
+        VkInstance m_instance;
+        VkSurfaceKHR m_surface;
+        VkQueue m_graphicsQueue;
+        VkQueue m_presentQueue;
+        VkFormat m_imageFormat;
+	    VkDescriptorPool m_descriptorPool;
+	    VkDescriptorSetLayout m_descriptorSetLayout;
 
         const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
         const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };

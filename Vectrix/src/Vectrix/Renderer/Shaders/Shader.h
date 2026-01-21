@@ -1,40 +1,24 @@
 #pragma once
 
-#include "GraphicAPI/Vulkan/rendering/Pipeline.h"
+#include <string>
 
+#include "ShaderUniformLayout.h"
 #include "Vectrix/Renderer/Buffer.h"
 
-#include <glm/glm.hpp>
-
-#include <string>
-#include <memory>
-#include <vector>
-
 namespace Vectrix {
-	// TODO: Make a Vulkan class for it
-	class Shader
-	{
-	public:
-		~Shader();
+	class Shader {
+		public:
+		virtual ~Shader() = default;
 
-		void bind() const;
-		void unbind();
+		virtual void bind() const = 0;
+		virtual void unbind() const = 0;
+		virtual void setUniform1i(const std::string& name,int value) const = 0;
+		virtual void setUniform1f(const std::string& name,float value) const = 0;
+		virtual void setUniform2f(const std::string& name,glm::vec2 value) const = 0;
+		virtual void setUniform3f(const std::string& name,glm::vec3 value) const = 0;
+		virtual void setUniform4f(const std::string& name,glm::vec4 value) const = 0;
 	private:
-		Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath, BufferLayout layout);
-		void createPipelineLayout();
-		void createPipeline(VkRenderPass renderPass, const std::string& vertexSrc, const std::string& fragmentSrc, BufferLayout layout);
-
-		Device& _device;
-
-		std::unique_ptr<Pipeline> _pipeline;
-		VkPipelineLayout _pipelineLayout;
-
-		bool _enable = true;
-		friend class VulkanContext;
 		friend class ShaderManager;
-		friend class Renderer;
-		// Info
-		const char* name;
+		static Shader* create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout,const BufferLayout& buffer_layout);
 	};
-
 }

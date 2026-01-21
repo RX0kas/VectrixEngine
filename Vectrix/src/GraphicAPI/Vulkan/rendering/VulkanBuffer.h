@@ -78,7 +78,7 @@ namespace Vectrix {
         void setLayout(const BufferLayout& layout) override { m_Layout = layout; }
     private:
         uint32_t _vertexCount{ 0 };
-        std::unique_ptr<Buffer> buffer;
+        Ref<Buffer> buffer;
         bool _enable = false;
         BufferLayout m_Layout;
     };
@@ -95,7 +95,7 @@ namespace Vectrix {
 
         [[nodiscard]] uint32_t getCount() const override { return _IndexCount; }
     private:
-        std::unique_ptr<Buffer> buffer;
+        Ref<Buffer> buffer;
         uint32_t _IndexCount;
         bool _enable = false;
     };

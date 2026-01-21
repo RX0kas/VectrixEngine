@@ -38,8 +38,8 @@ namespace Vectrix {
 		static Application& instance() { return *s_instance; }
 		void renderImGui();
 	private:
-		std::unique_ptr<Window> m_window;
-		std::unique_ptr<ShaderManager> m_shaderManager;
+		Ref<Window> m_window;
+		Ref<ShaderManager> m_shaderManager;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_running = true;
 

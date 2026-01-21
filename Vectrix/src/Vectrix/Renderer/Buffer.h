@@ -1,5 +1,8 @@
 #pragma once
 #include "Models/Vertex.h"
+#include "Vectrix/Core/Log.h"
+
+#include <algorithm>
 
 namespace Vectrix {
 
@@ -15,8 +18,7 @@ namespace Vectrix {
 			case ShaderDataType::Float3: return 12;
 			case ShaderDataType::Float4: return 16;
 		}
-		VC_CORE_ASSERT(false, "Unknown ShaderDataType");
-		return 0;
+		VC_CORE_ERROR("Unknown ShaderDataType");
 	}
 
 	struct BufferElement {
@@ -27,6 +29,10 @@ namespace Vectrix {
 
 		BufferElement(ShaderDataType type, const std::string& name)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0) {}
+
+		bool operator==(BufferElement e) const {
+			return e.Name==this->Name && e.Type==this->Type && e.Size==this->Size && e.Offset==this->Offset;
+		}
 	};
 
 	class BufferLayout {
@@ -40,7 +46,10 @@ namespace Vectrix {
 
 		uint32_t getStride() const { return m_Stride; }
 		const std::vector<BufferElement>& getElements() const { return m_Elements; }
-
+		bool has(const std::string& name) const {
+			auto end = m_Elements.end();
+			return std::any_of(m_Elements.begin(), end, [name](BufferElement x) { return x.Name == name; });
+		}
 	private:
 		void CalculateOffsetsAndStride() {
 			uint32_t offset = 0;

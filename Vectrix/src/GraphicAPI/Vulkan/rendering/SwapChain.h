@@ -1,4 +1,5 @@
 #pragma once
+#include "SSBO.h"
 #include "vcpch.h"
 
 #include "GraphicAPI/Vulkan/rendering/Device.h"
@@ -9,10 +10,8 @@ namespace Vectrix {
     public:
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-
-
         SwapChain(Device& deviceRef, VkExtent2D windowExtent);
-        SwapChain(Device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous);
+        SwapChain(Device& deviceRef, VkExtent2D windowExtent, Ref<SwapChain> previous);
 
         ~SwapChain();
 
@@ -181,7 +180,7 @@ namespace Vectrix {
         VkExtent2D windowExtent;
 
         VkSwapchainKHR _swapChain;
-		std::shared_ptr<SwapChain> oldSwapChain;
+		Ref<SwapChain> oldSwapChain;
 
         std::vector<VkSemaphore> imageAvailableSemaphores; // par frame
         std::vector<VkSemaphore> renderFinishedSemaphores; // par image

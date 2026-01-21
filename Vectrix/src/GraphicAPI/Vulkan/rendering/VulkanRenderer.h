@@ -12,6 +12,9 @@
 
 // Debug Widget
 #include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
+#include "Vectrix/Renderer/Models/Transform.h"
+#include "Vectrix/Renderer/Models/VertexArray.h"
+#include "Vectrix/Renderer/Shaders/Shader.h"
 
 namespace Vectrix {
     class VulkanRenderer {
@@ -58,6 +61,8 @@ namespace Vectrix {
             clearValue.color.float32[3] = color.a;
         }
 
+        static void Submit(Shader& shader,const VertexArray& vertexArray,const Transform& transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});
+
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
@@ -69,7 +74,7 @@ namespace Vectrix {
 
         Window& window;
         Device& device;
-        std::unique_ptr<SwapChain> swapChain;
+        Ref<SwapChain> swapChain;
         std::vector<VkCommandBuffer> commandBuffers;
 
         uint32_t currentImageIndex{ 0 };

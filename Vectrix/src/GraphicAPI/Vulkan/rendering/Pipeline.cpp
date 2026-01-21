@@ -5,6 +5,8 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/rendering/VulkanBuffer.h"
 
+#include "fstream"
+
 //#define NO_CULLING
 
 namespace Vectrix {

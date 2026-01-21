@@ -3,7 +3,6 @@
 #include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/fmt/ostr.h"
 
 namespace Vectrix {
 	class Vectrix_API Log
@@ -11,12 +10,12 @@ namespace Vectrix {
 	public:
 		static void init();
 
-		static std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_CoreLogger; }
-		static std::shared_ptr<spdlog::logger>& getClientLogger() { return s_ClientLogger; }
+		static Ref<spdlog::logger>& getCoreLogger() { return s_CoreLogger; }
+		static Ref<spdlog::logger>& getClientLogger() { return s_ClientLogger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> s_CoreLogger;
-		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+		static Ref<spdlog::logger> s_CoreLogger;
+		static Ref<spdlog::logger> s_ClientLogger;
 	};
 }
 
@@ -29,8 +28,8 @@ namespace Vectrix {
 		abort(); \
     }
 
-#define VC_CORE_CRITICAL(...)   ::Vectrix::Log::getCoreLogger()->critical(__VA_ARGS__);VC_DEBUGBREAK();abort()
-#define VC_CORE_ERROR(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__);VC_DEBUGBREAK();abort()
+#define VC_CORE_CRITICAL(...)   ::Vectrix::Log::getCoreLogger()->critical(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error from library
+#define VC_CORE_ERROR(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error caused by the user/dev
 #define VC_CORE_WARN(...)    ::Vectrix::Log::getCoreLogger()->warn(__VA_ARGS__)
 #define VC_CORE_INFO(...)    ::Vectrix::Log::getCoreLogger()->info(__VA_ARGS__)
 #define VC_CORE_TRACE(...)   ::Vectrix::Log::getCoreLogger()->trace(__VA_ARGS__)

@@ -22,13 +22,13 @@ namespace Vectrix {
 
     }
 
-    void VulkanVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer) {
+    void VulkanVertexArray::addVertexBuffer(const Ref<VertexBuffer> &vertexBuffer) {
         VC_CORE_ASSERT(!vertexBuffer->getLayout().getElements().empty(),"Vertex Buffer has no layout!");
 
         m_VertexBuffers.push_back(vertexBuffer);
     }
 
-    void VulkanVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer) {
+    void VulkanVertexArray::setIndexBuffer(const Ref<IndexBuffer> &indexBuffer) {
         m_IndexBuffer.reset();
         m_IndexBuffer = indexBuffer;
     }

@@ -20,7 +20,7 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::create());
+		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
 		m_shaderManager = std::make_unique<ShaderManager>();

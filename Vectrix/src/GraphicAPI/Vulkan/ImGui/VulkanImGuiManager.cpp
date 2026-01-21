@@ -172,7 +172,7 @@ namespace Vectrix {
 		VC_CORE_INFO("ImGui has been initialized");
     	createImGuiFramebuffers();
 #else
-		VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, ImGui can't be initialized");
+		VC_CORE_ERROR("The only Platform supported is Windows and Linux, ImGui can't be initialized");
 #endif
 	}
 

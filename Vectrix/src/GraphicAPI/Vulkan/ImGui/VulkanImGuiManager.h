@@ -38,7 +38,7 @@ private:
             if (err == VK_SUCCESS)
                 return;
 
-            VC_CORE_ERROR("VkResult = {0}\n", err);
+            VC_CORE_CRITICAL("VkResult = {0}\n", err);
         }
 	private:
         Device& device;

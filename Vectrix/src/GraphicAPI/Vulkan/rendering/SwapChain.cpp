@@ -8,7 +8,7 @@ namespace Vectrix {
         init();
     }
 
-    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous)
+    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, Ref<SwapChain> previous)
         : device{ deviceRef }, windowExtent{ extent }, oldSwapChain{ previous } {
         init();
 
@@ -404,8 +404,8 @@ namespace Vectrix {
         }
 
         // create one render finished semaphore per swapchain image
-        for (size_t i = 0; i < renderFinishedSemaphores.size(); ++i) {
-            if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+        for (auto & renderFinishedSemaphore : renderFinishedSemaphores) {
+            if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphore) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create per-image renderFinished semaphore!");
             }
         }

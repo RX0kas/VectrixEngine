@@ -12,7 +12,7 @@ namespace Vectrix {
 
 	static void errorCallback(int error, const char* description)
 	{
-		VC_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
 	}
 
 	void WinWindow::shutdown() {

@@ -1,14 +1,18 @@
 #include "vcpch.h"
 #include "VulkanRenderer.h"
 
+#include "VulkanShader.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "Vectrix/Renderer/RenderCommand.h"
+#include "Vectrix/Renderer/Camera/CameraPush.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"
 #elif defined(VC_PLATFORM_LINUX)
 #include "Platform/Linux/LinWindow.h"
 #else
-VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRenderer can't import the platform header");
+VC_CORE_ERROR("The only Platform supported is Windows and Linux, VulkanRenderer can't import the platform header");
 #endif
 
 namespace Vectrix {
@@ -48,7 +52,7 @@ namespace Vectrix {
 		else {
 			vkDeviceWaitIdle(device.device()); // OK ICI seulement
 			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
-			std::shared_ptr<SwapChain> oldSwapChain = std::move(swapChain);
+			Ref<SwapChain> oldSwapChain = std::move(swapChain);
 			swapChain = std::make_unique<SwapChain>(device, extent, oldSwapChain);
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
@@ -184,6 +188,13 @@ namespace Vectrix {
 			commandBuffer == getCurrentCommandBuffer(),
 			"Can't end render pass on command buffer from a different frame");
 		vkCmdEndRenderPass(commandBuffer);
+	}
+
+	void VulkanRenderer::Submit(Shader& shader, const VertexArray &vertexArray, const Transform &transform) {
+		auto& s = static_cast<VulkanShader&>(shader);
+		CameraPush::sendPush(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(),s.m_pipelineLayout,transform);
+		vertexArray.bind();
+		RenderCommand::drawIndexed(vertexArray);
 	}
 
 	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() {

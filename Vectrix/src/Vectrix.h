@@ -1,5 +1,8 @@
 #pragma once
 
+// Utils
+#include "Vectrix/Utils/Memory.h"
+
 // For application
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Application.h"
@@ -12,7 +15,7 @@
 
 #include "Vectrix/ImGui/ImGuiLayer.h"
 
-// ---Renderer------------------------
+// Render
 #include "Vectrix/Renderer/Renderer.h"
 #include "Vectrix/Renderer/RenderCommand.h"
 
@@ -23,5 +26,5 @@
 
 #include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
 
-// -- Entry Point --
+// Entry Point
 #include "Vectrix/EntryPoint.h"
