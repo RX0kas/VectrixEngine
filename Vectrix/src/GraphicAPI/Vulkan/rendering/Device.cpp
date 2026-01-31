@@ -7,6 +7,9 @@
 
 
 namespace Vectrix {
+
+    bool Device::enableValidationLayers = false;
+
     // local callback functions
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
         VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -71,27 +74,28 @@ namespace Vectrix {
     }
 
     void Device::createInstance() {
+#ifdef VC_DEBUG
         if (enableValidationLayers && !checkValidationLayerSupport()) {
-            throw std::runtime_error("validation layers requested, but not available!");
+            VC_CORE_WARN("Validation layers requested but not available, disabling.");
+            enableValidationLayers = false;
         }
+#endif
 
-        VkApplicationInfo appInfo = {};
-        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "APP_NAME";
-        appInfo.applicationVersion = VK_MAKE_VERSION(0, 0, 1);
+        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
+        appInfo.pApplicationName = "Vectrix";
+        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "Vectrix";
-        appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
-        appInfo.apiVersion = VK_API_VERSION_1_3;
+        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+        appInfo.apiVersion = VK_API_VERSION_1_2;
 
-        VkInstanceCreateInfo createInfo = {};
-        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
 
         auto extensions = getRequiredExtensions();
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
-        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 
+        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
         if (enableValidationLayers) {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
             createInfo.ppEnabledLayerNames = validationLayers.data();
@@ -100,12 +104,11 @@ namespace Vectrix {
             createInfo.pNext = &debugCreateInfo;
         } else {
             createInfo.enabledLayerCount = 0;
-            createInfo.ppEnabledLayerNames = nullptr;
             createInfo.pNext = nullptr;
         }
 
         if (vkCreateInstance(&createInfo, nullptr, &m_instance) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create instance!");
+            throw std::runtime_error("failed to create Vulkan instance");
         }
 
         hasGflwRequiredInstanceExtensions();

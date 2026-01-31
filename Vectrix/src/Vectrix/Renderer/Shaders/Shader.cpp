@@ -4,8 +4,12 @@
 #include "GraphicAPI/Vulkan/rendering/VulkanShader.h"
 
 namespace Vectrix {
-    Shader* Shader::create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout,const BufferLayout& buffer_layout)
-    {
+    Shader* Shader::create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera) {
+        if (affectedByCamera) {
+            layout.add("cameraTransform",ShaderUniformType::Mat4);
+            layout.add("modelMat",ShaderUniformType::Mat4);
+        }
+
         switch (Renderer::GetAPI())
         {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!");

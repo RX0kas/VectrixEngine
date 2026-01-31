@@ -2,10 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "CameraPush.h"
 
 namespace Vectrix {
-	// TODO: Move the Vulkan only property to a separated class
 	class PerspectiveCamera
 	{
 	public:
@@ -36,7 +34,6 @@ namespace Vectrix {
 
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
-		CameraPush p_ubo;
 	};
 
 }

@@ -15,7 +15,7 @@ namespace Vectrix {
         ~ShaderManager();
         Ref<Shader> get(const std::string& name);
         static ShaderManager& instance() { return *p_instance; }
-        static void createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout);
+        static void createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout,bool affectedByCamera);
     private:
         friend class Shader;
         bool remove(const std::string& name);

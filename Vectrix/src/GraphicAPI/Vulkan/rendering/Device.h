@@ -28,11 +28,7 @@ namespace Vectrix {
 	class Device
 	{
     public:
-        #ifdef VC_DEBUG
-            constexpr static bool enableValidationLayers = true;
-        #else
-            constexpr static bool enableValidationLayers = false;
-        #endif
+	    static bool enableValidationLayers;
 
         Device(Window& window,DescriptorPoolConfig cfg);
         ~Device();

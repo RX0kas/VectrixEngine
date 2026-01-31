@@ -5,7 +5,6 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "Vectrix/Renderer/RenderCommand.h"
-#include "Vectrix/Renderer/Camera/CameraPush.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"
@@ -191,8 +190,6 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::Submit(Shader& shader, const VertexArray &vertexArray, const Transform &transform) {
-		auto& s = static_cast<VulkanShader&>(shader);
-		CameraPush::sendPush(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(),s.m_pipelineLayout,transform);
 		vertexArray.bind();
 		RenderCommand::drawIndexed(vertexArray);
 	}

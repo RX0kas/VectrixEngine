@@ -27,8 +27,8 @@ cd VectrixEngine
 ## Roadmap
 
 - [ ] Finish the README
-- [ ] Performance optimization
-- [ ] Clearly separate the Vulkan part from the rest of the engine
+- [x] Clearly separate the Vulkan part from the rest of the engine
+- [ ] Make a universal function for sending shader uniform
 
 ## Known Issues
 

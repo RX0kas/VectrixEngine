@@ -1,5 +1,7 @@
 #include "Vectrix/Renderer/Shaders/ShaderManager.h"
 
+#include <utility>
+
 namespace Vectrix {
     ShaderManager* ShaderManager::p_instance = nullptr;
 
@@ -18,13 +20,8 @@ namespace Vectrix {
 
 
 
-    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout) {
-        if (!uniformLayout.isFinalized()) {
-            VC_CORE_WARN("Trying to create a shader with a non finalized uniform layout");
-            uniformLayout.finalize();
-        }
-
-        Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,uniformLayout, layout));
+    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout,bool affectedByCamera) {
+        Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
         instance().add(name,std::move(shader));
     }
 

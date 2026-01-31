@@ -4,6 +4,7 @@
 #include "Vectrix.h"
 #include "imgui.h"
 #include "Vectrix/Renderer/Models/ObjLoader.h"
+#include "Vectrix/Utils/Math.h"
 
 class ExampleLayer : public Vectrix::Layer
 {
@@ -11,19 +12,17 @@ public:
 	ExampleLayer()
 		: Layer("Example") {
 		m_Camera = std::make_unique<Vectrix::PerspectiveCamera>();
-		m_Camera->setPosition({0.0f,0.0f,0.0f});
-		m_Camera->setRotation({0.0f,0.0f,0.0f});
+		m_Camera->setPosition({0.0f,0.0f,3.0f});
+		m_Camera->setRotation({0.0f,-M_PI,0.0f});
 
 		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/suzanne.obj"));
 
 		Vectrix::ShaderUniformLayout layout;
-		layout.add("time", Vectrix::ShaderUniformType::Float);
-		layout.finalize();
-
+		layout.add("time",Vectrix::ShaderUniformType::Float);
 #ifdef VC_PLATFORM_WINDOWS
 		ShaderManager::createShader(p_defaultName, "E:\\v.vert.spv", "E:\\f.frag.spv", layout);
 #elif defined(VC_PLATFORM_LINUX)
-		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout());
+		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
 #endif
 		def = Vectrix::ShaderManager::instance().get(p_defaultName);
 	}
@@ -64,7 +63,9 @@ public:
 
 	void OnRender() override {
 		if (Vectrix::Renderer::BeginScene(*m_Camera)) {
-			def->setUniform1f("time",glfwGetTime());
+			def->setUniform1f("time",static_cast<float>(glfwGetTime()));
+			def->sentCameraUniform(*m_Camera);
+			def->setModelMatrix(m_model->getModelMatrix());
 			Vectrix::Renderer::Submit(*def.get(),*m_model);
 
 			Vectrix::Renderer::EndScene();
@@ -75,11 +76,11 @@ public:
 	{
 		ImGui::Begin("Debug Camera");
 		float pos[3] = {m_Camera->getPosition().x,m_Camera->getPosition().y,m_Camera->getPosition().z};
-		if (ImGui::SliderFloat3("Position",pos,-M_PI*2,M_PI*2)) {
+		if (ImGui::SliderFloat3("Position",pos,-VC_2PI,VC_2PI)) {
 			m_Camera->setPosition({pos[0],pos[1],pos[2]});
 		}
 		float rot[3] = {m_Camera->getRotation().x,m_Camera->getRotation().y,m_Camera->getRotation().z};
-		if (ImGui::SliderFloat3("Rotation",rot,-M_PI*2,M_PI*2)) {
+		if (ImGui::SliderFloat3("Rotation",rot,-VC_2PI,VC_2PI)) {
 			m_Camera->setRotation({rot[0],rot[1],rot[2]});
 		}
 		ImGui::End();
@@ -91,13 +92,13 @@ public:
 	}
 
 private:
-	Vectrix::Scope<Vectrix::PerspectiveCamera> m_Camera;
+	Vectrix::Own<Vectrix::PerspectiveCamera> m_Camera;
 
 	Vectrix::Ref<Vectrix::VertexArray> m_vertexArray;
 
-	Vectrix::Scope<Vectrix::Shader> _shader;
+	Vectrix::Own<Vectrix::Shader> _shader;
 	Vectrix::Ref<Vectrix::Shader> def;
-	Vectrix::Scope<Vectrix::Model> m_model;
+	Vectrix::Own<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";
 };
 

@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_SHADERUNIFORMLAYOUT_H
 
 #include "Vectrix/Utils/Memory.h"
+#include "Vectrix/Core/Log.h"
 #include "ShaderUniform.h"
 
 #include <string>
@@ -13,50 +14,66 @@ namespace Vectrix {
     struct UniformElement {
         std::string name;
         ShaderUniformType type;
-        uint32_t offset; // offset dans la struct (std430)
-        uint32_t size;   // taille utile (UniformSizeInBytes)
+        uint32_t offset; // std430 offset
+        uint32_t size;   // useful size (copied bytes)
     };
 
     class ShaderUniformLayout {
     public:
-        ShaderUniformLayout() = default;
-
-        // Ajoute un champ dans l'ordre d'apparition (doit correspondre au GLSL)
         void add(const std::string& name, ShaderUniformType type) {
-            elements.push_back({name, type, 0, UniformSizeInBytes(type)});
+            VC_CORE_ASSERT(!m_isFinalized, "Cannot add after finalize()");
+            elements.push_back({name, type, 0, uniformSizeInBytes(type)});
         }
 
-        // calcule offsets selon std430 simplifié
         void finalize() {
             uint32_t cursor = 0;
-            for (auto &e : elements) {
-                uint32_t a = UniformStd430Alignment(e.type);
-                cursor = ALIGN_TO(cursor, a);
+
+            for (auto& e : elements) {
+                uint32_t align = uniformAlignment(e.type);
+                cursor = ALIGN_TO(cursor, align);
+
                 e.offset = cursor;
-                // reserve physical stride: vec3 occupies 16 bytes
-                uint32_t physicalSize = (e.type == ShaderUniformType::Vec3) ? 16 : ALIGN_TO(e.size, a);
-                if (e.type == ShaderUniformType::Mat4) physicalSize = 16 * 4;
-                cursor += physicalSize;
+
+                cursor += occupiedSize(e.type);
             }
-            structSize = cursor;
+
+            structSize = ALIGN_TO(cursor, 16);
             m_isFinalized = true;
         }
 
-        uint32_t getStructSize() const { return structSize; }
-
-        const UniformElement* find(const std::string& name) const {
-            for (auto &e : elements) if (e.name == name) return &e;
-            return nullptr;
+        uint32_t getStructSize() const {
+            VC_CORE_ASSERT(m_isFinalized, "ShaderUniformLayout not finalized");
+            return structSize;
         }
 
-        bool has(const std::string& name) const {
-            for (auto &e : elements) if (e.name == name) return true;
-            return false;
+        const UniformElement* find(const std::string& name) const {
+            for (auto& e : elements) {
+                if (e.name == name) {
+                    return &e;
+                }
+            }
+            return nullptr;
         }
 
         const std::vector<UniformElement>& getElements() const { return elements; }
 
-        bool isFinalized() const {return m_isFinalized;}
+        bool isFinalized() const { return m_isFinalized; }
+
+    private:
+        uint32_t occupiedSize(ShaderUniformType t) {
+            switch (t) {
+                case ShaderUniformType::Float:
+                case ShaderUniformType::Int:
+                case ShaderUniformType::Uint:
+                case ShaderUniformType::Bool: return 4;
+                case ShaderUniformType::Vec2: return 8;
+                case ShaderUniformType::Vec3:
+                case ShaderUniformType::Vec4: return 16;
+                case ShaderUniformType::Mat4: return 64;
+                default: return 4;
+            }
+        }
+
     private:
         bool m_isFinalized = false;
         std::vector<UniformElement> elements;

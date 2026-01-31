@@ -9,18 +9,18 @@ namespace Vectrix {
         Float,
         Vec2,
         Vec3,
-        Vec4, // TODO: implement all of the other
+        Vec4,
         Mat4,
         Uint,
         Bool
     };
 
     // renvoie l'alignement en bytes (std430 rules simplified)
-    inline uint32_t UniformStd430Alignment(ShaderUniformType t) {
+    inline uint32_t uniformAlignment(ShaderUniformType t) {
         switch (t) {
-            case ShaderUniformType::Float: return 4;
-            case ShaderUniformType::Int:   return 4;
-            case ShaderUniformType::Uint:  return 4;
+            case ShaderUniformType::Float:
+            case ShaderUniformType::Int:
+            case ShaderUniformType::Uint:
             case ShaderUniformType::Bool:  return 4;
             case ShaderUniformType::Vec2:  return 8;
             case ShaderUniformType::Vec3:  // vec3 occupies vec4 slot
@@ -30,9 +30,7 @@ namespace Vectrix {
         }
     }
 
-    // renvoie la "taille utile" (nombre d'octets réellement copiés)
-    // vec3 sera 12 bytes de données mais occupe 16 bytes d'espace
-    inline uint32_t UniformSizeInBytes(ShaderUniformType t) {
+    inline uint32_t uniformSizeInBytes(ShaderUniformType t) {
         switch (t) {
             case ShaderUniformType::Float: return 4;
             case ShaderUniformType::Int:   return 4;

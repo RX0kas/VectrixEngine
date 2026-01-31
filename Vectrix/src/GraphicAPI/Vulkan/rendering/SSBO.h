@@ -11,14 +11,13 @@ namespace Vectrix {
 
     class SSBO {
     public:
-        SSBO(Device& device, const ShaderUniformLayout& layout, VkDescriptorSetLayout providedLayout = VK_NULL_HANDLE);
+        SSBO(Device& device, ShaderUniformLayout& layout);
 
         ~SSBO();
 
         void uploadFrame(uint32_t frameIndex, const void* src) {
             uint8_t* dst = static_cast<uint8_t*>(m_mapped) + static_cast<size_t>(frameIndex) * m_elementStride;
             std::memcpy(dst, src, m_elementStride);
-            // m_memory is HOST_COHERENT in this implementation, so no flush needed
         }
 
         void copyToFrame(uint32_t frameIndex, const uint32_t offset, const void* src, const size_t s) {
@@ -28,16 +27,13 @@ namespace Vectrix {
         }
 
         // pointer to the CPU buffer for a frame (used to upload to mapped GPU memory)
-        void const* framePtr(const uint32_t frameIndex) const {
+        [[nodiscard]] void const* framePtr(const uint32_t frameIndex) const {
             return m_storage.data() + static_cast<size_t>(frameIndex) * m_elementStride;
         }
 
         [[nodiscard]] VkDescriptorSet descriptorSet(uint32_t frameIndex) const { return m_descriptorSets[frameIndex]; }
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
-    private:
-        [[nodiscard]] bool m_layoutOwner() const { return m_layoutWasCreatedHere;}
-        void createBuffer();
     private:
         Device& m_device;
         VkBuffer m_buffer{};
@@ -48,9 +44,8 @@ namespace Vectrix {
         VkDeviceSize m_bufferSize{};
         uint32_t m_elementStride{};
         uint32_t m_framesInFlight{};
-        bool m_layoutWasCreatedHere;
         std::vector<uint8_t> m_storage;
-        ShaderUniformLayout m_layout;
+        ShaderUniformLayout& m_layout;
     };
 } // Vectrix
 

@@ -13,8 +13,7 @@
 
 namespace Vectrix {
 
-	PerspectiveCamera::PerspectiveCamera()
-		: m_ViewMatrix(1.0f)
+	PerspectiveCamera::PerspectiveCamera() : m_ViewMatrix(1.0f)
 	{
 		recalculateMatrices();
 	}
