@@ -8,8 +8,8 @@
 #include "Vectrix/Application.h"
 
 #define FOVY glm::radians(50.f)
-#define NEAR 0.1f
-#define FAR 10.0f
+#define CAM_NEAR 0.1f
+#define CAM_FAR 10.0f
 
 namespace Vectrix {
 
@@ -79,9 +79,9 @@ namespace Vectrix {
 		m_ProjectionMatrix = glm::mat4{0.0f};
 		m_ProjectionMatrix[0][0] = 1.f / (aspect * tanHalfFovy);
 		m_ProjectionMatrix[1][1] = 1.f / (tanHalfFovy);
-		m_ProjectionMatrix[2][2] = FAR / (FAR - NEAR);
+		m_ProjectionMatrix[2][2] = CAM_FAR / (CAM_FAR - CAM_NEAR);
 		m_ProjectionMatrix[2][3] = 1.f;
-		m_ProjectionMatrix[3][2] = -(FAR * NEAR) / (FAR - NEAR);
+		m_ProjectionMatrix[3][2] = -(CAM_FAR * CAM_NEAR) / (CAM_FAR - CAM_NEAR);
 
 		m_ProjectionMatrix[1][1] *= -1;
 	}

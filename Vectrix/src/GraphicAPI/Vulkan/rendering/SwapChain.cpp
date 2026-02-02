@@ -1,6 +1,8 @@
 #include "vcpch.h"
 #include "SwapChain.h"
 
+#include <vulkan/vk_enum_string_helper.h>
+
 
 namespace Vectrix {
     SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent)
@@ -128,7 +130,7 @@ namespace Vectrix {
 
         VkResult submitRes = vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]);
         if (submitRes != VK_SUCCESS) {
-            VC_CORE_CRITICAL("vkQueueSubmit failed: {0}", submitRes);
+            VC_CORE_CRITICAL("vkQueueSubmit failed: {0}", string_VkResult(submitRes));
             return submitRes;
         }
 
@@ -206,7 +208,7 @@ namespace Vectrix {
 
         VkResult result = vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &_swapChain);
         if (result != VK_SUCCESS) {
-            VC_CORE_CRITICAL("vkCreateSwapchainKHR failed with code: {0}", result);
+            VC_CORE_CRITICAL("vkCreateSwapchainKHR failed with code: {0}", string_VkResult(result));
         }
 
         // we only specified a minimum number of images in the swap chain, so the implementation is

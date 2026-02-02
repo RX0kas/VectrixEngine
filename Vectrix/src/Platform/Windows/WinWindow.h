@@ -13,27 +13,27 @@ namespace Vectrix {
 	public:
 		WinWindow();
 
-		bool shouldClose() { return glfwWindowShouldClose(window); }
+		[[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(window); }
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
-		VkExtent2D getExtent() { return { static_cast<uint32_t>(data.Width), static_cast<uint32_t>(data.Height) }; }
-		inline unsigned int getWidth() const override { return data.Width; }
-		inline unsigned int getHeight() const override { return data.Height; }
+		[[nodiscard]] VkExtent2D getExtent() const { return { static_cast<uint32_t>(data.Width), static_cast<uint32_t>(data.Height) }; }
+		[[nodiscard]] unsigned int getWidth() const override { return data.Width; }
+		[[nodiscard]] unsigned int getHeight() const override { return data.Height; }
 
 		void onUpdate() override;
 
-		bool wasWindowResized() { return framebufferResized; }
+		[[nodiscard]] bool wasWindowResized() const override { return framebufferResized; }
 
-		void resetWindowResizedFlag() { framebufferResized = false; }
+		void resetWindowResizedFlag() override { framebufferResized = false; }
 
-		void* getNativeWindow() const override { return window; }
+		[[nodiscard]] void* getNativeWindow() const override { return window; }
 
 		void setEventCallback(const EventCallbackFn& callback) override { data.EventCallback = callback; }
 
 		void setVSync(bool enabled) override;
 
-		bool isVSync() const override;
+		[[nodiscard]] bool isVSync() const override;
 		void init(const WindowAttributes& data = WindowAttributes()) override;
 	private:
 		virtual void shutdown();

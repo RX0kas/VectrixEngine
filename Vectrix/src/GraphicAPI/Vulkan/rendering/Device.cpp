@@ -1,6 +1,8 @@
 #include "vcpch.h"
 #include "Device.h"
 
+#include <vulkan/vk_enum_string_helper.h>
+
 #include "SwapChain.h"
 #include "Platform/Windows/WinWindow.h"
 #include "../../../Vectrix/Core/Log.h"
@@ -85,7 +87,7 @@ namespace Vectrix {
         appInfo.pApplicationName = "Vectrix";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "Vectrix";
-        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+        appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
@@ -278,7 +280,7 @@ namespace Vectrix {
         populateDebugMessengerCreateInfo(createInfo);
         VkResult result = CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger);
         if (result != VK_SUCCESS) {
-            VC_CORE_CRITICAL("failed to set up debug messenger: {0}", result);
+            VC_CORE_CRITICAL("failed to set up debug messenger: {0}", string_VkResult(result));
         }
     }
 

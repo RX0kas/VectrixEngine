@@ -20,7 +20,7 @@ public:
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
 #ifdef VC_PLATFORM_WINDOWS
-		ShaderManager::createShader(p_defaultName, "E:\\v.vert.spv", "E:\\f.frag.spv", layout);
+		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert.spv", ".\\shaders\\f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
 #endif

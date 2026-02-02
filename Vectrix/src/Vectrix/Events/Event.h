@@ -2,7 +2,6 @@
 
 #include "vcpch.h"
 #include "../Core/Core.h"
-#include "vulkan/generated/vk_enum_string_helper.h"
 
 namespace Vectrix {
 	// TODO : Events should not block the entire app
@@ -88,13 +87,5 @@ struct fmt::formatter<Vectrix::Event> : fmt::formatter<std::string> {
 	template <typename FormatContext>
 	auto format(const Vectrix::Event& e, FormatContext& ctx) const {
 		return fmt::formatter<std::string>::format(e.toString(), ctx);
-	}
-};
-
-template <>
-struct fmt::formatter<VkResult> : fmt::formatter<std::string> {
-	template <typename FormatContext>
-	auto format(const VkResult& e, FormatContext& ctx) const {
-		return fmt::formatter<std::string>::format(string_VkResult(e), ctx);
 	}
 };

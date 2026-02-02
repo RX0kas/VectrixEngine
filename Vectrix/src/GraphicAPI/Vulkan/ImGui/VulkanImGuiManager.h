@@ -8,8 +8,11 @@
 #include "GraphicAPI/Vulkan/rendering/Device.h"
 #include "GraphicAPI/Vulkan/rendering/VulkanRenderer.h"
 
+#ifdef VC_PLATFORM_WINDOWS
+#include "vulkan/vk_enum_string_helper.h"
+#else
 #include "vulkan/generated/vk_enum_string_helper.h"
-
+#endif
 
 namespace Vectrix {
 
@@ -38,7 +41,7 @@ private:
             if (err == VK_SUCCESS)
                 return;
 
-            VC_CORE_CRITICAL("VkResult = {0}\n", err);
+            VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
         }
 	private:
         Device& device;

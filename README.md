@@ -10,18 +10,22 @@ An engine made to run all of my little graphics project
 
 
 ## Prerequisites
-
+- [CMake 3.20](https://cmake.org/download/)
+- [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
+- Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
 
 ## Installation
 ```bash
 # Clone the repository
-git clone https://github.com/RX0kas/VectrixEngine.git
+git clone --recurse-submodules https://github.com/RX0kas/VectrixEngine.git
 cd VectrixEngine
-...
+mkdir build
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B ./build
+$ cmake --build ./build
 ```
 ## Documentation
 
-- [API Documentation (TODO)](linkDocks)
+- [API Documentation (TODO)]()
 
 
 ## Roadmap
@@ -29,6 +33,9 @@ cd VectrixEngine
 - [ ] Finish the README
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [ ] Make a universal function for sending shader uniform
+- [ ] Performance optimization
+- [ ] Add a material system
+- [ ] Add an editor
 
 ## Known Issues
 

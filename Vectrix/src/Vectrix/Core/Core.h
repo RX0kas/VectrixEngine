@@ -10,12 +10,7 @@
 			#define Vectrix_API __declspec(dllimport)
 		#endif
 	#endif
-	#if defined(_MSC_VER)
-		#define VC_DEBUGBREAK() __debugbreak()
-	#else
-		#include <signal.h>
-		#define VC_DEBUGBREAK() raise(SIGTRAP)
-	#endif
+	#define VC_DEBUGBREAK() __debugbreak()
 #else
 	#ifdef VC_PLATFORM_LINUX
 	#include <csignal>

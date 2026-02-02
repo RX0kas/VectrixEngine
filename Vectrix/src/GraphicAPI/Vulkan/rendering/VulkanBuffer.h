@@ -9,7 +9,12 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
-#include <vulkan/generated/vk_enum_string_helper.h>
+
+#ifdef VC_PLATFORM_WINDOWS
+#include "vulkan/vk_enum_string_helper.h"
+#else
+#include "vulkan/generated/vk_enum_string_helper.h"
+#endif
 
 
 namespace Vectrix {
@@ -154,5 +159,18 @@ struct fmt::formatter<VkFormat> {
             "VkFormat({})",
             string_VkFormat(f)
         );
+    }
+};
+
+template <>
+struct fmt::formatter<VkResult> : fmt::formatter<std::string> {
+
+    constexpr auto parse(format_parse_context& ctx) {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(const VkResult& e, FormatContext& ctx) const {
+        return fmt::formatter<std::string>::format(string_VkResult(e), ctx);
     }
 };

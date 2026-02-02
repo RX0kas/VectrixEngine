@@ -143,7 +143,7 @@ namespace Vectrix {
 
 		ImGui_ImplGlfw_InitForVulkan(w, true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
-		init_info.ApiVersion = VK_API_VERSION_1_3; // same as VkApplicationInfo::apiVersion
+		init_info.ApiVersion = VK_API_VERSION_1_2; // same as VkApplicationInfo::apiVersion
 		init_info.Instance = device.instance();
 		init_info.PhysicalDevice = device.physicalDevice();
 		init_info.Device = device.device();
