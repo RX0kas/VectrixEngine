@@ -6,25 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
-# Par défaut Release si non défini
+# Release by default
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Dist = Release optimisé
 if(CMAKE_BUILD_TYPE STREQUAL "Dist")
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Sorties
 set(OUTPUT_DIR ${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
-###############
-# Dépendances #
-###############
 # Vulkan
 find_package(Vulkan REQUIRED)
 
@@ -38,7 +33,7 @@ add_subdirectory(Vectrix/extern/spdlog)
 set(XXHASH_BUILD_XXHSUM OFF)
 add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
-# Librairie Vectrix
+# Vectrix
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
         Vectrix/src/Vectrix/*.h
@@ -138,7 +133,6 @@ if(MSVC)
     target_compile_options(Vectrix PRIVATE /utf-8)
 endif()
 
-# Macros par configuration
 target_compile_definitions(Vectrix PRIVATE
         $<$<CONFIG:Debug>:VC_DEBUG>
         $<$<CONFIG:Release>:VC_RELEASE>
@@ -146,7 +140,7 @@ target_compile_definitions(Vectrix PRIVATE
 )
 
 
-# Sandbox (exécutable)
+# Sandbox
 file(GLOB_RECURSE SANDBOX_SOURCES
         Sandbox/src/*.cpp
         Sandbox/src/*.h
@@ -181,7 +175,6 @@ elseif(UNIX AND NOT APPLE)
     target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_LINUX)
 endif()
 
-# Macros par plateforme
 if(WIN32)
     target_compile_definitions(Vectrix PRIVATE
             VC_PLATFORM_WINDOWS

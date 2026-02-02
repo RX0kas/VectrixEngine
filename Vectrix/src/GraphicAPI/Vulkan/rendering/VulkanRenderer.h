@@ -66,7 +66,7 @@ namespace Vectrix {
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
-        DebugFrameInfo getCurrentFrameInfo();
+        DebugFrameInfo getCurrentFrameInfo() const;
         void createCommandBuffers();
         void freeCommandBuffers();
         void recreateSwapChain();

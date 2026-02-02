@@ -194,7 +194,7 @@ namespace Vectrix {
 		RenderCommand::drawIndexed(vertexArray);
 	}
 
-	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() {
+	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() const {
 		DebugFrameInfo f{};
 		f.frameIndex = swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;
@@ -204,5 +204,6 @@ namespace Vectrix {
 
 		// TODO: Get the different Pipeline (shaders) and give their information
 
+		return {};
 	}
 }

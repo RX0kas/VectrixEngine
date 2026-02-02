@@ -20,8 +20,10 @@ An engine made to run all of my little graphics project
 git clone --recurse-submodules https://github.com/RX0kas/VectrixEngine.git
 cd VectrixEngine
 mkdir build
-cmake -DCMAKE_BUILD_TYPE=Release -S . -B ./build
-$ cmake --build ./build
+cmake -S . -B ./build
+cmake --build ./build
+cd run
+..\build\bin\Your_Platform\Debug\Sandbox.exe
 ```
 ## Documentation
 

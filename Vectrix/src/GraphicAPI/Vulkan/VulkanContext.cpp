@@ -18,12 +18,7 @@ namespace Vectrix {
 	{
 		
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		DescriptorPoolConfig cfg {
-			.uboCount = 64,
-			.ssboCount = 64,
-			.samplerCount = 64,
-			.maxSets = 64
-		};
+		DescriptorPoolConfig cfg {64,64,64,64};
 		p_device = std::make_unique<Device>(Application::instance().window(),cfg);
 		p_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*p_device);
 	}
