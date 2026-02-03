@@ -1,7 +1,11 @@
 #include "vcpch.h"
 #include "Device.h"
 
+#ifdef VC_PLATFORM_WINDOWS
 #include <vulkan/vk_enum_string_helper.h>
+#elif defined(VC_PLATFORM_LINUX)
+#include <vulkan/generated/vk_enum_string_helper.h>
+#endif
 
 #include "SwapChain.h"
 #include "Platform/Windows/WinWindow.h"
@@ -19,7 +23,6 @@ namespace Vectrix {
         const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
         void* pUserData) {
         VC_CORE_ERROR("validation layer: {0}", pCallbackData->pMessage);
-        return VK_FALSE;
     }
 
     VkResult CreateDebugUtilsMessengerEXT(
