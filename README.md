@@ -31,9 +31,9 @@ cd run
 
 
 ## Roadmap
-
-- [ ] Finish the README
 - [x] Clearly separate the Vulkan part from the rest of the engine
+- [ ] Finish the README
+- [ ] Make a hot shader reload feature
 - [ ] Make a universal function for sending shader uniform
 - [ ] Performance optimization
 - [ ] Add a material system
