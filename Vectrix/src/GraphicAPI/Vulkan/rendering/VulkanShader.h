@@ -5,6 +5,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Pipeline.h"
 #include "Vectrix/Renderer/Shaders/ShaderUniformLayout.h"
+#include "Vectrix/Renderer/Shaders/UniformTrait.h"
 
 namespace Vectrix {
     class VulkanShader final : public Shader {
@@ -23,7 +24,24 @@ namespace Vectrix {
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sentCameraUniform(const PerspectiveCamera &camera) const override;
         void setModelMatrix(const glm::mat4& model) const override;
+
+        void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
+            VC_VERIFY_UNIFORM_NAME(name);
+
+            const auto* e = m_layout->find(name);
+            if (!e) {
+                VC_CORE_ERROR("{} is not found in layout", name);
+            }
+
+            if (e->type != type) {
+                VC_CORE_ERROR("Uniform '{}' type mismatch (expected {}, got {})",name,static_cast<int>(e->type),static_cast<int>(type));
+            }
+
+            m_ssbo->copyToFrame(m_renderer.getFrameIndex(),e->offset,data,size);
+        }
+
     private:
+
         void createPipelineLayout();
         void createPipeline(VkRenderPass renderPass, const std::string& vertexSrc, const std::string& fragmentSrc, BufferLayout layout);
     private:
@@ -37,6 +55,7 @@ namespace Vectrix {
         bool m_enable = true;
         friend class VulkanContext;
         friend class ShaderManager;
+        friend class Shader;
         friend class VulkanRenderer;
         // Info
         const std::string m_name;

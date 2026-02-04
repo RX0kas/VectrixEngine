@@ -43,6 +43,19 @@ namespace Vectrix {
             default: return 4;
         }
     }
+    constexpr const char* toString(ShaderUniformType t) {
+        switch (t) {
+            case ShaderUniformType::Bool:  return "Bool";
+            case ShaderUniformType::Float: return "Float";
+            case ShaderUniformType::Int: return "Int";
+            case ShaderUniformType::Uint: return "UInt";
+            case ShaderUniformType::Vec2: return "Vec2";
+            case ShaderUniformType::Vec3: return "Vec3";
+            case ShaderUniformType::Vec4: return "Vec4";
+            case ShaderUniformType::Mat4: return "Mat4";
+                default: return "Unknown Type";
+        }
+    }
 }
 
 #endif //VECTRIXWORKSPACE_SHADERUNIFORM_H
