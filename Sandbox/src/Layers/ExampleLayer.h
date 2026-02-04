@@ -63,7 +63,7 @@ public:
 
 	void OnRender() override {
 		if (Vectrix::Renderer::BeginScene(*m_Camera)) {
-			def->setUniform1f("time",static_cast<float>(glfwGetTime()));
+			def->setUniform("time",static_cast<float>(glfwGetTime()));
 			def->sentCameraUniform(*m_Camera);
 			def->setModelMatrix(m_model->getModelMatrix());
 			Vectrix::Renderer::Submit(*def.get(),*m_model);

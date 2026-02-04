@@ -3,6 +3,7 @@
 #include <string>
 
 #include "ShaderUniformLayout.h"
+#include "UniformTrait.h"
 #include "Vectrix/Renderer/Buffer.h"
 #include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
 
@@ -25,6 +26,14 @@ namespace Vectrix {
 		virtual void setUniform4f(const std::string& name,glm::vec4 value) const = 0;
 		virtual void setUniformMat4f(const std::string& name,glm::mat4 value) const = 0;
 		virtual void setModelMatrix(const glm::mat4& model) const = 0;
+
+		template<typename T>
+		void setUniform(const std::string& name, const T& value) const {
+			static_assert(UniformTraits<T>::valid, "Unsupported uniform type");
+			setUniformImplementation(name,UniformTraits<T>::type,&value,sizeof(T));
+		}
+	protected:
+		virtual void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const = 0;
 	private:
 		friend class ShaderManager;
 		static Shader* create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera);
