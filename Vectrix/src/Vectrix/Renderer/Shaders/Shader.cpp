@@ -1,7 +1,7 @@
 #include "Shader.h"
 
 #include "Vectrix/Renderer/Renderer.h"
-#include "GraphicAPI/Vulkan/rendering/VulkanShader.h"
+#include "../../../GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 
 namespace Vectrix {
     Shader* Shader::create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera) {

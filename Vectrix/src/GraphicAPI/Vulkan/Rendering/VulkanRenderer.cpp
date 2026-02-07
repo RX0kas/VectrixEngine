@@ -1,10 +1,12 @@
 #include "vcpch.h"
 #include "VulkanRenderer.h"
 
-#include "VulkanShader.h"
+#include "Shaders/VulkanShader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "Vectrix/Renderer/RenderCommand.h"
+#include "Vectrix/Renderer/Shaders/ShaderManager.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"
@@ -145,13 +147,12 @@ namespace Vectrix {
 		}
 
 		isFrameStarted = false;
+		swapChain->advanceFrame();
 	}
 
 	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 		VC_CORE_ASSERT(isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
-		VC_CORE_ASSERT(
-			commandBuffer == getCurrentCommandBuffer(),
-			"Can't begin render pass on command buffer from a different frame");
+		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -199,11 +200,26 @@ namespace Vectrix {
 		f.frameIndex = swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;
 
-		f.semaphores = std::vector<DebugSemaphoreInfo>();
+		f.semaphores = std::vector<DebugSemaphoreInfo>(); // TODO: Implement Semaphores and fences
 		f.fences = std::vector<DebugFenceInfo>();
 
-		// TODO: Get the different Pipeline (shaders) and give their information
+		std::vector<DebugPipelineInfo> pipelines;
+		std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
-		return {};
+		for (auto& shader : ShaderManager::instance().getAll()) {
+			VulkanShader* s = dynamic_cast<VulkanShader*>(shader.get());
+			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
+			pipelines.push_back(i);
+			DebugDescriptorSetInfo d;
+			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
+			boundDescriptorSets.push_back(d);
+		}
+		f.pipelines = pipelines;
+		f.images = {};
+		f.buffers = {};
+
+		f.drawCalls = VulkanRendererAPI::s_drawCalls;
+		f.dispatchCalls = 0;
+		return f;
 	}
 }

@@ -4,14 +4,15 @@
 
 An engine made to run all of my little graphics project
 
-![Screenshot or demo GIF](p.png)
+![Screenshot or demo GIF]()
 
 ## Features
 
 
 ## Prerequisites
-- [CMake 3.20](https://cmake.org/download/)
+- [CMake 3.21.7](https://cmake.org/download/)
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
+- [Python 3](https://www.python.org/downloads/)
 - Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
 
 ## Installation
@@ -31,11 +32,11 @@ cd run
 
 
 ## Roadmap
+
 - [x] Clearly separate the Vulkan part from the rest of the engine
+- [x] Make a universal function for sending shader uniform
+- [ ] Refactor to have the same naming convention everywhere
 - [ ] Finish the README
-- [ ] Make a hot shader reload feature
-- [ ] Make a universal function for sending shader uniform
-- [ ] Performance optimization
 - [ ] Add a material system
 - [ ] Add an editor
 
@@ -45,7 +46,7 @@ cd run
 
 ## Acknowledgments
 
-- Thanks to [TheCherno](https://github.com/TheCherno) for the inspiration
+- Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration
 - [Dear ImGui](https://github.com/ocornut/imgui) for the ui library
 - [spdlog](https://github.com/gabime/spdlog) for the logging library
 

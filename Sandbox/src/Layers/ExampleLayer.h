@@ -15,14 +15,14 @@ public:
 		m_Camera->setPosition({0.0f,0.0f,3.0f});
 		m_Camera->setRotation({0.0f,-M_PI,0.0f});
 
-		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/suzanne.obj"));
+		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/cat.obj"));
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
 #ifdef VC_PLATFORM_WINDOWS
-		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert.spv", ".\\shaders\\f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
+		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert", ".\\shaders\\f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #elif defined(VC_PLATFORM_LINUX)
-		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
+		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #endif
 		def = Vectrix::ShaderManager::instance().get(p_defaultName);
 	}

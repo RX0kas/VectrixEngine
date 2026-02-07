@@ -3,7 +3,7 @@
 
 #include "Renderer.h"
 
-#include "GraphicAPI/Vulkan/rendering/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 #include "Vectrix/Renderer/RendererAPI.h"
 
 

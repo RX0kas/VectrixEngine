@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "GraphicAPI/Vulkan/rendering/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 #include "Vectrix/Renderer/Buffer.h"
 
 namespace Vectrix {

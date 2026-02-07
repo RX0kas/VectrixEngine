@@ -1,7 +1,7 @@
 #include "VertexArray.h"
 
 #include "../Renderer.h"
-#include "GraphicAPI/Vulkan/rendering/VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanVertexArray.h"
 
 namespace Vectrix {
     VertexArray* VertexArray::create() {

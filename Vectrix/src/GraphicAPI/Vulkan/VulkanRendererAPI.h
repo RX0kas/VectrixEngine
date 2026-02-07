@@ -13,6 +13,9 @@ namespace Vectrix {
 		void Clear() override;
 
 		void DrawIndexed(const VertexArray& vertexArray) override;
+	private:
+		friend class VulkanRenderer;
+		static uint32_t s_drawCalls;
 	};
 
 

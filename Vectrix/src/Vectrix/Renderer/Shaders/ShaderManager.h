@@ -14,6 +14,15 @@ namespace Vectrix {
         ShaderManager();
         ~ShaderManager();
         Ref<Shader> get(const std::string& name);
+        std::vector<Ref<Shader>> getAll() {
+            std::vector<Ref<Shader>> vals;
+            vals.reserve(p_cache.size());
+
+            for(auto kv : p_cache) {
+                vals.push_back(kv.second);
+            }
+            return vals;
+        }
         static ShaderManager& instance() { return *p_instance; }
         static void createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout,bool affectedByCamera);
     private:

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "../../../Vectrix/Renderer/Models/Vertex.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "Vectrix/Renderer/Models/Vertex.h"
 
-#include <string>
 #include <vector>
 
 #include "Vectrix/Renderer/Buffer.h"
@@ -36,14 +35,8 @@ namespace Vectrix {
 
     class Pipeline {
     public:
-        Pipeline(
-            Device& device,
-            const std::string& vertFilepath,
-            const std::string& fragFilepath,
-            const PipelineConfigInfo& configInfo);
-
+        Pipeline(Device& device,const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo);
         ~Pipeline();
-
 
         Pipeline(const Pipeline&) = delete;
         Pipeline& operator=(const Pipeline&) = delete;
@@ -52,26 +45,17 @@ namespace Vectrix {
 
         void bind(VkCommandBuffer commandBuffer) const;
 
-        VkPipeline getPipeline() const { return graphicsPipeline; }
+        [[nodiscard]] VkPipeline getPipeline() const { return m_graphicsPipeline; }
         static void enableAlphaBlending(PipelineConfigInfo& configInfo);
 
     private:
-        static std::vector<char> readFile(const std::string& filepath);
+        void createGraphicsPipeline(const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo);
 
-        void createGraphicsPipeline(
-            const std::string& vertFilepath,
-            const std::string& fragFilepath,
-            const PipelineConfigInfo& configInfo
-        );
+        void createShaderModule(const std::vector<uint32_t>& code,VkShaderModule* shaderModule);
 
-        void createShaderModule(
-            const std::vector<char>& code,
-            VkShaderModule* shaderModule
-        );
-
-        Device& device;
-        VkPipeline graphicsPipeline;
-        VkShaderModule vertShaderModule;
-        VkShaderModule fragShaderModule;
+        Device& m_device;
+        VkPipeline m_graphicsPipeline;
+        VkShaderModule m_vertShaderModule;
+        VkShaderModule m_fragShaderModule;
     };
 }

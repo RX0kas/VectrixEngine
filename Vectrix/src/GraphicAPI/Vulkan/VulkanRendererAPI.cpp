@@ -31,11 +31,13 @@ namespace Vectrix {
 				dynamic_cast<VulkanVertexBuffer*>(v.get())->draw();
 			}
 		}
+		s_drawCalls++;
 	}
 
 	bool VulkanRendererAPI::setupScene() {
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
 		auto commandBuffer = renderer.beginFrame();
+		s_drawCalls = 0;
 
 		if (commandBuffer == VK_NULL_HANDLE) {
 			renderer.recreateSwapChain();

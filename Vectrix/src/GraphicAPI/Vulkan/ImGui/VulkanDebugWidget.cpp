@@ -45,9 +45,9 @@ namespace Vectrix {
         if (ImGui::CollapsingHeader("Pipeline")) {
             for (const auto& pipeline : frame.pipelines) {
                 if (ImGui::TreeNode(pipeline.name)) {
-                    // TODO MAYBE: add a hot shader edition
-                    ImGui::Text("Vertex shader Path: %s",pipeline.vertPath);
-                    ImGui::Text("Fragment shader Path: %s", pipeline.fragPath);
+                    // TODO: add a hot shader edition
+                    // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
+                    // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
                     ImGui::Text("Pipeline Handle: 0x%p", pipeline.pipeline);
                     ImGui::Text("Layout Handle: 0x%p", pipeline.layout);
                     ImGui::TreePop();

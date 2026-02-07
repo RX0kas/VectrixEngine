@@ -12,6 +12,7 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "VulkanContext already exists!");
 		s_instance = this;
 		VC_CORE_ASSERT(windowHandle, "Window handle is null!");
+		p_compiler = std::make_unique<VulkanShaderCompiler>();
 	}
 
 	void VulkanContext::init()
