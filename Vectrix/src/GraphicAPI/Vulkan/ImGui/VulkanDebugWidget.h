@@ -24,8 +24,8 @@ namespace Vectrix {
 
     struct DebugPipelineInfo {
         const char* name;
-        const char* vertPath;
-        const char* fragPath;
+        std::string vertSRC;
+        std::string fragSRC;
         VkPipeline pipeline;
         VkPipelineLayout layout;
     };

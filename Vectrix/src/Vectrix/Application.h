@@ -2,7 +2,7 @@
 
 #include "Core/Core.h"
 #include "Window.h"
-#include "GraphicAPI/Vulkan/rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
 
 #include "Vectrix/Layers/LayerStack.h"
 #include "Events/Event.h"

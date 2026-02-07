@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.0)
 project(VectrixWorkspace LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -20,8 +20,27 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+# Python
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
 # Vulkan
 find_package(Vulkan REQUIRED)
+# Compiling Shader
+# Setup SPIRV-Tools
+message(STATUS "Initializing SPIRV-Header")
+set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Header)
+set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
+# add_subdirectory(${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Header)
+message(STATUS "Initializing SPIRV-Tools")
+add_subdirectory(Vectrix/extern/SPIRV-Tools)
+
+message(STATUS "Initializing glslang")
+add_subdirectory(Vectrix/extern/glslang)
+
+set(SPIRV_SKIP_TESTS ON)
+set(SPIRV_TOOLS_BUILD_STATIC ON)
+set(ENABLE_GLSLANG_BINARIES OFF)
+add_subdirectory(Vectrix/extern/shaderc)
 
 # GLFW
 add_subdirectory(Vectrix/extern/GLFW)
@@ -117,6 +136,7 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(Vectrix
             glfw
             Vulkan::Vulkan
+            shaderc
             X11::X11
             xxHash::xxhash
     )
@@ -124,6 +144,7 @@ else()
 target_link_libraries(Vectrix
         glfw
         Vulkan::Vulkan
+        shaderc
         xxHash::xxhash
 )
 endif()
@@ -168,22 +189,17 @@ if(MSVC)
     target_compile_options(Sandbox PRIVATE /utf-8)
 endif()
 
-# Macros Sandbox
-if(WIN32)
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_WINDOWS)
-elseif(UNIX AND NOT APPLE)
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_LINUX)
-endif()
-
 if(WIN32)
     target_compile_definitions(Vectrix PRIVATE
             VC_PLATFORM_WINDOWS
             GLFW_INCLUDE_NONE
     )
-elseif(UNIX)
+    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_WINDOWS)
+elseif(UNIX AND NOT APPLE)
     target_compile_definitions(Vectrix PRIVATE
             VC_PLATFORM_LINUX
     )
+    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_LINUX)
 endif()
 
 target_compile_definitions(Sandbox PRIVATE

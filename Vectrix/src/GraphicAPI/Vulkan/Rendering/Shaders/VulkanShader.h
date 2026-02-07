@@ -3,7 +3,7 @@
 
 #include "Vectrix/Renderer/Shaders/Shader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "Pipeline.h"
+#include "../Pipeline.h"
 #include "Vectrix/Renderer/Shaders/ShaderUniformLayout.h"
 #include "Vectrix/Renderer/Shaders/UniformTrait.h"
 
@@ -51,6 +51,9 @@ namespace Vectrix {
         VkPipelineLayout m_pipelineLayout{};
         Own<SSBO> m_ssbo;
         Own<ShaderUniformLayout> m_layout;
+
+        std::string m_fragSRC;
+        std::string m_vertSRC;
 
         bool m_enable = true;
         friend class VulkanContext;

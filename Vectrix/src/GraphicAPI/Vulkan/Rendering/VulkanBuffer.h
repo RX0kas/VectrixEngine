@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
-#include "GraphicAPI/Vulkan/rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "../../../Vectrix/Renderer/Models/Vertex.h"
 
 #include "Vectrix/Renderer/Buffer.h"

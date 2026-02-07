@@ -5,8 +5,8 @@
 #elif defined(VC_PLATFORM_LINUX)
 #include "Platform/Linux/LinWindow.h"
 #endif
-#include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/VulkanRenderer.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "vulkan/vk_enum_string_helper.h"

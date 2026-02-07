@@ -135,7 +135,6 @@ namespace Vectrix {
         VkResult submitRes = vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]);
         if (submitRes != VK_SUCCESS) {
             VC_CORE_CRITICAL("vkQueueSubmit failed: {0}", string_VkResult(submitRes));
-            return submitRes;
         }
 
         // Present using the same per-image renderFinished semaphore
@@ -151,7 +150,7 @@ namespace Vectrix {
         VkResult presentRes = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
 
         // Advance to next frame index only if submit/present didn't indicate swapchain recreation needed.
-        currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        //currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 
         // Handle special cases upstream: VK_ERROR_OUT_OF_DATE_KHR, VK_SUBOPTIMAL_KHR, etc.
         return presentRes;

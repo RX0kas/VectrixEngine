@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/SwapChain.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
 #include "Vectrix/Window.h"
 
 // std

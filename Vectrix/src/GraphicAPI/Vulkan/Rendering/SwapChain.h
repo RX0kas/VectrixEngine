@@ -2,7 +2,7 @@
 #include "SSBO.h"
 #include "vcpch.h"
 
-#include "GraphicAPI/Vulkan/rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
 
 namespace Vectrix {
 	class SwapChain {
@@ -92,6 +92,10 @@ namespace Vectrix {
         }
 
 	    [[nodiscard]] int getFrameIndex() const {return static_cast<int>(currentFrame);}
+
+	    void advanceFrame() {
+            currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        }
     private:
         void destroyImageviews() {
             if (!swapChainImageViews.empty()) {

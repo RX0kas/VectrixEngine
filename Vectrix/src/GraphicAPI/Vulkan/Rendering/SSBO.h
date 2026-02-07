@@ -1,7 +1,7 @@
 #ifndef VECTRIXWORKSPACE_SSBO_H
 #define VECTRIXWORKSPACE_SSBO_H
-#include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/SwapChain.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
 #include <vector>
 
 #include "Vectrix/Renderer/Buffer.h"

@@ -1,7 +1,10 @@
 #include "VulkanShader.h"
 
+#include <codecvt>
+#include <fstream>
 #include <utility>
 
+#define OPTIMIZE
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout)
@@ -145,6 +148,16 @@ namespace Vectrix {
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &model, sizeof(glm::mat4));
 	}
 
+	std::string readUTF8(const std::string& path) {
+		std::ifstream fichier(path, std::ios::binary);
+		if (!fichier.is_open()) {
+			VC_CORE_ERROR("Can't open: {}", path);
+		}
+		std::stringstream buffer;
+		buffer << fichier.rdbuf();
+		return buffer.str();
+	}
+
 	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {
 		VC_CORE_ASSERT(m_pipelineLayout != nullptr, "Cannot create pipeline before pipeline layout");
 
@@ -154,11 +167,17 @@ namespace Vectrix {
 		pipelineConfig.pipelineLayout = m_pipelineLayout;
 		pipelineConfig.layout = std::move(layout);
 
-		m_pipeline = std::make_unique<Pipeline>(
-			m_device,
-			vertexPath,
-			fragmentPath,
-			pipelineConfig);
+		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
+		m_vertSRC = readUTF8(vertexPath);
+		m_fragSRC = readUTF8(fragmentPath);
+		bool optimize = false;
+#ifdef OPTIMIZE
+		optimize=true;
+#endif
+		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
+		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);
+
+		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
 	}
 
 	void VulkanShader::createPipelineLayout() {
