@@ -30,7 +30,6 @@ find_package(Vulkan REQUIRED)
 message(STATUS "Initializing SPIRV-Header")
 set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Header)
 set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
-# add_subdirectory(${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Header)
 message(STATUS "Initializing SPIRV-Tools")
 add_subdirectory(Vectrix/extern/SPIRV-Tools)
 
@@ -154,14 +153,26 @@ if(MSVC)
     target_compile_options(Vectrix PRIVATE /utf-8)
 endif()
 
-target_compile_definitions(Vectrix PRIVATE
+target_compile_definitions(Vectrix PUBLIC
         $<$<CONFIG:Debug>:VC_DEBUG>
         $<$<CONFIG:Release>:VC_RELEASE>
         $<$<CONFIG:Dist>:VC_DIST>
 )
 
+if(WIN32)
+    target_compile_definitions(Vectrix PUBLIC
+            VC_PLATFORM_WINDOWS
+            GLFW_INCLUDE_NONE
+    )
+elseif(UNIX AND NOT APPLE)
+    target_compile_definitions(Vectrix PUBLIC
+            VC_PLATFORM_LINUX
+    )
+endif()
 
-# Sandbox
+###########
+# Sandbox #
+###########
 file(GLOB_RECURSE SANDBOX_SOURCES
         Sandbox/src/*.cpp
         Sandbox/src/*.h
@@ -169,41 +180,16 @@ file(GLOB_RECURSE SANDBOX_SOURCES
 
 add_executable(Sandbox ${SANDBOX_SOURCES})
 
+target_link_libraries(Sandbox PRIVATE Vectrix)
+
 target_include_directories(Sandbox PRIVATE
-        Vectrix/src
-        Vectrix/extern
-        Vectrix/extern/spdlog/include
-        Vectrix/extern/glm
-        ${Vulkan_INCLUDE_DIRS}
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-target_link_libraries(Sandbox
-        Vectrix
-        glfw
-        Vulkan::Vulkan
-        spdlog
-        xxHash::xxhash
+target_compile_definitions(Sandbox PRIVATE
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
 )
 
 if(MSVC)
     target_compile_options(Sandbox PRIVATE /utf-8)
 endif()
-
-if(WIN32)
-    target_compile_definitions(Vectrix PRIVATE
-            VC_PLATFORM_WINDOWS
-            GLFW_INCLUDE_NONE
-    )
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_WINDOWS)
-elseif(UNIX AND NOT APPLE)
-    target_compile_definitions(Vectrix PRIVATE
-            VC_PLATFORM_LINUX
-    )
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_LINUX)
-endif()
-
-target_compile_definitions(Sandbox PRIVATE
-        $<$<CONFIG:Debug>:VC_DEBUG>
-        $<$<CONFIG:Release>:VC_RELEASE>
-        $<$<CONFIG:Dist>:VC_DIST>
-)
