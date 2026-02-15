@@ -20,38 +20,51 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+message(STATUS "Initializing Vectrix dependencies")
+
 # Python
+message(VERBOSE "Searching python interpreter")
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # Vulkan
+message(VERBOSE "Initializing Vulkan")
+
+set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
+
 find_package(Vulkan REQUIRED)
 # Compiling Shader
 # Setup SPIRV-Tools
-message(STATUS "Initializing SPIRV-Header")
-set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Header)
+message(VERBOSE "Initializing SPIRV-Header")
+set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Headers)
 set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
-message(STATUS "Initializing SPIRV-Tools")
+message(VERBOSE "Initializing SPIRV-Tools")
+set(tools_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Tools)
+set(glslang_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/glslang)
 add_subdirectory(Vectrix/extern/SPIRV-Tools)
 
-message(STATUS "Initializing glslang")
+message(VERBOSE "Initializing glslang")
 add_subdirectory(Vectrix/extern/glslang)
 
-set(SPIRV_SKIP_TESTS ON)
-set(SPIRV_TOOLS_BUILD_STATIC ON)
-set(ENABLE_GLSLANG_BINARIES OFF)
 add_subdirectory(Vectrix/extern/shaderc)
 
 # GLFW
+message(VERBOSE "Initializing GLFW")
 add_subdirectory(Vectrix/extern/GLFW)
 
 # spdlog
+message(VERBOSE "Initializing spdlog")
 add_subdirectory(Vectrix/extern/spdlog)
 
 # xxHash
+message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
 add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
 # Vectrix
+message(STATUS "Initializing Vectrix")
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
         Vectrix/src/Vectrix/*.h

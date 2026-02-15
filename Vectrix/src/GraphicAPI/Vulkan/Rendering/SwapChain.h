@@ -51,7 +51,7 @@ namespace Vectrix {
         VkFormat findDepthFormat();
 
         VkResult acquireNextImage(uint32_t* imageIndex);
-        VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
+        VkResult submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex);
 
 		[[nodiscard]] bool compareSwapFormats(const SwapChain& swapChain) const {
 			return swapChain.swapChainDepthFormat == swapChainDepthFormat &&
@@ -190,7 +190,6 @@ namespace Vectrix {
         std::vector<VkSemaphore> renderFinishedSemaphores; // par image
         std::vector<VkFence> inFlightFences; // par frame
         std::vector<VkFence> imagesInFlight; // par image
-	    std::vector<VkSemaphore> renderFinishedSemaphoresPerImage;
 
         size_t currentFrame = 0;
     };

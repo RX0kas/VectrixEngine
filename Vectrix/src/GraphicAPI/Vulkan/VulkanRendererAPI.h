@@ -7,14 +7,14 @@ namespace Vectrix {
 	class VulkanRendererAPI : public RendererAPI
 	{
 	public:
-		bool setupScene() override;
-		void sendScene() override;
-		void SetClearColor(const glm::vec4& color) override;
-		void Clear() override;
+		void setClearColor(const glm::vec4& color) override;
+		bool prepareFrame() override;
+		void endFrame() override;
 
-		void DrawIndexed(const VertexArray& vertexArray) override;
+		void drawIndexed(const VertexArray& vertexArray) override;
 	private:
 		friend class VulkanRenderer;
+		static uint32_t getDrawCalls() { return s_drawCalls; }
 		static uint32_t s_drawCalls;
 	};
 

@@ -1,5 +1,5 @@
 #include "vcpch.h"
-#include "Device.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include <vulkan/vk_enum_string_helper.h>
@@ -7,14 +7,14 @@
 #include <vulkan/generated/vk_enum_string_helper.h>
 #endif
 
-#include "SwapChain.h"
+#include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
 #include "Platform/Windows/WinWindow.h"
-#include "../../../Vectrix/Core/Log.h"
+#include "Vectrix/Core/Log.h"
 
 
 namespace Vectrix {
 
-    bool Device::enableValidationLayers = false;
+    bool Device::enableValidationLayers = true;
 
     // local callback functions
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -86,11 +86,11 @@ namespace Vectrix {
         }
 #endif
 
-        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
+        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO}; // TODO: Create dynamically those information
         appInfo.pApplicationName = "Vectrix";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "Vectrix";
-        appInfo.engineVersion = VK_MAKE_VERSION(0, 0, 1);
+        appInfo.engineVersion = VK_MAKE_VERSION(0, 1, 0);
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};

@@ -7,7 +7,7 @@
 
 #include "fstream"
 
-#define NO_CULLING
+//#define NO_CULLING
 
 namespace Vectrix {
 
@@ -76,7 +76,7 @@ namespace Vectrix {
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 
-        VC_CHECK_VK_SUCCESS(vkCreateGraphicsPipelines(m_device.device(),VK_NULL_HANDLE,1,&pipelineInfo,nullptr,&m_graphicsPipeline), "failed to create graphics pipeline");
+        VC_VK_CHECK(vkCreateGraphicsPipelines(m_device.device(),VK_NULL_HANDLE,1,&pipelineInfo,nullptr,&m_graphicsPipeline), "failed to create graphics pipeline");
     }
 
     void Pipeline::bind(VkCommandBuffer commandBuffer) const {

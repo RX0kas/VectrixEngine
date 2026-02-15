@@ -2,7 +2,7 @@
 
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
-#include "Vectrix/Window.h"
+#include "../../../Vectrix/Core/Window.h"
 
 // std
 #include <memory>
@@ -26,33 +26,33 @@ namespace Vectrix {
 
         ~VulkanRenderer();
 
-        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
-        [[nodiscard]] size_t getSwapChainImageCount() const { return swapChain->imageCount();}
-        [[nodiscard]] VkFormat getImageFormat() { return swapChain->getSwapChainImageFormat(); }
+        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return m_swapChain->getRenderPass(); }
+        [[nodiscard]] size_t getSwapChainImageCount() const { return m_swapChain->imageCount();}
+        [[nodiscard]] VkFormat getImageFormat() { return m_swapChain->getSwapChainImageFormat(); }
         [[nodiscard]] bool isFrameInProgress() const { return isFrameStarted; }
-        [[nodiscard]] VkImageView getSwapChainImageView(int i) {return swapChain->getImageView(i);}
+        [[nodiscard]] VkImageView getSwapChainImageView(int i) {return m_swapChain->getImageView(i);}
 
-        [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() { return swapChain->getFrameBuffer(swapChain->getFrameIndex()); }
+        [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() { return m_swapChain->getFrameBuffer(m_swapChain->getFrameIndex()); }
 
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const {
             VC_CORE_ASSERT(isFrameStarted, "Frame not started: can't get command buffer");
-            VC_CORE_ASSERT(currentImageIndex <= commandBuffers.size(), "currentImageIndex out of bounds");
-            return commandBuffers[currentImageIndex];
+            VC_CORE_ASSERT(currentImageIndex <= m_commandBuffers.size(), "currentImageIndex out of bounds");
+            return m_commandBuffers[currentImageIndex];
         }
 
         [[nodiscard]] uint32_t getCurrentImageIndex() const {return currentImageIndex;}
 
         [[nodiscard]] int getFrameIndex() const {
             VC_CORE_ASSERT(isFrameStarted, "Cannot get frame index when frame not in progress");
-            return swapChain->getFrameIndex();
+            return m_swapChain->getFrameIndex();
         }
 
         VkCommandBuffer beginFrame();
         void endFrame();
         void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
-        [[nodiscard]] float getAspectRatio() const { return swapChain->extentAspectRatio(); }
-        [[nodiscard]] VkExtent2D getSwapChainExtent() const {return swapChain->getSwapChainExtent();}
-        void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        [[nodiscard]] float getAspectRatio() const { return m_swapChain->extentAspectRatio(); }
+        [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
+        void endSwapChainRenderPass(VkCommandBuffer commandBuffer) const;
 
         void makeClearColor(const glm::vec4& color) {
             clearValue.color.float32[0] = color.r;
@@ -72,14 +72,14 @@ namespace Vectrix {
         void recreateSwapChain();
         void cleanupSwapChain();
 
-        Window& window;
-        Device& device;
-        Ref<SwapChain> swapChain;
-        std::vector<VkCommandBuffer> commandBuffers;
+        Window& m_window;
+        Device& m_device;
+        Ref<SwapChain> m_swapChain;
+        std::vector<VkCommandBuffer> m_commandBuffers;
 
         uint32_t currentImageIndex{ 0 };
         bool isFrameStarted{ false };
 
-        VkClearValue clearValue = { 0.01f, 0.01f, 0.01f, 1.0f };
+        VkClearValue clearValue = { 0.05f, 0.05f, 0.05f, 1.0f };
     };
 }

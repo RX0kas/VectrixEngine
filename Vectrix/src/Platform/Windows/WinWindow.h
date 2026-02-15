@@ -1,8 +1,10 @@
 #pragma once
 
 #include "vcpch.h"
-#include "Vectrix/Window.h"
+#include "../../Vectrix/Core/Window.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Renderer/RendererAPI.h"
 
 
 namespace Vectrix {
@@ -13,23 +15,30 @@ namespace Vectrix {
 	public:
 		WinWindow();
 
-		[[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(window); }
+		[[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(m_window); }
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
-		[[nodiscard]] VkExtent2D getExtent() const { return { static_cast<uint32_t>(data.Width), static_cast<uint32_t>(data.Height) }; }
-		[[nodiscard]] unsigned int getWidth() const override { return data.Width; }
-		[[nodiscard]] unsigned int getHeight() const override { return data.Height; }
+		[[nodiscard]] unsigned int getWidth() const override { return m_data.Width; }
+		[[nodiscard]] unsigned int getHeight() const override { return m_data.Height; }
+		[[nodiscard]] float getAspect() const override {
+			if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
+				return VulkanContext::instance().getRenderer().getAspectRatio();
+			}
+
+			VC_CORE_WARN("Using default aspect since RendererAPI is not supported");
+			return m_data.Width/m_data.Height;
+		}
 
 		void onUpdate() override;
 
-		[[nodiscard]] bool wasWindowResized() const override { return framebufferResized; }
+		[[nodiscard]] bool wasWindowResized() const override { return m_framebufferResized; }
 
-		void resetWindowResizedFlag() override { framebufferResized = false; }
+		void resetWindowResizedFlag() override { m_framebufferResized = false; }
 
-		[[nodiscard]] void* getNativeWindow() const override { return window; }
+		[[nodiscard]] void* getNativeWindow() const override { return m_window; }
 
-		void setEventCallback(const EventCallbackFn& callback) override { data.EventCallback = callback; }
+		void setEventCallback(const EventCallbackFn& callback) override { m_data.EventCallback = callback; }
 
 		void setVSync(bool enabled) override;
 
@@ -42,20 +51,20 @@ namespace Vectrix {
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
-		bool framebufferResized;
+		bool m_framebufferResized;
 
-		GLFWwindow* window;
-		GraphicsContext* _context;
+		GLFWwindow* m_window;
+		GraphicsContext* m_context;
 
 		struct WindowData
 		{
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-
+			bool windowResized;
 			EventCallbackFn EventCallback;
 		};
 
-		WindowData data;
+		WindowData m_data;
 	};
 }

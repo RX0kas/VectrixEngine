@@ -4,6 +4,8 @@
 #include <fstream>
 #include <utility>
 
+#include "Vectrix/Application.h"
+
 #define OPTIMIZE
 
 namespace Vectrix {
@@ -135,7 +137,7 @@ namespace Vectrix {
 	void VulkanShader::sentCameraUniform(const PerspectiveCamera &camera) const {
 		auto* e = m_layout->find("cameraTransform");
 		if (e == nullptr) {
-			VC_CORE_ERROR("cameraTransform is not found in the layout");
+			VC_CORE_ERROR("Sending camera uniform in a shader that doesn't support camera");
 		}
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera.getTransformationMatrix(), sizeof(glm::mat4));
 	}

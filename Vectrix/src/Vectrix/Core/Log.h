@@ -20,14 +20,6 @@ namespace Vectrix {
 }
 
 // Log macro
-#define VC_CHECK_VK_SUCCESS(x,...) \
-    VkResult r = x; \
-    if (r != VK_SUCCESS) { \
-        ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__, r); \
-        VC_DEBUGBREAK(); \
-		abort(); \
-    }
-
 #define VC_CORE_CRITICAL(...)   ::Vectrix::Log::getCoreLogger()->critical(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error from library
 #define VC_CORE_ERROR(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error caused by the user/dev
 #define VC_CORE_WARN(...)    ::Vectrix::Log::getCoreLogger()->warn(__VA_ARGS__)

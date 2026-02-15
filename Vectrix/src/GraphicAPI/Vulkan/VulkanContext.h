@@ -5,6 +5,8 @@
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 #include "Rendering/Shaders/VulkanShaderCompiler.h"
 
+#define VC_VK_CHECK(x,...) if (x!=VK_SUCCESS) {VC_CORE_ERROR(__VA_ARGS__);}
+
 namespace Vectrix {
 
 	class VulkanContext : public GraphicsContext

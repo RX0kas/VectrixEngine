@@ -14,22 +14,25 @@
 namespace Vectrix {
 	VulkanImGuiManager* VulkanImGuiManager::_instance = nullptr;
 
-    VulkanImGuiManager::VulkanImGuiManager(Window& window, Device& device) : device{ device }, window{ window } {
+    VulkanImGuiManager::VulkanImGuiManager(Window& window) : device{ VulkanContext::instance().getDevice() }, window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
     	VC_CORE_ASSERT(!_instance, "ImGuiManager already exists!");
     	_instance = this;
 		renderer = &VulkanContext::instance().getRenderer();
 	}
 
-	void VulkanImGuiManager::cleanup() {
+    void VulkanImGuiManager::attachDebugGraphicWidget() {
+    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
+    	Application::instance().imguiLayer().addWidget(m_debugWidget);
+    }
+
+    void VulkanImGuiManager::cleanup() {
 		vkDeviceWaitIdle(device.device());
 		VC_CORE_INFO("Destroying ImGui");
 
-		// 1. ImGui backend shutdown
 		ImGui_ImplVulkan_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 
-		// 2. Destruction explicite des objets ImGui
 		if (imGuiRenderPass != VK_NULL_HANDLE) {
 			vkDestroyRenderPass(device.device(), imGuiRenderPass, nullptr);
 			imGuiRenderPass = VK_NULL_HANDLE;
@@ -40,7 +43,6 @@ namespace Vectrix {
 			descriptorPool = VK_NULL_HANDLE;
 		}
 
-		// 3. Contexte ImGui
 		ImGui::DestroyContext();
 	}
 
@@ -62,13 +64,8 @@ namespace Vectrix {
     		framebufferInfo.height = renderer->getSwapChainExtent().height;
     		framebufferInfo.layers = 1;
 
-    		if (vkCreateFramebuffer(
-				device.device(),
-				&framebufferInfo,
-				nullptr,
-				&imGuiFramebuffers[i]) != VK_SUCCESS) {
+    		if (vkCreateFramebuffer(device.device(),&framebufferInfo,nullptr,&imGuiFramebuffers[i]) != VK_SUCCESS)
     			throw std::runtime_error("failed to create ImGui framebuffer!");
-				}
     	}
     }
 
@@ -96,13 +93,6 @@ namespace Vectrix {
 	}
 
 	void VulkanImGuiManager::update() {
-    	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    	// Update and Render additional Platform Windows
-    	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    		ImGui::UpdatePlatformWindows();
-    		ImGui::RenderPlatformWindowsDefault();
-    	}
     }
 
 	void VulkanImGuiManager::initImGui() {

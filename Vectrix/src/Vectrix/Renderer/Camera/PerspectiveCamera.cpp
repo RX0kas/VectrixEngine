@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Renderer/RendererAPI.h"
 
 #define FOVY glm::radians(50.f)
 #define CAM_NEAR 0.1f
@@ -72,7 +73,7 @@ namespace Vectrix {
 	}
 
 	void PerspectiveCamera::recalculateProjectionMatrix() {
-		float aspect = VulkanContext::instance().getRenderer().getAspectRatio();
+		float aspect = Application::instance().window().getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
 
 		const float tanHalfFovy = std::tan(FOVY / 2.f);
