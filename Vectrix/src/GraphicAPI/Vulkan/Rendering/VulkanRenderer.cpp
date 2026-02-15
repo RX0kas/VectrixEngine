@@ -5,6 +5,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "Vectrix/Application.h"
 #include "Vectrix/Renderer/RenderCommand.h"
 #include "Vectrix/Renderer/Shaders/ShaderManager.h"
 
@@ -19,13 +20,15 @@ VC_CORE_ERROR("The only Platform supported is Windows and Linux, VulkanRenderer 
 namespace Vectrix {
 
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device)
-		: window{ window }, device{ device } {
+		: m_window{ window }, m_device{ device } {
 		VC_CORE_INFO("Initializing Renderer");
 		recreateSwapChain();
 
-		const VkFormat f = swapChain->getSwapChainImageFormat();
+		const VkFormat f = m_swapChain->getSwapChainImageFormat();
 		VC_CORE_ASSERT(f!=VK_FORMAT_UNDEFINED,"SwapChain image format is undefined");
 		device.setImageFormat(f);
+
+
 	}
 
 	VulkanRenderer::~VulkanRenderer() {
@@ -34,30 +37,30 @@ namespace Vectrix {
 
 	void VulkanRenderer::recreateSwapChain() {
 #if defined(VC_PLATFORM_WINDOWS)
-		WinWindow& w = dynamic_cast<WinWindow&>(window);
+		WinWindow& w = dynamic_cast<WinWindow&>(m_window);
 #elif defined(VC_PLATFORM_LINUX)
-		auto& w = dynamic_cast<LinWindow&>(window);
+		auto& w = dynamic_cast<LinWindow&>(m_window);
 #else
 		VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRenderer can't recreate the SwapChain");
 #endif
-		auto extent = w.getExtent();
+		VkExtent2D extent = {w.getWidth(),w.getHeight()};
 		while (extent.width == 0 || extent.height == 0) {
-			extent = w.getExtent();
+			extent = {w.getWidth(),w.getHeight()};
 			glfwWaitEvents();
 		}
-		vkDeviceWaitIdle(device.device());
+		vkDeviceWaitIdle(m_device.device());
 
-		if (swapChain == nullptr) {
-			swapChain = std::make_unique<SwapChain>(device, extent);
+		if (m_swapChain == nullptr) {
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent);
 		}
 		else {
-			vkDeviceWaitIdle(device.device()); // OK ICI seulement
+			vkDeviceWaitIdle(m_device.device());
 			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
-			Ref<SwapChain> oldSwapChain = std::move(swapChain);
-			swapChain = std::make_unique<SwapChain>(device, extent, oldSwapChain);
+			Ref<SwapChain> oldSwapChain = std::move(m_swapChain);
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain);
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
-			if (!oldSwapChain->compareSwapFormats(*swapChain)) {
+			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {
 				throw std::runtime_error("Swap chain image(or depth) format has changed!");
 			}
 			oldSwapChain.reset();
@@ -68,45 +71,45 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::cleanupSwapChain() {
-		swapChain->cleanup();
+		m_swapChain->cleanup();
 	}
 
 	void VulkanRenderer::createCommandBuffers() {
-		commandBuffers.resize(swapChain->imageCount());
+		m_commandBuffers.resize(m_swapChain->imageCount());
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandPool = device.getCommandPool();
-		allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
+		allocInfo.commandPool = m_device.getCommandPool();
+		allocInfo.commandBufferCount = static_cast<uint32_t>(m_commandBuffers.size());
 
-		if (vkAllocateCommandBuffers(device.device(), &allocInfo, commandBuffers.data()) !=
+		if (vkAllocateCommandBuffers(m_device.device(), &allocInfo, m_commandBuffers.data()) !=
 			VK_SUCCESS) {
 			throw std::runtime_error("failed to allocate command buffers!");
 		}
 	}
 
 	void VulkanRenderer::freeCommandBuffers() {
-		if (commandBuffers.empty()) return;
+		if (m_commandBuffers.empty()) return;
 		vkFreeCommandBuffers(
-			device.device(),
-			device.getCommandPool(),
-			static_cast<uint32_t>(commandBuffers.size()),
-			commandBuffers.data());
-		commandBuffers.clear();
+			m_device.device(),
+			m_device.getCommandPool(),
+			static_cast<uint32_t>(m_commandBuffers.size()),
+			m_commandBuffers.data());
+		m_commandBuffers.clear();
 	}
 
 	VkCommandBuffer VulkanRenderer::beginFrame() {
 		VC_CORE_ASSERT(!isFrameStarted, "Frame already started");
 
-		VkResult result = swapChain->acquireNextImage(&currentImageIndex);
+		VkResult result = m_swapChain->acquireNextImage(&currentImageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			return VK_NULL_HANDLE;
 		}
 
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-			throw std::runtime_error("failed to acquire swap chain image!");
+			VC_CORE_CRITICAL("failed to acquire swap chain image!");
 		}
 
 		isFrameStarted = true;
@@ -129,15 +132,15 @@ namespace Vectrix {
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
 		vkEndCommandBuffer(commandBuffer);
 
-		VkResult result = swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
+		VkResult result = m_swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
 
 		bool needRecreate =
 			result == VK_ERROR_OUT_OF_DATE_KHR ||
 			result == VK_SUBOPTIMAL_KHR ||
-			window.wasWindowResized();
+			m_window.wasWindowResized();
 
 		if (needRecreate) {
-			window.resetWindowResizedFlag();
+			m_window.resetWindowResizedFlag();
 			isFrameStarted = false;
 			return;
 		}
@@ -147,7 +150,7 @@ namespace Vectrix {
 		}
 
 		isFrameStarted = false;
-		swapChain->advanceFrame();
+		m_swapChain->advanceFrame();
 	}
 
 	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
@@ -156,11 +159,11 @@ namespace Vectrix {
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = swapChain->getRenderPass();
-		renderPassInfo.framebuffer = swapChain->getFrameBuffer(currentImageIndex);
+		renderPassInfo.renderPass = m_swapChain->getRenderPass();
+		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(currentImageIndex);
 
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
+		renderPassInfo.renderArea.extent = m_swapChain->getSwapChainExtent();
 
 		std::array<VkClearValue, 2> clearValues{};
 		clearValues[0].color = { 0.01f, 0.01f, 0.01f, 1.0f };
@@ -173,20 +176,19 @@ namespace Vectrix {
 		VkViewport viewport{};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(swapChain->getSwapChainExtent().width);
-		viewport.height = static_cast<float>(swapChain->getSwapChainExtent().height);
+		viewport.width = static_cast<float>(m_swapChain->getSwapChainExtent().width);
+		viewport.height = static_cast<float>(m_swapChain->getSwapChainExtent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		VkRect2D scissor{ {0, 0}, swapChain->getSwapChainExtent() };
+		VkRect2D scissor{ {0, 0}, m_swapChain->getSwapChainExtent() };
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	}
 
-	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) const {
 		VC_CORE_ASSERT(isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
-		VC_CORE_ASSERT(
-			commandBuffer == getCurrentCommandBuffer(),
-			"Can't end render pass on command buffer from a different frame");
+		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(),"Can't end render pass on command buffer from a different frame");
+		VC_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE,"Can't end render pass if commandBuffer is VK_NULL_HANDLE");
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
@@ -197,7 +199,7 @@ namespace Vectrix {
 
 	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() const {
 		DebugFrameInfo f{};
-		f.frameIndex = swapChain->getFrameIndex();
+		f.frameIndex = m_swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;
 
 		f.semaphores = std::vector<DebugSemaphoreInfo>(); // TODO: Implement Semaphores and fences
@@ -207,10 +209,10 @@ namespace Vectrix {
 		std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
 		for (auto& shader : ShaderManager::instance().getAll()) {
-			VulkanShader* s = dynamic_cast<VulkanShader*>(shader.get());
+			auto* s = dynamic_cast<VulkanShader*>(shader.get());
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
-			DebugDescriptorSetInfo d;
+			DebugDescriptorSetInfo d{};
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}
@@ -218,7 +220,7 @@ namespace Vectrix {
 		f.images = {};
 		f.buffers = {};
 
-		f.drawCalls = VulkanRendererAPI::s_drawCalls;
+		f.drawCalls = VulkanRendererAPI::getDrawCalls();
 		f.dispatchCalls = 0;
 		return f;
 	}

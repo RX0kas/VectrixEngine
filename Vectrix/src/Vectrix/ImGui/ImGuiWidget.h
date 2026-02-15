@@ -6,9 +6,10 @@
 namespace Vectrix {
     class ImGuiWidget {
     public:
-        ImGuiWidget(const std::string& name = "Widget");
-        virtual ~ImGuiWidget();
-        virtual void render();
+        ImGuiWidget(std::string name = "Widget");
+        virtual ~ImGuiWidget() = 0;
+
+        virtual void render() = 0;
         [[nodiscard]] const std::string& getName() const { return m_DebugName; }
     protected:
         std::string m_DebugName;

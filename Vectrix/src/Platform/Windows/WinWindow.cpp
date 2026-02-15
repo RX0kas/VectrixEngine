@@ -5,8 +5,6 @@
 #include "Vectrix/Events/WindowEvent.h"
 #include "Vectrix/Events/KeyEvent.h"
 
-#include "GraphicAPI/Vulkan/VulkanContext.h"
-
 namespace Vectrix {
 	static bool s_GLFWInitialized = false; // Might be multiple window
 
@@ -16,7 +14,7 @@ namespace Vectrix {
 	}
 
 	void WinWindow::shutdown() {
-		glfwDestroyWindow(window);
+		glfwDestroyWindow(m_window);
 
 		if (s_GLFWInitialized)
 		{
@@ -42,109 +40,105 @@ namespace Vectrix {
 	}
 
 	void WinWindow::init(const WindowAttributes& attributes) {
-		this->data.Width = attributes.width;
-		this->data.Height = attributes.height;
-		this->data.Title = attributes.title;
-
 		VC_CORE_INFO("Creating window {0} ({1}, {2})", attributes.title, attributes.width, attributes.height);
 
-		
+		m_data.Width = attributes.width;
+		m_data.Height = attributes.height;
+		m_data.Title = attributes.title;
+		m_data.aspect = m_data.Width/m_data.Height;
 
-		window = glfwCreateWindow(attributes.width, attributes.height, attributes.title.c_str(), nullptr, nullptr);
-		glfwSetWindowUserPointer(window, &data);
+
+
+		m_window = glfwCreateWindow(attributes.width, attributes.height, attributes.title.c_str(), nullptr, nullptr);
+		glfwSetWindowUserPointer(m_window, &m_data);
 
 
 		// Set some callbacks
-		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+		glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
-		glfwSetWindowSizeCallback(window, [](GLFWwindow* window, int width, int height)
+		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+			data.Width = width;
+			data.Height = height;
+			data.aspect = data.Width/data.Height;
+
+			WindowResizeEvent event(width, height);
+			data.EventCallback(event);
+		});
+
+		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+			WindowCloseEvent event;
+			data.EventCallback(event);
+		});
+
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+			switch (action)
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				data.Width = width;
-				data.Height = height;
-
-				WindowResizeEvent event(width, height);
+			case GLFW_PRESS:
+			{
+				KeyPressedEvent event(key, 0);
 				data.EventCallback(event);
-			});
-
-		glfwSetWindowCloseCallback(window, [](GLFWwindow* window)
+				break;
+			}
+			case GLFW_RELEASE:
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				WindowCloseEvent event;
+				KeyReleasedEvent event(key);
 				data.EventCallback(event);
-			});
-
-		glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+				break;
+			}
+			case GLFW_REPEAT:
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					KeyPressedEvent event(key, 0);
-					data.EventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					KeyReleasedEvent event(key);
-					data.EventCallback(event);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent event(key, 1);
-					data.EventCallback(event);
-					break;
-				}
-				}
-			});
-
-		glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				switch (action)
-				{
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent event(button);
-					data.EventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent event(button);
-					data.EventCallback(event);
-					break;
-				}
-				}
-			});
-
-		glfwSetScrollCallback(window, [](GLFWwindow* window, double xOffset, double yOffset)
-			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				MouseScrolledEvent event((float)xOffset, (float)yOffset);
+				KeyPressedEvent event(key, 1);
 				data.EventCallback(event);
-			});
+				break;
+			}
+			}
+		});
 
-		glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xPos, double yPos)
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			switch (action)
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-				MouseMovedEvent event((float)xPos, (float)yPos);
+			case GLFW_PRESS:
+			{
+				MouseButtonPressedEvent event(button);
 				data.EventCallback(event);
-			});
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				MouseButtonReleasedEvent event(button);
+				data.EventCallback(event);
+				break;
+			}
+			}
+		});
+
+		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			data.EventCallback(event);
+		});
+
+		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			MouseMovedEvent event((float)xPos, (float)yPos);
+			data.EventCallback(event);
+		});
 
 
-		_context = new VulkanContext(window);
-		_context->init();
+		m_context = new VulkanContext(m_window);
+		m_context->init();
 	}
 
 	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
-		VC_CHECK_VK_SUCCESS(glfwCreateWindowSurface(instance, window, nullptr, surface),"Could not create a WindowSurface");
+		VC_VK_CHECK(glfwCreateWindowSurface(instance, m_window, nullptr, surface),"Could not create a WindowSurface");
 	}
 
 	void WinWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {

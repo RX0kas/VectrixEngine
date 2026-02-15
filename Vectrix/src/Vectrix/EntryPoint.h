@@ -8,8 +8,8 @@ extern Vectrix::Application* Vectrix::createApplication();
 int main(int argc, char** argv)
 {
 	Vectrix::Log::init();
-#ifdef VC_PLATFORM_LINUX
-	VC_CORE_WARN("The support for Linux is still experimental");
+#ifdef VC_PLATFORM_WINDOWS
+	VC_CORE_WARN("The support for Windows is still experimental");
 #endif
 
 

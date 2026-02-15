@@ -18,8 +18,8 @@
 [submodule "Vectrix/extern/SPIRV-Tools"]
 	path = Vectrix/extern/SPIRV-Tools
 	url = https://github.com/KhronosGroup/SPIRV-Tools
-[submodule "Vectrix/extern/SPIRV-Header"]
-	path = Vectrix/extern/SPIRV-Header
+[submodule "Vectrix/extern/SPIRV-Headers"]
+	path = Vectrix/extern/SPIRV-Headers
 	url = https://github.com/KhronosGroup/SPIRV-Headers
 [submodule "Vectrix/extern/glslang"]
 	path = Vectrix/extern/glslang

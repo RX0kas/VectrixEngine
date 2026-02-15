@@ -1,6 +1,6 @@
 #pragma once
 #include "vcpch.h"
-#include "Vectrix/Window.h"
+#include "../../../Vectrix/Core/Window.h"
 
 namespace Vectrix {
     struct DescriptorPoolConfig {

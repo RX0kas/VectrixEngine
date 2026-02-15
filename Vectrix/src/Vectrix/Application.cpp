@@ -20,12 +20,13 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
 
+
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
 		m_shaderManager = std::make_unique<ShaderManager>();
 
-		m_ImGuiLayer = new ImGuiLayer();
+		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
 		PushOverlay(m_ImGuiLayer);
 	}
 
@@ -44,14 +45,18 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
-
 		while (m_running) {
 			auto time = static_cast<float>(glfwGetTime());
-			DeltaTime deltaTime = time - m_LastFrameTime;
+			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
-			for (Layer* layer : m_layerStack) {
-				layer->OnRender();
-				layer->OnUpdate(deltaTime);
+			if (RenderCommand::setupFrame()) {
+				for (const Ref<Layer>& layer : m_layerStack) {
+					if (layer->getName()==m_ImGuiLayer->getName()) continue; // TODO: Find a better way
+
+					layer->OnRender();
+					layer->OnUpdate(m_deltaTime);
+				}
+				RenderCommand::endFrame();
 			}
 
 			m_window->onUpdate();
@@ -63,13 +68,13 @@ namespace Vectrix {
 		return true;
 	}
 
-	void Application::PushLayer(Layer* layer)
+	void Application::PushLayer(const Ref<Layer>& layer)
 	{
 		m_layerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* layer)
+	void Application::PushOverlay(const Ref<Layer>& layer)
 	{
 		m_layerStack.PushOverlay(layer);
 		layer->OnAttach();
@@ -77,7 +82,7 @@ namespace Vectrix {
 
 
 	void Application::renderImGui() {
-		for (Layer* layer : m_layerStack)
+		for (const Ref<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
 	}
 }

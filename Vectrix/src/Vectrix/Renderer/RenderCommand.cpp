@@ -6,5 +6,5 @@
 namespace Vectrix {
 
 	RendererAPI* RenderCommand::s_RendererAPI = new VulkanRendererAPI();
-
+	bool RenderCommand::frameStarted = false;
 }

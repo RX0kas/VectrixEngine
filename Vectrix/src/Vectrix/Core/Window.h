@@ -4,7 +4,7 @@
 
 #include "vcpch.h"
 
-#include "Core/Core.h"
+#include "Core.h"
 #include "Vectrix/Events/Event.h"
 
 namespace Vectrix {
@@ -35,6 +35,7 @@ namespace Vectrix {
 
 		[[nodiscard]] virtual unsigned int getWidth() const = 0;
 		[[nodiscard]] virtual unsigned int getHeight() const = 0;
+		[[nodiscard]] virtual float getAspect() const = 0;
 
 		// Window attributes
 		virtual void setEventCallback(const EventCallbackFn& callback) = 0;

@@ -1,4 +1,5 @@
 #pragma once
+#include "Vectrix/ImGui/ImGuiManager.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"
@@ -16,16 +17,17 @@
 
 namespace Vectrix {
 
-	class VulkanImGuiManager
+	class VulkanImGuiManager : public ImGuiManager
 	{
     public:
-        VulkanImGuiManager(Window& window, Device& device);
+        VulkanImGuiManager(Window& window);
 
-        void initImGui();
+        void initImGui() override;
 
-        void render();
-        void update();
-        void cleanup();
+        void render() override;
+        void update() override;
+        void cleanup() override;
+		void attachDebugGraphicWidget() override;
 		static VulkanImGuiManager& instance() { return *_instance; }
 		void destroyImGuiFramebuffers();
         void createImGuiFramebuffers();
@@ -44,6 +46,7 @@ private:
             VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
         }
 	private:
+		Ref<VulkanDebugWidget> m_debugWidget;
         Device& device;
         Window& window;
         VulkanRenderer* renderer;

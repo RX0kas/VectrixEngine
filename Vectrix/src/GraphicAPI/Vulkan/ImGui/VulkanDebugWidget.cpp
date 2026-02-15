@@ -1,5 +1,5 @@
 #include "VulkanDebugWidget.h"
-
+#include "Vectrix/ImGui/ImGuiWidget.h"
 #include "imgui.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
@@ -8,7 +8,7 @@ namespace Vectrix {
         m_DebugName = name;
     }
 
-    VulkanDebugWidget::~VulkanDebugWidget() {}
+    VulkanDebugWidget::~VulkanDebugWidget() = default;
 
     void VulkanDebugWidget::render() {
         if (!ImGui::Begin("Vulkan Debug")) {
@@ -87,8 +87,8 @@ namespace Vectrix {
                 ImGui::BulletText(
                     "%s | Size: %llu | Offset: %llu",
                     buf.name,
-                    (unsigned long long)buf.size,
-                    (unsigned long long)buf.offset
+                    static_cast<unsigned long long>(buf.size),
+                    static_cast<unsigned long long>(buf.offset)
                 );
             }
         }

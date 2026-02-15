@@ -1,6 +1,8 @@
 #include "vcpch.h"
 #include "SwapChain.h"
 
+#include "GraphicAPI/Vulkan/VulkanContext.h"
+
 #ifdef VC_PLATFORM_WINDOWS
 #include <vulkan/vk_enum_string_helper.h>
 #elif defined(VC_PLATFORM_LINUX)
@@ -33,7 +35,6 @@ namespace Vectrix {
         createRenderPass();
         createDepthResources();
         createFramebuffers();
-
         createSyncObjects();
     }
 
@@ -65,17 +66,11 @@ namespace Vectrix {
             vkDestroySemaphore(device.device(), semaphore, nullptr);
         }
         renderFinishedSemaphores.clear();
+
         for (auto semaphore : imageAvailableSemaphores) {
             vkDestroySemaphore(device.device(), semaphore, nullptr);
         }
         imageAvailableSemaphores.clear();
-
-        for (auto semaphore : renderFinishedSemaphoresPerImage) {
-            if (semaphore != VK_NULL_HANDLE) {
-                vkDestroySemaphore(device.device(), semaphore, nullptr);
-            }
-        }
-        renderFinishedSemaphoresPerImage.clear();
 
         for (auto fence : inFlightFences) {
             vkDestroyFence(device.device(), fence, nullptr);
@@ -100,27 +95,21 @@ namespace Vectrix {
     }
 
 
-    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex) {
-        // Sanity checks
-        VC_CORE_ASSERT(imageIndex != nullptr, "imageIndex null");
+    VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex) {
+        VC_CORE_ASSERT(imageIndex != nullptr, "imageIndex is null");
         VC_CORE_ASSERT(*imageIndex < imagesInFlight.size(), "imageIndex out of bounds");
 
-        // If a previous frame is still using this image, wait for its fence.
         if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
 
-        // Mark this image as now being in flight on the current frame's fence
-        imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
+        vkResetFences(device.device(), 1, &inFlightFences[currentFrame]);
 
-        // Submit info: wait for the "image available" semaphore of current frame,
-        // signal the renderFinished semaphore specific to this image.
         VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
         VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
         VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[*imageIndex] };
 
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
         submitInfo.waitSemaphoreCount = 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
@@ -129,17 +118,14 @@ namespace Vectrix {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        // Reset the fence for this frame and submit
-        vkResetFences(device.device(), 1, &inFlightFences[currentFrame]);
-
         VkResult submitRes = vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]);
         if (submitRes != VK_SUCCESS) {
-            VC_CORE_CRITICAL("vkQueueSubmit failed: {0}", string_VkResult(submitRes));
+            VC_CORE_CRITICAL("vkQueueSubmit failed: {}", string_VkResult(submitRes));
         }
 
-        // Present using the same per-image renderFinished semaphore
-        VkPresentInfoKHR presentInfo{};
-        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
+
+        VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = signalSemaphores;
         presentInfo.swapchainCount = 1;
@@ -147,13 +133,7 @@ namespace Vectrix {
         presentInfo.pImageIndices = imageIndex;
         presentInfo.pResults = nullptr;
 
-        VkResult presentRes = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
-
-        // Advance to next frame index only if submit/present didn't indicate swapchain recreation needed.
-        //currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-        // Handle special cases upstream: VK_ERROR_OUT_OF_DATE_KHR, VK_SUBOPTIMAL_KHR, etc.
-        return presentRes;
+        return vkQueuePresentKHR(device.presentQueue(), &presentInfo);
     }
 
 
@@ -389,8 +369,7 @@ namespace Vectrix {
     void SwapChain::createSyncObjects() {
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-        renderFinishedSemaphores.resize(imageCount()); // one semaphore per swapchain image
-
+        renderFinishedSemaphores.resize(imageCount());
         imagesInFlight.resize(imageCount(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
@@ -401,18 +380,13 @@ namespace Vectrix {
         fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT; // start signaled so first vkWaitForFences returns immediately
 
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
-            if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-                vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create per-frame sync objects!");
-                }
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            VC_VK_CHECK(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]),"Failed to create imageAvailableSemaphores[{}]",i);
+            VC_VK_CHECK(vkCreateFence(device.device(), &fenceInfo, nullptr, &inFlightFences[i]),"Failed to create inFlightFences[{}]",i);
         }
 
-        // create one render finished semaphore per swapchain image
-        for (auto & renderFinishedSemaphore : renderFinishedSemaphores) {
-            if (vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphore) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create per-image renderFinished semaphore!");
-            }
+        for (uint32_t i = 0; i < imageCount(); i++) {
+            VC_VK_CHECK(vkCreateSemaphore(device.device(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]),"Failed to create renderFinishedSemaphores[{}]",i);
         }
     }
 

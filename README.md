@@ -7,7 +7,9 @@ An engine made to run all of my little graphics project
 ![Screenshot or demo GIF](basic-preview.png)
 
 ## Features
-
+ - Vulkan powered rendering
+ - OBJ Model Loading
+ - Runtime shader compilation
 
 ## Prerequisites
 - [CMake 3.21.7](https://cmake.org/download/)
@@ -65,8 +67,9 @@ endif()
 
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
+- [ ] Refactor to have the same naming convention everywhere and add better comments
 - [ ] Create the API documentation
-- [ ] Refactor to have the same naming convention everywhere
+- [ ] Find a better way to deal with the ImGuiLayer
 - [ ] Add a material system
 - [ ] Add an editor
 
