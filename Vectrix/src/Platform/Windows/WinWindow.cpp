@@ -45,7 +45,6 @@ namespace Vectrix {
 		m_data.Width = attributes.width;
 		m_data.Height = attributes.height;
 		m_data.Title = attributes.title;
-		m_data.aspect = m_data.Width/m_data.Height;
 
 
 
@@ -60,7 +59,6 @@ namespace Vectrix {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 			data.Width = width;
 			data.Height = height;
-			data.aspect = data.Width/data.Height;
 
 			WindowResizeEvent event(width, height);
 			data.EventCallback(event);
@@ -162,11 +160,11 @@ namespace Vectrix {
 	void WinWindow::setVSync(bool enabled)
 	{
 		// TODO: Changer la swapchain pour appliquer l'effet
-		data.VSync = enabled;
+		m_data.VSync = enabled;
 	}
 
 	bool WinWindow::isVSync() const
 	{
-		return data.VSync;
+		return m_data.VSync;
 	}
 }
