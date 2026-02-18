@@ -85,10 +85,6 @@ public:
 	void OnRender() override {
 	    // Tell the renderer to start rendering a scene
 		Vectrix::Renderer::BeginScene(*m_camera);
-        // Send the camera data
-		main->sentCameraUniform(*m_camera);
-	    // Give the model data
-		main->setModelMatrix(m_model->getModelMatrix());
 	    // Tell to draw the model
 		Vectrix::Renderer::Submit(*main.get(),*m_model);
         // Send the frame

@@ -9,8 +9,8 @@
 #define OPTIMIZE
 
 namespace Vectrix {
-	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout)
-		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)}
+	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
+		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
 	{
 		m_layout->finalize();
 		m_ssbo = std::make_unique<SSBO>(m_device,*m_layout);
@@ -134,12 +134,12 @@ namespace Vectrix {
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &value, sizeof(glm::mat4));
 	}
 
-	void VulkanShader::sentCameraUniform(const PerspectiveCamera &camera) const {
+	void VulkanShader::sendCameraUniform(const glm::mat4& camera) const {
 		auto* e = m_layout->find("cameraTransform");
 		if (e == nullptr) {
 			VC_CORE_ERROR("Sending camera uniform in a shader that doesn't support camera");
 		}
-		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera.getTransformationMatrix(), sizeof(glm::mat4));
+		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
 
 	void VulkanShader::setModelMatrix(const glm::mat4& model) const {
