@@ -4,14 +4,12 @@
 #include "Vectrix.h"
 #include "imgui.h"
 #include "../CameraWidget.h"
-#include "Vectrix/Renderer/Models/ObjLoader.h"
 #include "Vectrix/Utils/Math.h"
 
 class ExampleLayer : public Vectrix::Layer
 {
 public:
-	ExampleLayer()
-		: Layer("Example") {
+	ExampleLayer() : Layer("Example") {
 		m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
 		m_camera->setPosition({0.0f,0.0f,3.0f});
 		m_camera->setRotation({0.0f,-M_PI,0.0f});
@@ -84,9 +82,6 @@ private:
 	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
 	CameraWidget *m_cameraWidget;
 
-	Vectrix::Ref<Vectrix::VertexArray> m_vertexArray;
-
-	Vectrix::Own<Vectrix::Shader> _shader;
 	Vectrix::Ref<Vectrix::Shader> def;
 	Vectrix::Own<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";

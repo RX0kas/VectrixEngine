@@ -28,8 +28,6 @@ namespace Vectrix {
             VkDeviceSize minOffsetAlignment = 1);
         ~Buffer();
 
-        void cleanup();
-
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         void unmap();
 
@@ -38,34 +36,32 @@ namespace Vectrix {
         VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 
-        void writeToIndex(void* data, int index);
         VkResult flushIndex(int index);
         VkDescriptorBufferInfo descriptorInfoForIndex(int index);
         VkResult invalidateIndex(int index);
 
-        VkBuffer getBuffer() const { return buffer; }
-        void* getMappedMemory() const { return mapped; }
-        uint32_t getInstanceCount() const { return instanceCount; }
-        VkDeviceSize getInstanceSize() const { return instanceSize; }
-        VkDeviceSize getAlignmentSize() const { return instanceSize; }
-        VkBufferUsageFlags getUsageFlags() const { return usageFlags; }
-        VkMemoryPropertyFlags getMemoryPropertyFlags() const { return memoryPropertyFlags; }
-        VkDeviceSize getBufferSize() const { return bufferSize; }
-        VkDeviceMemory getMemory() const {return memory;}
+        VkBuffer getBuffer() const { return m_buffer; }
+        void* getMappedMemory() const { return m_mapped; }
+        uint32_t getInstanceCount() const { return m_instanceCount; }
+        VkDeviceSize getInstanceSize() const { return m_instanceSize; }
+        VkDeviceSize getAlignmentSize() const { return m_instanceSize; }
+        VkBufferUsageFlags getUsageFlags() const { return m_usageFlags; }
+        VkMemoryPropertyFlags getMemoryPropertyFlags() const { return m_memoryPropertyFlags; }
+        VkDeviceSize getBufferSize() const { return m_bufferSize; }
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
-        Device& device;
-        void* mapped = nullptr;
-        VkBuffer buffer = VK_NULL_HANDLE;
-        VkDeviceMemory memory = VK_NULL_HANDLE;
+        Device& m_device;
+        void* m_mapped = nullptr;
+        VkBuffer m_buffer = VK_NULL_HANDLE;
+        VmaAllocation m_allocation = VK_NULL_HANDLE;
 
-        VkDeviceSize bufferSize;
-        uint32_t instanceCount;
-        VkDeviceSize instanceSize;
-        VkDeviceSize alignmentSize;
-        VkBufferUsageFlags usageFlags;
-        VkMemoryPropertyFlags memoryPropertyFlags;
+        VkDeviceSize m_bufferSize;
+        uint32_t m_instanceCount;
+        VkDeviceSize m_instanceSize;
+        VkDeviceSize m_alignmentSize;
+        VkBufferUsageFlags m_usageFlags;
+        VkMemoryPropertyFlags m_memoryPropertyFlags;
     };
     
     class VulkanVertexBuffer : public VertexBuffer {

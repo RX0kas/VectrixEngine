@@ -24,3 +24,6 @@
 [submodule "Vectrix/extern/glslang"]
 	path = Vectrix/extern/glslang
 	url = https://github.com/KhronosGroup/glslang
+[submodule "Vectrix/extern/VulkanMemoryAllocator"]
+	path = Vectrix/extern/VulkanMemoryAllocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator

@@ -30,7 +30,9 @@ namespace Vectrix {
 		PushOverlay(m_ImGuiLayer);
 	}
 
-	Application::~Application() = default;
+	Application::~Application() {
+		m_ImGuiLayer.reset();
+	}
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);

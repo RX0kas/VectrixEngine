@@ -1,21 +1,17 @@
-#include "VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanVertexArray.h"
 
-#include "../../../Vectrix/Core/Log.h"
+#include "Vectrix/Core/Log.h"
 
 namespace Vectrix {
-    VulkanVertexArray::VulkanVertexArray() {
+    VulkanVertexArray::VulkanVertexArray() = default;
 
-    }
-
-    VulkanVertexArray::~VulkanVertexArray() {
-
-    }
+    VulkanVertexArray::~VulkanVertexArray() = default;
 
     void VulkanVertexArray::bind() const {
-        for (auto& buffer : m_VertexBuffers)
+        for (auto& buffer : m_vertexBuffers)
             buffer->bind();
-        if (m_IndexBuffer)
-            m_IndexBuffer->bind();
+        if (m_indexBuffer)
+            m_indexBuffer->bind();
     }
 
     void VulkanVertexArray::unbind() const {
@@ -25,11 +21,11 @@ namespace Vectrix {
     void VulkanVertexArray::addVertexBuffer(const Ref<VertexBuffer> &vertexBuffer) {
         VC_CORE_ASSERT(!vertexBuffer->getLayout().getElements().empty(),"Vertex Buffer has no layout!");
 
-        m_VertexBuffers.push_back(vertexBuffer);
+        m_vertexBuffers.push_back(vertexBuffer);
     }
 
     void VulkanVertexArray::setIndexBuffer(const Ref<IndexBuffer> &indexBuffer) {
-        m_IndexBuffer.reset();
-        m_IndexBuffer = indexBuffer;
+        m_indexBuffer.reset();
+        m_indexBuffer = indexBuffer;
     }
 } // Vectrix

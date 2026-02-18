@@ -28,7 +28,7 @@
 #include "Vectrix/Renderer/Models/Model.h"
 
 #include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
-
+#include "Vectrix/Renderer/Models/ObjLoader.h"
 
 // Entry Point
 #include "Vectrix/EntryPoint.h"

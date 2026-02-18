@@ -17,22 +17,27 @@ namespace Vectrix {
     bool Device::enableValidationLayers = true;
 
     // local callback functions
-    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-        VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-        VkDebugUtilsMessageTypeFlagsEXT messageType,
-        const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-        void* pUserData) {
-        VC_CORE_ERROR("validation layer: {0}", pCallbackData->pMessage);
+    static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+        switch (messageSeverity) {
+            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+                VC_CORE_TRACE("validation layer: {0}", pCallbackData->pMessage);
+                break;
+            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+                VC_CORE_INFO("validation layer: {0}", pCallbackData->pMessage);
+                break;
+            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+                VC_CORE_WARN("validation layer: {0}", pCallbackData->pMessage);
+                break;
+            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+                VC_CORE_ERROR("validation layer: {0}", pCallbackData->pMessage);
+            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
+                VC_CORE_CRITICAL("validation layer: {0}", pCallbackData->pMessage);
+        }
+        return true;
     }
 
-    VkResult CreateDebugUtilsMessengerEXT(
-        VkInstance instance,
-        const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-        const VkAllocationCallbacks* pAllocator,
-        VkDebugUtilsMessengerEXT* pDebugMessenger) {
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-            instance,
-            "vkCreateDebugUtilsMessengerEXT");
+    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+        auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
         if (func != nullptr) {
             return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
         }
@@ -40,13 +45,8 @@ namespace Vectrix {
         return VK_ERROR_EXTENSION_NOT_PRESENT;
     }
 
-    void DestroyDebugUtilsMessengerEXT(
-        VkInstance instance,
-        VkDebugUtilsMessengerEXT debugMessenger,
-        const VkAllocationCallbacks* pAllocator) {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-            instance,
-            "vkDestroyDebugUtilsMessengerEXT");
+    void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+        auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
         if (func != nullptr) {
             func(instance, debugMessenger, pAllocator);
         }
@@ -60,20 +60,33 @@ namespace Vectrix {
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
+
+        VmaAllocatorCreateInfo allocatorCreateInfo = {};
+        allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
+        allocatorCreateInfo.vulkanApiVersion = VK_API_VERSION_1_2;
+        allocatorCreateInfo.physicalDevice = physicalDevice();
+        allocatorCreateInfo.device = device();
+        allocatorCreateInfo.instance = instance();
+        vmaCreateAllocator(&allocatorCreateInfo,&m_allocator);
+
         createCommandPool();
         createDescriptorPool(cfg);
     }
 
     Device::~Device() {
         vkDestroyCommandPool(m_device, m_commandPool, nullptr);
+        vkDestroyDescriptorPool(m_device,m_descriptorPool,nullptr);
+        vmaDestroyAllocator(m_allocator);
+
         vkDestroyDevice(m_device, nullptr);
 
         if (enableValidationLayers) {
             DestroyDebugUtilsMessengerEXT(m_instance, m_debugMessenger, nullptr);
         }
-        vkDestroyDescriptorPool(m_device,m_descriptorPool,nullptr);
 
         vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
+
+
         vkDestroyInstance(m_instance, nullptr);
         VC_CORE_INFO("Device destroyed");
     }
@@ -113,7 +126,7 @@ namespace Vectrix {
         }
 
         if (vkCreateInstance(&createInfo, nullptr, &m_instance) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create Vulkan instance");
+            VC_CORE_CRITICAL("Failed to create Vulkan instance");
         }
 
         hasGflwRequiredInstanceExtensions();
@@ -123,9 +136,8 @@ namespace Vectrix {
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
         if (deviceCount == 0) {
-            throw std::runtime_error("failed to find GPUs with Vulkan support!");
+            VC_CORE_CRITICAL("Failed to find GPUs with Vulkan support");
         }
-        //VC_CORE_INFO("Device count: {0}", deviceCount);
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.data());
 
@@ -137,18 +149,17 @@ namespace Vectrix {
         }
 
         if (m_physicalDevice == VK_NULL_HANDLE) {
-            throw std::runtime_error("failed to find a suitable GPU!");
+            VC_CORE_CRITICAL("Failed to find a suitable GPU");
         }
 
         vkGetPhysicalDeviceProperties(m_physicalDevice, &properties);
-        //VC_CORE_INFO("physical device: {0}", properties.deviceName);
     }
 
     void Device::createLogicalDevice() {
         QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-        std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
+        std::set uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -178,7 +189,7 @@ namespace Vectrix {
 
 
         if (vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_device) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create logical device!");
+            VC_CORE_CRITICAL("Failed to create logical device");
         }
 
         vkGetDeviceQueue(m_device, indices.graphicsFamily, 0, &m_graphicsQueue);
@@ -195,7 +206,7 @@ namespace Vectrix {
             VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
         if (vkCreateCommandPool(m_device, &poolInfo, nullptr, &m_commandPool) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create command pool!");
+            VC_CORE_CRITICAL("Failed to create command pool");
         }
     }
 
@@ -242,7 +253,7 @@ namespace Vectrix {
 
     void Device::createSurface() {
         if (glfwCreateWindowSurface(m_instance, static_cast<GLFWwindow*>(m_window.getNativeWindow()), nullptr, &m_surface) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create window surface!");
+            VC_CORE_CRITICAL("Failed to create window surface");
         }
     }
 
@@ -260,19 +271,14 @@ namespace Vectrix {
         VkPhysicalDeviceFeatures supportedFeatures;
         vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
 
-        return indices.isComplete() && extensionsSupported && swapChainAdequate &&
-            supportedFeatures.samplerAnisotropy;
+        return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
     }
 
-    void Device::populateDebugMessengerCreateInfo(
-        VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+    void Device::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-            VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-        createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-            VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-            VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+        createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
         createInfo.pUserData = nullptr;  // Optional
     }
@@ -314,10 +320,9 @@ namespace Vectrix {
 
     std::vector<const char*> Device::getRequiredExtensions() {
         uint32_t glfwExtensionCount = 0;
-        const char** glfwExtensions;
-        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-        std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+        std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
         if (enableValidationLayers) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -332,21 +337,15 @@ namespace Vectrix {
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-        //VC_CORE_INFO("available extensions:");
         std::unordered_set<std::string> available;
         for (const auto& extension : extensions) {
-            //VC_CORE_INFO("\t{0}", extension.extensionName);
-
             available.insert(extension.extensionName);
         }
 
-        //VC_CORE_INFO("required extensions:");
         auto requiredExtensions = getRequiredExtensions();
         for (const auto& required : requiredExtensions) {
-            //VC_CORE_INFO("\t{0}", required);
             if (available.find(required) == available.end()) {
                 VC_CORE_CRITICAL("Missing required glfw extension: {0}", required);
-                abort();
             }
         }
     }
@@ -356,11 +355,7 @@ namespace Vectrix {
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-        vkEnumerateDeviceExtensionProperties(
-            device,
-            nullptr,
-            &extensionCount,
-            availableExtensions.data());
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
         std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
@@ -419,17 +414,12 @@ namespace Vectrix {
 
         if (presentModeCount != 0) {
             details.presentModes.resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(
-                device,
-                m_surface,
-                &presentModeCount,
-                details.presentModes.data());
+            vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_surface, &presentModeCount, details.presentModes.data());
         }
         return details;
     }
 
-    VkFormat Device::findSupportedFormat(
-        const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+    VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
         for (VkFormat format : candidates) {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(m_physicalDevice, format, &props);
@@ -442,7 +432,7 @@ namespace Vectrix {
                 return format;
             }
         }
-        throw std::runtime_error("failed to find supported format!");
+        VC_CORE_CRITICAL("Failed to find supported format");
     }
 
     uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memoryProperties) {
@@ -455,38 +445,26 @@ namespace Vectrix {
             }
         }
 
-        throw std::runtime_error("failed to find suitable memory type!");
+        VC_CORE_CRITICAL("Failed to find suitable memory type");
     }
 
-    void Device::createBuffer(
-        VkDeviceSize size,
-        VkBufferUsageFlags usage,
-        VkMemoryPropertyFlags memoryProperties,
-        VkBuffer& buffer,
-        VkDeviceMemory& bufferMemory) {
+    void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation) {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
         bufferInfo.usage = usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        if (vkCreateBuffer(m_device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create vertex buffer!");
+        VmaAllocationCreateInfo allocCreateInfo = {};
+        allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+        allocCreateInfo.flags = 0;
+        if (memoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
+            allocCreateInfo.flags |= VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
         }
 
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(m_device, buffer, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, memoryProperties);
-
-        if (vkAllocateMemory(m_device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate vertex buffer memory!");
+        if (vmaCreateBuffer(m_allocator, &bufferInfo, &allocCreateInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
+            VC_CORE_CRITICAL("Failed to create buffer");
         }
-
-        vkBindBufferMemory(m_device, buffer, bufferMemory, 0);
     }
 
     VkCommandBuffer Device::beginSingleTimeCommands() {
@@ -550,39 +528,34 @@ namespace Vectrix {
         region.imageOffset = { 0, 0, 0 };
         region.imageExtent = { width, height, 1 };
 
-        vkCmdCopyBufferToImage(
-            commandBuffer,
-            buffer,
-            image,
-            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-            1,
-            &region);
+        vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
         endSingleTimeCommands(commandBuffer);
     }
 
-    void Device::createImageWithInfo(
-        const VkImageCreateInfo& imageInfo,
-        VkMemoryPropertyFlags memoryProperties,
-        VkImage& image,
-        VkDeviceMemory& imageMemory) {
-        if (vkCreateImage(m_device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create image!");
+    void Device::createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags memoryProperties, VkImage& image, VmaAllocation& allocation) {
+        VmaAllocationCreateInfo allocCreateInfo = {};
+        allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+        if (memoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
+            allocCreateInfo.flags |= VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
         }
 
-        VkMemoryRequirements memRequirements;
-        vkGetImageMemoryRequirements(m_device, image, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, memoryProperties);
-
-        if (vkAllocateMemory(m_device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate image memory!");
+        if (memoryProperties & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) {
+            allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
         }
 
-        if (vkBindImageMemory(m_device, image, imageMemory, 0) != VK_SUCCESS) {
-            throw std::runtime_error("failed to bind image memory!");
+        if (vmaCreateImage(m_allocator, &imageInfo, &allocCreateInfo, &image, &allocation, nullptr) != VK_SUCCESS) {
+            VC_CORE_CRITICAL("Failed to create image");
         }
     }
+
+    void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation) {
+        vkDeviceWaitIdle(m_device);
+        vmaDestroyBuffer(m_allocator, buffer, allocation);
+    }
+
+    void Device::destroyImage(VkImage image, VmaAllocation allocation) {
+        vkDeviceWaitIdle(m_device);
+        vmaDestroyImage(m_allocator, image, allocation);
+    }
+
 }

@@ -32,7 +32,9 @@ namespace Vectrix {
 	}
 
 	VulkanRenderer::~VulkanRenderer() {
+		vkDeviceWaitIdle(m_device.device());
 		freeCommandBuffers();
+		cleanupSwapChain();
 	}
 
 	void VulkanRenderer::recreateSwapChain() {
@@ -61,8 +63,9 @@ namespace Vectrix {
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
 			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {
-				throw std::runtime_error("Swap chain image(or depth) format has changed!");
+				VC_CORE_ERROR("Swap chain image(or depth) format has changed");
 			}
+			oldSwapChain->cleanup();
 			oldSwapChain.reset();
 		}
 
@@ -83,19 +86,14 @@ namespace Vectrix {
 		allocInfo.commandPool = m_device.getCommandPool();
 		allocInfo.commandBufferCount = static_cast<uint32_t>(m_commandBuffers.size());
 
-		if (vkAllocateCommandBuffers(m_device.device(), &allocInfo, m_commandBuffers.data()) !=
-			VK_SUCCESS) {
-			throw std::runtime_error("failed to allocate command buffers!");
+		if (vkAllocateCommandBuffers(m_device.device(), &allocInfo, m_commandBuffers.data()) != VK_SUCCESS) {
+			VC_CORE_TRACE("Failed to allocate command buffers");
 		}
 	}
 
 	void VulkanRenderer::freeCommandBuffers() {
 		if (m_commandBuffers.empty()) return;
-		vkFreeCommandBuffers(
-			m_device.device(),
-			m_device.getCommandPool(),
-			static_cast<uint32_t>(m_commandBuffers.size()),
-			m_commandBuffers.data());
+		vkFreeCommandBuffers(m_device.device(),m_device.getCommandPool(),static_cast<uint32_t>(m_commandBuffers.size()),m_commandBuffers.data());
 		m_commandBuffers.clear();
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "vcpch.h"
-#include "../../../Vectrix/Core/Window.h"
+#include "Vectrix/Core/Window.h"
+#include "vk_mem_alloc.h"
 
 namespace Vectrix {
     struct DescriptorPoolConfig {
@@ -53,23 +54,13 @@ namespace Vectrix {
             const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
         // Buffer Helper Functions
-        void createBuffer(
-            VkDeviceSize size,
-            VkBufferUsageFlags usage,
-            VkMemoryPropertyFlags properties,
-            VkBuffer& buffer,
-            VkDeviceMemory& bufferMemory);
+	    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation);
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-        void copyBufferToImage(
-            VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount);
+        void copyBufferToImage( VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount);
 
-        void createImageWithInfo(
-            const VkImageCreateInfo& imageInfo,
-            VkMemoryPropertyFlags properties,
-            VkImage& image,
-            VkDeviceMemory& imageMemory);
+        void createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties, VkImage& image, VmaAllocation& allocation);
 
         VkPhysicalDeviceProperties properties;
 
@@ -78,6 +69,11 @@ namespace Vectrix {
         }
 
 	    VkDescriptorSetLayout createFrameSSBOLayout();
+
+		void destroyBuffer(VkBuffer buffer, VmaAllocation allocation);
+		void destroyImage(VkImage image, VmaAllocation allocation);
+
+		VmaAllocator getAllocator() const {return m_allocator;}
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -101,6 +97,8 @@ namespace Vectrix {
         VkDebugUtilsMessengerEXT m_debugMessenger;
         Window& m_window;
         VkCommandPool m_commandPool;
+
+	    VmaAllocator m_allocator;
 
         VkDevice m_device;
         VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;

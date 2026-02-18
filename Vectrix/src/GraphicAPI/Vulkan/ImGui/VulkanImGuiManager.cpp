@@ -12,13 +12,13 @@
 
 
 namespace Vectrix {
-	VulkanImGuiManager* VulkanImGuiManager::_instance = nullptr;
+	VulkanImGuiManager* VulkanImGuiManager::m_instance = nullptr;
 
-    VulkanImGuiManager::VulkanImGuiManager(Window& window) : device{ VulkanContext::instance().getDevice() }, window{ window } {
+    VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
-    	VC_CORE_ASSERT(!_instance, "ImGuiManager already exists!");
-    	_instance = this;
-		renderer = &VulkanContext::instance().getRenderer();
+    	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists!");
+    	m_instance = this;
+		m_renderer = &VulkanContext::instance().getRenderer();
 	}
 
     void VulkanImGuiManager::attachDebugGraphicWidget() {
@@ -27,55 +27,60 @@ namespace Vectrix {
     }
 
     void VulkanImGuiManager::cleanup() {
-		vkDeviceWaitIdle(device.device());
+		vkDeviceWaitIdle(m_device.device());
 		VC_CORE_INFO("Destroying ImGui");
 
 		ImGui_ImplVulkan_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 
-		if (imGuiRenderPass != VK_NULL_HANDLE) {
-			vkDestroyRenderPass(device.device(), imGuiRenderPass, nullptr);
-			imGuiRenderPass = VK_NULL_HANDLE;
+		if (m_imGuiRenderPass != VK_NULL_HANDLE) {
+			vkDestroyRenderPass(m_device.device(), m_imGuiRenderPass, nullptr);
+			m_imGuiRenderPass = VK_NULL_HANDLE;
 		}
 
-		if (descriptorPool != VK_NULL_HANDLE) {
-			vkDestroyDescriptorPool(device.device(), descriptorPool, nullptr);
-			descriptorPool = VK_NULL_HANDLE;
+		if (m_descriptorPool != VK_NULL_HANDLE) {
+			vkDestroyDescriptorPool(m_device.device(), m_descriptorPool, nullptr);
+			m_descriptorPool = VK_NULL_HANDLE;
 		}
+
+    	for (auto f : m_imGuiFramebuffers) {
+    		if (f!=VK_NULL_HANDLE)
+    			vkDestroyFramebuffer(m_device.device(),f,nullptr);
+    	}
 
 		ImGui::DestroyContext();
 	}
 
 	void VulkanImGuiManager::createImGuiFramebuffers() {
-    	imGuiFramebuffers.resize(renderer->getSwapChainImageCount());
+    	m_imGuiFramebuffers.resize(m_renderer->getSwapChainImageCount());
 
-    	for (size_t i = 0; i < imGuiFramebuffers.size(); i++) {
-    		VC_CORE_ASSERT(renderer->getSwapChainImageView(i) != VK_NULL_HANDLE,"Swapchain image view is null for index {}", i);
+    	for (size_t i = 0; i < m_imGuiFramebuffers.size(); i++) {
+    		VC_CORE_ASSERT(m_renderer->getSwapChainImageView(i) != VK_NULL_HANDLE,"Swapchain image view is null for index {}", i);
     		VkImageView attachments[] = {
-    			renderer->getSwapChainImageView(i)
+    			m_renderer->getSwapChainImageView(i)
 			};
 
     		VkFramebufferCreateInfo framebufferInfo{};
     		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    		framebufferInfo.renderPass = imGuiRenderPass;
+    		framebufferInfo.renderPass = m_imGuiRenderPass;
     		framebufferInfo.attachmentCount = 1;
     		framebufferInfo.pAttachments = attachments;
-    		framebufferInfo.width = renderer->getSwapChainExtent().width;
-    		framebufferInfo.height = renderer->getSwapChainExtent().height;
+    		framebufferInfo.width = m_renderer->getSwapChainExtent().width;
+    		framebufferInfo.height = m_renderer->getSwapChainExtent().height;
     		framebufferInfo.layers = 1;
 
-    		if (vkCreateFramebuffer(device.device(),&framebufferInfo,nullptr,&imGuiFramebuffers[i]) != VK_SUCCESS)
+    		if (vkCreateFramebuffer(m_device.device(),&framebufferInfo,nullptr,&m_imGuiFramebuffers[i]) != VK_SUCCESS)
     			throw std::runtime_error("failed to create ImGui framebuffer!");
     	}
     }
 
 	void VulkanImGuiManager::destroyImGuiFramebuffers() {
-    	for (auto fb : imGuiFramebuffers) {
+    	for (auto fb : m_imGuiFramebuffers) {
     		if (fb != VK_NULL_HANDLE) {
-    			vkDestroyFramebuffer(device.device(), fb, nullptr);
+    			vkDestroyFramebuffer(m_device.device(), fb, nullptr);
     		}
     	}
-    	imGuiFramebuffers.clear();
+    	m_imGuiFramebuffers.clear();
     }
 
 
@@ -100,9 +105,9 @@ namespace Vectrix {
 		VC_CORE_INFO("initializing ImGui");
 
 #ifdef VC_PLATFORM_WINDOWS
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<WinWindow&>(window).getNativeWindow());
+		auto* w = static_cast<GLFWwindow*>(dynamic_cast<WinWindow&>(m_window).getNativeWindow());
 #else
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<LinWindow&>(window).getNativeWindow());
+		auto* w = static_cast<GLFWwindow*>(dynamic_cast<LinWindow&>(m_window).getNativeWindow());
 #endif
 
 		// Setup Dear ImGui context
@@ -134,15 +139,15 @@ namespace Vectrix {
 		ImGui_ImplGlfw_InitForVulkan(w, true);
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.ApiVersion = VK_API_VERSION_1_2; // same as VkApplicationInfo::apiVersion
-		init_info.Instance = device.instance();
-		init_info.PhysicalDevice = device.physicalDevice();
-		init_info.Device = device.device();
-		init_info.QueueFamily = findGraphicsQueueFamilyIndex(device.physicalDevice());
-		init_info.Queue = device.graphicsQueue();
+		init_info.Instance = m_device.instance();
+		init_info.PhysicalDevice = m_device.physicalDevice();
+		init_info.Device = m_device.device();
+		init_info.QueueFamily = findGraphicsQueueFamilyIndex(m_device.physicalDevice());
+		init_info.Queue = m_device.graphicsQueue();
 		//init_info.PipelineCache = g_PipelineCache;
 		init_info.DescriptorPool = createImGuiDescriptorPool();
 		init_info.MinImageCount = 2;
-		init_info.ImageCount = renderer->getSwapChainImageCount(); // lets Dear ImGui know how many framebuffers and resources in general it should allocate
+		init_info.ImageCount = m_renderer->getSwapChainImageCount(); // lets Dear ImGui know how many framebuffers and resources in general it should allocate
 		init_info.Allocator = nullptr;
 		init_info.PipelineInfoMain.RenderPass = createImGuiRenderPass();
 		init_info.PipelineInfoMain.Subpass = 0;
@@ -170,7 +175,7 @@ namespace Vectrix {
 	VkRenderPass VulkanImGuiManager::createImGuiRenderPass() {
     	VC_CORE_INFO("Creating ImGui RenderPass");
     	VkAttachmentDescription colorAttachment{};
-    	colorAttachment.format = renderer->getImageFormat();
+    	colorAttachment.format = m_renderer->getImageFormat();
     	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
     	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
     	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -206,26 +211,26 @@ namespace Vectrix {
     	renderPassInfo.pDependencies = &dependency;
 
     	VkRenderPass renderPass = VK_NULL_HANDLE;
-    	VkResult res = vkCreateRenderPass(device.device(), &renderPassInfo, nullptr, &renderPass);
+    	VkResult res = vkCreateRenderPass(m_device.device(), &renderPassInfo, nullptr, &renderPass);
 
     	if (res != VK_SUCCESS)
     	{
     		throw std::runtime_error("Failed to create ImGui render pass");
     	}
 
-    	imGuiRenderPass = renderPass;
+    	m_imGuiRenderPass = renderPass;
 
     	return renderPass;
     }
 
 	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) {
-    	VC_CORE_ASSERT(imGuiRenderPass != VK_NULL_HANDLE, "ImGui render pass not created");
-    	VC_CORE_ASSERT(imageIndex < imGuiFramebuffers.size(), "Invalid ImGui framebuffer index");
+    	VC_CORE_ASSERT(m_imGuiRenderPass != VK_NULL_HANDLE, "ImGui render pass not created");
+    	VC_CORE_ASSERT(imageIndex < m_imGuiFramebuffers.size(), "Invalid ImGui framebuffer index");
 
     	VkRenderPassBeginInfo renderPassInfo{};
     	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    	renderPassInfo.renderPass = imGuiRenderPass;
-    	renderPassInfo.framebuffer = imGuiFramebuffers[imageIndex];
+    	renderPassInfo.renderPass = m_imGuiRenderPass;
+    	renderPassInfo.framebuffer = m_imGuiFramebuffers[imageIndex];
     	renderPassInfo.renderArea.offset = {0, 0};
     	renderPassInfo.renderArea.extent = VulkanContext::instance().getRenderer().getSwapChainExtent();
 
@@ -283,7 +288,7 @@ namespace Vectrix {
 		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
 		pool_info.pPoolSizes = pool_sizes;
 
-		vkCreateDescriptorPool(device.device(), &pool_info, nullptr, &descriptorPool);
-		return descriptorPool;
+		vkCreateDescriptorPool(m_device.device(), &pool_info, nullptr, &m_descriptorPool);
+		return m_descriptorPool;
 	}
 }

@@ -1,6 +1,6 @@
 #include "vcpch.h"
 
-#include "VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 /*
@@ -91,11 +91,7 @@ namespace Vectrix {
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        VulkanContext::instance().getDevice().copyBuffer(
-            stagingBuffer.getBuffer(),
-            buffer->getBuffer(),
-            bufferSize);
-
+        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(),buffer->getBuffer(),bufferSize);
     }
 
 
@@ -174,27 +170,19 @@ namespace Vectrix {
         return instanceSize;
     }
 
-    Buffer::Buffer(
-        VkDeviceSize instanceSize,
-        uint32_t instanceCount,
-        VkBufferUsageFlags usageFlags,
-        VkMemoryPropertyFlags memoryPropertyFlags,
-        VkDeviceSize minOffsetAlignment)
-        : device{ VulkanContext::instance().getDevice()},
-        instanceSize{ instanceSize },
-        instanceCount{ instanceCount },
-        usageFlags{ usageFlags },
-        memoryPropertyFlags{ memoryPropertyFlags } {
-        alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
-        bufferSize = alignmentSize * instanceCount;
-        device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, buffer, memory);
+    Buffer::Buffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment)
+            : m_device{ VulkanContext::instance().getDevice()}, m_instanceSize{ instanceSize }, m_instanceCount{ instanceCount }, m_usageFlags{ usageFlags }, m_memoryPropertyFlags{ memoryPropertyFlags } {
+        m_alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
+        m_bufferSize = m_alignmentSize * instanceCount;
+
+        m_device.createBuffer(m_bufferSize, usageFlags, memoryPropertyFlags, m_buffer, m_allocation);
     }
 
     Buffer::~Buffer() {
         unmap();
-        vkDeviceWaitIdle(device.device()); // TODO: Find if there is a better method the wait until the complete execution of the buffer
-        vkDestroyBuffer(device.device(), buffer, nullptr);
-        vkFreeMemory(device.device(), memory, nullptr);
+        if (m_buffer != VK_NULL_HANDLE) {
+            m_device.destroyBuffer(m_buffer, m_allocation);
+        }
     }
 
     /**
@@ -207,8 +195,8 @@ namespace Vectrix {
      * @return VkResult of the buffer mapping call
      */
     VkResult Buffer::map(VkDeviceSize size, VkDeviceSize offset) {
-        VC_CORE_ASSERT(buffer && memory, "Called map on buffer before create");
-        return vkMapMemory(device.device(), memory, offset, size, 0, &mapped);
+        VC_CORE_ASSERT(m_buffer != VK_NULL_HANDLE && m_allocation != VK_NULL_HANDLE, "Called map on buffer before create");
+        return vmaMapMemory(m_device.getAllocator(), m_allocation, &m_mapped);
     }
 
     /**
@@ -217,9 +205,9 @@ namespace Vectrix {
      * @note Does not return a result as vkUnmapMemory can't fail
      */
     void Buffer::unmap() {
-        if (mapped) {
-            vkUnmapMemory(device.device(), memory);
-            mapped = nullptr;
+        if (m_mapped) {
+            vmaUnmapMemory(m_device.getAllocator(), m_allocation);
+            m_mapped = nullptr;
         }
     }
 
@@ -233,15 +221,14 @@ namespace Vectrix {
      *
      */
     void Buffer::writeToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
-        VC_CORE_ASSERT(mapped, "Cannot copy to unmapped buffer");
+        VC_CORE_ASSERT(m_mapped, "Cannot copy to unmapped buffer");
+
+        char* mem = static_cast<char*>(m_mapped) + offset;
 
         if (size == VK_WHOLE_SIZE) {
-            memcpy(mapped, data, bufferSize);
-        }
-        else {
-            auto memOffset = (char*)mapped;
-            memOffset += offset;
-            memcpy(memOffset, data, size);
+            memcpy(m_mapped, data, m_bufferSize);
+        } else {
+            memcpy(mem, data, size);
         }
     }
 
@@ -259,10 +246,14 @@ namespace Vectrix {
     VkResult Buffer::flush(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedRange.memory = memory;
+
+        VmaAllocationInfo pAllocationInfo;
+        vmaGetAllocationInfo(m_device.getAllocator(), m_allocation,&pAllocationInfo);
+
+        mappedRange.memory = pAllocationInfo.deviceMemory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkFlushMappedMemoryRanges(device.device(), 1, &mappedRange);
+        return vkFlushMappedMemoryRanges(m_device.device(), 1, &mappedRange);
     }
 
     /**
@@ -279,10 +270,14 @@ namespace Vectrix {
     VkResult Buffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedRange.memory = memory;
+
+        VmaAllocationInfo pAllocationInfo;
+        vmaGetAllocationInfo(m_device.getAllocator(), m_allocation,&pAllocationInfo);
+
+        mappedRange.memory = pAllocationInfo.deviceMemory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkInvalidateMappedMemoryRanges(device.device(), 1, &mappedRange);
+        return vkInvalidateMappedMemoryRanges(m_device.device(), 1, &mappedRange);
     }
 
     /**
@@ -295,7 +290,7 @@ namespace Vectrix {
      */
     VkDescriptorBufferInfo Buffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
         return VkDescriptorBufferInfo{
-            buffer,
+            m_buffer,
             offset,
             size,
         };
@@ -307,7 +302,7 @@ namespace Vectrix {
      * @param index Used in offset calculation
      *
      */
-    VkResult Buffer::flushIndex(int index) { return flush(alignmentSize, index * alignmentSize); }
+    VkResult Buffer::flushIndex(int index) { return flush(m_alignmentSize, index * m_alignmentSize); }
 
     /**
      * Create a buffer info descriptor
@@ -317,7 +312,7 @@ namespace Vectrix {
      * @return VkDescriptorBufferInfo for instance at index
      */
     VkDescriptorBufferInfo Buffer::descriptorInfoForIndex(int index) {
-        return descriptorInfo(alignmentSize, index * alignmentSize);
+        return descriptorInfo(m_alignmentSize, index * m_alignmentSize);
     }
 
     /**
@@ -330,6 +325,6 @@ namespace Vectrix {
      * @return VkResult of the invalidate call
      */
     VkResult Buffer::invalidateIndex(int index) {
-        return invalidate(alignmentSize, index * alignmentSize);
+        return invalidate(m_alignmentSize, index * m_alignmentSize);
     }
 }

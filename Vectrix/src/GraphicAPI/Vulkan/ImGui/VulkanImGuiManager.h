@@ -28,7 +28,7 @@ namespace Vectrix {
         void update() override;
         void cleanup() override;
 		void attachDebugGraphicWidget() override;
-		static VulkanImGuiManager& instance() { return *_instance; }
+		static VulkanImGuiManager& instance() { return *m_instance; }
 		void destroyImGuiFramebuffers();
         void createImGuiFramebuffers();
 
@@ -47,15 +47,15 @@ private:
         }
 	private:
 		Ref<VulkanDebugWidget> m_debugWidget;
-        Device& device;
-        Window& window;
-        VulkanRenderer* renderer;
+        Device& m_device;
+        Window& m_window;
+        VulkanRenderer* m_renderer;
         //VkPipelineCache g_PipelineCache = VK_NULL_HANDLE;
-        VkRenderPass imGuiRenderPass;
-        VkDescriptorPool descriptorPool = nullptr;
-		std::vector<VkFramebuffer> imGuiFramebuffers;
+        VkRenderPass m_imGuiRenderPass;
+        VkDescriptorPool m_descriptorPool = nullptr;
+		std::vector<VkFramebuffer> m_imGuiFramebuffers;
 	private:
-		static VulkanImGuiManager* _instance;
+		static VulkanImGuiManager* m_instance;
 	};
 
 }

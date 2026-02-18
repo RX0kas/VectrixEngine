@@ -6,6 +6,7 @@
 #include "Vectrix/Events/KeyEvent.h"
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Renderer/GraphicsContext.h"
 
 namespace Vectrix {
 	static bool s_GLFWInitialized = false; // Might be multiple window
@@ -16,6 +17,7 @@ namespace Vectrix {
 	}
 
 	void LinWindow::shutdown() {
+		VC_CORE_INFO("Destroying Window");
 		glfwDestroyWindow(m_window);
 
 		if (s_GLFWInitialized)
@@ -23,6 +25,9 @@ namespace Vectrix {
 			glfwTerminate();
 			s_GLFWInitialized = false;
 		}
+
+		GraphicsContext* g = m_context.release();
+		delete g;
 	}
 
 	LinWindow::LinWindow() {
@@ -35,10 +40,12 @@ namespace Vectrix {
 
 			s_GLFWInitialized = true;
 
-
-			// TODO: put it in a better place, like VulkanContext
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			GraphicsContext::setClientAPI();
 		}
+	}
+
+	LinWindow::~LinWindow() {
+		shutdown();
 	}
 
 	void LinWindow::init(const WindowAttributes& attributes) {
@@ -131,7 +138,7 @@ namespace Vectrix {
 		});
 
 
-		m_context = new VulkanContext(m_window);
+		m_context = std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
 		m_context->init();
 	}
 

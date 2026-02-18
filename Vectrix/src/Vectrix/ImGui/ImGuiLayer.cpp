@@ -10,7 +10,12 @@ namespace Vectrix {
 
 	}
 
-	ImGuiLayer::~ImGuiLayer() = default;
+	ImGuiLayer::~ImGuiLayer() {
+		VC_CORE_INFO("Destroying ImGuiLayer");
+		m_manager->cleanup();
+		auto* m = m_manager.release();
+		delete m;
+	};
 
 	void ImGuiLayer::OnRender() {
 		m_manager->render();
