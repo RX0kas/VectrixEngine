@@ -20,7 +20,7 @@ namespace Vectrix {
 			m_widgets.push_back(std::shared_ptr(widget));
 		}
 	private:
-		ImGuiManager *m_manager;
+		Own<ImGuiManager> m_manager;
 		std::vector<Ref<ImGuiWidget>> m_widgets;
 	};
 

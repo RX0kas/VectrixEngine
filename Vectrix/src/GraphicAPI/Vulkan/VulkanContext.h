@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vk_mem_alloc.h"
 #include "Vectrix/Renderer/GraphicsContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
@@ -13,20 +14,21 @@ namespace Vectrix {
 	{
 	public:
 		VulkanContext(GLFWwindow* windowHandle);
-
+		~VulkanContext() override;
 		void init() override;
 		void swapBuffers() override;
 
 
-		[[nodiscard]] Device& getDevice() const { return *p_device; }
-		[[nodiscard]] VulkanRenderer& getRenderer() const { return *p_renderer; }
-		[[nodiscard]] VulkanShaderCompiler& getCompiler() const { return *p_compiler;}
+		[[nodiscard]] Device& getDevice() const { return *m_device; }
+		[[nodiscard]] VulkanRenderer& getRenderer() const { return *m_renderer; }
+		[[nodiscard]] VulkanShaderCompiler& getCompiler() const { return *m_compiler;}
+		[[nodiscard]] VmaAllocator getAllocator() const { return getDevice().getAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
 	private:
-		GLFWwindow* p_WindowHandle;
-		Ref<Device> p_device;
-		Ref<VulkanRenderer> p_renderer;
-		Own<VulkanShaderCompiler> p_compiler;
+		GLFWwindow* m_WindowHandle;
+		Own<Device> m_device;
+		Own<VulkanRenderer> m_renderer;
+		Own<VulkanShaderCompiler> m_compiler;
 		
 		friend class Shader;
 		friend class VulkanVertexBuffer;

@@ -7,7 +7,6 @@ namespace Vectrix {
     class Model {
     public:
         static Model create(const std::vector<Vertex>& vertices, const BufferLayout& layout);
-        static Model create(const std::string &filepath, const BufferLayout& layout);
         static Model create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const BufferLayout& layout);
         static Model load(const std::string& pathObj);
 

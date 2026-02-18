@@ -49,6 +49,9 @@ message(VERBOSE "Initializing glslang")
 add_subdirectory(Vectrix/extern/glslang)
 
 add_subdirectory(Vectrix/extern/shaderc)
+# VulkanMemoryAllocator
+message(VERBOSE "Initializing VulkanMemoryAllocator")
+add_subdirectory(Vectrix/extern/VulkanMemoryAllocator)
 
 # GLFW
 message(VERBOSE "Initializing GLFW")
@@ -151,6 +154,7 @@ if (UNIX AND NOT APPLE)
             shaderc
             X11::X11
             xxHash::xxhash
+            GPUOpen::VulkanMemoryAllocator
     )
 else()
 target_link_libraries(Vectrix
@@ -158,6 +162,7 @@ target_link_libraries(Vectrix
         Vulkan::Vulkan
         shaderc
         xxHash::xxhash
+        GPUOpen::VulkanMemoryAllocator
 )
 endif()
 

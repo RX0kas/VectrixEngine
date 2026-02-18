@@ -13,8 +13,8 @@ namespace Vectrix {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI is set to None");
-		case RendererAPI::API::Vulkan:  return new VulkanVertexBuffer(vertices, size);
+			case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI is set to None");
+			case RendererAPI::API::Vulkan:  return new VulkanVertexBuffer(vertices, size);
 		}
 
 		VC_CORE_ERROR("Unknown RendererAPI!");
@@ -24,8 +24,8 @@ namespace Vectrix {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!");
-		case RendererAPI::API::Vulkan:  return new VulkanIndexBuffer(indices, size);
+			case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!");
+			case RendererAPI::API::Vulkan:  return new VulkanIndexBuffer(indices, size);
 		}
 
 		VC_CORE_ERROR("Unknown RendererAPI!");

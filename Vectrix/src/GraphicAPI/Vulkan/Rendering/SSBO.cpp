@@ -1,5 +1,7 @@
 #include "SSBO.h"
 
+#include "GraphicAPI/Vulkan/VulkanContext.h"
+
 
 namespace Vectrix {
     SSBO::SSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout) {
@@ -18,13 +20,9 @@ namespace Vectrix {
         m_bufferSize = static_cast<VkDeviceSize>(m_elementStride) * m_framesInFlight;
 
         // GPU Buffer
-        m_device.createBuffer(m_bufferSize,
-            VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            m_buffer,
-            m_memory);
+        m_device.createBuffer(m_bufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_buffer, m_allocation);
 
-        vkMapMemory(m_device.device(), m_memory, 0, m_bufferSize, 0, &m_mapped);
+        vmaMapMemory(VulkanContext::instance().getAllocator(), m_allocation, &m_mapped);
         memset(m_mapped, 0, m_bufferSize);
 
         VkDescriptorSetLayoutBinding b{};
@@ -41,7 +39,7 @@ namespace Vectrix {
         li.pBindings = &b;
 
         if (vkCreateDescriptorSetLayout(m_device.device(), &li, nullptr, &m_descriptorSetLayout) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create descriptor set layout");
+            VC_CORE_CRITICAL("Failed to create descriptor set layout");
         }
 
         m_descriptorSets.resize(m_framesInFlight);
@@ -52,7 +50,7 @@ namespace Vectrix {
         alloc.pSetLayouts = layouts.data();
 
         if (vkAllocateDescriptorSets(m_device.device(), &alloc, m_descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to allocate SSBO descriptor sets");
+            VC_CORE_CRITICAL("Failed to allocate SSBO descriptor sets");
         }
 
         for (uint32_t i = 0; i < m_framesInFlight; ++i) {
@@ -75,9 +73,8 @@ namespace Vectrix {
 
     SSBO::~SSBO()
     {
-        if (m_mapped) vkUnmapMemory(m_device.device(), m_memory);
-        if (m_buffer) vkDestroyBuffer(m_device.device(), m_buffer, nullptr);
-        if (m_memory) vkFreeMemory(m_device.device(), m_memory, nullptr);
+        if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
+        m_device.destroyBuffer(m_buffer, m_allocation);
         vkDestroyDescriptorSetLayout(m_device.device(), m_descriptorSetLayout, nullptr);
     }
 } // Vectrix

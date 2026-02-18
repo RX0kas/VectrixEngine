@@ -13,6 +13,7 @@ namespace Vectrix {
 		// That's an internal class to handle the window things on Linux
 	public:
 		LinWindow();
+		~LinWindow() override;
 
 		bool shouldClose() { return glfwWindowShouldClose(m_window); }
 
@@ -44,14 +45,12 @@ namespace Vectrix {
 		[[nodiscard]] bool isVSync() const override;
 		void init(const WindowAttributes& data = WindowAttributes()) override;
 	private:
-		virtual void shutdown();
-
-	private:
+		void shutdown();
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
 		GLFWwindow* m_window;
-		GraphicsContext* m_context;
+		Own<GraphicsContext> m_context;
 
 		struct WindowData
 		{

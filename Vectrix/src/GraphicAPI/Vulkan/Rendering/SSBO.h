@@ -37,7 +37,6 @@ namespace Vectrix {
     private:
         Device& m_device;
         VkBuffer m_buffer{};
-        VkDeviceMemory m_memory{};
         void* m_mapped{};
         VkDescriptorSetLayout m_descriptorSetLayout{};
         std::vector<VkDescriptorSet> m_descriptorSets;
@@ -46,6 +45,8 @@ namespace Vectrix {
         uint32_t m_framesInFlight{};
         std::vector<uint8_t> m_storage;
         ShaderUniformLayout& m_layout;
+
+        VmaAllocation m_allocation;
     };
 } // Vectrix
 
