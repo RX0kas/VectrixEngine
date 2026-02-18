@@ -22,6 +22,7 @@ namespace Vectrix {
 	private:
 		Own<ImGuiManager> m_manager;
 		std::vector<Ref<ImGuiWidget>> m_widgets;
+		bool m_attached;
 	};
 
 }

@@ -5,14 +5,14 @@
 #include "Vectrix/Application.h"
 
 namespace Vectrix {
-	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer"), m_manager(ImGuiManager::create(Application::instance().window()))
-	{
-
+	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer"), m_manager(ImGuiManager::create(Application::instance().window())), m_attached(false) {
 	}
 
 	ImGuiLayer::~ImGuiLayer() {
 		VC_CORE_INFO("Destroying ImGuiLayer");
-		m_manager->cleanup();
+		if (m_attached)
+			m_manager->cleanup();
+
 		auto* m = m_manager.release();
 		delete m;
 	};
@@ -36,11 +36,13 @@ namespace Vectrix {
 	{
 		m_manager->initImGui();
 		m_manager->attachDebugGraphicWidget();
+		m_attached = true;
 	}
 
 	void ImGuiLayer::OnDetach()
 	{
 		m_manager->cleanup();
+		m_attached = false;
 	}
 
 	void ImGuiLayer::OnImGuiRender() {

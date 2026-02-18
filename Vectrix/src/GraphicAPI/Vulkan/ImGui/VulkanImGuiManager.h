@@ -38,13 +38,6 @@ private:
         void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex);
         void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
-
-        static void check_vk_result(VkResult err) {
-            if (err == VK_SUCCESS)
-                return;
-
-            VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
-        }
 	private:
 		Ref<VulkanDebugWidget> m_debugWidget;
         Device& m_device;

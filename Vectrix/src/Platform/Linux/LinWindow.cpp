@@ -30,7 +30,7 @@ namespace Vectrix {
 		delete g;
 	}
 
-	LinWindow::LinWindow() {
+	LinWindow::LinWindow() : m_window(nullptr), m_data() {
 		if (!s_GLFWInitialized) {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
@@ -80,60 +80,64 @@ namespace Vectrix {
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				KeyPressedEvent event(key, 0);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				KeyReleasedEvent event(key);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-				KeyPressedEvent event(key, 1);
-				data.EventCallback(event);
-				break;
-			}
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent event(key, 0);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent event(key);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent event(key, 1);
+					data.EventCallback(event);
+					break;
+				}
+				default: {
+					VC_CORE_CRITICAL("Unknown KeyButtonCallback Action: {}",action);
+				}
 			}
 		});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				MouseButtonPressedEvent event(button);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButtonReleasedEvent event(button);
-				data.EventCallback(event);
-				break;
-			}
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					MouseButtonPressedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleasedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
+				default: {
+					VC_CORE_CRITICAL("Unknown MouseButtonCallback Action: {}",action);
+				}
 			}
 		});
 
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
 			data.EventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			MouseMovedEvent event((float)xPos, (float)yPos);
+			MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
 			data.EventCallback(event);
 		});
 
@@ -142,12 +146,12 @@ namespace Vectrix {
 		m_context->init();
 	}
 
-	void LinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
+	void LinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const {
 		VC_VK_CHECK(glfwCreateWindowSurface(instance, m_window, nullptr, surface),"Couldn't create a WindowSurface")
 	}
 
 	void LinWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 		data.Width = width;
 		data.Height = height;
 		data.windowResized = true;

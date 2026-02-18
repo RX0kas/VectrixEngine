@@ -14,10 +14,11 @@ namespace Vectrix {
 		// That's an internal class to handle the window things on Windows
 	public:
 		WinWindow();
+		~WinWindow() override;
 
 		[[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(m_window); }
 
-		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const;
 
 		[[nodiscard]] unsigned int getWidth() const override { return m_data.Width; }
 		[[nodiscard]] unsigned int getHeight() const override { return m_data.Height; }
@@ -32,9 +33,9 @@ namespace Vectrix {
 
 		void onUpdate() override;
 
-		[[nodiscard]] bool wasWindowResized() const override { return m_framebufferResized; }
+		[[nodiscard]] bool wasWindowResized() const override { return m_data.windowResized; }
 
-		void resetWindowResizedFlag() override { m_framebufferResized = false; }
+		void resetWindowResizedFlag() override { m_data.windowResized = false; }
 
 		[[nodiscard]] void* getNativeWindow() const override { return m_window; }
 
@@ -45,16 +46,12 @@ namespace Vectrix {
 		[[nodiscard]] bool isVSync() const override;
 		void init(const WindowAttributes& data = WindowAttributes()) override;
 	private:
-		virtual void shutdown();
-
-	private:
+		void shutdown();
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
-		bool m_framebufferResized;
-
 		GLFWwindow* m_window;
-		GraphicsContext* m_context;
+		Own<GraphicsContext> m_context;
 
 		struct WindowData
 		{

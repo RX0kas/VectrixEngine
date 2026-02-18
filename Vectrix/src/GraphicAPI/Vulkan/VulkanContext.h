@@ -24,6 +24,12 @@ namespace Vectrix {
 		[[nodiscard]] VulkanShaderCompiler& getCompiler() const { return *m_compiler;}
 		[[nodiscard]] VmaAllocator getAllocator() const { return getDevice().getAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
+		static void check_vk_result(VkResult err) {
+			if (err == VK_SUCCESS)
+				return;
+
+			VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
+		}
 	private:
 		GLFWwindow* m_WindowHandle;
 		Own<Device> m_device;
