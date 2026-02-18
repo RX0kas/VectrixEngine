@@ -124,7 +124,6 @@ private:
 - [x] Make a universal function for sending shader uniform
 - [ ] Refactor to have the same naming convention everywhere and add better comments
 - [ ] Create the API documentation
-- [ ] Find a better way to deal with the ImGuiLayer
 - [ ] Add a material system
 - [ ] Add an editor
 

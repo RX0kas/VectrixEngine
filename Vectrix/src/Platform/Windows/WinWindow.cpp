@@ -14,6 +14,7 @@ namespace Vectrix {
 	}
 
 	void WinWindow::shutdown() {
+		VC_CORE_INFO("Destroying Window");
 		glfwDestroyWindow(m_window);
 
 		if (s_GLFWInitialized)
@@ -21,9 +22,12 @@ namespace Vectrix {
 			glfwTerminate();
 			s_GLFWInitialized = false;
 		}
+
+		GraphicsContext* g = m_context.release();
+		delete g;
 	}
 
-	WinWindow::WinWindow() {
+	WinWindow::WinWindow() : m_window(nullptr), m_data() {
 		if (!s_GLFWInitialized) {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
@@ -33,10 +37,12 @@ namespace Vectrix {
 
 			s_GLFWInitialized = true;
 
-
-			// TODO: put it in a better place, like VulkanContext
-			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			GraphicsContext::setClientAPI();
 		}
+	}
+
+	WinWindow::~WinWindow() {
+		shutdown();
 	}
 
 	void WinWindow::init(const WindowAttributes& attributes) {
@@ -45,7 +51,6 @@ namespace Vectrix {
 		m_data.Width = attributes.width;
 		m_data.Height = attributes.height;
 		m_data.Title = attributes.title;
-
 
 
 		m_window = glfwCreateWindow(attributes.width, attributes.height, attributes.title.c_str(), nullptr, nullptr);
@@ -73,74 +78,78 @@ namespace Vectrix {
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				KeyPressedEvent event(key, 0);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				KeyReleasedEvent event(key);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-				KeyPressedEvent event(key, 1);
-				data.EventCallback(event);
-				break;
-			}
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent event(key, 0);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent event(key);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent event(key, 1);
+					data.EventCallback(event);
+					break;
+				}
+				default: {
+					VC_CORE_CRITICAL("Unknown KeyButtonCallback Action: {}",action);
+				}
 			}
 		});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			switch (action)
-			{
-			case GLFW_PRESS:
-			{
-				MouseButtonPressedEvent event(button);
-				data.EventCallback(event);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				MouseButtonReleasedEvent event(button);
-				data.EventCallback(event);
-				break;
-			}
+			switch (action) {
+				case GLFW_PRESS:
+				{
+					MouseButtonPressedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleasedEvent event(button);
+					data.EventCallback(event);
+					break;
+				}
+				default: {
+					VC_CORE_CRITICAL("Unknown MouseButtonCallback Action: {}",action);
+				}
 			}
 		});
 
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			MouseScrolledEvent event((float)xOffset, (float)yOffset);
+			MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
 			data.EventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-			MouseMovedEvent event((float)xPos, (float)yPos);
+			MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
 			data.EventCallback(event);
 		});
 
 
-		m_context = new VulkanContext(m_window);
+		m_context = std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
 		m_context->init();
 	}
 
-	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
+	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const {
 		VC_VK_CHECK(glfwCreateWindowSurface(instance, m_window, nullptr, surface),"Could not create a WindowSurface");
 	}
 
 	void WinWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 		data.Width = width;
 		data.Height = height;
 		//data.FramebufferResized = true;

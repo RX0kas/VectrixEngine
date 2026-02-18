@@ -102,7 +102,7 @@ namespace Vectrix {
 
 	void VulkanImGuiManager::initImGui() {
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
-		VC_CORE_INFO("initializing ImGui");
+		VC_CORE_INFO("Initializing ImGui");
 
 #ifdef VC_PLATFORM_WINDOWS
 		auto* w = static_cast<GLFWwindow*>(dynamic_cast<WinWindow&>(m_window).getNativeWindow());
@@ -152,7 +152,7 @@ namespace Vectrix {
 		init_info.PipelineInfoMain.RenderPass = createImGuiRenderPass();
 		init_info.PipelineInfoMain.Subpass = 0;
 		init_info.PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
-		init_info.CheckVkResultFn = check_vk_result; // TODO: make a Conts file for that sort of functions
+		init_info.CheckVkResultFn = VulkanContext::check_vk_result;
 
 
 		VC_CORE_ASSERT(init_info.Device != VK_NULL_HANDLE, "Vulkan device is null!");
@@ -238,11 +238,7 @@ namespace Vectrix {
     	renderPassInfo.clearValueCount = 0;
     	renderPassInfo.pClearValues = nullptr;
 
-    	vkCmdBeginRenderPass(
-			commandBuffer,
-			&renderPassInfo,
-			VK_SUBPASS_CONTENTS_INLINE
-		);
+    	vkCmdBeginRenderPass(commandBuffer,&renderPassInfo,VK_SUBPASS_CONTENTS_INLINE);
     }
 
 	void VulkanImGuiManager::endImGuiRenderPass(VkCommandBuffer commandBuffer) {

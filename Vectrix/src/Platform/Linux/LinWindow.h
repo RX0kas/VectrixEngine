@@ -15,9 +15,9 @@ namespace Vectrix {
 		LinWindow();
 		~LinWindow() override;
 
-		bool shouldClose() { return glfwWindowShouldClose(m_window); }
+		[[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(m_window); }
 
-		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const;
 
 		[[nodiscard]] unsigned int getWidth() const override { return m_data.Width; }
 		[[nodiscard]] unsigned int getHeight() const override { return m_data.Height; }
