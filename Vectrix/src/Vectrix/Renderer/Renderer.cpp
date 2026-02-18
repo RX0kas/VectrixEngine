@@ -4,7 +4,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
-	Ref<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<Renderer::SceneData>();
+	Own<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<Renderer::SceneData>();
 
 	void Renderer::BeginScene(PerspectiveCamera& camera)
 	{
@@ -26,8 +26,11 @@ namespace Vectrix {
 		}
 	}
 
-	void Renderer::Submit(Shader& shader, const Model& model)
+	void Renderer::Submit(Shader& shader, Model& model)
 	{
+		shader.setModelMatrix(model.getModelMatrix());
+		if (shader.isAffectedByCamera())
+			shader.sendCameraUniform(m_SceneData->camera->getTransformationMatrix());
 		Submit(shader,*model.getVertexArray(),model.getTransform());
 	}
 }

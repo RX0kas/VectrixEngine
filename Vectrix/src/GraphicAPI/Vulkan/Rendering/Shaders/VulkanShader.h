@@ -10,7 +10,7 @@
 namespace Vectrix {
     class VulkanShader final : public Shader {
     public:
-        VulkanShader(std::string  name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout);
+        VulkanShader(std::string  name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera);
         ~VulkanShader() override;
         void bind() const override;
         void unbind() const override;
@@ -22,7 +22,7 @@ namespace Vectrix {
         void setUniform3f(const std::string &name, glm::vec3 value) const override;
         void setUniform4f(const std::string &name, glm::vec4 value) const override;
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
-        void sentCameraUniform(const PerspectiveCamera &camera) const override;
+        void sendCameraUniform(const glm::mat4& camera) const override;
         void setModelMatrix(const glm::mat4& model) const override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
@@ -40,6 +40,8 @@ namespace Vectrix {
             m_ssbo->copyToFrame(m_renderer.getFrameIndex(),e->offset,data,size);
         }
 
+        [[nodiscard]] bool isAffectedByCamera() const override {return m_affectedByCamera;}
+
     private:
 
         void createPipelineLayout();
@@ -56,6 +58,7 @@ namespace Vectrix {
         std::string m_vertSRC;
 
         bool m_enable = true;
+        bool m_affectedByCamera;
         friend class VulkanContext;
         friend class ShaderManager;
         friend class Shader;
