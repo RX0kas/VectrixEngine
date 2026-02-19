@@ -27,7 +27,7 @@ namespace Vectrix {
 		m_shaderManager = std::make_unique<ShaderManager>();
 
 		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
-		PushOverlay(m_ImGuiLayer);
+		m_ImGuiLayer->OnAttach();
 	}
 
 	Application::~Application() {
@@ -53,12 +53,13 @@ namespace Vectrix {
 			m_LastFrameTime = time;
 			if (RenderCommand::setupFrame()) {
 				for (const Ref<Layer>& layer : m_layerStack) {
-					if (layer->getName()==m_ImGuiLayer->getName()) continue; // TODO: Find a better way
-
 					layer->OnRender();
 					layer->OnUpdate(m_deltaTime);
 				}
 				RenderCommand::endFrame();
+				m_ImGuiLayer->OnRender();
+				m_ImGuiLayer->OnUpdate(m_deltaTime);
+				RenderCommand::sendFrame();
 			}
 
 			m_window->onUpdate();
@@ -86,5 +87,6 @@ namespace Vectrix {
 	void Application::renderImGui() {
 		for (const Ref<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
+		m_ImGuiLayer->OnImGuiRender();
 	}
 }

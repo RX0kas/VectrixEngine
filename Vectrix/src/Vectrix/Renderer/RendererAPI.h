@@ -18,6 +18,7 @@ namespace Vectrix {
 		virtual void setClearColor(const glm::vec4& color) = 0;
 		virtual bool prepareFrame() = 0;
 		virtual void endFrame() = 0;
+		virtual void sendFrame() = 0;
 
 		virtual void drawIndexed(const VertexArray& vertexArray) = 0;
 

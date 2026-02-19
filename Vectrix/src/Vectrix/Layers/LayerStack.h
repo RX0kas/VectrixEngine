@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/Core.h"
+#include "Vectrix/Core/Core.h"
 #include "Layer.h"
 
 namespace Vectrix {

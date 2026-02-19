@@ -43,6 +43,5 @@ namespace Vectrix {
 		static Application* s_instance;
 	};
 
-	// TODO: to be defined in the client
 	Application* createApplication();
 }

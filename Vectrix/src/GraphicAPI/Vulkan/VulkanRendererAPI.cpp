@@ -33,11 +33,10 @@ namespace Vectrix {
 	void VulkanRendererAPI::endFrame() {
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
 		renderer.endSwapChainRenderPass(renderer.getCurrentCommandBuffer());
+	}
 
-		Application::instance().imguiLayer().OnRender();
-		Application::instance().imguiLayer().OnUpdate(Application::instance().getDeltaTime()); // TODO: Find a better way
-
-		renderer.endFrame();
+	void VulkanRendererAPI::sendFrame() {
+		VulkanContext::instance().getRenderer().endFrame();
 	}
 
 	void VulkanRendererAPI::drawIndexed(const VertexArray& vertexArray)

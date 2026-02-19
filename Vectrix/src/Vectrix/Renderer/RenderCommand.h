@@ -15,6 +15,7 @@ namespace Vectrix
 
 		static void drawIndexed(const VertexArray& vertexArray)
 		{
+			if (!frameStarted) VC_ERROR("Trying to draw but no frame has started");
 			s_RendererAPI->drawIndexed(vertexArray);
 		}
 		static bool setupFrame() {
@@ -24,8 +25,12 @@ namespace Vectrix
 		}
 
 		static void endFrame() {
-			if (!frameStarted) VC_ERROR("Trying to send a frame but none has started");
+			if (!frameStarted) VC_ERROR("Trying to end a frame but none has started");
 			s_RendererAPI->endFrame();
+		}
+		static void sendFrame() {
+			if (!frameStarted) VC_ERROR("Trying to send a frame but none has started");
+			s_RendererAPI->sendFrame();
 			frameStarted = false;
 		}
 	private:
