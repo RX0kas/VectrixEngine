@@ -29,6 +29,8 @@ namespace Vectrix {
     }
 
     std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name,ShaderType type,const char *src,bool optimize) {
+        VC_CORE_INFO("Compiling a {} called {}, with{} optimization",toString(type),src_name,optimize ? "" : "out");
+
         shaderc_shader_kind kind = shaderTypeToShaderCKind(type);
 
         for (const auto& macro : p_macros) {

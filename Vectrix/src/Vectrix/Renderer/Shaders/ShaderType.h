@@ -17,4 +17,13 @@ inline shaderc_shader_kind shaderTypeToShaderCKind(ShaderType t) {
     }
 }
 
+inline const char* toString(ShaderType t) {
+    switch (t) {
+        case Vertex_Shader:   return "Vertex shader";
+        case Fragment_Shader: return "Fragment shader";
+        default:
+            VC_CORE_ERROR("Unknown shader type");
+    }
+}
+
 #endif //VECTRIXWORKSPACE_SHADERTYPE_H
