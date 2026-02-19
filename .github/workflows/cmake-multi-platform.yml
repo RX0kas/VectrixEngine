@@ -40,9 +40,19 @@ jobs:
 
     - name: Install Vulkan SDK (Windows)
       if: runner.os == 'Windows'
-      uses: humbletim/install-vulkan-sdk@v1
-      with:
-        version: 1.4.335.0
+      shell: powershell
+      run: |
+        Invoke-WebRequest `
+          -Uri https://sdk.lunarg.com/sdk/download/1.4.335.0/windows/vulkan-sdk.exe `
+          -OutFile vulkan-sdk.exe
+
+        Start-Process .\vulkan-sdk.exe `
+          -ArgumentList "--accept-licenses --default-answer --confirm-command install" `
+          -Wait
+
+        echo "VULKAN_SDK=C:\VulkanSDK\1.4.335.0" >> $env:GITHUB_ENV
+        echo "C:\VulkanSDK\1.4.335.0\Bin" >> $env:GITHUB_PATH
+
 
     - name: Install Ninja (Windows)
       if: runner.os == 'Windows'
