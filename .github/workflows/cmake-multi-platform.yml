@@ -17,11 +17,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Setup Python 3
-      uses: actions/setup-python@v5
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
 
@@ -32,31 +30,25 @@ jobs:
         sudo apt install -y \
           build-essential \
           ninja-build \
+          libvulkan-dev \
+          vulkan-tools \
           libx11-dev \
           libxrandr-dev \
           libxi-dev \
           libxcursor-dev \
           libxinerama-dev
 
-    - name: Install Vulkan SDK (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        wget -qO- https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan.list \
-          https://packages.lunarg.com/vulkan/lunarg-vulkan.list
-        sudo apt update
-        sudo apt install -y vulkan-sdk
+    - name: Install Vulkan SDK (Windows)
+      if: runner.os == 'Windows'
+      uses: humbletim/install-vulkan-sdk@v1
+      with:
+        version: 1.4.335.0
 
     - name: Install Ninja (Windows)
       if: runner.os == 'Windows'
       run: choco install ninja -y
 
-    - name: Install Vulkan SDK (Windows)
-      if: runner.os == 'Windows'
-      run: choco install vulkan-sdk --version=1.4.335.0 -y
-
-    - name: Cache CMake build
-      uses: actions/cache@v4
+    - uses: actions/cache@v4
       with:
         path: build
         key: ${{ runner.os }}-${{ matrix.config }}-${{ hashFiles('**/CMakeLists.txt') }}
@@ -68,6 +60,9 @@ jobs:
         cmake -S . -B build \
           -G Ninja \
           -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+
+    - name: Build
+      run: cmake --build build --parallel
 
     - name: Build
       run: cmake --build build --parallel
