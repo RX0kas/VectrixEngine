@@ -12,7 +12,7 @@ An engine made to run all of my little graphics project
  - Runtime shader compilation
 
 ## Prerequisites
-- [CMake 3.21.7](https://cmake.org/download/)
+- [CMake 3.20](https://cmake.org/download/)
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
 - [Python 3](https://www.python.org/downloads/)
 - Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
