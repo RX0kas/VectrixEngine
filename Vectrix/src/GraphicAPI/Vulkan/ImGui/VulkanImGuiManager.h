@@ -9,11 +9,6 @@
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 
-#ifdef VC_PLATFORM_WINDOWS
-#include "vulkan/vk_enum_string_helper.h"
-#else
-#include "vulkan/generated/vk_enum_string_helper.h"
-#endif
 
 namespace Vectrix {
 

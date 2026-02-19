@@ -44,5 +44,4 @@ namespace Vectrix {
 		static VulkanContext* s_instance;
 
 	};
-
 }

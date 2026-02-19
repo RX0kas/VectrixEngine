@@ -3,14 +3,6 @@
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
-#ifdef VC_PLATFORM_WINDOWS
-#include <vulkan/vk_enum_string_helper.h>
-#elif defined(VC_PLATFORM_LINUX)
-#include <vulkan/generated/vk_enum_string_helper.h>
-
-#include <utility>
-#endif
-
 
 namespace Vectrix {
     SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent)

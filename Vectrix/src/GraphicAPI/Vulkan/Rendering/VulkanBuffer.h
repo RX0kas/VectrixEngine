@@ -10,11 +10,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-#ifdef VC_PLATFORM_WINDOWS
-#include "vulkan/vk_enum_string_helper.h"
-#else
-#include "vulkan/generated/vk_enum_string_helper.h"
-#endif
+#include "GraphicAPI/Vulkan/Enum_str.h"
 
 
 namespace Vectrix {
@@ -143,22 +139,6 @@ struct fmt::formatter<Vectrix::BufferLayout> {
 };
 
 template <>
-struct fmt::formatter<VkFormat> {
-    constexpr auto parse(format_parse_context& ctx) {
-        return ctx.begin();
-    }
-
-    template <typename FormatContext>
-    auto format(const VkFormat& f, FormatContext& ctx) const {
-        return fmt::format_to(
-            ctx.out(),
-            "VkFormat({})",
-            string_VkFormat(f)
-        );
-    }
-};
-
-template <>
 struct fmt::formatter<VkResult> : fmt::formatter<std::string> {
 
     constexpr auto parse(format_parse_context& ctx) {
@@ -167,6 +147,6 @@ struct fmt::formatter<VkResult> : fmt::formatter<std::string> {
 
     template <typename FormatContext>
     auto format(const VkResult& e, FormatContext& ctx) const {
-        return fmt::formatter<std::string>::format(string_VkResult(e), ctx);
+        return fmt::formatter<std::string>::format(Vectrix::string_VkResult(e), ctx);
     }
 };
