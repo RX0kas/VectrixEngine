@@ -41,7 +41,8 @@ jobs:
           libxinerama-dev \
           libwayland-dev \
           wayland-protocols \
-          libxkbcommon-dev
+          libxkbcommon-dev \
+          libgl1-mesa-dev
 
     - name: Install Vulkan SDK (Windows)
       if: runner.os == 'Windows'
