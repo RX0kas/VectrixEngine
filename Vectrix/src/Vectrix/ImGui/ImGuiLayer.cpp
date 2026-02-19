@@ -6,6 +6,7 @@
 
 namespace Vectrix {
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer"), m_manager(ImGuiManager::create(Application::instance().window())), m_attached(false) {
+
 	}
 
 	ImGuiLayer::~ImGuiLayer() {

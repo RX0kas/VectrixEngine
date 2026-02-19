@@ -27,7 +27,6 @@ namespace Vectrix {
         Model(const std::vector<Vertex>& vertices,std::vector<uint32_t> indices, const BufferLayout& layout);
         Ref<VertexArray> m_vertexArray;
         BufferLayout m_layout;
-        // TODO: Maybe put it somewhere else
         Transform m_transform;
     };
 } // Vectrix
