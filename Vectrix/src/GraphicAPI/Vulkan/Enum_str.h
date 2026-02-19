@@ -93,8 +93,6 @@ namespace Vectrix {
 				return "VK_ERROR_INVALID_VIDEO_STD_PARAMETERS_KHR";
 			case VK_ERROR_COMPRESSION_EXHAUSTED_EXT:
 				return "VK_ERROR_COMPRESSION_EXHAUSTED_EXT";
-			case VK_INCOMPATIBLE_SHADER_BINARY_EXT:
-				return "VK_INCOMPATIBLE_SHADER_BINARY_EXT";
 			default:
 				return "Unhandled VkResult";
 		}
