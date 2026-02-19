@@ -1,6 +1,6 @@
 # Vectrix
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.1-green.svg)]()
+![Version](https://img.shields.io/badge/version-0.1.1-green.svg)
 
 An engine made to run all of my little graphics project
 
@@ -34,8 +34,8 @@ You can see the [Sandbox](https://github.com/RX0kas/VectrixEngine/tree/master/Sa
 ```cmake
 # Include your source
 file(GLOB_RECURSE PROJECT_SOURCES
-        Project/src/*.cpp
-        Project/src/*.h
+    Project/src/*.cpp
+    Project/src/*.h
 )
 
 add_executable(Project ${PROJECT_SOURCES})
@@ -43,10 +43,10 @@ add_executable(Project ${PROJECT_SOURCES})
 # Link your project with Vectrix
 target_link_libraries(Project PRIVATE Vectrix)
 target_include_directories(Project PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
 )
 target_compile_definitions(Project PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
+    $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
 )
 
 if(MSVC)
@@ -58,43 +58,43 @@ endif()
 // Include the entry point
 #include <Vectrix.h>
 // Create a custom layer
-class ExampleLayer : public Vectrix::Layer
+class CustomLayer : public Vectrix::Layer
 {
 public:
-	ExampleLayer() : Layer("Example") {
-	    // Create a camera
-		m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
-		m_camera->setPosition({0.0f,0.0f,3.0f});
-		m_camera->setRotation({0.0f,-M_PI,0.0f});
+    CustomLayer() : Layer("Example") {
+        // Create a camera
+        m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
+        m_camera->setPosition({0.0f,0.0f,3.0f});
+        m_camera->setRotation({0.0f,-M_PI,0.0f});
         // Load a model
-		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
+        m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
 
-	    // Create a layout for the main shader
-		Vectrix::ShaderUniformLayout layout;
-		layout.add("time",Vectrix::ShaderUniformType::Float);
-	    // Create the shader and tell it how to load Obj Files
-		Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout, Vectrix::getTinyObjLayout(),true);
-	    // Save the shader in a variable
-		main = Vectrix::ShaderManager::instance().get("main");
-	}
+        // Create a layout for the main shader
+        Vectrix::ShaderUniformLayout layout;
+        layout.add("time",Vectrix::ShaderUniformType::Float);
+        // Create the shader and tell it how to load Obj Files
+        Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout, Vectrix::getTinyObjLayout(),true);
+        // Save the shader in a variable
+        main = Vectrix::ShaderManager::instance().get("main");
+    }
 
-	// Do something each frame
-	void OnUpdate(Vectrix::DeltaTime ts) override {}
+    // Do something each frame
+    void OnUpdate(Vectrix::DeltaTime ts) override {}
 
     // Same but for rendering stuff
-	void OnRender() override {
-	    // Tell the renderer to start rendering a scene
-		Vectrix::Renderer::BeginScene(*m_camera);
-	    // Tell to draw the model
-		Vectrix::Renderer::Submit(*main.get(),*m_model);
+    void OnRender() override {
+        // Tell the renderer to start rendering a scene
+        Vectrix::Renderer::BeginScene(*m_camera);
+        // Tell to draw the model
+        Vectrix::Renderer::Submit(*main.get(),*m_model);
         // Send the frame
-		Vectrix::Renderer::EndScene();
-	}
+        Vectrix::Renderer::EndScene();
+    }
 
-	void OnEvent(Vectrix::Event &event) override {
-		if (event.getEventType()==Vectrix::EventType::WindowResize)
-			m_camera->recalculateMatrices();
-	}
+    void OnEvent(Vectrix::Event &event) override {
+        if (event.getEventType()==Vectrix::EventType::WindowResize)
+            m_camera->recalculateMatrices();
+    }
 private:
 	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
 	Vectrix::Ref<Vectrix::Shader> main;
@@ -102,16 +102,23 @@ private:
 };
 
 // Create a custom application
-class Sandbox : public Vectrix::Application {
+class TestApp : public Vectrix::Application {
 public:
-	Sandbox() {
-		m_exampleLayer = std::make_shared<ExampleLayer>();
-		PushLayer(m_exampleLayer);
+	TestApp() {
+            m_exampleLayer = std::make_shared<CustomLayer>();
+            PushLayer(m_exampleLayer);
 	}
-	~Sandbox() override = default;
+	~TestApp() override = default;
+    
 private:
-	Vectrix::Ref<ExampleLayer> m_exampleLayer;
+	Vectrix::Ref<CustomLayer> m_exampleLayer;
 };
+Vectrix::Application* Vectrix::createApplication()
+{
+	return new TestApp();
+}
+
+VC_SET_APP_INFO("Sandbox",0,1,0);
 ```
 ## Documentation
 

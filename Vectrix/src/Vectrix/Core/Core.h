@@ -3,25 +3,27 @@
 #include <memory>
 
 #ifdef VC_PLATFORM_WINDOWS
-	#if HZ_DYNAMIC_LINK
+	#if VC_DYNAMIC_LINK
 		#ifdef VC_BUILD_DLL
 			#define Vectrix_API __declspec(dllexport)
 		#else
 			#define Vectrix_API __declspec(dllimport)
 		#endif
 	#endif
-	#define VC_DEBUGBREAK() __debugbreak()
+		#define VC_DEBUGBREAK() __debugbreak()
+	#define VC_PLATFORM_ID 1
 #else
 	#ifdef VC_PLATFORM_LINUX
-	#include <csignal>
-	#define VC_DEBUGBREAK() raise(SIGTRAP)
+		#include <csignal>
+		#define VC_DEBUGBREAK() raise(SIGTRAP)
+		#define VC_PLATFORM_ID 0
 	#else
 		#error Vectrix only support windows and Linux
 	#endif
 #endif
 
 #ifndef Vectrix_API
-#define Vectrix_API
+	#define Vectrix_API
 #endif
 
 #ifdef VC_DEBUG

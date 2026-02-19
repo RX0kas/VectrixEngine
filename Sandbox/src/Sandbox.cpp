@@ -17,3 +17,5 @@ Vectrix::Application* Vectrix::createApplication()
 {
 	return new Sandbox();
 }
+
+VC_SET_APP_INFO("Sandbox",0,1,0);

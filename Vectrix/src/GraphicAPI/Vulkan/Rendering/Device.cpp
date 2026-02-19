@@ -1,8 +1,9 @@
 #include "vcpch.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 
-#include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
 #include "Platform/Windows/WinWindow.h"
+#include "Vectrix/Application.h"
+#include "Vectrix/Core/AppInfo.h"
 #include "Vectrix/Core/Log.h"
 
 
@@ -92,12 +93,12 @@ namespace Vectrix {
             enableValidationLayers = false;
         }
 #endif
-
-        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO}; // TODO: Create dynamically those information
-        appInfo.pApplicationName = "Vectrix";
-        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "Vectrix";
-        appInfo.engineVersion = VK_MAKE_VERSION(0, 1, 0);
+        VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
+        ApplicationInfo i = Application::getAppInfo();
+        appInfo.pApplicationName = i.getAppName();
+        appInfo.applicationVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getAppVersion());
+        appInfo.pEngineName = ApplicationInfo::getEngineName();
+        appInfo.engineVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getEngineVersion());
         appInfo.apiVersion = VK_API_VERSION_1_2;
 
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};

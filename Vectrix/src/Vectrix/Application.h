@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/AppInfo.h"
 #include "Core/Core.h"
 #include "Core/Window.h"
 
@@ -10,7 +11,13 @@
 #include "ImGui/ImGuiLayer.h"
 #include "Renderer/Shaders/ShaderManager.h"
 
+using AppInfoFunc = Vectrix::ApplicationInfo(*)();
+extern AppInfoFunc g_getAppInfo;
+
+#define VC_SET_APP_INFO(name,major,minor,patch) AppInfoFunc g_getAppInfo = []() {return Vectrix::ApplicationInfo(name, major, minor, patch);};
+
 namespace Vectrix {
+
 	class Vectrix_API Application
 	{
 	public:
@@ -25,15 +32,23 @@ namespace Vectrix {
 		void PushOverlay(const Ref<Layer>&  layer);
 
 		[[nodiscard]] Window &window() const { return *m_window; }
-		[[nodiscard]] ImGuiLayer &imguiLayer() const {return *m_ImGuiLayer;}
+		[[nodiscard]] ImGuiLayer &imguiLayer() const {return *m_imGuiLayer;}
 		[[nodiscard]] DeltaTime getDeltaTime() const {return m_deltaTime;}
 
 		static Application& instance() { return *s_instance; }
+		static ApplicationInfo getAppInfo() {
+			if (g_getAppInfo) {
+				return g_getAppInfo();
+			}
+			VC_CORE_ERROR("No information has been set for the application");
+		}
+
 		void renderImGui();
 	private:
 		Ref<Window> m_window;
 		Ref<ShaderManager> m_shaderManager;
-		Ref<ImGuiLayer> m_ImGuiLayer;
+		Ref<ImGuiLayer> m_imGuiLayer;
+		Own<ApplicationInfo> m_appInfo;
 		bool m_running = true;
 
 		LayerStack m_layerStack;
@@ -44,4 +59,5 @@ namespace Vectrix {
 	};
 
 	Application* createApplication();
+
 }

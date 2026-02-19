@@ -6,6 +6,7 @@
 #include "Vectrix/Utils/Math.h"
 
 // For application
+#include "Vectrix/Core/Core.h"
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Layers/Layer.h"

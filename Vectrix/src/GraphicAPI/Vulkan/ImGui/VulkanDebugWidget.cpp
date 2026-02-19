@@ -3,6 +3,8 @@
 #include "Vectrix/ImGui/ImGuiWidget.h"
 #include "imgui.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Application.h"
+#include "Vectrix/Core/AppInfo.h"
 
 namespace Vectrix {
     VulkanDebugWidget::VulkanDebugWidget(const std::string &name) : ImGuiWidget(name) {
@@ -16,9 +18,17 @@ namespace Vectrix {
             ImGui::End();
             return;
         }
+
+        ApplicationInfo info = Application::getAppInfo();
+        if (ImGui::CollapsingHeader("Application Information")) {
+            ImGui::Text("Application name: %s",info.getAppName());
+            ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
+            ImGui::Text("Engine name: %s",info.getEngineName());
+            ImGui::Text("Engine version: %s",toString(info.getEngineVersion()).c_str());
+        }
+        ImGui::Separator();
         DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
         std::vector<DebugMemoryHeapInfo> memory = collectMemoryInfo();
-
         ImGui::Text("Frame Index: %u", frame.frameIndex);
         ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
         ImGui::Separator();

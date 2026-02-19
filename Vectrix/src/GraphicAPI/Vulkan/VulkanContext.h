@@ -7,6 +7,7 @@
 #include "Rendering/Shaders/VulkanShaderCompiler.h"
 
 #define VC_VK_CHECK(x,...) if (x!=VK_SUCCESS) {VC_CORE_ERROR(__VA_ARGS__);}
+#define VC_MAKE_VULKAN_COMPATIBLE_VERSION(version) VK_MAKE_API_VERSION(VC_PLATFORM_ID,std::min(getMajor(version),8U), std::min(getMinor(version),12U), std::min(getPatch(version),12U))
 
 namespace Vectrix {
 

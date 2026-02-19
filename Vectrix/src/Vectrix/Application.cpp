@@ -26,12 +26,12 @@ namespace Vectrix {
 		m_window->init();
 		m_shaderManager = std::make_unique<ShaderManager>();
 
-		m_ImGuiLayer = std::make_shared<ImGuiLayer>();
-		m_ImGuiLayer->OnAttach();
+		m_imGuiLayer = std::make_shared<ImGuiLayer>();
+		m_imGuiLayer->OnAttach();
 	}
 
 	Application::~Application() {
-		m_ImGuiLayer.reset();
+		m_imGuiLayer.reset();
 	}
 
 	void Application::onEvent(Event& e) {
@@ -58,8 +58,8 @@ namespace Vectrix {
 					layer->OnUpdate(m_deltaTime);
 				}
 				RenderCommand::endFrame();
-				m_ImGuiLayer->OnRender();
-				m_ImGuiLayer->OnUpdate(m_deltaTime);
+				m_imGuiLayer->OnRender();
+				m_imGuiLayer->OnUpdate(m_deltaTime);
 				RenderCommand::sendFrame();
 			}
 
@@ -88,6 +88,6 @@ namespace Vectrix {
 	void Application::renderImGui() {
 		for (const Ref<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
-		m_ImGuiLayer->OnImGuiRender();
+		m_imGuiLayer->OnImGuiRender();
 	}
 }
