@@ -376,9 +376,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
 */imgui.ini
-/Sandbox/Sandbox.vcxproj
-/Vectrix.sln
-/Vectrix/Vectrix.vcxproj
-/Vectrix/Vectrix.vcxproj.filters
 /.env

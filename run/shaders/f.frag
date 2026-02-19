@@ -1,15 +1,17 @@
 #version 450
-
-layout(location = 0) in vec3 v_Normal;
-layout(location = 1) in vec2 v_TexCoord;
-
-layout(location = 0) out vec4 outColor;
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
 
 layout(set = 0, binding = 0) readonly buffer FrameSSBO {
 	float time;
 	mat4 cameraTransform;
 	mat4 modelMat;
 } frame;
+
+layout(location = 0) in vec3 v_Normal;
+layout(location = 1) in vec2 v_TexCoord;
+
+layout(location = 0) out vec4 outColor;
 
 void main()
 {

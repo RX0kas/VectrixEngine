@@ -1,4 +1,6 @@
 #version 450
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
 
 layout(set = 0, binding = 0) readonly buffer FrameSSBO {
 	float time;
@@ -16,5 +18,6 @@ layout(location = 1) out vec2 v_TexCoord;
 void main() {
 	v_Normal = a_Normal;
 	v_TexCoord = a_TexCoord;
-	gl_Position = frame.cameraTransform * frame.modelMat * vec4(a_Position, 1.0);
+	vec4 position = frame.cameraTransform * frame.modelMat * vec4(a_Position,1.0);
+	gl_Position = position;
 }

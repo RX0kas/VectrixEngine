@@ -1,20 +1,20 @@
 #ifndef VECTRIXWORKSPACE_VULKANDEBUGWIDGET_H
 #define VECTRIXWORKSPACE_VULKANDEBUGWIDGET_H
 #include "Vectrix/ImGui/ImGuiWidget.h"
+#include "vk_mem_alloc.h"
 
 namespace Vectrix {
-    class VulkanDebugWidget : public ImGuiWidget {
-    public:
-        VulkanDebugWidget(const std::string& name = "VulkanDebugWidget");
-        ~VulkanDebugWidget() override;
-
-        void render() override;
-    };
 
     // All the info needed
     struct DebugSemaphoreInfo {
         const char* name;
         bool signaled;
+    };
+
+    struct DebugMemoryHeapInfo {
+        const char* name;
+        VkDeviceSize usedBytes;
+        VkDeviceSize budgetBytes;
     };
 
     struct DebugFenceInfo {
@@ -24,8 +24,8 @@ namespace Vectrix {
 
     struct DebugPipelineInfo {
         const char* name;
-        const char* vertPath;
-        const char* fragPath;
+        std::string vertSRC;
+        std::string fragSRC;
         VkPipeline pipeline;
         VkPipelineLayout layout;
     };
@@ -64,6 +64,16 @@ namespace Vectrix {
 
         uint32_t drawCalls;
         uint32_t dispatchCalls;
+    };
+
+    class VulkanDebugWidget : public ImGuiWidget {
+    public:
+        VulkanDebugWidget(const std::string& name = "VulkanDebugWidget");
+        ~VulkanDebugWidget() override;
+
+        void render() override;
+    private:
+        static std::vector<DebugMemoryHeapInfo> collectMemoryInfo();
     };
 }
 

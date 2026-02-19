@@ -12,3 +12,18 @@
 	path = Vectrix/extern/xxHash
 	url = https://github.com/Cyan4973/xxHash
 	branch = release
+[submodule "Vectrix/extern/shaderc"]
+	path = Vectrix/extern/shaderc
+	url = https://github.com/google/shaderc
+[submodule "Vectrix/extern/SPIRV-Tools"]
+	path = Vectrix/extern/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools
+[submodule "Vectrix/extern/SPIRV-Headers"]
+	path = Vectrix/extern/SPIRV-Headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers
+[submodule "Vectrix/extern/glslang"]
+	path = Vectrix/extern/glslang
+	url = https://github.com/KhronosGroup/glslang
+[submodule "Vectrix/extern/VulkanMemoryAllocator"]
+	path = Vectrix/extern/VulkanMemoryAllocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator

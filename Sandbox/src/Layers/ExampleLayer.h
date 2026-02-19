@@ -3,34 +3,35 @@
 
 #include "Vectrix.h"
 #include "imgui.h"
-#include "Vectrix/Renderer/Models/ObjLoader.h"
+#include "../CameraWidget.h"
 #include "Vectrix/Utils/Math.h"
 
 class ExampleLayer : public Vectrix::Layer
 {
 public:
-	ExampleLayer()
-		: Layer("Example") {
-		m_Camera = std::make_unique<Vectrix::PerspectiveCamera>();
-		m_Camera->setPosition({0.0f,0.0f,3.0f});
-		m_Camera->setRotation({0.0f,-M_PI,0.0f});
+	ExampleLayer() : Layer("Example") {
+		m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
+		m_camera->setPosition({0.0f,0.0f,3.0f});
+		m_camera->setRotation({0.0f,-M_PI,0.0f});
 
-		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/suzanne.obj"));
+		m_cameraWidget = new CameraWidget(*m_camera);
+
+		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/cat.obj"));
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
 #ifdef VC_PLATFORM_WINDOWS
-		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert.spv", ".\\shaders\\f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
+		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert", ".\\shaders\\f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #elif defined(VC_PLATFORM_LINUX)
-		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert.spv", "./shaders/f.frag.spv",layout, Vectrix::getTinyObjLayout(),true);
+		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #endif
 		def = Vectrix::ShaderManager::instance().get(p_defaultName);
 	}
 
 	void OnUpdate(Vectrix::DeltaTime ts) override
 	{
-		glm::vec3 m_CameraPosition = m_Camera->getPosition();
-		glm::vec3 m_CameraRotation = m_Camera->getRotation();
+		glm::vec3 m_CameraPosition = m_camera->getPosition();
+		glm::vec3 m_CameraRotation = m_camera->getRotation();
 		float m_CameraMoveSpeed = 1.0f;
 		float m_CameraRotationSpeed = 1.0f;
 		if (Vectrix::Input::isKeyPressed(VC_KEY_A))
@@ -57,46 +58,27 @@ public:
 		else if (Vectrix::Input::isKeyPressed(VC_KEY_DOWN))
 			m_CameraRotation.x -= m_CameraRotationSpeed * ts;
 
-		m_Camera->setPosition(m_CameraPosition);
-		m_Camera->setRotation(m_CameraRotation);
+		m_camera->setPosition(m_CameraPosition);
+		m_camera->setRotation(m_CameraRotation);
 	}
 
 	void OnRender() override {
-		if (Vectrix::Renderer::BeginScene(*m_Camera)) {
-			def->setUniform1f("time",static_cast<float>(glfwGetTime()));
-			def->sentCameraUniform(*m_Camera);
-			def->setModelMatrix(m_model->getModelMatrix());
-			Vectrix::Renderer::Submit(*def.get(),*m_model);
+		Vectrix::Renderer::BeginScene(*m_camera);
+		def->setUniform("time",static_cast<float>(glfwGetTime()));
 
-			Vectrix::Renderer::EndScene();
-		}
-	}
-
-	void OnImGuiRender() override
-	{
-		ImGui::Begin("Debug Camera");
-		float pos[3] = {m_Camera->getPosition().x,m_Camera->getPosition().y,m_Camera->getPosition().z};
-		if (ImGui::SliderFloat3("Position",pos,-VC_2PI,VC_2PI)) {
-			m_Camera->setPosition({pos[0],pos[1],pos[2]});
-		}
-		float rot[3] = {m_Camera->getRotation().x,m_Camera->getRotation().y,m_Camera->getRotation().z};
-		if (ImGui::SliderFloat3("Rotation",rot,-VC_2PI,VC_2PI)) {
-			m_Camera->setRotation({rot[0],rot[1],rot[2]});
-		}
-		ImGui::End();
+		Vectrix::Renderer::Submit(*def.get(),*m_model);
+		Vectrix::Renderer::EndScene();
 	}
 
 	void OnEvent(Vectrix::Event &event) override {
 		if (event.getEventType()==Vectrix::EventType::WindowResize)
-			m_Camera->recalculateMatrices();
+			m_camera->recalculateMatrices();
 	}
 
 private:
-	Vectrix::Own<Vectrix::PerspectiveCamera> m_Camera;
+	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
+	CameraWidget *m_cameraWidget;
 
-	Vectrix::Ref<Vectrix::VertexArray> m_vertexArray;
-
-	Vectrix::Own<Vectrix::Shader> _shader;
 	Vectrix::Ref<Vectrix::Shader> def;
 	Vectrix::Own<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";

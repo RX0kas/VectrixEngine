@@ -1,6 +1,7 @@
 #pragma once
+#include "ImGuiManager.h"
+#include "ImGuiWidget.h"
 #include "Vectrix/Layers/Layer.h"
-#include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 
 namespace Vectrix {
 
@@ -10,12 +11,18 @@ namespace Vectrix {
 		ImGuiLayer();
 		~ImGuiLayer() override;
 
+		void OnRender() override;
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnImGuiRender() override;
 		void OnUpdate(DeltaTime deltaTime) override;
+		void addWidget(const Ref<ImGuiWidget> &widget) {
+			m_widgets.push_back(std::shared_ptr(widget));
+		}
 	private:
-		VulkanImGuiManager manager;
+		Own<ImGuiManager> m_manager;
+		std::vector<Ref<ImGuiWidget>> m_widgets;
+		bool m_attached;
 	};
 
 }

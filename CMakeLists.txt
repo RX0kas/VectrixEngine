@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.0)
 project(VectrixWorkspace LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -20,20 +20,54 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+message(STATUS "Initializing Vectrix dependencies")
+
+# Python
+message(VERBOSE "Searching python interpreter")
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
 # Vulkan
+message(VERBOSE "Initializing Vulkan")
+
+set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
+
 find_package(Vulkan REQUIRED)
+# Compiling Shader
+# Setup SPIRV-Tools
+message(VERBOSE "Initializing SPIRV-Header")
+set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Headers)
+set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
+message(VERBOSE "Initializing SPIRV-Tools")
+set(tools_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Tools)
+set(glslang_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/glslang)
+add_subdirectory(Vectrix/extern/SPIRV-Tools)
+
+message(VERBOSE "Initializing glslang")
+add_subdirectory(Vectrix/extern/glslang)
+
+add_subdirectory(Vectrix/extern/shaderc)
+# VulkanMemoryAllocator
+message(VERBOSE "Initializing VulkanMemoryAllocator")
+add_subdirectory(Vectrix/extern/VulkanMemoryAllocator)
 
 # GLFW
+message(VERBOSE "Initializing GLFW")
 add_subdirectory(Vectrix/extern/GLFW)
 
 # spdlog
+message(VERBOSE "Initializing spdlog")
 add_subdirectory(Vectrix/extern/spdlog)
 
 # xxHash
+message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
 add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
 # Vectrix
+message(STATUS "Initializing Vectrix")
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
         Vectrix/src/Vectrix/*.h
@@ -117,14 +151,18 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(Vectrix
             glfw
             Vulkan::Vulkan
+            shaderc
             X11::X11
             xxHash::xxhash
+            GPUOpen::VulkanMemoryAllocator
     )
 else()
 target_link_libraries(Vectrix
         glfw
         Vulkan::Vulkan
+        shaderc
         xxHash::xxhash
+        GPUOpen::VulkanMemoryAllocator
 )
 endif()
 
@@ -133,14 +171,26 @@ if(MSVC)
     target_compile_options(Vectrix PRIVATE /utf-8)
 endif()
 
-target_compile_definitions(Vectrix PRIVATE
+target_compile_definitions(Vectrix PUBLIC
         $<$<CONFIG:Debug>:VC_DEBUG>
         $<$<CONFIG:Release>:VC_RELEASE>
         $<$<CONFIG:Dist>:VC_DIST>
 )
 
+if(WIN32)
+    target_compile_definitions(Vectrix PUBLIC
+            VC_PLATFORM_WINDOWS
+            GLFW_INCLUDE_NONE
+    )
+elseif(UNIX AND NOT APPLE)
+    target_compile_definitions(Vectrix PUBLIC
+            VC_PLATFORM_LINUX
+    )
+endif()
 
-# Sandbox
+###########
+# Sandbox #
+###########
 file(GLOB_RECURSE SANDBOX_SOURCES
         Sandbox/src/*.cpp
         Sandbox/src/*.h
@@ -148,46 +198,16 @@ file(GLOB_RECURSE SANDBOX_SOURCES
 
 add_executable(Sandbox ${SANDBOX_SOURCES})
 
+target_link_libraries(Sandbox PRIVATE Vectrix)
+
 target_include_directories(Sandbox PRIVATE
-        Vectrix/src
-        Vectrix/extern
-        Vectrix/extern/spdlog/include
-        Vectrix/extern/glm
-        ${Vulkan_INCLUDE_DIRS}
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-target_link_libraries(Sandbox
-        Vectrix
-        glfw
-        Vulkan::Vulkan
-        spdlog
-        xxHash::xxhash
+target_compile_definitions(Sandbox PRIVATE
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
 )
 
 if(MSVC)
     target_compile_options(Sandbox PRIVATE /utf-8)
 endif()
-
-# Macros Sandbox
-if(WIN32)
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_WINDOWS)
-elseif(UNIX AND NOT APPLE)
-    target_compile_definitions(Sandbox PRIVATE VC_PLATFORM_LINUX)
-endif()
-
-if(WIN32)
-    target_compile_definitions(Vectrix PRIVATE
-            VC_PLATFORM_WINDOWS
-            GLFW_INCLUDE_NONE
-    )
-elseif(UNIX)
-    target_compile_definitions(Vectrix PRIVATE
-            VC_PLATFORM_LINUX
-    )
-endif()
-
-target_compile_definitions(Sandbox PRIVATE
-        $<$<CONFIG:Debug>:VC_DEBUG>
-        $<$<CONFIG:Release>:VC_RELEASE>
-        $<$<CONFIG:Dist>:VC_DIST>
-)

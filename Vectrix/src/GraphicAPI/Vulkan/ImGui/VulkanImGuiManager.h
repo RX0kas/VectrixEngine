@@ -1,12 +1,13 @@
 #pragma once
+#include "Vectrix/ImGui/ImGuiManager.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"
 #elif defined(VC_PLATFORM_LINUX)
 #include "Platform/Linux/LinWindow.h"
 #endif
-#include "GraphicAPI/Vulkan/rendering/Device.h"
-#include "GraphicAPI/Vulkan/rendering/VulkanRenderer.h"
+#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "vulkan/vk_enum_string_helper.h"
@@ -16,17 +17,18 @@
 
 namespace Vectrix {
 
-	class VulkanImGuiManager
+	class VulkanImGuiManager : public ImGuiManager
 	{
     public:
-        VulkanImGuiManager(Window& window, Device& device);
+        VulkanImGuiManager(Window& window);
 
-        void initImGui();
+        void initImGui() override;
 
-        void render();
-        void update();
-        void cleanup();
-		static VulkanImGuiManager& instance() { return *_instance; }
+        void render() override;
+        void update() override;
+        void cleanup() override;
+		void attachDebugGraphicWidget() override;
+		static VulkanImGuiManager& instance() { return *m_instance; }
 		void destroyImGuiFramebuffers();
         void createImGuiFramebuffers();
 
@@ -36,23 +38,17 @@ private:
         void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex);
         void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
-
-        static void check_vk_result(VkResult err) {
-            if (err == VK_SUCCESS)
-                return;
-
-            VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
-        }
 	private:
-        Device& device;
-        Window& window;
-        VulkanRenderer* renderer;
+		Ref<VulkanDebugWidget> m_debugWidget;
+        Device& m_device;
+        Window& m_window;
+        VulkanRenderer* m_renderer;
         //VkPipelineCache g_PipelineCache = VK_NULL_HANDLE;
-        VkRenderPass imGuiRenderPass;
-        VkDescriptorPool descriptorPool = nullptr;
-		std::vector<VkFramebuffer> imGuiFramebuffers;
+        VkRenderPass m_imGuiRenderPass;
+        VkDescriptorPool m_descriptorPool = nullptr;
+		std::vector<VkFramebuffer> m_imGuiFramebuffers;
 	private:
-		static VulkanImGuiManager* _instance;
+		static VulkanImGuiManager* m_instance;
 	};
 
 }
