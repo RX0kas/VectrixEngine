@@ -51,9 +51,11 @@ namespace Vectrix {
 		m_data.Width = attributes.width;
 		m_data.Height = attributes.height;
 		m_data.Title = attributes.title;
+		m_data.visible = false;
 
 
-		m_window = glfwCreateWindow(attributes.width, attributes.height, attributes.title.c_str(), nullptr, nullptr);
+		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
+		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), attributes.title.c_str(), nullptr, nullptr);
 		glfwSetWindowUserPointer(m_window, &m_data);
 
 

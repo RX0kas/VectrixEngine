@@ -46,5 +46,19 @@ namespace Vectrix {
 		[[nodiscard]] virtual bool wasWindowResized() const = 0;
 		virtual void resetWindowResizedFlag() = 0;
 		static Window* create();
+
+		virtual void show() = 0;
+		virtual void hide() = 0;
+		[[nodiscard]] virtual bool isVisible() const = 0;
+	protected:
+		struct WindowData
+		{
+			std::string Title;
+			unsigned int Width, Height;
+			bool VSync;
+			bool windowResized;
+			EventCallbackFn EventCallback;
+			bool visible;
+		};
 	};
 }

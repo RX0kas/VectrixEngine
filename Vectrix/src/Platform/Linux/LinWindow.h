@@ -43,7 +43,23 @@ namespace Vectrix {
 		void setVSync(bool enabled) override;
 
 		[[nodiscard]] bool isVSync() const override;
-		void init(const WindowAttributes& data = WindowAttributes()) override;
+
+		void init(const WindowAttributes& data) override;
+
+		void show() override {
+			glfwShowWindow(m_window);
+			m_data.visible = true;
+		}
+
+		void hide() override {
+			glfwHideWindow(m_window);
+			m_data.visible = false;
+		}
+
+		[[nodiscard]] bool isVisible() const override {
+			return m_data.visible;
+		}
+
 	private:
 		void shutdown();
 
@@ -51,15 +67,6 @@ namespace Vectrix {
 
 		GLFWwindow* m_window;
 		Own<GraphicsContext> m_context;
-
-		struct WindowData
-		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;
-			bool windowResized;
-			EventCallbackFn EventCallback;
-		};
 
 		WindowData m_data;
 	};

@@ -47,6 +47,7 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		m_window->show();
 		while (m_running) {
 			auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
