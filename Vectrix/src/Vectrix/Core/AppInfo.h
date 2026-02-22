@@ -46,7 +46,7 @@ namespace Vectrix {
             return m_engineName;
         }
         [[nodiscard]] static Version getEngineVersion() {
-            return makeVersion(0,1,1);
+            return makeVersion(0,1,2);
         }
     private:
         void init(const std::string &appName, const Version appVersion);
