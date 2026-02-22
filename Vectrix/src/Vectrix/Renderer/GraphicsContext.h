@@ -9,7 +9,9 @@ namespace Vectrix {
 
 		virtual void init() = 0;
 		virtual void swapBuffers() = 0;
-		static GraphicsContext *create(GLFWwindow *windowHandle);
 		static void setClientAPI();
+	private:
+		friend class Window;
+		static GraphicsContext *create(GLFWwindow *windowHandle);
 	};
 }

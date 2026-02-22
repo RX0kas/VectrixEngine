@@ -13,7 +13,6 @@ namespace Vectrix {
         VulkanShader(std::string  name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera);
         ~VulkanShader() override;
         void bind() const override;
-        void unbind() const override;
         void setUniformBool(const std::string& name,bool value) const override;
         void setUniform1i(const std::string &name, int value) const override;
         void setUniform1u(const std::string &name, unsigned int value) const override;

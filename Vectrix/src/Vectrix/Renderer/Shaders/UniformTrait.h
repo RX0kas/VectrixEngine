@@ -1,10 +1,15 @@
 #ifndef VECTRIXWORKSPACE_UNIFORMTRAIT_H
 #define VECTRIXWORKSPACE_UNIFORMTRAIT_H
-#include "ShaderUniform.h"
+#include "ShaderUniformType.h"
 #include "glm/glm.hpp"
 
 
 namespace Vectrix {
+    /*! @cond INTERNAL */
+    /**
+     * @private Used to more easily get the ShaderUniformType from the C type
+     * @tparam T Any type supported, @see ShaderUniformType
+     */
     template<typename T>
     struct UniformTraits;
 
@@ -19,6 +24,7 @@ namespace Vectrix {
     CREATE_UNIFORM_TRAITS(glm::vec3,Vec3)
     CREATE_UNIFORM_TRAITS(glm::vec4,Vec4)
     CREATE_UNIFORM_TRAITS(glm::mat4,Mat4)
+    /*! @endcond */
 }
 
 #endif //VECTRIXWORKSPACE_UNIFORMTRAIT_H

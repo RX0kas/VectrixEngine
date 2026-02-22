@@ -1,0 +1,15 @@
+/**
+ * @mainpage Documentation of the Vectrix Engine
+ *
+ * # Main modules
+ *
+ * @li @subpage rendering_overview "Graphic rendering"
+ * @li @subpage input_overview "Input"
+ * @li @subpage event_overview "Events"
+ *
+ * ---
+ *
+ * @see @ref rendering
+ * @see @ref input
+ * @see @ref event
+ */

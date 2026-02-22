@@ -1,0 +1,21 @@
+/**
+ * @defgroup core Core
+ * @brief Fundamental engine components
+ *
+ * @defgroup rendering Graphic rendering
+ * @ingroup core
+ * @brief Complete rendering system
+ *
+ * @defgroup shaders Shaders
+ * @ingroup rendering
+ * @brief Shader program management
+ * @details To be simple a shader is a program executed by the GPU and is used because it can process things in parallel. So it's perfect to render images or modify geometry
+ *
+ * @defgroup buffers Buffers
+ * @ingroup rendering
+ * @brief GPU buffer management
+ *
+ * @defgroup textures Textures
+ * @ingroup rendering
+ * @brief Textures management
+ */

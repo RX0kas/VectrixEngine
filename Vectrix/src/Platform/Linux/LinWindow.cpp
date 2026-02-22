@@ -144,7 +144,7 @@ namespace Vectrix {
 		});
 
 
-		m_context = std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
+		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 		m_context->init();
 	}
 

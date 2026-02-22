@@ -24,9 +24,10 @@ namespace Vectrix {
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		m_shaderManager = std::make_unique<ShaderManager>();
-
-		m_imGuiLayer = std::make_shared<ImGuiLayer>();
+		auto m = new ShaderManager();
+		m_shaderManager = std::unique_ptr<ShaderManager>(m);
+		auto i = new ImGuiLayer();
+		m_imGuiLayer = std::shared_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 	}
 

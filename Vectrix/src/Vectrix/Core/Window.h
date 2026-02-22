@@ -6,6 +6,7 @@
 
 #include "Core.h"
 #include "Vectrix/Events/Event.h"
+#include "Vectrix/Renderer/GraphicsContext.h"
 
 namespace Vectrix {
 	struct WindowAttributes
@@ -45,12 +46,14 @@ namespace Vectrix {
 		[[nodiscard]] virtual void* getNativeWindow() const = 0;
 		[[nodiscard]] virtual bool wasWindowResized() const = 0;
 		virtual void resetWindowResizedFlag() = 0;
-		static Window* create();
 
 		virtual void show() = 0;
 		virtual void hide() = 0;
 		[[nodiscard]] virtual bool isVisible() const = 0;
 	protected:
+		static GraphicsContext* createGraphicContext(GLFWwindow* window) {return GraphicsContext::create(window);}
+		friend class Application;
+		static Window* create();
 		struct WindowData
 		{
 			std::string Title;

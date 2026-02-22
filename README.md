@@ -130,7 +130,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
 - [ ] Refactor to have the same naming convention everywhere and add better comments
-- [ ] Create the API documentation
+- [ ] Create the API documentation (In progress)
 - [ ] Add a material system
 - [ ] Add an editor
 
@@ -150,6 +150,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [spdlog](https://github.com/gabime/spdlog): for the logging library
 - [VMA](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator): Vulkan memory allocation library
 - [xxHash](https://github.com/Cyan4973/xxHash): for the hashing functions
+- [STB Image](https://github.com/nothings/stb/blob/master/stb_image.h): to load Textures
 ---
 
 If you like this project, feel free to give it a star!

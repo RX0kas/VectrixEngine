@@ -12,7 +12,7 @@ namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
 		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
 	{
-		m_layout->finalize();
+		finalize(m_layout.get());
 		m_ssbo = std::make_unique<SSBO>(m_device,*m_layout);
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
@@ -31,11 +31,6 @@ namespace Vectrix {
 		m_ssbo->uploadFrame(currentFrame, m_ssbo->framePtr(currentFrame));
 		VkDescriptorSet ds = m_ssbo->descriptorSet(currentFrame);
 		vkCmdBindDescriptorSets(m_renderer.getCurrentCommandBuffer(),VK_PIPELINE_BIND_POINT_GRAPHICS,m_pipelineLayout, 0, 1, &ds, 0, nullptr);
-	}
-
-	void VulkanShader::unbind() const
-	{
-
 	}
 
 	void VulkanShader::setUniformBool(const std::string &name, bool value) const {

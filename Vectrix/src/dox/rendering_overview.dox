@@ -1,0 +1,17 @@
+/**
+ * @page rendering_overview Rendering System Guide
+ *
+ * # Overview
+ * ## Architecture
+ *
+ * The rendering system is organized into several key :
+ *
+ * ### 1. Shaders (@ref shaders)
+ * - @ref Shader : Base class
+ * - @ref ShaderManager : Manager
+ *
+ * ### 2. Buffers (@ref buffers)
+ * - @ref Models : Class that simplifies the use of buffers
+ * - @ref VertexBuffer : Summit data
+ * - @ref IndexBuffer : Indexes for indexing
+ */

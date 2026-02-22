@@ -76,7 +76,6 @@ list(APPEND Vectrix_SOURCES
         Vectrix/src/vcpch.cpp
         Vectrix/src/vcpch.h
         Vectrix/src/Vectrix.h
-        Vectrix/src/tinyobj_loader.cpp
 )
 
 

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doxygenlayout version="2.0">
+  <navindex>
+    <tab type="mainpage" visible="yes" title=""/>
+    <tab type="modules" visible="yes" title="" intro="">
+      <tab type="modulelist" visible="yes" title="" intro=""/>
+      <tab type="modulemembers" visible="yes" title="" intro=""/>
+    </tab>
+    <tab type="classes" visible="yes" title="">
+      <tab type="classlist" visible="yes" title="" intro=""/>
+      <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/>
+      <tab type="hierarchy" visible="yes" title="" intro=""/>
+      <tab type="classmembers" visible="yes" title="" intro=""/>
+    </tab>
+    <tab type="files" visible="yes" title="">
+      <tab type="filelist" visible="yes" title="" intro=""/>
+      <tab type="globals" visible="yes" title="" intro=""/>
+    </tab>
+    <tab type="examples" visible="yes" title="" intro=""/>
+    <tab type="namespaces" visible="no" title=""/>
+    <tab type="structs" visible="no" title=""/>
+  </navindex>
+
+  <!-- Class page : montrer uniquement les sections publiques + description détaillée -->
+  <class>
+    <briefdescription visible="yes"/>
+    <includes visible="$SHOW_HEADERFILE"/>
+    <inheritancegraph visible="yes"/>
+    <collaborationgraph visible="no"/>
+    <memberdecl>
+      <!-- garder les types publics et méthodes publiques -->
+      <nestedclasses visible="no" title=""/>
+      <publictypes visible="yes" title="Types"/>
+      <publicmethods visible="yes" title="Public Member Functions"/>
+      <publicstaticmethods visible="yes" title="Public Static Functions"/>
+      <publicattributes visible="yes" title="Public Attributes"/>
+      <!-- masquer les membres protégés / privés -->
+      <protectedtypes visible="no" title=""/>
+      <protectedmethods visible="no" title=""/>
+      <protectedattributes visible="no" title=""/>
+      <privatetypes visible="no" title=""/>
+      <privatemethods visible="no" title=""/>
+      <privateattributes visible="no" title=""/>
+      <membergroups visible="yes"/>
+    </memberdecl>
+
+    <!-- détaileddescription : affichage des docs Javadoc/Doxygen -->
+    <detaileddescription visible="yes" title="Detailed Description"/>
+    <memberdef>
+      <!-- affichage des définitions (fonctions / variables publiques) -->
+      <constructors visible="yes" title="Constructors"/>
+      <functions visible="yes" title="Functions"/>
+      <variables visible="yes" title="Variables"/>
+      <related visible="no" title=""/>
+    </memberdef>
+
+    <allmemberslink visible="no"/>
+    <usedfiles visible="$SHOW_USED_FILES"/>
+    <authorsection visible="no"/>
+  </class>
+
+  <!-- Namespace: limiter l'affichage -->
+  <namespace>
+    <briefdescription visible="yes"/>
+    <memberdecl>
+      <classes visible="no" title=""/>
+      <structs visible="no" title=""/>
+      <enums visible="yes" title="Enums"/>
+      <typedefs visible="yes" title="Typedefs"/>
+      <functions visible="yes" title="Functions"/>
+      <variables visible="no" title=""/>
+      <membergroups visible="yes"/>
+    </memberdecl>
+    <detaileddescription visible="yes" title=""/>
+  </namespace>
+
+  <!-- File: montrer fichiers + macros/typedefs/fonctions -->
+  <file>
+    <briefdescription visible="yes"/>
+    <includes visible="$SHOW_INCLUDE_FILES"/>
+    <includegraph visible="no"/>
+    <includedbygraph visible="no"/>
+    <sourcelink visible="yes"/>
+    <memberdecl>
+      <defines visible="yes" title="Macros"/>
+      <typedefs visible="yes" title="Typedefs"/>
+      <functions visible="yes" title="Functions"/>
+      <variables visible="no" title=""/>
+      <membergroups visible="yes"/>
+    </memberdecl>
+    <detaileddescription visible="yes" title=""/>
+    <authorsection visible="no"/>
+  </file>
+
+  <!-- Group / module / directory : style épuré -->
+  <group>
+    <briefdescription visible="yes"/>
+    <groupgraph visible="no"/>
+    <memberdecl>
+      <modules visible="yes" title=""/>
+      <files visible="yes" title=""/>
+      <functions visible="yes" title="Functions"/>
+      <typedefs visible="yes" title="Typedefs"/>
+      <membergroups visible="yes"/>
+    </memberdecl>
+    <detaileddescription visible="yes" title=""/>
+  </group>
+
+  <directory>
+    <briefdescription visible="yes"/>
+    <directorygraph visible="no"/>
+    <memberdecl>
+      <dirs visible="no"/>
+      <files visible="yes"/>
+    </memberdecl>
+  </directory>
+</doxygenlayout>

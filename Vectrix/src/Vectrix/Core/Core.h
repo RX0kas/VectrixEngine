@@ -36,6 +36,10 @@
 
 #define BIT(x) (1 << x)
 
+/**
+ * @namespace Vectrix
+ * @brief Vectrix Engine namespace
+ */
 namespace Vectrix {
 
 	template<typename T>

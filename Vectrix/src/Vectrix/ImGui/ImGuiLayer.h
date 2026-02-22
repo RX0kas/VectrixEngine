@@ -8,7 +8,6 @@ namespace Vectrix {
 	class Vectrix_API ImGuiLayer : public Layer
 	{
 	public:
-		ImGuiLayer();
 		~ImGuiLayer() override;
 
 		void OnRender() override;
@@ -20,6 +19,8 @@ namespace Vectrix {
 			m_widgets.push_back(std::shared_ptr(widget));
 		}
 	private:
+		friend class Application;
+		ImGuiLayer();
 		Own<ImGuiManager> m_manager;
 		std::vector<Ref<ImGuiWidget>> m_widgets;
 		bool m_attached;
