@@ -6,8 +6,8 @@
 
 #include "Core/DeltaTime.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "Renderer/RenderCommand.h"
-#include "Renderer/Renderer.h"
+#include "Rendering/RenderCommand.h"
+#include "Rendering/Renderer.h"
 
 
 namespace Vectrix {
@@ -24,8 +24,10 @@ namespace Vectrix {
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		auto m = new ShaderManager();
-		m_shaderManager = std::unique_ptr<ShaderManager>(m);
+		auto tm = new TextureManager();
+		m_textureManager = std::unique_ptr<TextureManager>(tm);
+		auto sm = new ShaderManager();
+		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::shared_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();

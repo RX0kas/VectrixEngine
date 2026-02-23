@@ -2,6 +2,7 @@ var classVectrix_1_1Shader =
 [
     [ "bind", "classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728", null ],
     [ "isAffectedByCamera", "classVectrix_1_1Shader.html#af7c6d680a5472ae797ee35630f9908f4", null ],
+    [ "setTexture", "classVectrix_1_1Shader.html#a5f5f320a28230d8cf89d50c70047994a", null ],
     [ "setUniform", "classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472", null ],
     [ "setUniform1f", "classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f", null ],
     [ "setUniform1i", "classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756", null ],

@@ -42,7 +42,8 @@ var annotated_dup =
       [ "ShaderManager", "classVectrix_1_1ShaderManager.html", "classVectrix_1_1ShaderManager" ],
       [ "UniformElement", "structVectrix_1_1UniformElement.html", "structVectrix_1_1UniformElement" ],
       [ "ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", "classVectrix_1_1ShaderUniformLayout" ],
-      [ "Texture", "classVectrix_1_1Texture.html", null ]
+      [ "Texture", "classVectrix_1_1Texture.html", null ],
+      [ "TextureManager", "classVectrix_1_1TextureManager.html", "classVectrix_1_1TextureManager" ]
     ] ],
     [ "XXH3", "structXXH3.html", null ]
 ];

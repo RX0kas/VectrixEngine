@@ -6,8 +6,8 @@
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "Vectrix/Application.h"
-#include "Vectrix/Renderer/RenderCommand.h"
-#include "Vectrix/Renderer/Shaders/ShaderManager.h"
+#include "Vectrix/Rendering/RenderCommand.h"
+#include "Vectrix/Rendering/Shaders/ShaderManager.h"
 
 #ifdef VC_PLATFORM_WINDOWS
 #include "Platform/Windows/WinWindow.h"

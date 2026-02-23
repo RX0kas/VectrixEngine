@@ -3,8 +3,8 @@
 #include "vcpch.h"
 #include "../../Vectrix/Core/Window.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
-#include "Vectrix/Renderer/RendererAPI.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
+#include "Vectrix/Rendering/RendererAPI.h"
 
 
 namespace Vectrix {

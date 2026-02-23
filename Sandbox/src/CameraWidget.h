@@ -1,7 +1,7 @@
 #ifndef VECTRIXWORKSPACE_CAMERAWIDGET_H
 #define VECTRIXWORKSPACE_CAMERAWIDGET_H
 #include "Vectrix/ImGui/ImGuiWidget.h"
-#include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
+#include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
 
 
 class CameraWidget : public Vectrix::ImGuiWidget {

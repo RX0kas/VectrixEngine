@@ -5,7 +5,7 @@
 #include <xxh3.h>
 #include <functional>
 
-#include "Vectrix/Renderer/Models/Vertex.h"
+#include "Vectrix/Rendering/Models/Vertex.h"
 
 struct XXH3 {
     static constexpr uint64_t seed = 0x64AC0CB07C37A232;

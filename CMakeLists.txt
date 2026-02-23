@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(VectrixWorkspace LANGUAGES CXX)
+project(VectrixWorkspace VERSION 0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,6 +19,34 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+message(STATUS "Updating documentation")
+# Is certainly not a good way, TODO : Find a better way to fix this bug
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    configure_file(
+            "./templates/Doxyfile.in"
+            "./Doxyfile"
+            @ONLY
+    )
+
+    configure_file(
+            "${PROJECT_SOURCE_DIR}/templates/README.in"
+            "${PROJECT_SOURCE_DIR}/README.md"
+            @ONLY
+    )
+else ()
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/templates/Doxyfile.in"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
+            @ONLY
+    )
+
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/templates/README.in"
+            "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+            @ONLY
+    )
+endif ()
+
 message(STATUS "Initializing Vectrix dependencies")
 
 # Python
@@ -37,11 +65,11 @@ find_package(Vulkan REQUIRED)
 # Compiling Shader
 # Setup SPIRV-Tools
 message(VERBOSE "Initializing SPIRV-Header")
-set(SPIRV-Headers_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Headers)
+set(SPIRV-Headers_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/SPIRV-Headers)
 set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
 message(VERBOSE "Initializing SPIRV-Tools")
-set(tools_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/SPIRV-Tools)
-set(glslang_SOURCE_DIR ${CMAKE_HOME_DIRECTORY}/Vectrix/extern/glslang)
+set(tools_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/SPIRV-Tools)
+set(glslang_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/glslang)
 add_subdirectory(Vectrix/extern/SPIRV-Tools)
 
 message(VERBOSE "Initializing glslang")
@@ -67,6 +95,13 @@ add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
 # Vectrix
 message(STATUS "Initializing Vectrix")
+
+configure_file(
+        "${PROJECT_SOURCE_DIR}/templates/version.h.in"
+        "${PROJECT_SOURCE_DIR}/Vectrix/src/Vectrix/Core/version.h"
+        @ONLY
+)
+
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
         Vectrix/src/Vectrix/*.h

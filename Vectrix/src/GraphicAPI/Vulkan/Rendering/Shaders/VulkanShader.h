@@ -1,11 +1,11 @@
 #ifndef VECTRIXWORKSPACE_VULKANSHADER_H
 #define VECTRIXWORKSPACE_VULKANSHADER_H
 
-#include "Vectrix/Renderer/Shaders/Shader.h"
+#include "Vectrix/Rendering/Shaders/Shader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "../Pipeline.h"
-#include "Vectrix/Renderer/Shaders/ShaderUniformLayout.h"
-#include "Vectrix/Renderer/Shaders/UniformTrait.h"
+#include "GraphicAPI/Vulkan/Rendering/Pipeline.h"
+#include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
+#include "Vectrix/Rendering/Shaders/UniformTrait.h"
 
 namespace Vectrix {
     class VulkanShader final : public Shader {
@@ -23,6 +23,7 @@ namespace Vectrix {
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
         void setModelMatrix(const glm::mat4& model) const override;
+        void setTexture(Ref<Texture> texture) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
             VC_VERIFY_UNIFORM_NAME(name);

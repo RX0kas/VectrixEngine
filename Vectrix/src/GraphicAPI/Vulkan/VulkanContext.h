@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vk_mem_alloc.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 #include "Rendering/Shaders/VulkanShaderCompiler.h"

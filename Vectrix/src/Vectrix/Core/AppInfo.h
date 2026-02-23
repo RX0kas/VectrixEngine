@@ -1,8 +1,9 @@
-#ifndef VECTRIXWORKSPACE_VERSION_H
-#define VECTRIXWORKSPACE_VERSION_H
+#ifndef VECTRIXWORKSPACE_APP_INFO_H
+#define VECTRIXWORKSPACE_APP_INFO_H
 
 #include <cstdint>
 #include "Log.h"
+#include "version.h"
 
 using Version = std::uint32_t;
 
@@ -46,7 +47,7 @@ namespace Vectrix {
             return m_engineName;
         }
         [[nodiscard]] static Version getEngineVersion() {
-            return makeVersion(0,1,2);
+            return makeVersion(VC_VERSION_MAJOR,VC_VERSION_MINOR,VC_VERSION_PATCH);
         }
     private:
         void init(const std::string &appName, const Version appVersion);
@@ -56,4 +57,4 @@ namespace Vectrix {
     };
 }
 
-#endif //VECTRIXWORKSPACE_VERSION_H
+#endif //VECTRIXWORKSPACE_APP_INFO_H

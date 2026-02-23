@@ -6,7 +6,7 @@
 #include "Vectrix/Events/KeyEvent.h"
 
 #include "Vectrix/Application.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	static bool s_GLFWInitialized = false; // Might be multiple window

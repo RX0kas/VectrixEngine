@@ -40,6 +40,7 @@ var hierarchy =
     [ "Vectrix::ShaderManager", "classVectrix_1_1ShaderManager.html", null ],
     [ "Vectrix::ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", null ],
     [ "Vectrix::Texture", "classVectrix_1_1Texture.html", null ],
+    [ "Vectrix::TextureManager", "classVectrix_1_1TextureManager.html", null ],
     [ "Vectrix::Transform", "classVectrix_1_1Transform.html", null ],
     [ "Vectrix::UniformElement", "structVectrix_1_1UniformElement.html", null ],
     [ "Vectrix::Vertex", "structVectrix_1_1Vertex.html", null ],

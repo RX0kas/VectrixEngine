@@ -1,7 +1,7 @@
 #include "ImGuiManager.h"
 
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
-#include "Vectrix/Renderer/Renderer.h"
+#include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
     ImGuiManager* ImGuiManager::create(Window& window) {
