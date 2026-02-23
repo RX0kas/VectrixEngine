@@ -1,7 +1,7 @@
 #include "vcpch.h"
 #include "Pipeline.h"
 
-#include "../../../Vectrix/Renderer/Shaders/ShaderManager.h"
+#include "../../../Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 

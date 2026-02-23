@@ -12,9 +12,9 @@
 
 // Debug Widget
 #include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
-#include "Vectrix/Renderer/Models/Transform.h"
-#include "Vectrix/Renderer/Models/VertexArray.h"
-#include "Vectrix/Renderer/Shaders/Shader.h"
+#include "Vectrix/Rendering/Models/Transform.h"
+#include "Vectrix/Rendering/Models/VertexArray.h"
+#include "Vectrix/Rendering/Shaders/Shader.h"
 
 namespace Vectrix {
     class VulkanRenderer {
@@ -53,6 +53,10 @@ namespace Vectrix {
         [[nodiscard]] float getAspectRatio() const { return m_swapChain->extentAspectRatio(); }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
         void endSwapChainRenderPass(VkCommandBuffer commandBuffer) const;
+
+        [[nodiscard]] std::vector<VkFence> getInFlightFences() const {
+            return m_swapChain->getInFlightFences();
+        }
 
         void makeClearColor(const glm::vec4& color) {
             clearValue.color.float32[0] = color.r;

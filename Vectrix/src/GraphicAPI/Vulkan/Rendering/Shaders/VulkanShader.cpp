@@ -136,13 +136,16 @@ namespace Vectrix {
 		}
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
-
 	void VulkanShader::setModelMatrix(const glm::mat4& model) const {
 		auto* e = m_layout->find("modelMat");
 		if (e == nullptr) {
 			VC_CORE_ERROR("modelMat is not found in the layout");
 		}
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &model, sizeof(glm::mat4));
+	}
+
+	void VulkanShader::setTexture(Ref<Texture> texture) {
+		m_ssbo->setTexture(dynamic_cast<VulkanTexture*>(texture.get()));
 	}
 
 	std::string readUTF8(const std::string& path) {

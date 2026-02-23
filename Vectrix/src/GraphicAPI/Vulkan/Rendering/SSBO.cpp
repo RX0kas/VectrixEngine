@@ -1,6 +1,7 @@
 #include "SSBO.h"
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Rendering/Textures/TextureManager.h"
 
 
 namespace Vectrix {
@@ -25,22 +26,9 @@ namespace Vectrix {
         vmaMapMemory(VulkanContext::instance().getAllocator(), m_allocation, &m_mapped);
         memset(m_mapped, 0, m_bufferSize);
 
-        VkDescriptorSetLayoutBinding b{};
-        b.binding = 0;
-        b.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        b.descriptorCount = 1;
 
-        b.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-
-        b.pImmutableSamplers = nullptr;
-
-        VkDescriptorSetLayoutCreateInfo li{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
-        li.bindingCount = 1;
-        li.pBindings = &b;
-
-        if (vkCreateDescriptorSetLayout(m_device.device(), &li, nullptr, &m_descriptorSetLayout) != VK_SUCCESS) {
-            VC_CORE_CRITICAL("Failed to create descriptor set layout");
-        }
+        // creation descriptor set
+        createDescriptorSetLayout();
 
         m_descriptorSets.resize(m_framesInFlight);
         std::vector<VkDescriptorSetLayout> layouts(m_framesInFlight, m_descriptorSetLayout);
@@ -56,18 +44,18 @@ namespace Vectrix {
         for (uint32_t i = 0; i < m_framesInFlight; ++i) {
             VkDescriptorBufferInfo bi{};
             bi.buffer = m_buffer;
-            bi.offset = static_cast<VkDeviceSize>(i) * m_elementStride;
+            bi.offset = i * m_elementStride;
             bi.range = m_layout.getStructSize();
 
-            VkWriteDescriptorSet w{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-            w.dstSet = m_descriptorSets[i];
-            w.dstBinding = 0;
-            w.dstArrayElement = 0;
-            w.descriptorCount = 1;
-            w.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-            w.pBufferInfo = &bi;
+            VkWriteDescriptorSet w[1] = {};
+            w[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            w[0].dstSet = m_descriptorSets[i];
+            w[0].dstBinding = 0;
+            w[0].descriptorCount = 1;
+            w[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            w[0].pBufferInfo = &bi;
 
-            vkUpdateDescriptorSets(m_device.device(), 1, &w, 0, nullptr);
+            vkUpdateDescriptorSets(m_device.device(), 1, w, 0, nullptr);
         }
     }
 
@@ -76,5 +64,41 @@ namespace Vectrix {
         if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
         m_device.destroyBuffer(m_buffer, m_allocation);
         vkDestroyDescriptorSetLayout(m_device.device(), m_descriptorSetLayout, nullptr);
+    }
+
+    void SSBO::setTexture(const VulkanTexture *texture) const {
+        VulkanRenderer& r = VulkanContext::instance().getRenderer();
+        vkWaitForFences(m_device.device(), 1, &r.getInFlightFences()[r.getFrameIndex()], VK_TRUE, UINT64_MAX);
+
+        VkDescriptorImageInfo imageInfo = texture->getDescriptorInfo();
+        VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+        write.dstSet = m_descriptorSets[r.getFrameIndex()];
+        write.dstBinding = 1;
+        write.descriptorCount = 1;
+        write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        write.pImageInfo = &imageInfo;
+        vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
+    }
+
+    void SSBO::createDescriptorSetLayout() {
+        VkDescriptorSetLayoutBinding b[2] = {};
+
+        b[0].binding = 0;
+        b[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        b[0].descriptorCount = 1;
+        b[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+        b[1].binding = 1;
+        b[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        b[1].descriptorCount = 1;
+        b[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+        VkDescriptorSetLayoutCreateInfo li{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
+        li.bindingCount = 2;
+        li.pBindings = b;
+
+        if (vkCreateDescriptorSetLayout(m_device.device(), &li, nullptr, &m_descriptorSetLayout) != VK_SUCCESS) {
+            VC_CORE_CRITICAL("Failed to create descriptor set layout");
+        }
     }
 } // Vectrix

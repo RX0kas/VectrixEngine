@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Vectrix Engine: Vectrix/src/Vectrix/Renderer/Shaders/ShaderManager.h Source File</title>
+<title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Shaders/ShaderManager.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.1.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.2.0</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -97,8 +97,8 @@ $(function(){initNavTree('ShaderManager_8h_source.html','',''); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_SHADERMANAGER_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Vectrix/Core/Core.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Renderer/Buffer.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="Shader_8h.html">Vectrix/Renderer/Shaders/Shader.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Rendering/Buffer.h&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="Shader_8h.html">Vectrix/Rendering/Shaders/Shader.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;Vectrix/Utils/Hashing.h&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"></span> </div>
@@ -174,7 +174,7 @@ $(function(){initNavTree('ShaderManager_8h_source.html','',''); });
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_SHADERMANAGER_H</span></div>
 <div class="ttc" id="aShader_8h_html"><div class="ttname"><a href="Shader_8h.html">Shader.h</a></div><div class="ttdoc">Definition of the shader class.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00021">Application.h:22</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00022">Application.h:23</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00038">Buffer.h:38</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderManager_html"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html">Vectrix::ShaderManager</a></div><div class="ttdoc">Manages shaders.</div><div class="ttdef"><b>Definition</b> <a href="#l00020">ShaderManager.h:20</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a43f30568122de24a2cd29a03747ee121"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a43f30568122de24a2cd29a03747ee121">Vectrix::ShaderManager::createShader</a></div><div class="ttdeci">static void createShader(const std::string &amp;name, const std::string &amp;vertexPath, const std::string &amp;fragmentPath, ShaderUniformLayout uniformLayout, BufferLayout layout, bool affectedByCamera)</div><div class="ttdoc">Function to create a new shader.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8cpp_source.html#l00023">ShaderManager.cpp:23</a></div></div>
@@ -182,7 +182,7 @@ $(function(){initNavTree('ShaderManager_8h_source.html','',''); });
 <div class="ttc" id="aclassVectrix_1_1ShaderManager_html_aadd98904e823f291f8dbc82683191526"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#aadd98904e823f291f8dbc82683191526">Vectrix::ShaderManager::getAll</a></div><div class="ttdeci">std::vector&lt; Ref&lt; Shader &gt; &gt; getAll()</div><div class="ttdoc">This function is used to get all the shader previously created.</div><div class="ttdef"><b>Definition</b> <a href="#l00037">ShaderManager.h:37</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderManager_html_ae3f69ad2d50bbaea23ba8d939c91ff17"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#ae3f69ad2d50bbaea23ba8d939c91ff17">Vectrix::ShaderManager::instance</a></div><div class="ttdeci">static ShaderManager &amp; instance()</div><div class="ttdoc">Return a reference to the instance of this class.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">ShaderManager.h:51</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderUniformLayout_html"><div class="ttname"><a href="classVectrix_1_1ShaderUniformLayout.html">Vectrix::ShaderUniformLayout</a></div><div class="ttdef"><b>Definition</b> <a href="ShaderUniformLayout_8h_source.html#l00040">ShaderUniformLayout.h:40</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Shader_html"><div class="ttname"><a href="classVectrix_1_1Shader.html">Vectrix::Shader</a></div><div class="ttdoc">This class represent a shader.</div><div class="ttdef"><b>Definition</b> <a href="Shader_8h_source.html#l00025">Shader.h:25</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Shader_html"><div class="ttname"><a href="classVectrix_1_1Shader.html">Vectrix::Shader</a></div><div class="ttdoc">This class represent a shader.</div><div class="ttdef"><b>Definition</b> <a href="Shader_8h_source.html#l00026">Shader.h:26</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
 <div class="ttc" id="astructXXH3_html"><div class="ttname"><a href="structXXH3.html">XXH3</a></div><div class="ttdef"><b>Definition</b> <a href="Hashing_8h_source.html#l00010">Hashing.h:10</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -191,7 +191,7 @@ $(function(){initNavTree('ShaderManager_8h_source.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Renderer</b></li><li class="navelem"><b>Shaders</b></li><li class="navelem"><a href="ShaderManager_8h.html">ShaderManager.h</a></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Shaders</b></li><li class="navelem"><a href="ShaderManager_8h.html">ShaderManager.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

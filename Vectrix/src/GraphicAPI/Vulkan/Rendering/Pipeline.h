@@ -1,11 +1,11 @@
 #pragma once
 
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "Vectrix/Renderer/Models/Vertex.h"
+#include "Vectrix/Rendering/Models/Vertex.h"
 
 #include <vector>
 
-#include "Vectrix/Renderer/Buffer.h"
+#include "Vectrix/Rendering/Buffer.h"
 
 namespace Vectrix {
 

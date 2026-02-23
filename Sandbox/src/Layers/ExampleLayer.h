@@ -16,7 +16,7 @@ public:
 
 		m_cameraWidget = new CameraWidget(*m_camera);
 
-		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/cat.obj"));
+		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
@@ -25,7 +25,13 @@ public:
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #endif
-		def = Vectrix::ShaderManager::instance().get(p_defaultName);
+#ifdef VC_PLATFORM_WINDOWS
+		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\cat.png");
+#elif defined(VC_PLATFORM_LINUX)
+		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
+#endif
+		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
+		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
 	}
 
 	void OnUpdate(Vectrix::DeltaTime ts) override
@@ -64,9 +70,9 @@ public:
 
 	void OnRender() override {
 		Vectrix::Renderer::BeginScene(*m_camera);
-		def->setUniform("time",static_cast<float>(glfwGetTime()));
-
-		Vectrix::Renderer::Submit(*def.get(),*m_model);
+		defaultShader->setUniform("time",static_cast<float>(glfwGetTime()));
+		defaultShader->setTexture(customTexture);
+		Vectrix::Renderer::Submit(*defaultShader.get(),*m_model);
 		Vectrix::Renderer::EndScene();
 	}
 
@@ -79,7 +85,8 @@ private:
 	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
 	CameraWidget *m_cameraWidget;
 
-	Vectrix::Ref<Vectrix::Shader> def;
+	Vectrix::Ref<Vectrix::Shader> defaultShader;
+	Vectrix::Ref<Vectrix::Texture> customTexture;
 	Vectrix::Own<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";
 };

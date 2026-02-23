@@ -96,6 +96,10 @@ namespace Vectrix {
 	    void advanceFrame() {
             m_currentFrame = (m_currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
         }
+
+        std::vector<VkFence> getInFlightFences() {
+            return m_inFlightFences;
+        }
     private:
         void destroyImageviews() {
             if (!m_swapChainImageViews.empty()) {

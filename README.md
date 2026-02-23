@@ -109,7 +109,7 @@ public:
             PushLayer(m_exampleLayer);
 	}
 	~TestApp() override = default;
-    
+
 private:
 	Vectrix::Ref<CustomLayer> m_exampleLayer;
 };

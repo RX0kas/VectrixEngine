@@ -6,7 +6,7 @@
 
 #include "Core.h"
 #include "Vectrix/Events/Event.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	struct WindowAttributes

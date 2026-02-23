@@ -20,16 +20,16 @@
 #include "Vectrix/ImGui/ImGuiWidget.h"
 
 // Render
-#include "Vectrix/Renderer/Renderer.h"
-#include "Vectrix/Renderer/RenderCommand.h"
+#include "Vectrix/Rendering/Renderer.h"
+#include "Vectrix/Rendering/RenderCommand.h"
 
-#include "Vectrix/Renderer/Buffer.h"
-#include "Vectrix/Renderer/Shaders/Shader.h"
-#include "Vectrix/Renderer/Models/VertexArray.h"
-#include "Vectrix/Renderer/Models/Model.h"
+#include "Vectrix/Rendering/Buffer.h"
+#include "Vectrix/Rendering/Shaders/Shader.h"
+#include "Vectrix/Rendering/Models/VertexArray.h"
+#include "Vectrix/Rendering/Models/Model.h"
 
-#include "Vectrix/Renderer/Camera/PerspectiveCamera.h"
-#include "Vectrix/Renderer/Models/ObjLoader.h"
+#include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
+#include "Vectrix/Rendering/Models/ObjLoader.h"
 
 // Entry Point
 #include "Vectrix/EntryPoint.h"

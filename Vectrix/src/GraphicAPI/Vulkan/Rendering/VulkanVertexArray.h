@@ -1,6 +1,6 @@
 #ifndef VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
 #define VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
-#include "Vectrix/Renderer/Models/VertexArray.h"
+#include "Vectrix/Rendering/Models/VertexArray.h"
 
 namespace Vectrix {
     class VulkanVertexArray : public VertexArray {

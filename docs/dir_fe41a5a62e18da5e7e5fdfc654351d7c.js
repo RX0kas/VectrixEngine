@@ -5,7 +5,7 @@ var dir_fe41a5a62e18da5e7e5fdfc654351d7c =
     [ "ImGui", "dir_1647afd2a46d71bb2fb546cd33fd9f85.html", "dir_1647afd2a46d71bb2fb546cd33fd9f85" ],
     [ "Input", "dir_3bf2d475275315ad8b811b840ed679bd.html", "dir_3bf2d475275315ad8b811b840ed679bd" ],
     [ "Layers", "dir_df2e93641b8641d2df3f068b6f716da8.html", "dir_df2e93641b8641d2df3f068b6f716da8" ],
-    [ "Renderer", "dir_989ab924887825c186bb03ac33b1798b.html", "dir_989ab924887825c186bb03ac33b1798b" ],
+    [ "Rendering", "dir_4aa01486a295e7b0b42bebe6d16d0719.html", "dir_4aa01486a295e7b0b42bebe6d16d0719" ],
     [ "Utils", "dir_55dc9bd985ae3920f4b5f7d9fececaec.html", "dir_55dc9bd985ae3920f4b5f7d9fececaec" ],
     [ "Application.cpp", "Application_8cpp_source.html", null ],
     [ "Application.h", "Application_8h_source.html", null ],

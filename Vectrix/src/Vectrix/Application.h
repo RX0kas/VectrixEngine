@@ -9,7 +9,8 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
-#include "Renderer/Shaders/ShaderManager.h"
+#include "Rendering/Shaders/ShaderManager.h"
+#include "Rendering/Textures/TextureManager.h"
 
 using AppInfoFunc = Vectrix::ApplicationInfo(*)();
 extern AppInfoFunc g_getAppInfo;
@@ -47,6 +48,7 @@ namespace Vectrix {
 	private:
 		Ref<Window> m_window;
 		Ref<ShaderManager> m_shaderManager;
+		Ref<TextureManager> m_textureManager;
 		Ref<ImGuiLayer> m_imGuiLayer;
 		Own<ApplicationInfo> m_appInfo;
 		bool m_running = true;

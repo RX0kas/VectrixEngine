@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vectrix/Renderer/RendererAPI.h"
+#include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
 
