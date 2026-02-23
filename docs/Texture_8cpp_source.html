@@ -93,21 +93,21 @@ $(function(){initNavTree('Texture_8cpp_source.html','',''); });
   <div class="headertitle"><div class="title">Texture.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;Texture.h&quot;</span></div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="Texture_8h.html">Texture.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="TextureManager_8h.html">TextureManager.h</a>&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/Rendering/VulkanTexture.h&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;Vectrix/Core/Log.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;Vectrix/Rendering/Renderer.h&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="Renderer_8h.html">Vectrix/Rendering/Renderer.h</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;Vectrix/Rendering/RendererAPI.h&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    Ref&lt;Texture&gt; Texture::create(<span class="keyword">const</span> std::string &amp;path) {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordflow">if</span> (!std::filesystem::exists(path)) {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            VC_CORE_WARN(<span class="stringliteral">&quot;Texture {} doesn&#39;t exist, using default Texture instead&quot;</span>,path);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            <span class="keywordflow">return</span> TextureManager::getNotFoundTexture();</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classVectrix_1_1TextureManager.html#aedcdc973756efff2645cab0c66233888">TextureManager::getNotFoundTexture</a>();</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        }</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordflow">switch</span> (Renderer::GetAPI())</div>
@@ -119,7 +119,10 @@ $(function(){initNavTree('Texture_8cpp_source.html','',''); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        VC_CORE_ERROR(<span class="stringliteral">&quot;Unknown RendererAPI&quot;</span>);</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    }</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <span class="comment">// Vectrix</span></div>
+<div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Definition of the renderer class.</div></div>
 <div class="ttc" id="aTextureManager_8h_html"><div class="ttname"><a href="TextureManager_8h.html">TextureManager.h</a></div><div class="ttdoc">Definition of the class that manage the life of textures.</div></div>
+<div class="ttc" id="aTexture_8h_html"><div class="ttname"><a href="Texture_8h.html">Texture.h</a></div><div class="ttdoc">Definition of the texture class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1TextureManager_html_aedcdc973756efff2645cab0c66233888"><div class="ttname"><a href="classVectrix_1_1TextureManager.html#aedcdc973756efff2645cab0c66233888">Vectrix::TextureManager::getNotFoundTexture</a></div><div class="ttdeci">static Ref&lt; Texture &gt; getNotFoundTexture()</div><div class="ttdoc">Use when a texture can&#39;t be found or is not compatible This function return a Ref to a texture that i...</div><div class="ttdef"><b>Definition</b> <a href="TextureManager_8cpp_source.html#l00043">TextureManager.cpp:43</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

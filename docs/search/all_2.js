@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['add_0',['add',['../classVectrix_1_1ShaderUniformLayout.html#ac2ab0483896a0bf3d1762dcfb0679f71',1,'Vectrix::ShaderUniformLayout']]],
-  ['application_1',['Application',['../classVectrix_1_1Application.html',1,'Vectrix']]],
-  ['applicationinfo_2',['ApplicationInfo',['../classVectrix_1_1ApplicationInfo.html',1,'Vectrix']]],
-  ['architecture_3',['Architecture',['../rendering_overview.html#autotoc_md3',1,'']]]
+  ['3_20buffers_20buffers_0',['3. Buffers (&lt;a class=&quot;el&quot; href=&quot;group__buffers.html&quot; title=&quot;Buffers&quot;&gt;Buffers&lt;/a&gt;)',['../rendering_overview.html#autotoc_md6',1,'']]]
 ];

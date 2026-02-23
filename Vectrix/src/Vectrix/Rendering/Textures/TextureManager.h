@@ -28,6 +28,12 @@ namespace Vectrix {
          * @return The texture program with the name you entered
          */
         Ref<Texture> get(const std::string& name);
+
+        /**
+         * @brief Use when a texture can't be found or is not compatible
+         * This function return a Ref to a texture that is used by the engine when it cannot found a texture
+         * @return The default texture
+         */
         static Ref<Texture> getNotFoundTexture();
 
         /**

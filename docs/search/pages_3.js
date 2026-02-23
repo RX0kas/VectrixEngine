@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['buffers_0',['2. Buffers (&lt;a class=&quot;el&quot; href=&quot;group__buffers.html&quot; title=&quot;Buffers&quot;&gt;Buffers&lt;/a&gt;)',['../rendering_overview.html#autotoc_md5',1,'']]],
-  ['buffers_20buffers_1',['2. Buffers (&lt;a class=&quot;el&quot; href=&quot;group__buffers.html&quot; title=&quot;Buffers&quot;&gt;Buffers&lt;/a&gt;)',['../rendering_overview.html#autotoc_md5',1,'']]]
+  ['4_20textures_20textures_0',['4. Textures (&lt;a class=&quot;el&quot; href=&quot;group__textures.html&quot; title=&quot;Textures&quot;&gt;Textures&lt;/a&gt;)',['../rendering_overview.html#autotoc_md7',1,'']]]
 ];

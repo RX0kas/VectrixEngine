@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['rendercommand_0',['RenderCommand',['../classVectrix_1_1RenderCommand.html',1,'Vectrix']]],
-  ['renderer_1',['Renderer',['../classVectrix_1_1Renderer.html',1,'Vectrix']]],
-  ['rendererapi_2',['RendererAPI',['../classVectrix_1_1RendererAPI.html',1,'Vectrix']]]
+  ['scenedata_0',['SceneData',['../structVectrix_1_1Renderer_1_1SceneData.html',1,'Vectrix::Renderer']]],
+  ['shader_1',['Shader',['../classVectrix_1_1Shader.html',1,'Vectrix']]],
+  ['shadermanager_2',['ShaderManager',['../classVectrix_1_1ShaderManager.html',1,'Vectrix']]],
+  ['shaderuniformlayout_3',['ShaderUniformLayout',['../classVectrix_1_1ShaderUniformLayout.html',1,'Vectrix']]]
 ];

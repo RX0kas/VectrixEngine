@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['1_20shaders_20shaders_0',['1. Shaders (&lt;a class=&quot;el&quot; href=&quot;group__shaders.html&quot; title=&quot;Shaders&quot;&gt;Shaders&lt;/a&gt;)',['../rendering_overview.html#autotoc_md4',1,'']]]
+  ['1_20renderer_20rendering_0',['1. Renderer (&lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;)',['../rendering_overview.html#autotoc_md4',1,'']]]
 ];

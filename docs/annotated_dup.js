@@ -30,7 +30,6 @@ var annotated_dup =
       [ "VertexBuffer", "classVectrix_1_1VertexBuffer.html", null ],
       [ "IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
       [ "PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
-      [ "GraphicsContext", "classVectrix_1_1GraphicsContext.html", null ],
       [ "Model", "classVectrix_1_1Model.html", null ],
       [ "Transform", "classVectrix_1_1Transform.html", null ],
       [ "Vertex", "structVectrix_1_1Vertex.html", null ],
@@ -42,7 +41,7 @@ var annotated_dup =
       [ "ShaderManager", "classVectrix_1_1ShaderManager.html", "classVectrix_1_1ShaderManager" ],
       [ "UniformElement", "structVectrix_1_1UniformElement.html", "structVectrix_1_1UniformElement" ],
       [ "ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", "classVectrix_1_1ShaderUniformLayout" ],
-      [ "Texture", "classVectrix_1_1Texture.html", null ],
+      [ "Texture", "classVectrix_1_1Texture.html", "classVectrix_1_1Texture" ],
       [ "TextureManager", "classVectrix_1_1TextureManager.html", "classVectrix_1_1TextureManager" ]
     ] ],
     [ "XXH3", "structXXH3.html", null ]

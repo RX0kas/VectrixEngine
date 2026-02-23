@@ -97,19 +97,31 @@ $(function(){initNavTree('rendering_overview.html','',''); });
 Overview</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Architecture</h2>
-<p>The rendering system is organized into several key :</p>
+<p>The rendering system is organized into several key features: </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
-1. Shaders (<a class="el" href="group__shaders.html" title="Shaders">Shaders</a>)</h3>
+1. Renderer (<a class="el" href="group__rendering.html" title="Graphic rendering">Graphic rendering</a>)</h3>
 <ul>
-<li>Shader : Base class</li>
-<li>ShaderManager : Manager</li>
+<li>RenderCommand : Class that</li>
+<li>Renderer : Class that help create and maintain shaders</li>
 </ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-2. Buffers (<a class="el" href="group__buffers.html" title="Buffers">Buffers</a>)</h3>
+2. Shaders (<a class="el" href="group__shaders.html" title="Shaders">Shaders</a>)</h3>
+<ul>
+<li>Shader : Base class</li>
+<li>ShaderManager : Class that help create and maintain shaders</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+3. Buffers (<a class="el" href="group__buffers.html" title="Buffers">Buffers</a>)</h3>
 <ul>
 <li>Models : Class that simplifies the use of buffers</li>
 <li>VertexBuffer : Summit data</li>
-<li>IndexBuffer : Indexes for indexing </li>
+<li>IndexBuffer : Indexes for indexing</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+4. Textures (<a class="el" href="group__textures.html" title="Textures">Textures</a>)</h3>
+<ul>
+<li>Texture : Base class</li>
+<li>TextureManager : Class that help create and maintain textures </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

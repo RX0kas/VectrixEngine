@@ -93,26 +93,24 @@ $(function(){initNavTree('classVectrix_1_1Texture.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::Texture Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="Texture_8h_source.html">Texture.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a414647df6c57bb144ea15f8b32bfaa60" id="r_a414647df6c57bb144ea15f8b32bfaa60"><td class="memItemLeft"><a id="a414647df6c57bb144ea15f8b32bfaa60" name="a414647df6c57bb144ea15f8b32bfaa60"></a>
-uint32_t&#160;</td><td class="memItemRight"><b>getWidth</b> () const</td></tr>
-<tr class="memitem:aa752a7e29ba91587ee1e24f984e2dc43" id="r_aa752a7e29ba91587ee1e24f984e2dc43"><td class="memItemLeft"><a id="aa752a7e29ba91587ee1e24f984e2dc43" name="aa752a7e29ba91587ee1e24f984e2dc43"></a>
-uint32_t&#160;</td><td class="memItemRight"><b>getHeight</b> () const</td></tr>
-<tr class="memitem:ab6b8d73daa417ee472d49d9f51f681a4" id="r_ab6b8d73daa417ee472d49d9f51f681a4"><td class="memItemLeft"><a id="ab6b8d73daa417ee472d49d9f51f681a4" name="ab6b8d73daa417ee472d49d9f51f681a4"></a>
-void&#160;</td><td class="memItemRight"><b>bind</b> (uint32_t slot) const</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Public Static Functions</h2></td></tr>
-<tr class="memitem:a85176d1c504f16593eb0129f6d25355a" id="r_a85176d1c504f16593eb0129f6d25355a"><td class="memItemLeft">static Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a85176d1c504f16593eb0129f6d25355a">create</a> (const std::string &amp;path)</td></tr>
+<tr class="memitem:a414647df6c57bb144ea15f8b32bfaa60" id="r_a414647df6c57bb144ea15f8b32bfaa60"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a414647df6c57bb144ea15f8b32bfaa60">getWidth</a> () const</td></tr>
+<tr class="memdesc:a414647df6c57bb144ea15f8b32bfaa60"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the width in pixel of the texture.  <br /></td></tr>
+<tr class="memitem:aa752a7e29ba91587ee1e24f984e2dc43" id="r_aa752a7e29ba91587ee1e24f984e2dc43"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#aa752a7e29ba91587ee1e24f984e2dc43">getHeight</a> () const</td></tr>
+<tr class="memdesc:aa752a7e29ba91587ee1e24f984e2dc43"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the height in pixel of the texture.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Texture_8h_source.html#l00008">8</a> of file <a class="el" href="Texture_8h_source.html">Texture.h</a>.</p>
+<div class="textblock"><p>This class represent a texture that can be created with <a class="el" href="classVectrix_1_1TextureManager.html#a2432c166bc4dd61f6132ce9d8ab56e72" title="Function to create a new texture.">Vectrix::TextureManager::createTexture()</a> <br  />
+ And <a class="el" href="classVectrix_1_1TextureManager.html#a0f4c1b39ffa0bb4dedf2360227576fca" title="This function is used to get a texture previously created.">Vectrix::TextureManager::get()</a> can be used to obtain a texture already created </p>
+
+<p class="definition">Definition at line <a class="el" href="Texture_8h_source.html#l00018">18</a> of file <a class="el" href="Texture_8h_source.html">Texture.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a85176d1c504f16593eb0129f6d25355a" name="a85176d1c504f16593eb0129f6d25355a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85176d1c504f16593eb0129f6d25355a">&#9670;&#160;</a></span>create()</h2>
+<a id="aa752a7e29ba91587ee1e24f984e2dc43" name="aa752a7e29ba91587ee1e24f984e2dc43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa752a7e29ba91587ee1e24f984e2dc43">&#9670;&#160;</a></span>getHeight()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -121,20 +119,49 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt; Vectrix::Texture::create </td>
+          <td class="memname">uint32_t Vectrix::Texture::getHeight </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
-          <td></td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Texture_8cpp_source.html#l00012">12</a> of file <a class="el" href="Texture_8cpp_source.html">Texture.cpp</a>.</p>
+<p>This function return the height in pixel of the texture. </p>
+<dl class="section return"><dt>Returns</dt><dd>Height of the texture </dd></dl>
+
+</div>
+</div>
+<a id="a414647df6c57bb144ea15f8b32bfaa60" name="a414647df6c57bb144ea15f8b32bfaa60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a414647df6c57bb144ea15f8b32bfaa60">&#9670;&#160;</a></span>getWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t Vectrix::Texture::getWidth </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function return the width in pixel of the texture. </p>
+<dl class="section return"><dt>Returns</dt><dd>Width of the texture </dd></dl>
 
 </div>
 </div>
