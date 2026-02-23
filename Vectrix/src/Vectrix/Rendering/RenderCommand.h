@@ -3,6 +3,12 @@
 #include "RendererAPI.h"
 #include "Models/VertexArray.h"
 
+/**
+ * @file RenderCommand.h
+ * @brief Definition of the RenderCommand class
+ * @ingroup rendering
+ */
+
 namespace Vectrix
 {
 	class RenderCommand

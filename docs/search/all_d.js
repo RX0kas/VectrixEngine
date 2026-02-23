@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['name_0',['name',['../structVectrix_1_1UniformElement.html#a1ea8def54794a12ccf9e7416b61144be',1,'Vectrix::UniformElement']]]
+  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
+  ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
+  ['log_2',['Log',['../classVectrix_1_1Log.html',1,'Vectrix']]]
 ];

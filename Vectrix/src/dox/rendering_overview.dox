@@ -4,14 +4,21 @@
  * # Overview
  * ## Architecture
  *
- * The rendering system is organized into several key :
+ * The rendering system is organized into several key features:
+ * ### 1. Renderer (@ref rendering)
+ * - @ref RenderCommand : Class that
+ * - @ref Renderer : Class that help create and maintain shaders
  *
- * ### 1. Shaders (@ref shaders)
+ * ### 2. Shaders (@ref shaders)
  * - @ref Shader : Base class
- * - @ref ShaderManager : Manager
+ * - @ref ShaderManager : Class that help create and maintain shaders
  *
- * ### 2. Buffers (@ref buffers)
+ * ### 3. Buffers (@ref buffers)
  * - @ref Models : Class that simplifies the use of buffers
  * - @ref VertexBuffer : Summit data
  * - @ref IndexBuffer : Indexes for indexing
+ *
+ * ### 4. Textures (@ref textures)
+ * - @ref Texture : Base class
+ * - @ref TextureManager : Class that help create and maintain textures
  */

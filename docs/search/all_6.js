@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['engine_0',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
-  ['event_1',['Event',['../classVectrix_1_1Event.html',1,'Vectrix']]],
-  ['eventdispatcher_2',['EventDispatcher',['../classVectrix_1_1EventDispatcher.html',1,'Vectrix']]]
+  ['core_0',['Core',['../group__core.html',1,'']]],
+  ['createshader_1',['createShader',['../classVectrix_1_1ShaderManager.html#a43f30568122de24a2cd29a03747ee121',1,'Vectrix::ShaderManager']]],
+  ['createtexture_2',['createTexture',['../classVectrix_1_1TextureManager.html#a2432c166bc4dd61f6132ce9d8ab56e72',1,'Vectrix::TextureManager']]]
 ];

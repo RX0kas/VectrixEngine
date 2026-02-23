@@ -7,6 +7,12 @@
 #include "Shaders/Shader.h"
 #include "Models/VertexArray.h"
 
+/**
+ * @file Renderer.h
+ * @brief Definition of the renderer class
+ * @ingroup rendering
+ */
+
 namespace Vectrix {
 	class Renderer
 	{

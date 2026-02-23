@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
-  ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
-  ['log_2',['Log',['../classVectrix_1_1Log.html',1,'Vectrix']]]
+  ['model_0',['Model',['../classVectrix_1_1Model.html',1,'Vectrix']]],
+  ['mousebuttonevent_1',['MouseButtonEvent',['../classVectrix_1_1MouseButtonEvent.html',1,'Vectrix']]],
+  ['mousebuttonpressedevent_2',['MouseButtonPressedEvent',['../classVectrix_1_1MouseButtonPressedEvent.html',1,'Vectrix']]],
+  ['mousebuttonreleasedevent_3',['MouseButtonReleasedEvent',['../classVectrix_1_1MouseButtonReleasedEvent.html',1,'Vectrix']]],
+  ['mousemovedevent_4',['MouseMovedEvent',['../classVectrix_1_1MouseMovedEvent.html',1,'Vectrix']]],
+  ['mousescrolledevent_5',['MouseScrolledEvent',['../classVectrix_1_1MouseScrolledEvent.html',1,'Vectrix']]]
 ];
