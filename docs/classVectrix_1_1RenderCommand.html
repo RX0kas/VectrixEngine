@@ -93,18 +93,25 @@ $(function(){initNavTree('classVectrix_1_1RenderCommand.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::RenderCommand Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Provides static methods for issuing rendering commands.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:a4a7883c329e82a955808454bee544756" id="r_a4a7883c329e82a955808454bee544756"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a4a7883c329e82a955808454bee544756">setClearColor</a> (const glm::vec4 &amp;color)</td></tr>
+<tr class="memdesc:a4a7883c329e82a955808454bee544756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clear color for the render target.  <br /></td></tr>
 <tr class="memitem:ab68273671cc0dc23c7a94388c31dc2e7" id="r_ab68273671cc0dc23c7a94388c31dc2e7"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ab68273671cc0dc23c7a94388c31dc2e7">drawIndexed</a> (const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;vertexArray)</td></tr>
-<tr class="memitem:ae9ecac6c813139a0fe33446d664e5cf0" id="r_ae9ecac6c813139a0fe33446d664e5cf0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#ae9ecac6c813139a0fe33446d664e5cf0">setupFrame</a> ()</td></tr>
-<tr class="memitem:aefa9485627ee06030547333edc62fb61" id="r_aefa9485627ee06030547333edc62fb61"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#aefa9485627ee06030547333edc62fb61">endFrame</a> ()</td></tr>
-<tr class="memitem:a85eac63a9d47a855b34377f06455fab4" id="r_a85eac63a9d47a855b34377f06455fab4"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a85eac63a9d47a855b34377f06455fab4">sendFrame</a> ()</td></tr>
+<tr class="memdesc:ab68273671cc0dc23c7a94388c31dc2e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws geometry using the provided vertex array.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00014">14</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
+<div class="textblock"><p>Provides static methods for issuing rendering commands. </p>
+<p>The <a class="el" href="classVectrix_1_1RenderCommand.html" title="Provides static methods for issuing rendering commands.">RenderCommand</a> class offers a static interface for common rendering operations This class is designed to be used throughout the rendering pipeline for basic draw calls and frame management.</p>
+<dl class="section note"><dt>Note</dt><dd>All methods are static </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00022">22</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
 <a id="ab68273671cc0dc23c7a94388c31dc2e7" name="ab68273671cc0dc23c7a94388c31dc2e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab68273671cc0dc23c7a94388c31dc2e7">&#9670;&#160;</a></span>drawIndexed()</h2>
@@ -129,61 +136,18 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00022">22</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
+<p>Draws geometry using the provided vertex array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vertexArray</td><td>The vertex array containing vertex data and indices</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>A frame must have been started with setupFrame() </dd>
+<dd>
+The vertex array must be properly initialized </dd></dl>
 
-</div>
-</div>
-<a id="aefa9485627ee06030547333edc62fb61" name="aefa9485627ee06030547333edc62fb61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefa9485627ee06030547333edc62fb61">&#9670;&#160;</a></span>endFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::RenderCommand::endFrame </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00033">33</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
-
-</div>
-</div>
-<a id="a85eac63a9d47a855b34377f06455fab4" name="a85eac63a9d47a855b34377f06455fab4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85eac63a9d47a855b34377f06455fab4">&#9670;&#160;</a></span>sendFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::RenderCommand::sendFrame </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00037">37</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00048">48</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
 
 </div>
 </div>
@@ -210,34 +174,17 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00017">17</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
+<p>Sets the clear color for the render target. </p>
+<p>Defines the color used when clearing the color buffer. This color will be used for subsequent clear operations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">color</td><td>The clear color as a 4-component vector (RGBA)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Values should be in range [0.0, 1.0] </dd></dl>
 
-</div>
-</div>
-<a id="ae9ecac6c813139a0fe33446d664e5cf0" name="ae9ecac6c813139a0fe33446d664e5cf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9ecac6c813139a0fe33446d664e5cf0">&#9670;&#160;</a></span>setupFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Vectrix::RenderCommand::setupFrame </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00027">27</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00035">35</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
 
 </div>
 </div>

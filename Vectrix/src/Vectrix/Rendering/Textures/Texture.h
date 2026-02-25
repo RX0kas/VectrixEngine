@@ -14,6 +14,7 @@ namespace Vectrix {
     /**
      * @details This class represent a texture that can be created with Vectrix::TextureManager::createTexture() <br>
      * And Vectrix::TextureManager::get() can be used to obtain a texture already created
+     * @version 0.2.0
      */
     class Texture
     {

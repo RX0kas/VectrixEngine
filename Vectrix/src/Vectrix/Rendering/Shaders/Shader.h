@@ -21,8 +21,9 @@
 namespace Vectrix {
 	/**
  	* @brief This class represent a shader
-	* @details This class represent a shader that can be created with Vectrix::ShaderManager::createTexture() <br>
+	* @details This class represent a shader that can be created with Vectrix::ShaderManager::createShader() <br>
 	* And Vectrix::ShaderManager::get() can be used to obtain a shader already created
+	* @version 0.1.0
  	*/
 	class Shader {
 		public:

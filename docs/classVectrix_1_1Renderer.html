@@ -93,22 +93,35 @@ $(function(){initNavTree('classVectrix_1_1Renderer.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::Renderer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Central rendering manager for 3D scenes.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Renderer_8h_source.html">Renderer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
-<tr class="memitem:ac538f3bb6199bd7e9e7aefb511b54b8c" id="r_ac538f3bb6199bd7e9e7aefb511b54b8c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ac538f3bb6199bd7e9e7aefb511b54b8c">BeginScene</a> (<a class="el" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a> &amp;camera)</td></tr>
-<tr class="memitem:a6199e05b82c6824a07d35e6234f5c58f" id="r_a6199e05b82c6824a07d35e6234f5c58f"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a6199e05b82c6824a07d35e6234f5c58f">EndScene</a> ()</td></tr>
-<tr class="memitem:a86db239a4df296210ceba686e8db253a" id="r_a86db239a4df296210ceba686e8db253a"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a86db239a4df296210ceba686e8db253a">Submit</a> (<a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;shader, const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;vertexArray, const <a class="el" href="classVectrix_1_1Transform.html">Transform</a> &amp;transform=<a class="el" href="classVectrix_1_1Transform.html">Transform</a>{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})</td></tr>
-<tr class="memitem:a6c391f6507390d92b9162dbc3874833c" id="r_a6c391f6507390d92b9162dbc3874833c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a6c391f6507390d92b9162dbc3874833c">Submit</a> (<a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;shader, <a class="el" href="classVectrix_1_1Model.html">Model</a> &amp;model)</td></tr>
-<tr class="memitem:a7f6b0da7ff6e38917b5d9d50fe70c739" id="r_a7f6b0da7ff6e38917b5d9d50fe70c739"><td class="memItemLeft">static RendererAPI::API&#160;</td><td class="memItemRight"><a class="el" href="#a7f6b0da7ff6e38917b5d9d50fe70c739">GetAPI</a> ()</td></tr>
+<tr class="memitem:ae3fb1998571670bd8e2cee70de4fa5c3" id="r_ae3fb1998571670bd8e2cee70de4fa5c3"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ae3fb1998571670bd8e2cee70de4fa5c3">beginScene</a> (<a class="el" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a> &amp;camera)</td></tr>
+<tr class="memdesc:ae3fb1998571670bd8e2cee70de4fa5c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start rendering a scene with the given camera.  <br /></td></tr>
+<tr class="memitem:aae62ac1bd1413ba9db62165ec8df9b99" id="r_aae62ac1bd1413ba9db62165ec8df9b99"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#aae62ac1bd1413ba9db62165ec8df9b99">endScene</a> ()</td></tr>
+<tr class="memdesc:aae62ac1bd1413ba9db62165ec8df9b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the current rendering scene.  <br /></td></tr>
+<tr class="memitem:acb321c453f1312c2508325b76b8b859a" id="r_acb321c453f1312c2508325b76b8b859a"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#acb321c453f1312c2508325b76b8b859a">submit</a> (<a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;shader, const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;vertexArray, const <a class="el" href="classVectrix_1_1Transform.html">Transform</a> &amp;transform=<a class="el" href="classVectrix_1_1Transform.html">Transform</a>{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})</td></tr>
+<tr class="memdesc:acb321c453f1312c2508325b76b8b859a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Submit geometry with transform.  <br /></td></tr>
+<tr class="memitem:a7d217ee42aac2d537522b49bd15e6676" id="r_a7d217ee42aac2d537522b49bd15e6676"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a7d217ee42aac2d537522b49bd15e6676">submit</a> (<a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;shader, <a class="el" href="classVectrix_1_1Model.html">Model</a> &amp;model)</td></tr>
+<tr class="memdesc:a7d217ee42aac2d537522b49bd15e6676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Submit a complete model.  <br /></td></tr>
+<tr class="memitem:a4b8aa3aeb37890d0eb26359159c78f9e" id="r_a4b8aa3aeb37890d0eb26359159c78f9e"><td class="memItemLeft">static RendererAPI::API&#160;</td><td class="memItemRight"><a class="el" href="#a4b8aa3aeb37890d0eb26359159c78f9e">getAPI</a> ()</td></tr>
+<tr class="memdesc:a4b8aa3aeb37890d0eb26359159c78f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current graphics API.  <br /></td></tr>
 <tr class="memitem:a98deb2af2903de6d61b2738bace652fb" id="r_a98deb2af2903de6d61b2738bace652fb"><td class="memItemLeft">static <a class="el" href="structVectrix_1_1Renderer_1_1SceneData.html">SceneData</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a98deb2af2903de6d61b2738bace652fb">getSceneData</a> ()</td></tr>
+<tr class="memdesc:a98deb2af2903de6d61b2738bace652fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current scene data.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00017">17</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
+<div class="textblock"><p>Central rendering manager for 3D scenes. </p>
+<p>Provides static methods for scene-based rendering. All rendering must occur between BeginScene() and EndScene() calls. </p>
+
+<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00024">24</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="ac538f3bb6199bd7e9e7aefb511b54b8c" name="ac538f3bb6199bd7e9e7aefb511b54b8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac538f3bb6199bd7e9e7aefb511b54b8c">&#9670;&#160;</a></span>BeginScene()</h2>
+<a id="ae3fb1998571670bd8e2cee70de4fa5c3" name="ae3fb1998571670bd8e2cee70de4fa5c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3fb1998571670bd8e2cee70de4fa5c3">&#9670;&#160;</a></span>beginScene()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -117,7 +130,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Vectrix::Renderer::BeginScene </td>
+          <td class="memname">void Vectrix::Renderer::beginScene </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>camera</em></span></td><td>)</td>
           <td></td>
@@ -130,12 +143,20 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Start rendering a scene with the given camera. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">camera</td><td>Camera to use for view/projection matrices </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Renderer_8cpp_source.html#l00009">9</a> of file <a class="el" href="Renderer_8cpp_source.html">Renderer.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a6199e05b82c6824a07d35e6234f5c58f" name="a6199e05b82c6824a07d35e6234f5c58f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6199e05b82c6824a07d35e6234f5c58f">&#9670;&#160;</a></span>EndScene()</h2>
+<a id="aae62ac1bd1413ba9db62165ec8df9b99" name="aae62ac1bd1413ba9db62165ec8df9b99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae62ac1bd1413ba9db62165ec8df9b99">&#9670;&#160;</a></span>endScene()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,7 +165,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Vectrix::Renderer::EndScene </td>
+          <td class="memname">void Vectrix::Renderer::endScene </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -157,12 +178,14 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>End the current rendering scene. </p>
+
 <p class="definition">Definition at line <a class="el" href="Renderer_8cpp_source.html#l00014">14</a> of file <a class="el" href="Renderer_8cpp_source.html">Renderer.cpp</a>.</p>
 
 </div>
 </div>
-<a id="a7f6b0da7ff6e38917b5d9d50fe70c739" name="a7f6b0da7ff6e38917b5d9d50fe70c739"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f6b0da7ff6e38917b5d9d50fe70c739">&#9670;&#160;</a></span>GetAPI()</h2>
+<a id="a4b8aa3aeb37890d0eb26359159c78f9e" name="a4b8aa3aeb37890d0eb26359159c78f9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b8aa3aeb37890d0eb26359159c78f9e">&#9670;&#160;</a></span>getAPI()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -171,7 +194,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">RendererAPI::API Vectrix::Renderer::GetAPI </td>
+          <td class="memname">RendererAPI::API Vectrix::Renderer::getAPI </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -184,7 +207,10 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00029">29</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
+<p>Get current graphics API. </p>
+<dl class="section return"><dt>Returns</dt><dd>The active rendering API </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00065">65</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
 
 </div>
 </div>
@@ -211,12 +237,15 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00030">30</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
+<p>Get current scene data. </p>
+<dl class="section return"><dt>Returns</dt><dd>Reference to active scene data </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Renderer_8h_source.html#l00070">70</a> of file <a class="el" href="Renderer_8h_source.html">Renderer.h</a>.</p>
 
 </div>
 </div>
-<a id="a86db239a4df296210ceba686e8db253a" name="a86db239a4df296210ceba686e8db253a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86db239a4df296210ceba686e8db253a">&#9670;&#160;</a></span>Submit() <span class="overload">[1/2]</span></h2>
+<a id="acb321c453f1312c2508325b76b8b859a" name="acb321c453f1312c2508325b76b8b859a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb321c453f1312c2508325b76b8b859a">&#9670;&#160;</a></span>submit() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,7 +254,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Vectrix::Renderer::Submit </td>
+          <td class="memname">void Vectrix::Renderer::submit </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>shader</em></span>, </td>
         </tr>
@@ -247,12 +276,27 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Submit geometry with transform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shader</td><td><a class="el" href="classVectrix_1_1Shader.html" title="This class represent a shader.">Shader</a> to use </td></tr>
+    <tr><td class="paramname">vertexArray</td><td>Geometry to render </td></tr>
+    <tr><td class="paramname">transform</td><td><a class="el" href="classVectrix_1_1Transform.html">Transform</a> to apply (position, scale, rotation) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated</a></b></dt><dd>Will be removed when the material system will be created, please use <a class="el" href="classVectrix_1_1Model.html" title="Model">Model</a> and <a class="el" href="#a7d217ee42aac2d537522b49bd15e6676" title="Vectrix::Renderer::submit(Shader&amp; shader, Model&amp; model)">Vectrix::Renderer::submit(Shader&amp; shader, Model&amp; model)</a> instead </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="Renderer_8cpp_source.html#l00019">19</a> of file <a class="el" href="Renderer_8cpp_source.html">Renderer.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728">Vectrix::Shader::bind()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Renderer_8cpp_source.html#l00029">submit()</a>.</p>
 
 </div>
 </div>
-<a id="a6c391f6507390d92b9162dbc3874833c" name="a6c391f6507390d92b9162dbc3874833c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c391f6507390d92b9162dbc3874833c">&#9670;&#160;</a></span>Submit() <span class="overload">[2/2]</span></h2>
+<a id="a7d217ee42aac2d537522b49bd15e6676" name="a7d217ee42aac2d537522b49bd15e6676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d217ee42aac2d537522b49bd15e6676">&#9670;&#160;</a></span>submit() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,7 +305,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Vectrix::Renderer::Submit </td>
+          <td class="memname">void Vectrix::Renderer::submit </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classVectrix_1_1Shader.html">Shader</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>shader</em></span>, </td>
         </tr>
@@ -278,7 +322,18 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Submit a complete model. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">shader</td><td><a class="el" href="classVectrix_1_1Shader.html" title="This class represent a shader.">Shader</a> to use </td></tr>
+    <tr><td class="paramname">model</td><td><a class="el" href="classVectrix_1_1Model.html">Model</a> to render </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="Renderer_8cpp_source.html#l00029">29</a> of file <a class="el" href="Renderer_8cpp_source.html">Renderer.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="classVectrix_1_1Shader.html#af7c6d680a5472ae797ee35630f9908f4">Vectrix::Shader::isAffectedByCamera()</a>, and <a class="el" href="Renderer_8cpp_source.html#l00019">submit()</a>.</p>
 
 </div>
 </div>
