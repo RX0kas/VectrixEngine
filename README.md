@@ -4,6 +4,8 @@
 
 An engine made to run all of my little graphics project
 
+Current working branch : [feature/texture-support](https://github.com/RX0kas/VectrixEngine/tree/feature/texture-support)
+
 ![Screenshot or demo GIF](basic-preview.png)
 
 ## Features
