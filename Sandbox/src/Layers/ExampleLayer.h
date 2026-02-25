@@ -69,11 +69,11 @@ public:
 	}
 
 	void OnRender() override {
-		Vectrix::Renderer::BeginScene(*m_camera);
+		Vectrix::Renderer::beginScene(*m_camera);
 		defaultShader->setUniform("time",static_cast<float>(glfwGetTime()));
 		defaultShader->setTexture(customTexture);
-		Vectrix::Renderer::Submit(*defaultShader.get(),*m_model);
-		Vectrix::Renderer::EndScene();
+		Vectrix::Renderer::submit(*defaultShader.get(),*m_model);
+		Vectrix::Renderer::endScene();
 	}
 
 	void OnEvent(Vectrix::Event &event) override {

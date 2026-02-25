@@ -6,17 +6,17 @@
 namespace Vectrix {
 	Own<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<Renderer::SceneData>();
 
-	void Renderer::BeginScene(PerspectiveCamera& camera)
+	void Renderer::beginScene(PerspectiveCamera& camera)
 	{
 		m_SceneData->camera = &camera;
 	}
 
-	void Renderer::EndScene()
+	void Renderer::endScene()
 	{
 
 	}
 
-	void Renderer::Submit(Shader& shader,const VertexArray& vertexArray,const Transform& transform)
+	void Renderer::submit(Shader& shader,const VertexArray& vertexArray,const Transform& transform)
 	{
 		shader.bind();
 		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
@@ -26,11 +26,11 @@ namespace Vectrix {
 		}
 	}
 
-	void Renderer::Submit(Shader& shader, Model& model)
+	void Renderer::submit(Shader& shader, Model& model)
 	{
 		shader.setModelMatrix(model.getModelMatrix());
 		if (shader.isAffectedByCamera())
 			shader.sendCameraUniform(m_SceneData->camera->getTransformationMatrix());
-		Submit(shader,*model.getVertexArray(),model.getTransform());
+		submit(shader,*model.getVertexArray(),model.getTransform());
 	}
 }
