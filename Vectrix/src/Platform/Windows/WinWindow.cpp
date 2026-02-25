@@ -37,7 +37,7 @@ namespace Vectrix {
 
 			s_GLFWInitialized = true;
 
-			GraphicsContext::setClientAPI();
+			setClientAPI();
 		}
 	}
 
@@ -143,7 +143,6 @@ namespace Vectrix {
 
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
-		m_context->init();
 	}
 
 	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const {
