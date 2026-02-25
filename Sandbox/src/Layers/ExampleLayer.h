@@ -26,7 +26,7 @@ public:
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 #endif
 #ifdef VC_PLATFORM_WINDOWS
-		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\cat.png");
+		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\fox.png");
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
 #endif

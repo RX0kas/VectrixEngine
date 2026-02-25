@@ -149,8 +149,4 @@ namespace Vectrix {
         if (m_image != VK_NULL_HANDLE)
             m_device.destroyImage(m_image, m_allocation);
     }
-
-    void VulkanTexture::bind(uint32_t slot) const {
-
-    }
 } // Vectrix

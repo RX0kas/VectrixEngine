@@ -71,5 +71,4 @@ namespace Vectrix {
 	private:
 		static Own<SceneData> m_SceneData;
 	};
-
 }

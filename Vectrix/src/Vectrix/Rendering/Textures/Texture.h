@@ -33,6 +33,7 @@ namespace Vectrix {
         [[nodiscard]] virtual uint32_t getHeight() const = 0;
 
     private:
+        friend class TextureManager;
         static Ref<Texture> create(const std::string& path);
     };
 } // Vectrix
