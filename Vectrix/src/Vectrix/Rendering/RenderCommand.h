@@ -53,7 +53,6 @@ namespace Vectrix
 
 	private:
 		static bool setupFrame() {
-			if (frameStarted) VC_ERROR("Trying to start a frame while another one is being render");
 			frameStarted = true;
 			return s_RendererAPI->prepareFrame();
 		}
