@@ -15,6 +15,27 @@ namespace Vectrix {
         if (!pixels) {
             VC_CORE_ERROR("Failed to load texture image");
         }
+        createTexture(pixels);
+    }
+
+    /**
+     * Used to createDefaultTexture
+     */
+    VulkanTexture::VulkanTexture() : m_device(VulkanContext::instance().getDevice()) {
+        VC_CORE_INFO("Creating not_found texture");
+        int x, y, channels;
+        stbi_uc* pixels = stbi_load_from_memory(getNotFoundTextureData(), getNotFoundTextureSize(), &x, &y, &channels, 4);
+        if (!pixels) {
+            VC_CORE_ERROR("Failed to load embedded not_found texture");
+        }
+        m_width = x;
+        m_height = y;
+        m_channel = 4;
+        m_imageSize = m_width * m_height * 4;
+        createTexture(pixels);
+    }
+
+    void VulkanTexture::createTexture(stbi_uc *pixels) {
         // staging buffer
         VkBuffer stagingBuffer;
         VmaAllocation stagingAllocation;

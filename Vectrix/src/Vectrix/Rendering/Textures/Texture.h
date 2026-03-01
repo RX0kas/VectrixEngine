@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "Vectrix/Core/Core.h"
+#include "Vectrix/Utils/Data.h"
 
 /**
  * @file Texture.h
@@ -36,6 +37,8 @@ namespace Vectrix {
     private:
         friend class TextureManager;
         static Ref<Texture> create(const std::string& path);
+        static Ref<Texture> createDefaultTexture();
+        static unsigned int m_count;
     };
 } // Vectrix
 
