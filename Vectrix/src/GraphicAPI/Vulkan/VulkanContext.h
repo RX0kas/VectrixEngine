@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Enum_str.h"
 #include "vk_mem_alloc.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"

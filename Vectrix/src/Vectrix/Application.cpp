@@ -39,7 +39,7 @@ namespace Vectrix {
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>([this](auto && PH1) { return onWindowClose(std::forward<decltype(PH1)>(PH1)); });
+		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
 		{

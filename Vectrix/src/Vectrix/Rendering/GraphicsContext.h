@@ -7,7 +7,6 @@ namespace Vectrix {
 	{
 	public:
 		virtual ~GraphicsContext() = default;
-
 	private:
 		virtual void swapBuffers() = 0;
 		virtual void init() = 0;

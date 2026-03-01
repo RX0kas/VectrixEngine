@@ -49,7 +49,7 @@ namespace Vectrix {
 		 * @param transform Transform to apply (position, scale, rotation)
 		 * @deprecated Will be removed when the material system will be created, please use @ref Model and @ref Vectrix::Renderer::submit(Shader& shader, Model& model) instead
 		 */
-		static void submit(Shader& shader, const VertexArray& vertexArray,const Transform& transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});
+		static void submit(Shader& shader, const VertexArray& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});
 
 		/**
 		 * @brief Submit a complete model

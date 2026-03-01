@@ -41,21 +41,41 @@ namespace Vectrix {
             VC_CORE_CRITICAL("Failed to allocate SSBO descriptor sets");
         }
 
-        for (uint32_t i = 0; i < m_framesInFlight; ++i) {
-            VkDescriptorBufferInfo bi{};
-            bi.buffer = m_buffer;
-            bi.offset = i * m_elementStride;
-            bi.range = m_layout.getStructSize();
+        for (auto& tex : m_textures) {
+            auto defaultTex = TextureManager::getNotFoundTexture();
+            tex = std::dynamic_pointer_cast<VulkanTexture>(defaultTex);
+        }
 
-            VkWriteDescriptorSet w[1] = {};
-            w[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            w[0].dstSet = m_descriptorSets[i];
-            w[0].dstBinding = 0;
-            w[0].descriptorCount = 1;
-            w[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-            w[0].pBufferInfo = &bi;
+        for (uint32_t frame = 0; frame < m_framesInFlight; ++frame) {
+            // SSBO/Uniforms
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = m_buffer;
+            bufferInfo.offset = frame * m_elementStride;
+            bufferInfo.range = m_layout.getStructSize();
 
-            vkUpdateDescriptorSets(m_device.device(), 1, w, 0, nullptr);
+            VkWriteDescriptorSet writeBuffer{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+            writeBuffer.dstSet = m_descriptorSets[frame];
+            writeBuffer.dstBinding = 0;
+            writeBuffer.descriptorCount = 1;
+            writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            writeBuffer.pBufferInfo = &bufferInfo;
+
+            // Textures
+            std::vector<VkDescriptorImageInfo> imageInfos(Texture::getMaxTexture());
+            for (uint32_t i = 0; i < Texture::getMaxTexture(); ++i) {
+                imageInfos[i] = m_textures[i]->getDescriptorInfo();
+            }
+
+            VkWriteDescriptorSet writeTexture{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+            writeTexture.dstSet = m_descriptorSets[frame];
+            writeTexture.dstBinding = 1;
+            writeTexture.dstArrayElement = 0;
+            writeTexture.descriptorCount = Texture::getMaxTexture();
+            writeTexture.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            writeTexture.pImageInfo = imageInfos.data();
+
+            std::array<VkWriteDescriptorSet, 2> writes = { writeBuffer, writeTexture };
+            vkUpdateDescriptorSets(m_device.device(), writes.size(), writes.data(), 0, nullptr);
         }
     }
 
@@ -66,37 +86,38 @@ namespace Vectrix {
         vkDestroyDescriptorSetLayout(m_device.device(), m_descriptorSetLayout, nullptr);
     }
 
-    void SSBO::setTexture(const VulkanTexture *texture) const {
-        VulkanRenderer& r = VulkanContext::instance().getRenderer();
-        vkWaitForFences(m_device.device(), 1, &r.getInFlightFences()[r.getFrameIndex()], VK_TRUE, UINT64_MAX);
-
-        VkDescriptorImageInfo imageInfo = texture->getDescriptorInfo();
-        VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
-        write.dstSet = m_descriptorSets[r.getFrameIndex()];
-        write.dstBinding = 1;
-        write.descriptorCount = 1;
-        write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        write.pImageInfo = &imageInfo;
-        vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
-    }
-
     void SSBO::createDescriptorSetLayout() {
-        VkDescriptorSetLayoutBinding b[2] = {};
+        std::array<VkDescriptorSetLayoutBinding,2> b = {};
 
+        // SSBO/Uniforms
         b[0].binding = 0;
         b[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         b[0].descriptorCount = 1;
         b[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        b[0].pImmutableSamplers = nullptr;
 
+        // Textures
         b[1].binding = 1;
         b[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        b[1].descriptorCount = 1;
+        b[1].descriptorCount = Texture::getMaxTexture();
         b[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        b[1].pImmutableSamplers = nullptr;
 
-        VkDescriptorSetLayoutCreateInfo li{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
-        li.bindingCount = 2;
-        li.pBindings = b;
+        std::array<VkDescriptorBindingFlagsEXT, 2> bindingFlags{};
+        bindingFlags[0] = 0;
+        bindingFlags[1] = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT | VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT;
 
+        VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extendedInfo{};
+        extendedInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT;
+        extendedInfo.bindingCount = b.size();
+        extendedInfo.pBindingFlags = bindingFlags.data();
+
+        VkDescriptorSetLayoutCreateInfo li{};
+        li.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        li.pNext = &extendedInfo;
+        li.bindingCount = b.size();
+        li.pBindings = b.data();
+        li.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
         if (vkCreateDescriptorSetLayout(m_device.device(), &li, nullptr, &m_descriptorSetLayout) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create descriptor set layout");
         }

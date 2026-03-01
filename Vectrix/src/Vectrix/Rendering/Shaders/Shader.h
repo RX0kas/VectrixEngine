@@ -8,7 +8,7 @@
 #include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
-#define VC_VERIFY_UNIFORM_NAME(name) if (name=="cameraTransform" || name=="modelMat") VC_ERROR("The uniform name \"{}\" is reserved",name)
+#define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") VC_ERROR("The uniform name \"{}\" is reserved",name)
 
 
 /**
@@ -268,7 +268,8 @@ namespace Vectrix {
 		 *
 		 * This function permit to modify the value of the current texture in this shader
 		 *
-		 * @param value texture that is sent
+		 * @param index The slot in which the texture will be
+		 * @param texture texture that is sent
 		 *
 		 * @pre The shader must be bind before
 		 *
@@ -279,7 +280,7 @@ namespace Vectrix {
 		 *
 		 * @warning <strong>For now only one texture per shader is supported</strong>
 		 */
-		virtual void setTexture(Ref<Texture> value) = 0;
+		virtual void setTexture(uint32_t index, Ref<Texture> texture)  = 0;
 
 		/**
 		 * @brief Define the value of a uniform in the shader, without needing to think about the type
