@@ -1,6 +1,7 @@
 #ifndef VECTRIXWORKSPACE_VULKANTEXTURE_H
 #define VECTRIXWORKSPACE_VULKANTEXTURE_H
 #include "Device.h"
+#include "stb_image.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
 namespace Vectrix {
@@ -22,6 +23,9 @@ namespace Vectrix {
             return info;
         }
     private:
+        friend class Texture;
+        VulkanTexture();
+        void createTexture(stbi_uc* pixels);
         void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) const;
         int m_width = -1;
         int m_height = -1;

@@ -15,7 +15,7 @@ namespace Vectrix {
         p_cache.reserve(256);
         p_cache.max_load_factor(0.7f);
 
-        m_notFoundTexture = Texture::create("textures/not_found.png"); // TODO: move it into the executable
+        m_notFoundTexture = Texture::createDefaultTexture();
     }
 
     TextureManager::~TextureManager() {
