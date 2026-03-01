@@ -14,7 +14,7 @@ namespace Vectrix {
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnImGuiRender() override;
-		void OnUpdate(DeltaTime deltaTime) override;
+		void OnUpdate(const DeltaTime& deltaTime) override;
 		void addWidget(const Ref<ImGuiWidget> &widget) {
 			m_widgets.push_back(std::shared_ptr(widget));
 		}

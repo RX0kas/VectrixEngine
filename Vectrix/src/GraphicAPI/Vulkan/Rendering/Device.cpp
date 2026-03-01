@@ -166,6 +166,17 @@ namespace Vectrix {
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
+        VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures{};
+        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+
+        // Get supported feature of the GPU
+        VkPhysicalDeviceFeatures2 deviceFeatures2{};
+        deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        deviceFeatures2.pNext = &indexingFeatures;
+        vkGetPhysicalDeviceFeatures2(m_physicalDevice, &deviceFeatures2);
+
+        indexingFeatures.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+
         VkPhysicalDeviceFeatures deviceFeatures = {};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
 
@@ -181,6 +192,7 @@ namespace Vectrix {
 
         createInfo.enabledLayerCount = 0;
         createInfo.ppEnabledLayerNames = nullptr;
+        createInfo.pNext = &indexingFeatures;
 
 
         if (vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_device) != VK_SUCCESS) {
@@ -221,7 +233,7 @@ namespace Vectrix {
         info.poolSizeCount = static_cast<uint32_t>(sizes.size());
         info.pPoolSizes = sizes.data();
         info.maxSets = cfg.maxSets;
-        info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+        info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT | VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT;
 
         vkCreateDescriptorPool(m_device, &info, nullptr, &m_descriptorPool);
     }
@@ -252,19 +264,30 @@ namespace Vectrix {
         }
     }
 
-    bool Device::isDeviceSuitable(VkPhysicalDevice device) {
-        QueueFamilyIndices indices = findQueueFamilies(device);
+    bool Device::isDeviceSuitable(VkPhysicalDevice physicalDevice) {
+        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
-        bool extensionsSupported = checkDeviceExtensionSupport(device);
+        bool extensionsSupported = checkDeviceExtensionSupport(physicalDevice);
 
         bool swapChainAdequate = false;
         if (extensionsSupported) {
-            SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+            SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
 
         VkPhysicalDeviceFeatures supportedFeatures;
-        vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+        vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
+
+        VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures{};
+        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
+        VkPhysicalDeviceFeatures2 deviceFeatures2{};
+        deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        deviceFeatures2.pNext = &indexingFeatures;
+        vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
+
+        if (!indexingFeatures.descriptorBindingUpdateUnusedWhilePending || !indexingFeatures.descriptorBindingPartiallyBound) {
+            VC_CORE_ERROR("Your GPU is not capable of using a necessary vulkan extension, please use another RendererAPI");
+        }
 
         return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
     }

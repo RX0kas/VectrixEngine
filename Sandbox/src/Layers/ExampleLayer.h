@@ -4,90 +4,65 @@
 #include "Vectrix.h"
 #include "imgui.h"
 #include "../CameraWidget.h"
-#include "Vectrix/Utils/Math.h"
 
 class ExampleLayer : public Vectrix::Layer
 {
 public:
 	ExampleLayer() : Layer("Example") {
-		m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
-		m_camera->setPosition({0.0f,0.0f,3.0f});
-		m_camera->setRotation({0.0f,-M_PI,0.0f});
-
-		m_cameraWidget = new CameraWidget(*m_camera);
+		m_cameraController.getCamera().setPosition({0.0f,0.0f,3.0f});
+		m_cameraController.getCamera().setRotation({0.0f,-M_PI,0.0f});
+		m_cameraWidget = new CameraWidget(m_cameraController.getCamera());
 
 		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
+		m_model->setPosition({1.5,0,0});
+		m_model2 = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
+		m_model2->setPosition({-1.5,0,0});
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
 #ifdef VC_PLATFORM_WINDOWS
 		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert", ".\\shaders\\f.frag",layout, Vectrix::getTinyObjLayout(),true);
+		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\fox.png");
+		Vectrix::TextureManager::createTexture("t2", "./textures/test.png");
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
-#endif
-#ifdef VC_PLATFORM_WINDOWS
-		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\fox.png");
-#elif defined(VC_PLATFORM_LINUX)
 		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
+		Vectrix::TextureManager::createTexture("t2", "./textures/test.png");
 #endif
+
 		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
 		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
+		customTexture2 = Vectrix::TextureManager::instance().get("t2");
 	}
 
-	void OnUpdate(Vectrix::DeltaTime ts) override
+	void OnUpdate(const Vectrix::DeltaTime& dt) override
 	{
-		glm::vec3 m_CameraPosition = m_camera->getPosition();
-		glm::vec3 m_CameraRotation = m_camera->getRotation();
-		float m_CameraMoveSpeed = 1.0f;
-		float m_CameraRotationSpeed = 1.0f;
-		if (Vectrix::Input::isKeyPressed(VC_KEY_A))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		else if (Vectrix::Input::isKeyPressed(VC_KEY_D))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-
-		if (Vectrix::Input::isKeyPressed(VC_KEY_W))
-			m_CameraPosition.z += m_CameraMoveSpeed * ts;
-		else if (Vectrix::Input::isKeyPressed(VC_KEY_S))
-			m_CameraPosition.z -= m_CameraMoveSpeed * ts;
-		if (Vectrix::Input::isKeyPressed(VC_KEY_Q))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		else if (Vectrix::Input::isKeyPressed(VC_KEY_E))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-		if (Vectrix::Input::isKeyPressed(VC_KEY_LEFT))
-			m_CameraRotation.y -= m_CameraRotationSpeed * ts;
-		else if (Vectrix::Input::isKeyPressed(VC_KEY_RIGHT))
-			m_CameraRotation.y += m_CameraRotationSpeed * ts;
-
-		if (Vectrix::Input::isKeyPressed(VC_KEY_UP))
-			m_CameraRotation.x += m_CameraRotationSpeed * ts;
-		else if (Vectrix::Input::isKeyPressed(VC_KEY_DOWN))
-			m_CameraRotation.x -= m_CameraRotationSpeed * ts;
-
-		m_camera->setPosition(m_CameraPosition);
-		m_camera->setRotation(m_CameraRotation);
+		m_cameraController.onUpdate(dt);
 	}
 
 	void OnRender() override {
-		Vectrix::Renderer::beginScene(*m_camera);
+		Vectrix::Renderer::beginScene(m_cameraController.getCamera());
 		defaultShader->setUniform("time",static_cast<float>(glfwGetTime()));
-		defaultShader->setTexture(customTexture);
+		defaultShader->setTexture(0,customTexture);
 		Vectrix::Renderer::submit(*defaultShader.get(),*m_model);
+		defaultShader->setTexture(1,customTexture2);
+		Vectrix::Renderer::submit(*defaultShader.get(),*m_model2);
 		Vectrix::Renderer::endScene();
 	}
 
 	void OnEvent(Vectrix::Event &event) override {
-		if (event.getEventType()==Vectrix::EventType::WindowResize)
-			m_camera->recalculateMatrices();
+		m_cameraController.onEvent(event);
 	}
 
 private:
-	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
 	CameraWidget *m_cameraWidget;
+	Vectrix::PerspectiveCameraController m_cameraController;
 
 	Vectrix::Ref<Vectrix::Shader> defaultShader;
 	Vectrix::Ref<Vectrix::Texture> customTexture;
+	Vectrix::Ref<Vectrix::Texture> customTexture2;
 	Vectrix::Own<Vectrix::Model> m_model;
+	Vectrix::Own<Vectrix::Model> m_model2;
 	const char* p_defaultName = "default";
 };
 

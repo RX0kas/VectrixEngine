@@ -1,9 +1,6 @@
 #ifndef VECTRIXWORKSPACE_VERTEXARRAY_H
 #define VECTRIXWORKSPACE_VERTEXARRAY_H
 
-#include <memory>
-
-#include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 #include "Vectrix/Rendering/Buffer.h"
 
 namespace Vectrix {

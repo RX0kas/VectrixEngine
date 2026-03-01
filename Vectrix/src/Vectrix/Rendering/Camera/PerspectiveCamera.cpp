@@ -8,13 +8,9 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Rendering/RendererAPI.h"
 
-#define FOVY glm::radians(50.f)
-#define CAM_NEAR 0.1f
-#define CAM_FAR 10.0f
-
 namespace Vectrix {
 
-	PerspectiveCamera::PerspectiveCamera() : m_ViewMatrix(1.0f)
+	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_ViewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear)
 	{
 		recalculateMatrices();
 	}
@@ -76,13 +72,13 @@ namespace Vectrix {
 		float aspect = Application::instance().window().getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
 
-		const float tanHalfFovy = std::tan(FOVY / 2.f);
+		const float tanHalfFovy = std::tan(m_fov / 2.f);
 		m_ProjectionMatrix = glm::mat4{0.0f};
 		m_ProjectionMatrix[0][0] = 1.f / (aspect * tanHalfFovy);
 		m_ProjectionMatrix[1][1] = 1.f / (tanHalfFovy);
-		m_ProjectionMatrix[2][2] = CAM_FAR / (CAM_FAR - CAM_NEAR);
+		m_ProjectionMatrix[2][2] = m_camFar / (m_camFar - m_camNear);
 		m_ProjectionMatrix[2][3] = 1.f;
-		m_ProjectionMatrix[3][2] = -(CAM_FAR * CAM_NEAR) / (CAM_FAR - CAM_NEAR);
+		m_ProjectionMatrix[3][2] = -(m_camFar * m_camNear) / (m_camFar - m_camNear);
 
 		m_ProjectionMatrix[1][1] *= -1;
 	}

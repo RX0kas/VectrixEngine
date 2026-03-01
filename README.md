@@ -4,7 +4,7 @@
 
 An engine made to run all of my little graphics project
 
-![Screenshot](preview.png)
+![Screenshot or demo GIF](basic-preview.png)
 
 ## Features
  - Vulkan powered rendering

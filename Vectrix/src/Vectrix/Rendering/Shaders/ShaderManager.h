@@ -31,14 +31,23 @@ namespace Vectrix {
         Ref<Shader> get(const std::string& name);
 
         /**
+         * @brief This function is used to know if a shader with the name given exist
+         * @param name Name of the shader
+         * @return If the shader exist in the cache
+         */
+        static bool exist(const std::string& name) {
+            return instance().m_cache.find(name) != instance().m_cache.end();
+        }
+
+        /**
          * @brief This function is used to get all the shader previously created
          * @return The shader programs created
          */
         std::vector<Ref<Shader>> getAll() {
             std::vector<Ref<Shader>> vals;
-            vals.reserve(p_cache.size());
+            vals.reserve(m_cache.size());
 
-            for(const auto&[fst, snd] : p_cache) {
+            for(const auto&[fst, snd] : m_cache) {
                 vals.push_back(snd);
             }
             return vals;
@@ -48,10 +57,11 @@ namespace Vectrix {
          * @brief Return a reference to the instance of this class
          * @return The instance of the class ShaderManager
          */
-        static ShaderManager& instance() { return *p_instance; }
+        static ShaderManager& instance() { return *s_instance; }
 
         /**
          * @brief Function to create a new shader
+         * @pre A shader with the name given should not already exist
          * @param name Name given to the shader
          * @param vertexPath Path of the vertex source file
          * @param fragmentPath Path of the fragment source file
@@ -66,10 +76,10 @@ namespace Vectrix {
         ShaderManager();
         bool remove(const std::string& name);
         void add(const std::string& name,Ref<Shader> shader);
-        std::unordered_map<std::string,Ref<Shader>,XXH3> p_cache;
+        std::unordered_map<std::string,Ref<Shader>,XXH3> m_cache;
 
     private:
-        static ShaderManager* p_instance;
+        static ShaderManager* s_instance;
     };
 } // Vectrix
 

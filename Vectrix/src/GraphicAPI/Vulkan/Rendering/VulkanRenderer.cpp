@@ -7,6 +7,7 @@
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Rendering/RenderCommand.h"
+#include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 
 #ifdef VC_PLATFORM_WINDOWS
@@ -215,7 +216,7 @@ namespace Vectrix {
 			boundDescriptorSets.push_back(d);
 		}
 		f.pipelines = pipelines;
-		f.images = {};
+		f.images = {}; // TODO: Implement Images
 		f.buffers = {};
 
 		f.drawCalls = VulkanRendererAPI::getDrawCalls();

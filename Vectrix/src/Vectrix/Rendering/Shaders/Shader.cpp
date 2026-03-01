@@ -1,13 +1,12 @@
 #include "Shader.h"
 
 #include "Vectrix/Rendering/Renderer.h"
-#include "../../../GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
+#include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 
 namespace Vectrix {
     Shader* Shader::create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera) {
         if (affectedByCamera) {
-            layout.add("cameraTransform",ShaderUniformType::Mat4);
-            layout.add("modelMat",ShaderUniformType::Mat4);
+            layout.add("vc_cameraTransform",ShaderUniformType::Mat4);
         }
 
         switch (Renderer::getAPI())

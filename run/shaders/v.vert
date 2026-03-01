@@ -4,9 +4,13 @@
 
 layout(set = 0, binding = 0) readonly buffer FrameSSBO {
 	float time;
-	mat4 cameraTransform;
-	mat4 modelMat;
+	mat4 vc_cameraTransform;
 } frame;
+
+layout(push_constant) uniform PushConstants {
+	mat4 vc_modelMat;
+	uint vc_textureIndex;
+} pc;
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
@@ -18,6 +22,6 @@ layout(location = 1) out vec2 v_TexCoord;
 void main() {
 	v_Normal = a_Normal;
 	v_TexCoord = a_TexCoord;
-	vec4 position = frame.cameraTransform * frame.modelMat * vec4(a_Position,1.0);
+	vec4 position = frame.vc_cameraTransform * pc.vc_modelMat * vec4(a_Position,1.0);
 	gl_Position = position;
 }

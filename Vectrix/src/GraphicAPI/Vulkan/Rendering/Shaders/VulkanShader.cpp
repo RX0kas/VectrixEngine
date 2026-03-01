@@ -1,6 +1,5 @@
 #include "VulkanShader.h"
 
-#include <codecvt>
 #include <fstream>
 #include <utility>
 
@@ -130,22 +129,33 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::sendCameraUniform(const glm::mat4& camera) const {
-		auto* e = m_layout->find("cameraTransform");
+		auto* e = m_layout->find("vc_cameraTransform");
 		if (e == nullptr) {
 			VC_CORE_ERROR("Sending camera uniform in a shader that doesn't support camera");
 		}
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
 	void VulkanShader::setModelMatrix(const glm::mat4& model) const {
-		auto* e = m_layout->find("modelMat");
-		if (e == nullptr) {
-			VC_CORE_ERROR("modelMat is not found in the layout");
-		}
-		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &model, sizeof(glm::mat4));
+		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::mat4), &model);
 	}
 
-	void VulkanShader::setTexture(Ref<Texture> texture) {
-		m_ssbo->setTexture(dynamic_cast<VulkanTexture*>(texture.get()));
+	void VulkanShader::setTexture(uint32_t index, Ref<Texture> texture) {
+		VC_CORE_ASSERT(index < Texture::getMaxTexture(), "Index out of range");
+		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
+		auto textures = m_ssbo->textures();
+		textures[index] = vkTex;
+
+		VkDescriptorImageInfo imageInfo = vkTex->getDescriptorInfo();
+		VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+		write.dstSet = m_ssbo->descriptorSet()[VulkanContext::instance().getRenderer().getFrameIndex()];
+		write.dstBinding = 1;
+		write.dstArrayElement = index;
+		write.descriptorCount = 1;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		write.pImageInfo = &imageInfo;
+		vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
+
+		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(glm::mat4), sizeof(unsigned int) , &index);
 	}
 
 	std::string readUTF8(const std::string& path) {
@@ -187,16 +197,21 @@ namespace Vectrix {
 			VC_CORE_ERROR("Descriptor set layout is null!");
 		}
 
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(glm::mat4)+sizeof(unsigned int);
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 1;
 		pipelineLayoutInfo.pSetLayouts = &dsl;
-		pipelineLayoutInfo.pushConstantRangeCount = 0;
-		pipelineLayoutInfo.pPushConstantRanges = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
 		VkResult result = vkCreatePipelineLayout(m_device.device(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
 		if (result != VK_SUCCESS) {
-			VC_CORE_CRITICAL("Failed to create pipeline layout: {}", result);
+			VC_CORE_CRITICAL("Failed to create pipeline layout: {}", string_VkResult(result));
 		}
 	}
 } // Vectrix

@@ -22,7 +22,7 @@ namespace Vectrix {
 		m_manager->render();
 	}
 
-	void ImGuiLayer::OnUpdate(DeltaTime deltaTime) {
+	void ImGuiLayer::OnUpdate(const DeltaTime& deltaTime) {
 		m_manager->update();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 

@@ -23,7 +23,7 @@ namespace Vectrix {
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
         void setModelMatrix(const glm::mat4& model) const override;
-        void setTexture(Ref<Texture> texture) override;
+        void setTexture(uint32_t index, Ref<Texture> texture) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
             VC_VERIFY_UNIFORM_NAME(name);

@@ -16,8 +16,11 @@ namespace Vectrix {
 
 	}
 
-	void Renderer::submit(Shader& shader,const VertexArray& vertexArray,const Transform& transform)
+	void Renderer::submit(Shader& shader,const VertexArray& vertexArray,Transform transform)
 	{
+		shader.setModelMatrix(transform.mat4());
+		if (shader.isAffectedByCamera())
+			shader.sendCameraUniform(m_SceneData->camera->getTransformationMatrix());
 		shader.bind();
 		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
 			VulkanRenderer::Submit(shader,vertexArray,transform);
@@ -28,9 +31,6 @@ namespace Vectrix {
 
 	void Renderer::submit(Shader& shader, Model& model)
 	{
-		shader.setModelMatrix(model.getModelMatrix());
-		if (shader.isAffectedByCamera())
-			shader.sendCameraUniform(m_SceneData->camera->getTransformationMatrix());
 		submit(shader,*model.getVertexArray(),model.getTransform());
 	}
 }

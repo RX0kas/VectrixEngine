@@ -13,7 +13,7 @@ namespace Vectrix {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate(DeltaTime deltaTime) {}
+		virtual void OnUpdate(const DeltaTime& deltaTime) {}
 		virtual void OnRender() {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}

@@ -32,6 +32,7 @@ namespace Vectrix {
          */
         [[nodiscard]] virtual uint32_t getHeight() const = 0;
 
+        static constexpr uint32_t getMaxTexture() { return 8; }
     private:
         friend class TextureManager;
         static Ref<Texture> create(const std::string& path);

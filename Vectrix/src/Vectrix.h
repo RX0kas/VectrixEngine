@@ -29,6 +29,7 @@
 #include "Vectrix/Rendering/Models/Model.h"
 
 #include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
+#include "Vectrix/Rendering/Camera/PerspectiveCameraController.h"
 #include "Vectrix/Rendering/Models/ObjLoader.h"
 
 // Entry Point
