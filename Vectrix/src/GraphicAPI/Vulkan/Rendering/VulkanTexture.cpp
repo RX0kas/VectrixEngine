@@ -15,7 +15,7 @@ namespace Vectrix {
         if (!pixels) {
             VC_CORE_ERROR("Failed to load texture image");
         }
-        createTexture(pixels);
+        createTexture(pixels,m_channel);
     }
 
     /**
@@ -32,11 +32,24 @@ namespace Vectrix {
         m_height = y;
         m_channel = 4;
         m_imageSize = m_width * m_height * 4;
-        createTexture(pixels);
+        createTexture(pixels,4);
     }
 
-    void VulkanTexture::createTexture(stbi_uc *pixels) {
-        VkFormat f = VK_FORMAT_R8G8B8A8_SRGB; // TODO: dynamically detect this
+    void VulkanTexture::createTexture(stbi_uc *pixels, int channels) {
+        VkFormat f = VK_FORMAT_UNDEFINED;
+        switch (channels) {
+            case 1:
+                f = VK_FORMAT_R8_SRGB; break;
+            case 2:
+                f = VK_FORMAT_R8G8_SRGB; break;
+            case 3:
+                f = VK_FORMAT_R8G8B8_SRGB; break;
+            case 4:
+                f = VK_FORMAT_R8G8B8A8_SRGB; break;
+            default:
+                VC_CORE_WARN("Unsupported channels number");
+        }
+
         m_format = f;
         // staging buffer
         VkBuffer stagingBuffer;
