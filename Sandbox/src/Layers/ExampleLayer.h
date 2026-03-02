@@ -11,7 +11,8 @@ public:
 	ExampleLayer() : Layer("Example") {
 		m_cameraController.getCamera().setPosition({0.0f,0.0f,3.0f});
 		m_cameraController.getCamera().setRotation({0.0f,-M_PI,0.0f});
-		m_cameraWidget = new CameraWidget(m_cameraController.getCamera());
+		m_cameraWidget = std::make_shared<CameraWidget>(m_cameraController.getCamera());
+		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
 		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
 		m_model->setPosition({1.5,0,0});
@@ -55,7 +56,7 @@ public:
 	}
 
 private:
-	CameraWidget *m_cameraWidget;
+	Vectrix::Ref<CameraWidget> m_cameraWidget;
 	Vectrix::PerspectiveCameraController m_cameraController;
 
 	Vectrix::Ref<Vectrix::Shader> defaultShader;
