@@ -36,6 +36,8 @@ namespace Vectrix {
     }
 
     void VulkanTexture::createTexture(stbi_uc *pixels) {
+        VkFormat f = VK_FORMAT_R8G8B8A8_SRGB; // TODO: dynamically detect this
+        m_format = f;
         // staging buffer
         VkBuffer stagingBuffer;
         VmaAllocation stagingAllocation;
@@ -61,7 +63,7 @@ namespace Vectrix {
         imageInfo.extent.depth = 1;
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
-        imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+        imageInfo.format = f;
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL; // Texels are laid out in an implementation defined order for optimal access
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED; // Not usable by the GPU and the very first transition will discard the texels
         imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
@@ -75,13 +77,13 @@ namespace Vectrix {
         vmaCreateImage(VulkanContext::instance().getAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr);
 
         // transition to TRANSFER_DST_OPTIMAL
-        transitionImageLayout(m_image, VK_FORMAT_R8G8B8A8_SRGB,VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        transitionImageLayout(m_image, f,VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
         // staging buffer to image
         m_device.copyBufferToImage(stagingBuffer, m_image, static_cast<uint32_t>(m_width), static_cast<uint32_t>(m_height),1);
 
         // transition to READ_ONLY_OPTIMAL
-        transitionImageLayout(m_image, VK_FORMAT_R8G8B8A8_SRGB,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout(m_image, f,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         m_device.destroyBuffer(stagingBuffer, stagingAllocation);
 
@@ -89,7 +91,7 @@ namespace Vectrix {
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = m_image;
         viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+        viewInfo.format = f;
         viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         viewInfo.subresourceRange.baseMipLevel = 0;
         viewInfo.subresourceRange.levelCount = 1;
@@ -123,7 +125,7 @@ namespace Vectrix {
         }
     }
 
-    void VulkanTexture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) const {
+    void VulkanTexture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
         VkCommandBuffer commandBuffer = m_device.beginSingleTimeCommands();
 
         VkImageMemoryBarrier barrier{};
@@ -160,6 +162,7 @@ namespace Vectrix {
             0, nullptr, 0, nullptr,1, &barrier);
 
         m_device.endSingleTimeCommands(commandBuffer);
+        m_layout = newLayout;
     }
 
     VulkanTexture::~VulkanTexture() {

@@ -51,6 +51,20 @@ namespace Vectrix {
         }
 
         /**
+         * @brief This function is used to get all the texture previously created with their names
+         * @return The texture programs created
+         */
+        std::vector<std::pair<std::string,Ref<Texture>>> getAllWithName() {
+            std::vector<std::pair<std::string,Ref<Texture>>> vals;
+            vals.reserve(p_cache.size());
+
+            for(const auto& t : p_cache) {
+                vals.emplace_back(t);
+            }
+            return vals;
+        }
+
+        /**
          * @brief Return a reference to the instance of this class
          * @return The instance of the class TextureManager
          */

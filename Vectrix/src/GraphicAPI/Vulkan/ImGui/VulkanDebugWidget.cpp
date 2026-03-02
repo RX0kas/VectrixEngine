@@ -40,16 +40,9 @@ namespace Vectrix {
         }
 
         if (ImGui::CollapsingHeader("Synchronization")) {
-            if (ImGui::TreeNode("Semaphores")) {
-                for (const auto& s : frame.semaphores) {
-                    ImGui::Text("%s : %s", s.name, s.signaled ? "SIGNALED" : "WAITING");
-                }
-                ImGui::TreePop();
-            }
-
             if (ImGui::TreeNode("Fences")) {
                 for (const auto& f : frame.fences) {
-                    ImGui::Text("%s : %s", f.name, f.signaled ? "SIGNALED" : "UNSIGNALED");
+                    ImGui::Text("%s : %s", f.name, f.isNull ? "VK_NULL_HANDLE" : f.signaled ? "SIGNALED" : "UNSIGNALED");
                 }
                 ImGui::TreePop();
             }
@@ -110,8 +103,8 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) {
             for (const auto& img : frame.images) {
-                if (ImGui::TreeNode(img.name)) {
-                    ImGui::Text("Format: %d", img.format);
+                if (ImGui::TreeNode(img.name.c_str())) {
+                    ImGui::Text("Format: %s", string_VkFormat(img.format));
                     ImGui::Text("Layout: %d", img.layout);
                     ImGui::Text(
                         "Extent: %u x %u x %u",

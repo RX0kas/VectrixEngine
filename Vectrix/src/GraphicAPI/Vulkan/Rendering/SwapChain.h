@@ -100,6 +100,9 @@ namespace Vectrix {
         std::vector<VkFence> getInFlightFences() {
             return m_inFlightFences;
         }
+	    std::vector<VkFence> getImageInFlightFences() {
+            return m_imagesInFlight;
+        }
     private:
         void destroyImageviews() {
             if (!m_swapChainImageViews.empty()) {

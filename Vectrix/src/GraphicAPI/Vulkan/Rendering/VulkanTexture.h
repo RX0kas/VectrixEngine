@@ -17,16 +17,19 @@ namespace Vectrix {
         [[nodiscard]] VkSampler getSampler() const { return m_sampler; }
         [[nodiscard]] VkDescriptorImageInfo getDescriptorInfo() const {
             VkDescriptorImageInfo info{};
-            info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            info.imageLayout = m_layout;
             info.imageView = m_imageView;
             info.sampler = m_sampler;
             return info;
         }
+
+        [[nodiscard]] VkFormat getFormat() const { return m_format; }
+        [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
     private:
         friend class Texture;
         VulkanTexture();
         void createTexture(stbi_uc* pixels);
-        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) const;
+        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
         int m_width = -1;
         int m_height = -1;
         int m_channel = -1;
@@ -35,7 +38,8 @@ namespace Vectrix {
         VmaAllocation m_allocation = VK_NULL_HANDLE;
         VkImageView m_imageView = VK_NULL_HANDLE;
         VkSampler m_sampler = VK_NULL_HANDLE;
-
+        VkFormat m_format = VK_FORMAT_UNDEFINED;
+        VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
         Device& m_device;
     };
 } // Vectrix

@@ -201,22 +201,55 @@ namespace Vectrix {
 		f.frameIndex = m_swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;
 
-		f.semaphores = std::vector<DebugSemaphoreInfo>(); // TODO: Implement Semaphores and fences
 		f.fences = std::vector<DebugFenceInfo>();
+		auto imageInFlightFences = m_swapChain->getImageInFlightFences();
+		auto inFlightFences = m_swapChain->getInFlightFences();
+		for (auto fe : imageInFlightFences) {
+			DebugFenceInfo i{};
+			i.name = "imageInFlightFences";
+			if (fe==VK_NULL_HANDLE) {
+				i.isNull = true;
+				i.signaled = false;
+			} else {
+				i.signaled = vkGetFenceStatus(m_device.device(),fe)==VK_SUCCESS;
+				i.isNull = false;
+			}
+			f.fences.push_back(i);
+		}
+		for (auto fe : inFlightFences) {
+			DebugFenceInfo i{};
+			i.name = "inFlightFences";
+			i.signaled = vkGetFenceStatus(m_device.device(),fe)==VK_SUCCESS;
+			f.fences.push_back(i);
+		}
 
 		std::vector<DebugPipelineInfo> pipelines;
 		std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
 		for (auto& shader : ShaderManager::instance().getAll()) {
-			auto* s = dynamic_cast<VulkanShader*>(shader.get());
+			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
 			DebugDescriptorSetInfo d{};
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}
+
 		f.pipelines = pipelines;
-		f.images = {}; // TODO: Implement Images
+		f.images = {};
+		auto defaultTexture = std::dynamic_pointer_cast<VulkanTexture>(TextureManager::getNotFoundTexture());
+		f.images.push_back({"not_found",defaultTexture->getLayout(),defaultTexture->getFormat(),{defaultTexture->getWidth(),defaultTexture->getHeight(),0}});
+
+		for (const auto&[name, tex] : TextureManager::instance().getAllWithName()) {
+			auto t = std::dynamic_pointer_cast<VulkanTexture>(tex);
+			DebugImageInfo i{};
+			i.name = name;
+			i.extent = {t->getWidth(),t->getHeight(),0};
+			i.format = t->getFormat();
+			i.layout = t->getLayout();
+			f.images.push_back(i);
+		}
+
 		f.buffers = {};
 
 		f.drawCalls = VulkanRendererAPI::getDrawCalls();
