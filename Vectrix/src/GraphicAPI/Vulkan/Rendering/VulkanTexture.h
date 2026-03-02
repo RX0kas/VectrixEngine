@@ -28,7 +28,7 @@ namespace Vectrix {
     private:
         friend class Texture;
         VulkanTexture();
-        void createTexture(stbi_uc* pixels);
+        void createTexture(stbi_uc* pixels, int channels);
         void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
         int m_width = -1;
         int m_height = -1;
