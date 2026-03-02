@@ -15,7 +15,7 @@ namespace Vectrix {
         if (!pixels) {
             VC_CORE_ERROR("Failed to load texture image");
         }
-        createTexture(pixels,m_channel);
+        createTexture(pixels,STBI_rgb_alpha);
     }
 
     /**
