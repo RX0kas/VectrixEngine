@@ -117,16 +117,16 @@ namespace Vectrix {
             }
         }
 
-        if (ImGui::CollapsingHeader("Buffers")) {
-            for (const auto& buf : frame.buffers) {
-                ImGui::BulletText(
-                    "%s | Size: %llu | Offset: %llu",
-                    buf.name,
-                    static_cast<unsigned long long>(buf.size),
-                    static_cast<unsigned long long>(buf.offset)
-                );
-            }
-        }
+        //if (ImGui::CollapsingHeader("Buffers")) {
+        //    for (const auto& buf : frame.buffers) {
+        //        ImGui::BulletText(
+        //            "%s | Size: %llu | Offset: %llu",
+        //            buf.name,
+        //            static_cast<unsigned long long>(buf.size),
+        //            static_cast<unsigned long long>(buf.offset)
+        //        );
+        //    }
+        //}
 
         ImGui::End();
     }

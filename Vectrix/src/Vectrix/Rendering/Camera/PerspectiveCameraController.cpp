@@ -14,34 +14,58 @@ namespace Vectrix {
     }
 
     void PerspectiveCameraController::onUpdate(DeltaTime dt) {
-        glm::vec3 m_cameraPosition = m_camera.getPosition();
-        glm::vec3 m_cameraRotation = m_camera.getRotation();
-        if (Input::isKeyPressed(VC_KEY_A))
-            m_cameraPosition.x -= m_cameraMoveSpeed * dt;
-        else if (Input::isKeyPressed(VC_KEY_D))
-            m_cameraPosition.x += m_cameraMoveSpeed * dt;
-
-        if (Input::isKeyPressed(VC_KEY_W))
-            m_cameraPosition.z += m_cameraMoveSpeed * dt;
-        else if (Input::isKeyPressed(VC_KEY_S))
-            m_cameraPosition.z -= m_cameraMoveSpeed * dt;
-        if (Input::isKeyPressed(VC_KEY_Q))
-            m_cameraPosition.y += m_cameraMoveSpeed * dt;
-        else if (Input::isKeyPressed(VC_KEY_E))
-            m_cameraPosition.y -= m_cameraMoveSpeed * dt;
-
+        glm::vec3 cameraRot = m_camera.getRotation();
         if (Input::isKeyPressed(VC_KEY_LEFT))
-            m_cameraRotation.y -= m_cameraRotationSpeed * dt;
-        else if (Input::isKeyPressed(VC_KEY_RIGHT))
-            m_cameraRotation.y += m_cameraRotationSpeed * dt;
-
+            cameraRot.y -= m_cameraRotationSpeed * dt;
+        if (Input::isKeyPressed(VC_KEY_RIGHT))
+            cameraRot.y += m_cameraRotationSpeed * dt;
         if (Input::isKeyPressed(VC_KEY_UP))
-            m_cameraRotation.x += m_cameraRotationSpeed * dt;
-        else if (Input::isKeyPressed(VC_KEY_DOWN))
-            m_cameraRotation.x -= m_cameraRotationSpeed * dt;
+            cameraRot.x += m_cameraRotationSpeed * dt;
+        if (Input::isKeyPressed(VC_KEY_DOWN))
+            cameraRot.x -= m_cameraRotationSpeed * dt;
+        m_camera.setRotation(cameraRot);
 
-        m_camera.setPosition(m_cameraPosition);
-        m_camera.setRotation(m_cameraRotation);
+        float yaw = cameraRot.y;
+        float pitch = cameraRot.x;
+        float roll = cameraRot.z;
+
+        float c1 = std::cos(yaw);
+        float s1 = std::sin(yaw);
+        float c2 = std::cos(pitch);
+        float s2 = std::sin(pitch);
+        float c3 = std::cos(roll);
+        float s3 = std::sin(roll);
+
+        glm::vec3 right;
+        right.x = c1 * c3 + s1 * s2 * s3;
+        right.y = c2 * s3;
+        right.z = c1 * s2 * s3 - c3 * s1;
+
+        glm::vec3 up;
+        up.x = c3 * s1 * s2 - c1 * s3;
+        up.y = c2 * c3;
+        up.z = c1 * c3 * s2 + s1 * s3;
+
+        glm::vec3 forward;
+        forward.x = c2 * s1;
+        forward.y = -s2;
+        forward.z = c1 * c2;
+
+        glm::vec3 moveDir(0.0f);
+        if (Input::isKeyPressed(VC_KEY_A)) moveDir.x -= 1.0f;
+        if (Input::isKeyPressed(VC_KEY_D)) moveDir.x += 1.0f;
+        if (Input::isKeyPressed(VC_KEY_W)) moveDir.z += 1.0f;
+        if (Input::isKeyPressed(VC_KEY_S)) moveDir.z -= 1.0f;
+        if (Input::isKeyPressed(VC_KEY_Q)) moveDir.y -= 1.0f;
+        if (Input::isKeyPressed(VC_KEY_E)) moveDir.y += 1.0f;
+
+        if (glm::length(moveDir) > 0.0f) {
+            moveDir = glm::normalize(moveDir);
+
+            glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();
+
+            m_camera.setPosition(m_camera.getPosition() + delta);
+        }
     }
 
     bool PerspectiveCameraController::onWindowResized(WindowResizeEvent &e) {

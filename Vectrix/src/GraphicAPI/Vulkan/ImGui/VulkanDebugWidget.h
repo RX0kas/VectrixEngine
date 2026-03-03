@@ -37,11 +37,11 @@ namespace Vectrix {
         VkExtent3D extent;
     };
 
-    struct DebugBufferInfo {
-        const char* name;
-        VkDeviceSize size;
-        VkDeviceSize offset;
-    };
+    //struct DebugBufferInfo {
+    //    const char* name;
+    //    VkDeviceSize size;
+    //    VkDeviceSize offset;
+    //};
 
     struct DebugFrameInfo {
         uint32_t frameIndex;
@@ -53,7 +53,7 @@ namespace Vectrix {
         std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
         std::vector<DebugImageInfo> images;
-        std::vector<DebugBufferInfo> buffers;
+        //std::vector<DebugBufferInfo> buffers;
 
         uint32_t drawCalls;
         uint32_t dispatchCalls;
