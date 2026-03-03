@@ -236,6 +236,7 @@ namespace Vectrix {
 		}
 
 		f.pipelines = pipelines;
+		f.boundDescriptorSets = boundDescriptorSets;
 		f.images = {};
 		auto defaultTexture = std::dynamic_pointer_cast<VulkanTexture>(TextureManager::getNotFoundTexture());
 		f.images.push_back({"not_found",defaultTexture->getLayout(),defaultTexture->getFormat(),{defaultTexture->getWidth(),defaultTexture->getHeight(),0}});
@@ -249,8 +250,6 @@ namespace Vectrix {
 			i.layout = t->getLayout();
 			f.images.push_back(i);
 		}
-
-		f.buffers = {};
 
 		f.drawCalls = VulkanRendererAPI::getDrawCalls();
 		f.dispatchCalls = 0;
