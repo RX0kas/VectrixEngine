@@ -33,7 +33,11 @@ namespace Vectrix {
          */
         [[nodiscard]] virtual uint32_t getHeight() const = 0;
 
-        static constexpr uint32_t getMaxTexture() { return 8; }
+        /**
+         * @brief This function return the maximal number of Texture allowed per Shader
+         * @return The maximum number of Texture allowed per shader
+         */
+        static constexpr uint32_t getMaxTexturePerShader() { return 8; }
     private:
         friend class TextureManager;
         static Ref<Texture> create(const std::string& path);

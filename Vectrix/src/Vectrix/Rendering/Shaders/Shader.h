@@ -278,7 +278,7 @@ namespace Vectrix {
 		 * @warning Don't call this function before the initialization of the window
 		 * @warning The name of the uniform is case-sensitive
 		 *
-		 * @warning <strong>For now only one texture per shader is supported</strong>
+		 * @warning There is a limited number of texture allowed per shader Texture::getMaxTexturePerShader()
 		 */
 		virtual void setTexture(uint32_t index, Ref<Texture> texture)  = 0;
 

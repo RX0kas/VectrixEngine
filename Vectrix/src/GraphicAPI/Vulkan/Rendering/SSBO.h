@@ -36,7 +36,7 @@ namespace Vectrix {
         [[nodiscard]] std::vector<VkDescriptorSet> descriptorSet() const { return m_descriptorSets; }
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
-        [[nodiscard]] std::array<Ref<VulkanTexture>,Texture::getMaxTexture()> textures() const {return m_textures;}
+        [[nodiscard]] std::array<Ref<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
     private:
         void createDescriptorSetLayout();
         Device& m_device;
@@ -50,7 +50,7 @@ namespace Vectrix {
         std::vector<uint8_t> m_storage;
         ShaderUniformLayout& m_layout;
 
-        std::array<Ref<VulkanTexture>, Texture::getMaxTexture()> m_textures;
+        std::array<Ref<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
 
         VmaAllocation m_allocation;
     };

@@ -2,7 +2,7 @@ var searchData=
 [
   ['scenedata_0',['SceneData',['../structVectrix_1_1Renderer_1_1SceneData.html',1,'Vectrix::Renderer']]],
   ['setclearcolor_1',['setClearColor',['../classVectrix_1_1RenderCommand.html#a4a7883c329e82a955808454bee544756',1,'Vectrix::RenderCommand']]],
-  ['settexture_2',['setTexture',['../classVectrix_1_1Shader.html#a5f5f320a28230d8cf89d50c70047994a',1,'Vectrix::Shader']]],
+  ['settexture_2',['setTexture',['../classVectrix_1_1Shader.html#a050f9929c45f6dd17b9c64cbf541adf7',1,'Vectrix::Shader']]],
   ['setuniform_3',['setUniform',['../classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472',1,'Vectrix::Shader']]],
   ['setuniform1f_4',['setUniform1f',['../classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f',1,'Vectrix::Shader']]],
   ['setuniform1i_5',['setUniform1i',['../classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756',1,'Vectrix::Shader']]],
@@ -22,6 +22,6 @@ var searchData=
   ['shaderuniformlayout_2eh_19',['ShaderUniformLayout.h',['../ShaderUniformLayout_8h.html',1,'']]],
   ['shaderuniformtype_20',['ShaderUniformType',['../namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c',1,'Vectrix']]],
   ['shaderuniformtype_2eh_21',['ShaderUniformType.h',['../ShaderUniformType_8h.html',1,'']]],
-  ['submit_22',['submit',['../classVectrix_1_1Renderer.html#acb321c453f1312c2508325b76b8b859a',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, const Transform &amp;transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]],
+  ['submit_22',['submit',['../classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]],
   ['system_20guide_23',['Rendering System Guide',['../rendering_overview.html',1,'index']]]
 ];
