@@ -140,7 +140,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setTexture(uint32_t index, Ref<Texture> texture) {
-		VC_CORE_ASSERT(index < Texture::getMaxTexture(), "Index out of range");
+		VC_CORE_ASSERT(index < Texture::getMaxTexturePerShader(), "Index out of range");
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
 		auto textures = m_ssbo->textures();
 		textures[index] = vkTex;

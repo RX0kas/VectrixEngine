@@ -31,6 +31,7 @@ var hierarchy =
     [ "Vectrix::Log", "classVectrix_1_1Log.html", null ],
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
+    [ "Vectrix::PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
     [ "Vectrix::RenderCommand", "classVectrix_1_1RenderCommand.html", null ],
     [ "Vectrix::Renderer", "classVectrix_1_1Renderer.html", null ],
     [ "Vectrix::RendererAPI", "classVectrix_1_1RendererAPI.html", null ],

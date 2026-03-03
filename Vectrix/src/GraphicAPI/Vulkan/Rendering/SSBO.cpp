@@ -61,8 +61,8 @@ namespace Vectrix {
             writeBuffer.pBufferInfo = &bufferInfo;
 
             // Textures
-            std::vector<VkDescriptorImageInfo> imageInfos(Texture::getMaxTexture());
-            for (uint32_t i = 0; i < Texture::getMaxTexture(); ++i) {
+            std::vector<VkDescriptorImageInfo> imageInfos(Texture::getMaxTexturePerShader());
+            for (uint32_t i = 0; i < Texture::getMaxTexturePerShader(); ++i) {
                 imageInfos[i] = m_textures[i]->getDescriptorInfo();
             }
 
@@ -70,7 +70,7 @@ namespace Vectrix {
             writeTexture.dstSet = m_descriptorSets[frame];
             writeTexture.dstBinding = 1;
             writeTexture.dstArrayElement = 0;
-            writeTexture.descriptorCount = Texture::getMaxTexture();
+            writeTexture.descriptorCount = Texture::getMaxTexturePerShader();
             writeTexture.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             writeTexture.pImageInfo = imageInfos.data();
 
@@ -99,7 +99,7 @@ namespace Vectrix {
         // Textures
         b[1].binding = 1;
         b[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        b[1].descriptorCount = Texture::getMaxTexture();
+        b[1].descriptorCount = Texture::getMaxTexturePerShader();
         b[1].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
         b[1].pImmutableSamplers = nullptr;
 

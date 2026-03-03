@@ -12,8 +12,8 @@ namespace Vectrix {
     unsigned int Texture::m_count = 0;
 
     Ref<Texture> Texture::create(const std::string &path) {
-        if (m_count==getMaxTexture()) {
-            VC_CORE_ERROR("The maximum number of texture allowed is {}",getMaxTexture());
+        if (m_count==getMaxTexturePerShader()) {
+            VC_CORE_ERROR("The maximum number of texture allowed is {}",getMaxTexturePerShader());
         }
 
         if (!std::filesystem::exists(path)) {

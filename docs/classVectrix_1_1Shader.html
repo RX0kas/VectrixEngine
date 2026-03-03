@@ -120,8 +120,8 @@ This function tell the GPU that this shader will be used for all subsequent draw
 <tr class="memdesc:abfdcda5aad42649875ee2198b85f1fd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of a 4D vector uniform in the shader.  <br /></td></tr>
 <tr class="memitem:a929f30f7607470db78def08a69f4d6e8" id="r_a929f30f7607470db78def08a69f4d6e8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a929f30f7607470db78def08a69f4d6e8">setUniformMat4f</a> (const std::string &amp;name, glm::mat4 value) const</td></tr>
 <tr class="memdesc:a929f30f7607470db78def08a69f4d6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of a 4x4 matrix uniform in the shader.  <br /></td></tr>
-<tr class="memitem:a5f5f320a28230d8cf89d50c70047994a" id="r_a5f5f320a28230d8cf89d50c70047994a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5f5f320a28230d8cf89d50c70047994a">setTexture</a> (Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt; value)</td></tr>
-<tr class="memdesc:a5f5f320a28230d8cf89d50c70047994a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of the current texture in the shader.  <br /></td></tr>
+<tr class="memitem:a050f9929c45f6dd17b9c64cbf541adf7" id="r_a050f9929c45f6dd17b9c64cbf541adf7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a050f9929c45f6dd17b9c64cbf541adf7">setTexture</a> (uint32_t index, Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt; texture)</td></tr>
+<tr class="memdesc:a050f9929c45f6dd17b9c64cbf541adf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of the current texture in the shader.  <br /></td></tr>
 <tr class="memitem:a8dd177a44c4bb9f2428af2f2296e6472" id="r_a8dd177a44c4bb9f2428af2f2296e6472"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a8dd177a44c4bb9f2428af2f2296e6472 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8dd177a44c4bb9f2428af2f2296e6472">setUniform</a> (const std::string &amp;name, const T &amp;value) const</td></tr>
 <tr class="memdesc:a8dd177a44c4bb9f2428af2f2296e6472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of a uniform in the shader, without needing to think about the type.  <br /></td></tr>
@@ -161,8 +161,8 @@ The shader is automatically unbound at each new frame </dd></dl>
 
 </div>
 </div>
-<a id="a5f5f320a28230d8cf89d50c70047994a" name="a5f5f320a28230d8cf89d50c70047994a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f5f320a28230d8cf89d50c70047994a">&#9670;&#160;</a></span>setTexture()</h2>
+<a id="a050f9929c45f6dd17b9c64cbf541adf7" name="a050f9929c45f6dd17b9c64cbf541adf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a050f9929c45f6dd17b9c64cbf541adf7">&#9670;&#160;</a></span>setTexture()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,8 +170,12 @@ The shader is automatically unbound at each new frame </dd></dl>
         <tr>
           <td class="memname">void Vectrix::Shader::setTexture </td>
           <td>(</td>
-          <td class="paramtype">Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Ref&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>texture</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -180,7 +184,8 @@ The shader is automatically unbound at each new frame </dd></dl>
 <p>This function permit to modify the value of the current texture in this shader</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>texture that is sent</td></tr>
+    <tr><td class="paramname">index</td><td>The slot in which the texture will be </td></tr>
+    <tr><td class="paramname">texture</td><td>texture that is sent</td></tr>
   </table>
   </dd>
 </dl>
@@ -190,7 +195,7 @@ The shader is automatically unbound at each new frame </dd></dl>
 <dd>
 The name of the uniform is case-sensitive</dd>
 <dd>
-<b>For now only one texture per shader is supported</b> </dd></dl>
+There is a limited number of texture allowed per shader <a class="el" href="classVectrix_1_1Texture.html#a769130d3cbee3826ac2ee6616c51bb2b" title="This function return the maximal number of Texture allowed per Shader.">Texture::getMaxTexturePerShader()</a> </dd></dl>
 
 </div>
 </div>
@@ -267,7 +272,7 @@ The name of the uniform is case-sensitive</dd></dl>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00312">312</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00313">313</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
 
 </div>
 </div>
