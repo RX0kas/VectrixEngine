@@ -1,6 +1,27 @@
 var searchData=
 [
-  ['uniformalignment_0',['uniformAlignment',['../namespaceVectrix.html#add762e9c3c2f921ca240998c51b098a2',1,'Vectrix']]],
-  ['uniformelement_1',['UniformElement',['../structVectrix_1_1UniformElement.html',1,'Vectrix']]],
-  ['uniformsizeinbytes_2',['uniformSizeInBytes',['../namespaceVectrix.html#aa98fdc13824ee10e019b88443a9bce40',1,'Vectrix']]]
+  ['scenedata_0',['SceneData',['../structVectrix_1_1Renderer_1_1SceneData.html',1,'Vectrix::Renderer']]],
+  ['setclearcolor_1',['setClearColor',['../classVectrix_1_1RenderCommand.html#a4a7883c329e82a955808454bee544756',1,'Vectrix::RenderCommand']]],
+  ['settexture_2',['setTexture',['../classVectrix_1_1Shader.html#a050f9929c45f6dd17b9c64cbf541adf7',1,'Vectrix::Shader']]],
+  ['setuniform_3',['setUniform',['../classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472',1,'Vectrix::Shader']]],
+  ['setuniform1f_4',['setUniform1f',['../classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f',1,'Vectrix::Shader']]],
+  ['setuniform1i_5',['setUniform1i',['../classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756',1,'Vectrix::Shader']]],
+  ['setuniform1u_6',['setUniform1u',['../classVectrix_1_1Shader.html#a017abdd2eccc15c4c501a117c3ba3b3a',1,'Vectrix::Shader']]],
+  ['setuniform2f_7',['setUniform2f',['../classVectrix_1_1Shader.html#abdff206cba9d44deea50dd54cca15114',1,'Vectrix::Shader']]],
+  ['setuniform3f_8',['setUniform3f',['../classVectrix_1_1Shader.html#a5a36bed2c7814144d4d00c341118110c',1,'Vectrix::Shader']]],
+  ['setuniform4f_9',['setUniform4f',['../classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3',1,'Vectrix::Shader']]],
+  ['setuniformbool_10',['setUniformBool',['../classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54',1,'Vectrix::Shader']]],
+  ['setuniformmat4f_11',['setUniformMat4f',['../classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8',1,'Vectrix::Shader']]],
+  ['shader_12',['Shader',['../classVectrix_1_1Shader.html',1,'Vectrix']]],
+  ['shader_2eh_13',['Shader.h',['../Shader_8h.html',1,'']]],
+  ['shadermanager_14',['ShaderManager',['../classVectrix_1_1ShaderManager.html',1,'Vectrix']]],
+  ['shadermanager_2eh_15',['ShaderManager.h',['../ShaderManager_8h.html',1,'']]],
+  ['shaders_16',['Shaders',['../group__shaders.html',1,'']]],
+  ['shaders_17',['2. &lt;a class=&quot;el&quot; href=&quot;group__shaders.html&quot; title=&quot;Shaders&quot;&gt;Shaders&lt;/a&gt;',['../rendering_overview.html#autotoc_md5',1,'']]],
+  ['shaderuniformlayout_18',['ShaderUniformLayout',['../classVectrix_1_1ShaderUniformLayout.html',1,'Vectrix']]],
+  ['shaderuniformlayout_2eh_19',['ShaderUniformLayout.h',['../ShaderUniformLayout_8h.html',1,'']]],
+  ['shaderuniformtype_20',['ShaderUniformType',['../namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c',1,'Vectrix']]],
+  ['shaderuniformtype_2eh_21',['ShaderUniformType.h',['../ShaderUniformType_8h.html',1,'']]],
+  ['submit_22',['submit',['../classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]],
+  ['system_20guide_23',['Rendering System Guide',['../rendering_overview.html',1,'index']]]
 ];

@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['window_0',['Window',['../classVectrix_1_1Window.html',1,'Vectrix']]],
-  ['windowattributes_1',['WindowAttributes',['../structVectrix_1_1WindowAttributes.html',1,'Vectrix']]],
-  ['windowcloseevent_2',['WindowCloseEvent',['../classVectrix_1_1WindowCloseEvent.html',1,'Vectrix']]],
-  ['windowdata_3',['WindowData',['../structVectrix_1_1Window_1_1WindowData.html',1,'Vectrix::Window']]],
-  ['windowresizeevent_4',['WindowResizeEvent',['../classVectrix_1_1WindowResizeEvent.html',1,'Vectrix']]]
+  ['uniformalignment_0',['uniformAlignment',['../namespaceVectrix.html#add762e9c3c2f921ca240998c51b098a2',1,'Vectrix']]],
+  ['uniformelement_1',['UniformElement',['../structVectrix_1_1UniformElement.html',1,'Vectrix']]],
+  ['uniformsizeinbytes_2',['uniformSizeInBytes',['../namespaceVectrix.html#aa98fdc13824ee10e019b88443a9bce40',1,'Vectrix']]]
 ];

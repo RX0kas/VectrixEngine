@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['shaders_0',['1. Shaders (&lt;a class=&quot;el&quot; href=&quot;group__shaders.html&quot; title=&quot;Shaders&quot;&gt;Shaders&lt;/a&gt;)',['../rendering_overview.html#autotoc_md4',1,'']]],
-  ['shaders_20shaders_1',['1. Shaders (&lt;a class=&quot;el&quot; href=&quot;group__shaders.html&quot; title=&quot;Shaders&quot;&gt;Shaders&lt;/a&gt;)',['../rendering_overview.html#autotoc_md4',1,'']]],
-  ['system_20guide_2',['Rendering System Guide',['../rendering_overview.html',1,'index']]]
+  ['main_20modules_0',['Main modules',['../index.html#autotoc_md0',1,'']]],
+  ['modules_1',['Main modules',['../index.html#autotoc_md0',1,'']]]
 ];

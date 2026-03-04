@@ -30,19 +30,20 @@ var annotated_dup =
       [ "VertexBuffer", "classVectrix_1_1VertexBuffer.html", null ],
       [ "IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
       [ "PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
-      [ "GraphicsContext", "classVectrix_1_1GraphicsContext.html", null ],
+      [ "PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
       [ "Model", "classVectrix_1_1Model.html", null ],
       [ "Transform", "classVectrix_1_1Transform.html", null ],
       [ "Vertex", "structVectrix_1_1Vertex.html", null ],
       [ "VertexArray", "classVectrix_1_1VertexArray.html", null ],
-      [ "RenderCommand", "classVectrix_1_1RenderCommand.html", null ],
-      [ "Renderer", "classVectrix_1_1Renderer.html", null ],
+      [ "RenderCommand", "classVectrix_1_1RenderCommand.html", "classVectrix_1_1RenderCommand" ],
+      [ "Renderer", "classVectrix_1_1Renderer.html", "classVectrix_1_1Renderer" ],
       [ "RendererAPI", "classVectrix_1_1RendererAPI.html", null ],
       [ "Shader", "classVectrix_1_1Shader.html", "classVectrix_1_1Shader" ],
       [ "ShaderManager", "classVectrix_1_1ShaderManager.html", "classVectrix_1_1ShaderManager" ],
       [ "UniformElement", "structVectrix_1_1UniformElement.html", "structVectrix_1_1UniformElement" ],
       [ "ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", "classVectrix_1_1ShaderUniformLayout" ],
-      [ "Texture", "classVectrix_1_1Texture.html", null ]
+      [ "Texture", "classVectrix_1_1Texture.html", "classVectrix_1_1Texture" ],
+      [ "TextureManager", "classVectrix_1_1TextureManager.html", "classVectrix_1_1TextureManager" ]
     ] ],
     [ "XXH3", "structXXH3.html", null ]
 ];

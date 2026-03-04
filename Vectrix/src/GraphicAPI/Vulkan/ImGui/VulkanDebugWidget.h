@@ -4,13 +4,6 @@
 #include "vk_mem_alloc.h"
 
 namespace Vectrix {
-
-    // All the info needed
-    struct DebugSemaphoreInfo {
-        const char* name;
-        bool signaled;
-    };
-
     struct DebugMemoryHeapInfo {
         const char* name;
         VkDeviceSize usedBytes;
@@ -20,6 +13,7 @@ namespace Vectrix {
     struct DebugFenceInfo {
         const char* name;
         bool signaled;
+        bool isNull;
     };
 
     struct DebugPipelineInfo {
@@ -37,30 +31,29 @@ namespace Vectrix {
     };
 
     struct DebugImageInfo {
-        const char* name;
+        std::string name;
         VkImageLayout layout;
         VkFormat format;
         VkExtent3D extent;
     };
 
-    struct DebugBufferInfo {
-        const char* name;
-        VkDeviceSize size;
-        VkDeviceSize offset;
-    };
+    //struct DebugBufferInfo {
+    //    const char* name;
+    //    VkDeviceSize size;
+    //    VkDeviceSize offset;
+    //};
 
     struct DebugFrameInfo {
         uint32_t frameIndex;
         uint32_t swapchainImageIndex;
 
-        std::vector<DebugSemaphoreInfo> semaphores;
         std::vector<DebugFenceInfo> fences;
 
         std::vector<DebugPipelineInfo> pipelines;
         std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
         std::vector<DebugImageInfo> images;
-        std::vector<DebugBufferInfo> buffers;
+        //std::vector<DebugBufferInfo> buffers;
 
         uint32_t drawCalls;
         uint32_t dispatchCalls;

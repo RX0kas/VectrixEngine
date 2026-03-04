@@ -73,7 +73,7 @@ namespace Vectrix {
 		void destroyBuffer(VkBuffer buffer, VmaAllocation allocation);
 		void destroyImage(VkImage image, VmaAllocation allocation);
 
-		VmaAllocator getAllocator() const {return m_allocator;}
+		[[nodiscard]] VmaAllocator getAllocator() const {return m_allocator;}
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -82,9 +82,8 @@ namespace Vectrix {
         void createLogicalDevice();
         void createCommandPool();
 	    void createDescriptorPool(const DescriptorPoolConfig& cfg);
-
         // helper functions
-        bool isDeviceSuitable(VkPhysicalDevice device);
+        bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
         std::vector<const char*> getRequiredExtensions();
         bool checkValidationLayerSupport();
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);

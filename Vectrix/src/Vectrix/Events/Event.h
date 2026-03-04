@@ -35,6 +35,8 @@ namespace Vectrix {
 //  A macro to not have to rewrite the getCategoryFlags function every time we create a new event
 #define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category; }
 
+#define VC_BIND_EVENT_FN_RETURN(fn) [this](auto && PH1) { return fn(std::forward<decltype(PH1)>(PH1)); }
+#define VC_BIND_EVENT_FN(fn) [this](auto && PH1) { fn(std::forward<decltype(PH1)>(PH1)); } // TODO: Fix event system
 
 	class Vectrix_API Event
 	{

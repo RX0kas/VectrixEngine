@@ -1,12 +1,14 @@
 var searchData=
 [
-  ['setuniform_0',['setUniform',['../classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472',1,'Vectrix::Shader']]],
-  ['setuniform1f_1',['setUniform1f',['../classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f',1,'Vectrix::Shader']]],
-  ['setuniform1i_2',['setUniform1i',['../classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756',1,'Vectrix::Shader']]],
-  ['setuniform1u_3',['setUniform1u',['../classVectrix_1_1Shader.html#a017abdd2eccc15c4c501a117c3ba3b3a',1,'Vectrix::Shader']]],
-  ['setuniform2f_4',['setUniform2f',['../classVectrix_1_1Shader.html#abdff206cba9d44deea50dd54cca15114',1,'Vectrix::Shader']]],
-  ['setuniform3f_5',['setUniform3f',['../classVectrix_1_1Shader.html#a5a36bed2c7814144d4d00c341118110c',1,'Vectrix::Shader']]],
-  ['setuniform4f_6',['setUniform4f',['../classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3',1,'Vectrix::Shader']]],
-  ['setuniformbool_7',['setUniformBool',['../classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54',1,'Vectrix::Shader']]],
-  ['setuniformmat4f_8',['setUniformMat4f',['../classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8',1,'Vectrix::Shader']]]
+  ['get_0',['get',['../classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee',1,'Vectrix::ShaderManager::get()'],['../classVectrix_1_1TextureManager.html#a0f4c1b39ffa0bb4dedf2360227576fca',1,'Vectrix::TextureManager::get()']]],
+  ['getall_1',['getAll',['../classVectrix_1_1ShaderManager.html#aadd98904e823f291f8dbc82683191526',1,'Vectrix::ShaderManager::getAll()'],['../classVectrix_1_1TextureManager.html#a694c59d166e27d59c8c0b269937fe32c',1,'Vectrix::TextureManager::getAll()']]],
+  ['getallwithname_2',['getAllWithName',['../classVectrix_1_1TextureManager.html#abbf96c43491eef9788accf1f3bb5e923',1,'Vectrix::TextureManager']]],
+  ['getapi_3',['getAPI',['../classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e',1,'Vectrix::Renderer']]],
+  ['getelements_4',['getElements',['../classVectrix_1_1ShaderUniformLayout.html#a09bed6a875a0946dfc85b5752fe8b272',1,'Vectrix::ShaderUniformLayout']]],
+  ['getheight_5',['getHeight',['../classVectrix_1_1Texture.html#aa752a7e29ba91587ee1e24f984e2dc43',1,'Vectrix::Texture']]],
+  ['getmaxtexturepershader_6',['getMaxTexturePerShader',['../classVectrix_1_1Texture.html#a769130d3cbee3826ac2ee6616c51bb2b',1,'Vectrix::Texture']]],
+  ['getnotfoundtexture_7',['getNotFoundTexture',['../classVectrix_1_1TextureManager.html#aedcdc973756efff2645cab0c66233888',1,'Vectrix::TextureManager']]],
+  ['getscenedata_8',['getSceneData',['../classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb',1,'Vectrix::Renderer']]],
+  ['getstructsize_9',['getStructSize',['../classVectrix_1_1ShaderUniformLayout.html#acc95d1afccc855b6d9ecc3890f68235c',1,'Vectrix::ShaderUniformLayout']]],
+  ['getwidth_10',['getWidth',['../classVectrix_1_1Texture.html#a414647df6c57bb144ea15f8b32bfaa60',1,'Vectrix::Texture']]]
 ];

@@ -2,9 +2,9 @@
 
 #include "vulkan/vulkan.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "../../../Vectrix/Renderer/Models/Vertex.h"
+#include "../../../Vectrix/Rendering/Models/Vertex.h"
 
-#include "Vectrix/Renderer/Buffer.h"
+#include "Vectrix/Rendering/Buffer.h"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

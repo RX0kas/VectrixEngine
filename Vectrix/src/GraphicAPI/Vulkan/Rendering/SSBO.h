@@ -4,8 +4,9 @@
 #include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
 #include <vector>
 
-#include "Vectrix/Renderer/Buffer.h"
-#include "Vectrix/Renderer/Shaders/ShaderUniformLayout.h"
+#include "VulkanTexture.h"
+#include "Vectrix/Rendering/Buffer.h"
+#include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
 
 namespace Vectrix {
 
@@ -32,9 +33,12 @@ namespace Vectrix {
         }
 
         [[nodiscard]] VkDescriptorSet descriptorSet(uint32_t frameIndex) const { return m_descriptorSets[frameIndex]; }
+        [[nodiscard]] std::vector<VkDescriptorSet> descriptorSet() const { return m_descriptorSets; }
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
+        [[nodiscard]] std::array<Ref<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
     private:
+        void createDescriptorSetLayout();
         Device& m_device;
         VkBuffer m_buffer{};
         void* m_mapped{};
@@ -45,6 +49,8 @@ namespace Vectrix {
         uint32_t m_framesInFlight{};
         std::vector<uint8_t> m_storage;
         ShaderUniformLayout& m_layout;
+
+        std::array<Ref<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
 
         VmaAllocation m_allocation;
     };

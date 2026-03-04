@@ -23,8 +23,9 @@ namespace Vectrix {
         if (ImGui::CollapsingHeader("Application Information")) {
             ImGui::Text("Application name: %s",info.getAppName());
             ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
-            ImGui::Text("Engine name: %s",info.getEngineName());
-            ImGui::Text("Engine version: %s",toString(info.getEngineVersion()).c_str());
+            ImGui::Text("Engine name: %s",ApplicationInfo::getEngineName());
+            ImGui::Text("Engine version: %s",toString(ApplicationInfo::getEngineVersion()).c_str());
+            ImGui::Text("FPS: %f",1/Application::instance().getDeltaTime().getSeconds());
         }
         ImGui::Separator();
         DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
@@ -39,16 +40,9 @@ namespace Vectrix {
         }
 
         if (ImGui::CollapsingHeader("Synchronization")) {
-            if (ImGui::TreeNode("Semaphores")) {
-                for (const auto& s : frame.semaphores) {
-                    ImGui::Text("%s : %s", s.name, s.signaled ? "SIGNALED" : "WAITING");
-                }
-                ImGui::TreePop();
-            }
-
             if (ImGui::TreeNode("Fences")) {
                 for (const auto& f : frame.fences) {
-                    ImGui::Text("%s : %s", f.name, f.signaled ? "SIGNALED" : "UNSIGNALED");
+                    ImGui::Text("%s : %s", f.name, f.isNull ? "VK_NULL_HANDLE" : f.signaled ? "SIGNALED" : "UNSIGNALED");
                 }
                 ImGui::TreePop();
             }
@@ -109,8 +103,8 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) {
             for (const auto& img : frame.images) {
-                if (ImGui::TreeNode(img.name)) {
-                    ImGui::Text("Format: %d", img.format);
+                if (ImGui::TreeNode(img.name.c_str())) {
+                    ImGui::Text("Format: %s", string_VkFormat(img.format));
                     ImGui::Text("Layout: %d", img.layout);
                     ImGui::Text(
                         "Extent: %u x %u x %u",
@@ -123,16 +117,16 @@ namespace Vectrix {
             }
         }
 
-        if (ImGui::CollapsingHeader("Buffers")) {
-            for (const auto& buf : frame.buffers) {
-                ImGui::BulletText(
-                    "%s | Size: %llu | Offset: %llu",
-                    buf.name,
-                    static_cast<unsigned long long>(buf.size),
-                    static_cast<unsigned long long>(buf.offset)
-                );
-            }
-        }
+        //if (ImGui::CollapsingHeader("Buffers")) {
+        //    for (const auto& buf : frame.buffers) {
+        //        ImGui::BulletText(
+        //            "%s | Size: %llu | Offset: %llu",
+        //            buf.name,
+        //            static_cast<unsigned long long>(buf.size),
+        //            static_cast<unsigned long long>(buf.offset)
+        //        );
+        //    }
+        //}
 
         ImGui::End();
     }

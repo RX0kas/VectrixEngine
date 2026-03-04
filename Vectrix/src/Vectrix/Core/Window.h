@@ -6,7 +6,7 @@
 
 #include "Core.h"
 #include "Vectrix/Events/Event.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	struct WindowAttributes
@@ -51,7 +51,12 @@ namespace Vectrix {
 		virtual void hide() = 0;
 		[[nodiscard]] virtual bool isVisible() const = 0;
 	protected:
-		static GraphicsContext* createGraphicContext(GLFWwindow* window) {return GraphicsContext::create(window);}
+		static GraphicsContext* createGraphicContext(GLFWwindow* window) {
+			GraphicsContext* g = GraphicsContext::create(window);
+			g->init();
+			return g;
+		}
+		static void setClientAPI() {GraphicsContext::setClientAPI();}
 		friend class Application;
 		static Window* create();
 		struct WindowData

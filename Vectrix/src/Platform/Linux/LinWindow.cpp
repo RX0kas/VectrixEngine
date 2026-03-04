@@ -6,7 +6,7 @@
 #include "Vectrix/Events/KeyEvent.h"
 
 #include "Vectrix/Application.h"
-#include "Vectrix/Renderer/GraphicsContext.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	static bool s_GLFWInitialized = false; // Might be multiple window
@@ -40,7 +40,7 @@ namespace Vectrix {
 
 			s_GLFWInitialized = true;
 
-			GraphicsContext::setClientAPI();
+			setClientAPI();
 		}
 	}
 
@@ -145,7 +145,6 @@ namespace Vectrix {
 
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
-		m_context->init();
 	}
 
 	void LinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const {

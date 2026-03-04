@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['rendering_0',['Graphic rendering',['../group__rendering.html',1,'']]]
+  ['renderer_0',['Renderer',['../group__renderer.html',1,'']]],
+  ['rendering_1',['Graphic rendering',['../group__rendering.html',1,'']]]
 ];

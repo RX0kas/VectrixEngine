@@ -20,7 +20,6 @@ var hierarchy =
       [ "Vectrix::WindowResizeEvent", "classVectrix_1_1WindowResizeEvent.html", null ]
     ] ],
     [ "Vectrix::EventDispatcher", "classVectrix_1_1EventDispatcher.html", null ],
-    [ "Vectrix::GraphicsContext", "classVectrix_1_1GraphicsContext.html", null ],
     [ "Vectrix::ImGuiManager", "classVectrix_1_1ImGuiManager.html", null ],
     [ "Vectrix::ImGuiWidget", "classVectrix_1_1ImGuiWidget.html", null ],
     [ "Vectrix::IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
@@ -32,6 +31,7 @@ var hierarchy =
     [ "Vectrix::Log", "classVectrix_1_1Log.html", null ],
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
+    [ "Vectrix::PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
     [ "Vectrix::RenderCommand", "classVectrix_1_1RenderCommand.html", null ],
     [ "Vectrix::Renderer", "classVectrix_1_1Renderer.html", null ],
     [ "Vectrix::RendererAPI", "classVectrix_1_1RendererAPI.html", null ],
@@ -40,6 +40,7 @@ var hierarchy =
     [ "Vectrix::ShaderManager", "classVectrix_1_1ShaderManager.html", null ],
     [ "Vectrix::ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", null ],
     [ "Vectrix::Texture", "classVectrix_1_1Texture.html", null ],
+    [ "Vectrix::TextureManager", "classVectrix_1_1TextureManager.html", null ],
     [ "Vectrix::Transform", "classVectrix_1_1Transform.html", null ],
     [ "Vectrix::UniformElement", "structVectrix_1_1UniformElement.html", null ],
     [ "Vectrix::Vertex", "structVectrix_1_1Vertex.html", null ],
