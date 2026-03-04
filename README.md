@@ -4,6 +4,8 @@
 
 An engine made to run all of my little graphics project
 
+Current Working branch: [feature/profiling](https://github.com/RX0kas/VectrixEngine/tree/feature/profiling)
+
 ![Screenshot or demo GIF](preview.png)
 
 ## Features
@@ -62,10 +64,6 @@ class CustomLayer : public Vectrix::Layer
 {
 public:
     CustomLayer() : Layer("Example") {
-        // Create a camera
-        m_camera = std::make_unique<Vectrix::PerspectiveCamera>();
-        m_camera->setPosition({0.0f,0.0f,3.0f});
-        m_camera->setRotation({0.0f,-M_PI,0.0f});
         // Load a model
         m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
 
@@ -79,7 +77,10 @@ public:
     }
 
     // Do something each frame
-    void OnUpdate(Vectrix::DeltaTime ts) override {}
+    void OnUpdate(const Vectrix::DeltaTime& dt) override
+	{
+		m_cameraController.onUpdate(dt);
+	}
 
     // Same but for rendering stuff
     void OnRender() override {
@@ -92,10 +93,10 @@ public:
     }
 
     void OnEvent(Vectrix::Event &event) override {
-        if (event.getEventType()==Vectrix::EventType::WindowResize)
-            m_camera->recalculateMatrices();
-    }
+		m_cameraController.onEvent(event);
+	}
 private:
+    Vectrix::PerspectiveCameraController m_cameraController;
 	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
 	Vectrix::Ref<Vectrix::Shader> main;
 	Vectrix::Own<Vectrix::Model> m_model;
