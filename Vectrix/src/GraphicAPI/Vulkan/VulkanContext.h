@@ -37,6 +37,10 @@ namespace Vectrix {
 		Own<Device> m_device;
 		Own<VulkanRenderer> m_renderer;
 		Own<VulkanShaderCompiler> m_compiler;
+
+		float getAspect() override {
+			return m_renderer->getAspectRatio();
+		}
 		
 		friend class Shader;
 		friend class VulkanVertexBuffer;

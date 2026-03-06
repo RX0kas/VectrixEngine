@@ -10,14 +10,6 @@
 #include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 
-#ifdef VC_PLATFORM_WINDOWS
-#include "Platform/Windows/WinWindow.h"
-#elif defined(VC_PLATFORM_LINUX)
-#include "Platform/Linux/LinWindow.h"
-#else
-VC_CORE_ERROR("The only Platform supported is Windows and Linux, VulkanRenderer can't import the platform header");
-#endif
-
 namespace Vectrix {
 
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device)
@@ -39,16 +31,9 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::recreateSwapChain() {
-#if defined(VC_PLATFORM_WINDOWS)
-		WinWindow& w = dynamic_cast<WinWindow&>(m_window);
-#elif defined(VC_PLATFORM_LINUX)
-		auto& w = dynamic_cast<LinWindow&>(m_window);
-#else
-		VC_CORE_CRITICAL("The only Platform supported is Windows and Linux, VulkanRenderer can't recreate the SwapChain");
-#endif
-		VkExtent2D extent = {w.getWidth(),w.getHeight()};
+		VkExtent2D extent = {m_window.getWidth(),m_window.getHeight()};
 		while (extent.width == 0 || extent.height == 0) {
-			extent = {w.getWidth(),w.getHeight()};
+			extent = {m_window.getWidth(),m_window.getHeight()};
 			glfwWaitEvents();
 		}
 		vkDeviceWaitIdle(m_device.device());

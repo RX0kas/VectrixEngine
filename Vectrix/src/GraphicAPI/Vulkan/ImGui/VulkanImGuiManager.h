@@ -1,11 +1,5 @@
 #pragma once
 #include "Vectrix/ImGui/ImGuiManager.h"
-
-#ifdef VC_PLATFORM_WINDOWS
-#include "Platform/Windows/WinWindow.h"
-#elif defined(VC_PLATFORM_LINUX)
-#include "Platform/Linux/LinWindow.h"
-#endif
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 

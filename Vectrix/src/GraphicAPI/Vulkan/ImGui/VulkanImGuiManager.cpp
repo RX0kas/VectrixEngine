@@ -104,11 +104,7 @@ namespace Vectrix {
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 		VC_CORE_INFO("Initializing ImGui");
 
-#ifdef VC_PLATFORM_WINDOWS
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<WinWindow&>(m_window).getNativeWindow());
-#else
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<LinWindow&>(m_window).getNativeWindow());
-#endif
+		auto* w = static_cast<GLFWwindow*>(m_window.getNativeWindow());
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
