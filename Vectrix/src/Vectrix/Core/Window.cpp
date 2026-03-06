@@ -1,19 +1,18 @@
-#include "vcpch.h"
-#include "WinWindow.h"
+#include "Window.h"
 
+#include "Vectrix/Events/KeyEvent.h"
 #include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
-#include "Vectrix/Events/KeyEvent.h"
 
 namespace Vectrix {
-	static bool s_GLFWInitialized = false; // Might be multiple window
+    static bool s_GLFWInitialized = false; // Might be multiple window
 
 	static void errorCallback(int error, const char* description)
 	{
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
 	}
 
-	void WinWindow::shutdown() {
+	void Window::shutdown() {
 		VC_CORE_INFO("Destroying Window");
 		glfwDestroyWindow(m_window);
 
@@ -27,7 +26,7 @@ namespace Vectrix {
 		delete g;
 	}
 
-	WinWindow::WinWindow() : m_window(nullptr), m_data() {
+	Window::Window() : m_window(nullptr), m_data() {
 		if (!s_GLFWInitialized) {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
@@ -41,18 +40,17 @@ namespace Vectrix {
 		}
 	}
 
-	WinWindow::~WinWindow() {
+	Window::~Window() {
 		shutdown();
 	}
 
-	void WinWindow::init(const WindowAttributes& attributes) {
+	void Window::init(const WindowAttributes& attributes) {
 		VC_CORE_INFO("Creating window {0} ({1}, {2})", attributes.title, attributes.width, attributes.height);
 
 		m_data.Width = attributes.width;
 		m_data.Height = attributes.height;
 		m_data.Title = attributes.title;
 		m_data.visible = false;
-
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
 		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), attributes.title.c_str(), nullptr, nullptr);
@@ -145,35 +143,31 @@ namespace Vectrix {
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 	}
 
-	void WinWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const {
-		VC_VK_CHECK(glfwCreateWindowSurface(instance, m_window, nullptr, surface),"Could not create a WindowSurface");
-	}
-
-	void WinWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+	void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 		data.Width = width;
 		data.Height = height;
-		//data.FramebufferResized = true;
+		data.windowResized = true;
 		// TODO: implement that
 	}
 
 	Window* Window::create()
 	{
-		return new WinWindow();
+		return new Window();
 	}
 
-	void WinWindow::onUpdate()
+	void Window::onUpdate()
 	{
-		VulkanContext::instance().swapBuffers();
+		m_context->swapBuffers();
 	}
 
-	void WinWindow::setVSync(bool enabled)
+	void Window::setVSync(bool enabled)
 	{
 		// TODO: Changer la swapchain pour appliquer l'effet
 		m_data.VSync = enabled;
 	}
 
-	bool WinWindow::isVSync() const
+	bool Window::isVSync() const
 	{
 		return m_data.VSync;
 	}

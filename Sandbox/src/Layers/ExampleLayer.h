@@ -15,9 +15,6 @@ public:
 		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
 		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
-		m_model->setPosition({1.5,0,0});
-		m_model2 = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
-		m_model2->setPosition({-1.5,0,0});
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
@@ -28,12 +25,10 @@ public:
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
-		Vectrix::TextureManager::createTexture("t2", "./textures/test.png");
 #endif
 
 		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
 		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
-		customTexture2 = Vectrix::TextureManager::instance().get("t2");
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override
@@ -46,8 +41,6 @@ public:
 		defaultShader->setUniform("time",static_cast<float>(glfwGetTime()));
 		defaultShader->setTexture(0,customTexture);
 		Vectrix::Renderer::submit(*defaultShader.get(),*m_model);
-		defaultShader->setTexture(1,customTexture2);
-		Vectrix::Renderer::submit(*defaultShader.get(),*m_model2);
 		Vectrix::Renderer::endScene();
 	}
 
@@ -61,9 +54,7 @@ private:
 
 	Vectrix::Ref<Vectrix::Shader> defaultShader;
 	Vectrix::Ref<Vectrix::Texture> customTexture;
-	Vectrix::Ref<Vectrix::Texture> customTexture2;
 	Vectrix::Own<Vectrix::Model> m_model;
-	Vectrix::Own<Vectrix::Model> m_model2;
 	const char* p_defaultName = "default";
 };
 
