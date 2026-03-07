@@ -4,9 +4,7 @@
 #include "Vectrix/Layers/Layer.h"
 
 namespace Vectrix {
-
-	class Vectrix_API ImGuiLayer : public Layer
-	{
+	class ImGuiLayer : public Layer	{
 	public:
 		~ImGuiLayer() override;
 

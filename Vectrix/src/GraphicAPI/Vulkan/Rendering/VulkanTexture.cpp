@@ -5,10 +5,12 @@
 #include "Device.h"
 #include "stb_image.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
 
     VulkanTexture::VulkanTexture(const std::string &path) : m_device(VulkanContext::instance().getDevice()) {
+        VC_PROFILER_FUNCTION();
         stbi_uc* pixels = stbi_load(path.c_str(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
         m_imageSize = m_width * m_height * 4;
 
@@ -22,6 +24,7 @@ namespace Vectrix {
      * Used to createDefaultTexture
      */
     VulkanTexture::VulkanTexture() : m_device(VulkanContext::instance().getDevice()) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_INFO("Creating not_found texture");
         int x, y, channels;
         stbi_uc* pixels = stbi_load_from_memory(getNotFoundTextureData(), getNotFoundTextureSize(), &x, &y, &channels, 4);
@@ -36,6 +39,7 @@ namespace Vectrix {
     }
 
     void VulkanTexture::createTexture(stbi_uc *pixels, int channels) {
+        VC_PROFILER_FUNCTION();
         VkFormat f = VK_FORMAT_UNDEFINED;
         switch (channels) {
             case 1:
@@ -139,6 +143,7 @@ namespace Vectrix {
     }
 
     void VulkanTexture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
+        VC_PROFILER_FUNCTION();
         VkCommandBuffer commandBuffer = m_device.beginSingleTimeCommands();
 
         VkImageMemoryBarrier barrier{};
@@ -179,6 +184,7 @@ namespace Vectrix {
     }
 
     VulkanTexture::~VulkanTexture() {
+        VC_PROFILER_FUNCTION();
         if (m_sampler != VK_NULL_HANDLE)
             vkDestroySampler(m_device.device(), m_sampler, nullptr);
         if (m_imageView != VK_NULL_HANDLE)

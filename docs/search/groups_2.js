@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['graphic_20rendering_0',['Graphic rendering',['../group__rendering.html',1,'']]]
+  ['debugging_20tools_0',['Debugging Tools',['../group__debugtools.html',1,'']]]
 ];

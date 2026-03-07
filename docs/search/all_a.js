@@ -12,5 +12,5 @@ var searchData=
   ['getstructsize_9',['getStructSize',['../classVectrix_1_1ShaderUniformLayout.html#acc95d1afccc855b6d9ecc3890f68235c',1,'Vectrix::ShaderUniformLayout']]],
   ['getwidth_10',['getWidth',['../classVectrix_1_1Texture.html#a414647df6c57bb144ea15f8b32bfaa60',1,'Vectrix::Texture']]],
   ['graphic_20rendering_11',['Graphic rendering',['../group__rendering.html',1,'']]],
-  ['guide_12',['Rendering System Guide',['../rendering_overview.html',1,'index']]]
+  ['guide_12',['Guide',['../rendering_overview.html',1,'Rendering System Guide'],['../tools_overview.html',1,'Tools Guide']]]
 ];

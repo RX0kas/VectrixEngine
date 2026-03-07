@@ -4,28 +4,22 @@
 
 #include "vcpch.h"
 
-#include "Core.h"
 #include "Vectrix/Events/Event.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	struct WindowAttributes
 	{
-		std::string title;
+		const char* title;
 		unsigned int width;
 		unsigned int height;
 
-		WindowAttributes(std::string  title = "Vectrix Engine",
-			unsigned int width = 1280,
-			unsigned int height = 720)
-			: title(std::move(title)), width(width), height(height)
-		{
-		}
+		WindowAttributes(const char* title = "Vectrix Engine", unsigned int width = 1280, unsigned int height = 720)
+			: title(std::move(title)), width(width), height(height) {}
 	};
 
 	// Interface representing a desktop system based Window
-	class Vectrix_API Window
-	{
+	class Window {
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
 
@@ -68,8 +62,6 @@ namespace Vectrix {
 		}
 	private:
 		Window();
-
-		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) const;
 
 		struct WindowData
 		{

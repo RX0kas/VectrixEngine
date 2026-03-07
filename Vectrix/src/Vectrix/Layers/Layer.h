@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../Core/Core.h"
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Events/Event.h"
 
 namespace Vectrix {
-	class Vectrix_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name = "Layer");

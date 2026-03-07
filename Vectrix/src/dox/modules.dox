@@ -21,4 +21,11 @@
  * @defgroup textures Textures
  * @ingroup rendering
  * @brief Textures management
+ *
+ * @defgroup tools Tools
+ * @brief All the tools given by the engine
+ *
+ * @defgroup debugtools Debugging Tools
+ * @brief Tools used to make debugging and optimizations easier
+ * @ingroup tools
  */

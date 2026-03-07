@@ -3,31 +3,25 @@
 #include "Event.h"
 
 namespace Vectrix {
-	class Vectrix_API KeyEvent : public Event
-	{
+	class KeyEvent : public Event {
 	public:
-		int getKeyCode() const { return m_KeyCode; }
+		[[nodiscard]] int getKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+		[[nodiscard]] std::string toString() const override { return getName(); }
 	protected:
-		KeyEvent(int keycode)
-			: m_KeyCode(keycode) {
-		}
+		KeyEvent(int keycode) : m_KeyCode(keycode) {}
 
 		int m_KeyCode;
 	};
 
-	class Vectrix_API KeyPressedEvent : public KeyEvent
-	{
+	class KeyPressedEvent : public KeyEvent {
 	public:
-		KeyPressedEvent(int keycode, int repeatCount)
-			: KeyEvent(keycode), m_RepeatCount(repeatCount) {
-		}
+		KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		inline int getRepeatCount() const { return m_RepeatCount; }
+		[[nodiscard]] int getRepeatCount() const { return m_RepeatCount; }
 
-		std::string toString() const override
-		{
+		[[nodiscard]] std::string toString() const override	{
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
 			return ss.str();
@@ -38,15 +32,11 @@ namespace Vectrix {
 		int m_RepeatCount;
 	};
 
-	class Vectrix_API KeyReleasedEvent : public KeyEvent
-	{
+	class KeyReleasedEvent : public KeyEvent {
 	public:
-		KeyReleasedEvent(int keycode)
-			: KeyEvent(keycode) {
-		}
+		KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
 
-		std::string toString() const override
-		{
+		[[nodiscard]] std::string toString() const override	{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent: " << m_KeyCode;
 			return ss.str();

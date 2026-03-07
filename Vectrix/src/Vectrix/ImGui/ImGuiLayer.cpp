@@ -3,6 +3,7 @@
 #include "backends/imgui_impl_glfw.h"
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
 	ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer"), m_manager(ImGuiManager::create(Application::instance().window())), m_attached(false) {
@@ -10,6 +11,7 @@ namespace Vectrix {
 	}
 
 	ImGuiLayer::~ImGuiLayer() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying ImGuiLayer");
 		if (m_attached)
 			m_manager->cleanup();
@@ -19,10 +21,12 @@ namespace Vectrix {
 	};
 
 	void ImGuiLayer::OnRender() {
+		VC_PROFILER_FUNCTION();
 		m_manager->render();
 	}
 
 	void ImGuiLayer::OnUpdate(const DeltaTime& deltaTime) {
+		VC_PROFILER_FUNCTION();
 		m_manager->update();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -33,20 +37,21 @@ namespace Vectrix {
 		}
 	}
 
-	void ImGuiLayer::OnAttach()
-	{
+	void ImGuiLayer::OnAttach() {
+		VC_PROFILER_FUNCTION();
 		m_manager->initImGui();
 		m_manager->attachDebugGraphicWidget();
 		m_attached = true;
 	}
 
-	void ImGuiLayer::OnDetach()
-	{
+	void ImGuiLayer::OnDetach() {
+		VC_PROFILER_FUNCTION();
 		m_manager->cleanup();
 		m_attached = false;
 	}
 
 	void ImGuiLayer::OnImGuiRender() {
+		VC_PROFILER_FUNCTION();
 		for (const auto& w : m_widgets) {
 			w->render();
 		}

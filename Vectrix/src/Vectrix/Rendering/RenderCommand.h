@@ -2,6 +2,7 @@
 
 #include "RendererAPI.h"
 #include "Models/VertexArray.h"
+#include "Vectrix/Debug/Profiler.h"
 
 /**
  * @file RenderCommand.h
@@ -34,6 +35,7 @@ namespace Vectrix
 		 */
 		static void setClearColor(const glm::vec4& color)
 		{
+			VC_PROFILER_FUNCTION();
 			s_RendererAPI->setClearColor(color);
 		}
 
@@ -47,21 +49,25 @@ namespace Vectrix
 		 */
 		static void drawIndexed(const VertexArray& vertexArray)
 		{
+			VC_PROFILER_FUNCTION();
 			if (!frameStarted) VC_ERROR("Trying to draw but no frame has started");
 			s_RendererAPI->drawIndexed(vertexArray);
 		}
 
 	private:
 		static bool setupFrame() {
+			VC_PROFILER_FUNCTION();
 			frameStarted = true;
 			return s_RendererAPI->prepareFrame();
 		}
 
 		static void endFrame() {
+			VC_PROFILER_FUNCTION();
 			if (!frameStarted) VC_ERROR("Trying to end a frame but none has started");
 			s_RendererAPI->endFrame();
 		}
 		static void sendFrame() {
+			VC_PROFILER_FUNCTION();
 			if (!frameStarted) VC_ERROR("Trying to send a frame but none has started");
 			s_RendererAPI->sendFrame();
 			frameStarted = false;

@@ -26,8 +26,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Vectrix/Core/Log.h"
-
 #ifdef VC_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif

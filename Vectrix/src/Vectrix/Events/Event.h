@@ -1,7 +1,9 @@
 #pragma once
 
-#include "vcpch.h"
-#include "../Core/Core.h"
+#include <string>
+#include <ostream>
+#include "Vectrix/Core/Core.h"
+#include "Vectrix/Core/Log.h"
 
 namespace Vectrix {
 	// TODO : Events should not block the entire app
@@ -38,8 +40,7 @@ namespace Vectrix {
 #define VC_BIND_EVENT_FN_RETURN(fn) [this](auto && PH1) { return fn(std::forward<decltype(PH1)>(PH1)); }
 #define VC_BIND_EVENT_FN(fn) [this](auto && PH1) { fn(std::forward<decltype(PH1)>(PH1)); } // TODO: Fix event system
 
-	class Vectrix_API Event
-	{
+	class Event {
 	public:
 		virtual ~Event() = default;
 		bool Handled = false;
@@ -47,10 +48,9 @@ namespace Vectrix {
 		[[nodiscard]] virtual EventType getEventType() const = 0;
 		[[nodiscard]] virtual const char* getName() const = 0;
 		[[nodiscard]] virtual int getCategoryFlags() const = 0;
-		[[nodiscard]] virtual std::string toString() const { return getName(); }
+		[[nodiscard]] virtual std::string toString() const = 0;
 
-		[[nodiscard]] bool isInCategory(EventCategory category) const
-		{
+		[[nodiscard]] bool isInCategory(EventCategory category) const {
 			return getCategoryFlags() & category;
 		}
 	};
@@ -78,9 +78,10 @@ namespace Vectrix {
 		Event& m_Event;
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Event& e)
-	{
-		return os << e.toString();
+	inline std::ostream& operator<<(std::ostream& os, const Event& e) {
+		os << e.toString();
+		os.flush();
+		return os;
 	}
 }
 

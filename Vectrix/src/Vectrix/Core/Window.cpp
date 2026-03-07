@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Events/KeyEvent.h"
 #include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
@@ -7,12 +8,12 @@
 namespace Vectrix {
     static bool s_GLFWInitialized = false; // Might be multiple window
 
-	static void errorCallback(int error, const char* description)
-	{
+	static void errorCallback(int error, const char* description) {
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
 	}
 
 	void Window::shutdown() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Window");
 		glfwDestroyWindow(m_window);
 
@@ -27,6 +28,7 @@ namespace Vectrix {
 	}
 
 	Window::Window() : m_window(nullptr), m_data() {
+		VC_PROFILER_FUNCTION();
 		if (!s_GLFWInitialized) {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
@@ -41,10 +43,12 @@ namespace Vectrix {
 	}
 
 	Window::~Window() {
+		VC_PROFILER_FUNCTION();
 		shutdown();
 	}
 
 	void Window::init(const WindowAttributes& attributes) {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Creating window {0} ({1}, {2})", attributes.title, attributes.width, attributes.height);
 
 		m_data.Width = attributes.width;
@@ -53,7 +57,7 @@ namespace Vectrix {
 		m_data.visible = false;
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
-		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), attributes.title.c_str(), nullptr, nullptr);
+		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), attributes.title, nullptr, nullptr);
 		glfwSetWindowUserPointer(m_window, &m_data);
 
 
@@ -151,24 +155,23 @@ namespace Vectrix {
 		// TODO: implement that
 	}
 
-	Window* Window::create()
-	{
+	Window* Window::create() {
+		VC_PROFILER_FUNCTION();
 		return new Window();
 	}
 
-	void Window::onUpdate()
-	{
+	void Window::onUpdate()	{
+		VC_PROFILER_FUNCTION();
 		m_context->swapBuffers();
 	}
 
-	void Window::setVSync(bool enabled)
-	{
+	void Window::setVSync(bool enabled)	{
+		VC_PROFILER_FUNCTION();
 		// TODO: Changer la swapchain pour appliquer l'effet
 		m_data.VSync = enabled;
 	}
 
-	bool Window::isVSync() const
-	{
+	bool Window::isVSync() const {
 		return m_data.VSync;
 	}
 }
