@@ -2,6 +2,7 @@
 
 #include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Debug/Profiler.h"
 
 /*
  * Thanks to Sascha Willems
@@ -11,8 +12,8 @@
 namespace Vectrix {
 
     // Vertex && Index Buffer
-    VulkanVertexBuffer::VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size)
-    {
+    VulkanVertexBuffer::VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size) {
+        VC_PROFILER_FUNCTION();
         _vertexCount = static_cast<uint32_t>(vertices.size());
         VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
         uint32_t vertexSize = sizeof(vertices[0]);
@@ -33,10 +34,12 @@ namespace Vectrix {
     }
 
     void VulkanVertexBuffer::draw() {
+        VC_PROFILER_FUNCTION();
         vkCmdDraw(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(), _vertexCount, 1, 0, 0);
     }
 
     void VulkanVertexBuffer::bind() {
+        VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(m_Layout.getStride() == sizeof(Vertex), "Vertex stride mismatch: layout != sizeof(Vertex): layout = {}, sizeof(Vertex)={}",m_Layout.getStride(),sizeof(Vertex));
         VkBuffer buffers[] = {buffer->getBuffer() };
         VkDeviceSize offsets[] = { 0 };
@@ -45,6 +48,7 @@ namespace Vectrix {
     }
 
     void VulkanIndexBuffer::draw() {
+        VC_PROFILER_FUNCTION();
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
         VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
         VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer invalide");
@@ -55,6 +59,7 @@ namespace Vectrix {
 
 
     void VulkanIndexBuffer::bind() {
+        VC_PROFILER_FUNCTION();
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
         VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
         VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer VkBuffer invalide");
@@ -67,6 +72,7 @@ namespace Vectrix {
 
 
     VulkanIndexBuffer::VulkanIndexBuffer(const uint32_t* indices, uint32_t count) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(indices != nullptr, "indices pointer is null");
         VC_CORE_ASSERT(count > 0, "Indices array is empty");
 
@@ -107,6 +113,7 @@ namespace Vectrix {
     // Describes at which rate to load data from memory throughout the vertices. 
     // It specifies the number of bytes between data entries and whether to move to the next data entry after each vertex or after each instance.
     std::vector<VkVertexInputBindingDescription> VulkanVertexBuffer::getBindingDescriptions(const BufferLayout& layout) {
+        VC_PROFILER_FUNCTION();
         VkVertexInputBindingDescription binding{};
         binding.binding = 0;
         binding.stride = layout.getStride(); // DOIT être sizeof(Vertex)
@@ -120,6 +127,7 @@ namespace Vectrix {
     // Returns the attribute descriptions for the vertex input
     // So the layout of the vertex shader
     std::vector<VkVertexInputAttributeDescription> VulkanVertexBuffer::getAttributeDescriptions(const BufferLayout& layout) {
+        VC_PROFILER_FUNCTION();
         std::vector<VkVertexInputAttributeDescription> attributes;
 
         uint32_t location = 0;
@@ -164,6 +172,7 @@ namespace Vectrix {
      * @return VkResult of the buffer mapping call
      */
     VkDeviceSize Buffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
+        VC_PROFILER_FUNCTION();
         if (minOffsetAlignment > 0) {
             return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
         }
@@ -172,6 +181,7 @@ namespace Vectrix {
 
     Buffer::Buffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment)
             : m_device{ VulkanContext::instance().getDevice()}, m_instanceSize{ instanceSize }, m_instanceCount{ instanceCount }, m_usageFlags{ usageFlags }, m_memoryPropertyFlags{ memoryPropertyFlags } {
+        VC_PROFILER_FUNCTION();
         m_alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
         m_bufferSize = m_alignmentSize * instanceCount;
 
@@ -179,6 +189,7 @@ namespace Vectrix {
     }
 
     Buffer::~Buffer() {
+        VC_PROFILER_FUNCTION();
         unmap();
         if (m_buffer != VK_NULL_HANDLE) {
             m_device.destroyBuffer(m_buffer, m_allocation);
@@ -195,6 +206,7 @@ namespace Vectrix {
      * @return VkResult of the buffer mapping call
      */
     VkResult Buffer::map(VkDeviceSize size, VkDeviceSize offset) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(m_buffer != VK_NULL_HANDLE && m_allocation != VK_NULL_HANDLE, "Called map on buffer before create");
         return vmaMapMemory(m_device.getAllocator(), m_allocation, &m_mapped);
     }
@@ -205,6 +217,7 @@ namespace Vectrix {
      * @note Does not return a result as vkUnmapMemory can't fail
      */
     void Buffer::unmap() {
+        VC_PROFILER_FUNCTION();
         if (m_mapped) {
             vmaUnmapMemory(m_device.getAllocator(), m_allocation);
             m_mapped = nullptr;
@@ -221,6 +234,7 @@ namespace Vectrix {
      *
      */
     void Buffer::writeToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(m_mapped, "Cannot copy to unmapped buffer");
 
         char* mem = static_cast<char*>(m_mapped) + offset;
@@ -244,6 +258,7 @@ namespace Vectrix {
      * @return VkResult of the flush call
      */
     VkResult Buffer::flush(VkDeviceSize size, VkDeviceSize offset) {
+        VC_PROFILER_FUNCTION();
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 
@@ -268,6 +283,7 @@ namespace Vectrix {
      * @return VkResult of the invalidate call
      */
     VkResult Buffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
+        VC_PROFILER_FUNCTION();
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 

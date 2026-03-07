@@ -3,6 +3,7 @@
 
 #include "Vectrix/Utils/Memory.h"
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Core/Core.h"
 #include "ShaderUniformType.h"
 
 #include <string>

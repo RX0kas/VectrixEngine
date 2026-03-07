@@ -380,3 +380,6 @@ FodyWeavers.xsd
 
 */imgui.ini
 /.env
+run/Profile-Startup.json
+run/Profile-Runtime.json
+run/Profile-Shutdown.json

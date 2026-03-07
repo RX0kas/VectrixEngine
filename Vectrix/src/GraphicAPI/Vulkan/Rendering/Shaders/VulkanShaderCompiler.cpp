@@ -4,9 +4,11 @@
 
 #include "shaderc/shaderc.hpp"
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
     std::string VulkanShaderCompiler::preprocessing(const char *source_name, const shaderc_shader_kind& kind, const char *src) {
+        VC_PROFILER_FUNCTION();
         shaderc::PreprocessedSourceCompilationResult result = m_compiler.PreprocessGlsl(src, kind, source_name, m_options);
 
         if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
@@ -17,6 +19,7 @@ namespace Vectrix {
     }
 
     VulkanShaderCompiler::VulkanShaderCompiler() {
+        VC_PROFILER_FUNCTION();
         p_macros.reserve(256);
         p_macros.max_load_factor(0.7f);
         // Options
@@ -29,6 +32,7 @@ namespace Vectrix {
     }
 
     std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name,ShaderType type,const char *src,bool optimize) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_INFO("Compiling a {} called {}, with{} optimization",toString(type),src_name,optimize ? "" : "out");
 
         shaderc_shader_kind kind = shaderTypeToShaderCKind(type);

@@ -165,10 +165,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a06f72d5de46e7b3f890d52565c4a1cdc" id="r_a06f72d5de46e7b3f890d52565c4a1cdc"><td class="memItemLeft"><a id="a06f72d5de46e7b3f890d52565c4a1cdc" name="a06f72d5de46e7b3f890d52565c4a1cdc"></a>
 <a class="el" href="classVectrix_1_1Application.html">Application</a> *&#160;</td><td class="memItemRight"><b>createApplication</b> ()</td></tr>
 <tr class="memitem:a96f38492f0dc2d759993e6b8560db6ad" id="r_a96f38492f0dc2d759993e6b8560db6ad"><td class="memItemLeft">static Version&#160;</td><td class="memItemRight"><a class="el" href="#a96f38492f0dc2d759993e6b8560db6ad">makeVersion</a> (const std::uint32_t major, const std::uint32_t minor, const std::uint32_t patch)</td></tr>
+<tr class="memitem:a1591db032e844e4f38e36eb0ed5f6dad" id="r_a1591db032e844e4f38e36eb0ed5f6dad"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a1591db032e844e4f38e36eb0ed5f6dad">getOS</a> (const Version version)</td></tr>
 <tr class="memitem:a750521f61e567d606315a3271f9093dc" id="r_a750521f61e567d606315a3271f9093dc"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a750521f61e567d606315a3271f9093dc">getMajor</a> (const Version version)</td></tr>
 <tr class="memitem:a56ae7d290427ef8cb915799541a0b753" id="r_a56ae7d290427ef8cb915799541a0b753"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a56ae7d290427ef8cb915799541a0b753">getMinor</a> (const Version version)</td></tr>
 <tr class="memitem:a27ac7eea7e64e862ebcf219043c09e25" id="r_a27ac7eea7e64e862ebcf219043c09e25"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a27ac7eea7e64e862ebcf219043c09e25">getPatch</a> (const Version version)</td></tr>
 <tr class="memitem:ae70f210e8290ec11f81695b01761853a" id="r_ae70f210e8290ec11f81695b01761853a"><td class="memItemLeft">static std::string&#160;</td><td class="memItemRight"><a class="el" href="#ae70f210e8290ec11f81695b01761853a">toString</a> (const Version version)</td></tr>
+<tr class="memitem:aefdd4c404f7568655bcfdc23f444c2c1" id="r_aefdd4c404f7568655bcfdc23f444c2c1"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#aefdd4c404f7568655bcfdc23f444c2c1">errorCallback</a> (int error, const char *description)</td></tr>
 <tr class="memitem:a8ec605805c50a91f592b902a3cbfce5d" id="r_a8ec605805c50a91f592b902a3cbfce5d"><td class="memItemLeft">std::ostream &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a8ec605805c50a91f592b902a3cbfce5d">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classVectrix_1_1Event.html">Event</a> &amp;e)</td></tr>
 <tr class="memitem:ae5980ca94a79ed9db178659adb22410e" id="r_ae5980ca94a79ed9db178659adb22410e"><td class="memItemLeft">static uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#ae5980ca94a79ed9db178659adb22410e">ShaderDataTypeSize</a> (ShaderDataType type)</td></tr>
 <tr class="memitem:afca0b4d343ae0e4641178c091e29bde4" id="r_afca0b4d343ae0e4641178c091e29bde4"><td class="memItemLeft"><a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&#160;</td><td class="memItemRight"><a class="el" href="#afca0b4d343ae0e4641178c091e29bde4">getTinyObjLayout</a> ()</td></tr>
@@ -197,7 +199,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00046">46</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00039">39</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
 
 </div>
 </div>
@@ -215,7 +217,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00049">49</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00042">42</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
 
 </div>
 </div>
@@ -232,7 +234,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Event_8h_source.html#l00018">18</a> of file <a class="el" href="Event_8h_source.html">Event.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Event_8h_source.html#l00020">20</a> of file <a class="el" href="Event_8h_source.html">Event.h</a>.</p>
 
 </div>
 </div>
@@ -256,7 +258,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Event_8h_source.html#l00009">9</a> of file <a class="el" href="Event_8h_source.html">Event.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Event_8h_source.html#l00011">11</a> of file <a class="el" href="Event_8h_source.html">Event.h</a>.</p>
 
 </div>
 </div>
@@ -311,6 +313,37 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="aefdd4c404f7568655bcfdc23f444c2c1" name="aefdd4c404f7568655bcfdc23f444c2c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefdd4c404f7568655bcfdc23f444c2c1">&#9670;&#160;</a></span>errorCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::errorCallback </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>error</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>description</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Window_8cpp_source.html#l00011">11</a> of file <a class="el" href="Window_8cpp_source.html">Window.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a750521f61e567d606315a3271f9093dc" name="a750521f61e567d606315a3271f9093dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a750521f61e567d606315a3271f9093dc">&#9670;&#160;</a></span>getMajor()</h2>
 
@@ -334,7 +367,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00024">24</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00028">28</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
 </div>
 </div>
@@ -361,7 +394,34 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00027">27</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00031">31</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+
+</div>
+</div>
+<a id="a1591db032e844e4f38e36eb0ed5f6dad" name="a1591db032e844e4f38e36eb0ed5f6dad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1591db032e844e4f38e36eb0ed5f6dad">&#9670;&#160;</a></span>getOS()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::uint32_t Vectrix::getOS </td>
+          <td>(</td>
+          <td class="paramtype">const Version</td>          <td class="paramname"><span class="paramname"><em>version</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00024">24</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
 </div>
 </div>
@@ -388,7 +448,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00030">30</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00034">34</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
 </div>
 </div>
@@ -572,7 +632,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00034">34</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00038">38</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
 </div>
 </div>
@@ -681,6 +741,31 @@ template&lt;typename T&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The bytes size </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="ShaderUniformType_8h_source.html#l00048">48</a> of file <a class="el" href="ShaderUniformType_8h_source.html">ShaderUniformType.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="a78ffb2d2242af5251fb7b58dd4f2871e" name="a78ffb2d2242af5251fb7b58dd4f2871e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78ffb2d2242af5251fb7b58dd4f2871e">&#9670;&#160;</a></span>s_GLFWInitialized</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::s_GLFWInitialized = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Window_8cpp_source.html#l00009">9</a> of file <a class="el" href="Window_8cpp_source.html">Window.cpp</a>.</p>
 
 </div>
 </div>

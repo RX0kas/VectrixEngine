@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]],
-  ['documentation_20of_20the_20vectrix_20engine_1',['Documentation of the Vectrix Engine',['../index.html',1,'']]]
+  ['categories_0',['Categories',['../tools_overview.html#autotoc_md8',1,'']]]
 ];

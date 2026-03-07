@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Core/DeltaTime.h"
-#include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Debug/Profiler.h"
 #include "Rendering/RenderCommand.h"
 #include "Rendering/Renderer.h"
 
@@ -20,6 +20,7 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
 
+		VC_PROFILER_FUNCTION();
 
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
@@ -34,10 +35,12 @@ namespace Vectrix {
 	}
 
 	Application::~Application() {
+		VC_PROFILER_FUNCTION();
 		m_imGuiLayer.reset();
 	}
 
 	void Application::onEvent(Event& e) {
+		VC_PROFILER_FUNCTION();
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
 
@@ -50,6 +53,7 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {
 			auto time = static_cast<float>(glfwGetTime());
@@ -71,24 +75,26 @@ namespace Vectrix {
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {
+		VC_PROFILER_FUNCTION();
 		m_running = false;
 		return true;
 	}
 
-	void Application::PushLayer(const Ref<Layer>& layer)
-	{
+	void Application::PushLayer(const Ref<Layer>& layer) {
+		VC_PROFILER_FUNCTION();
 		m_layerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(const Ref<Layer>& layer)
-	{
+	void Application::PushOverlay(const Ref<Layer>& layer) {
+		VC_PROFILER_FUNCTION();
 		m_layerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
 
 
 	void Application::renderImGui() {
+		VC_PROFILER_FUNCTION();
 		for (const Ref<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
 		m_imGuiLayer->OnImGuiRender();

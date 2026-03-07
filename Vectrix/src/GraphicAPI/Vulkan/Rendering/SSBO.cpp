@@ -1,11 +1,13 @@
 #include "SSBO.h"
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 
 
 namespace Vectrix {
     SSBO::SSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout) {
+        VC_PROFILER_FUNCTION();
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 
         // Alignement
@@ -79,14 +81,15 @@ namespace Vectrix {
         }
     }
 
-    SSBO::~SSBO()
-    {
+    SSBO::~SSBO() {
+        VC_PROFILER_FUNCTION();
         if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
         m_device.destroyBuffer(m_buffer, m_allocation);
         vkDestroyDescriptorSetLayout(m_device.device(), m_descriptorSetLayout, nullptr);
     }
 
     void SSBO::createDescriptorSetLayout() {
+        VC_PROFILER_FUNCTION();
         std::array<VkDescriptorSetLayoutBinding,2> b = {};
 
         // SSBO/Uniforms

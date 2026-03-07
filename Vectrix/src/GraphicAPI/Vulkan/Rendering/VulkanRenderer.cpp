@@ -12,8 +12,8 @@
 
 namespace Vectrix {
 
-	VulkanRenderer::VulkanRenderer(Window& window, Device& device)
-		: m_window{ window }, m_device{ device } {
+	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Initializing Renderer");
 		recreateSwapChain();
 
@@ -25,12 +25,14 @@ namespace Vectrix {
 	}
 
 	VulkanRenderer::~VulkanRenderer() {
+		VC_PROFILER_FUNCTION();
 		vkDeviceWaitIdle(m_device.device());
 		freeCommandBuffers();
 		cleanupSwapChain();
 	}
 
 	void VulkanRenderer::recreateSwapChain() {
+		VC_PROFILER_FUNCTION();
 		VkExtent2D extent = {m_window.getWidth(),m_window.getHeight()};
 		while (extent.width == 0 || extent.height == 0) {
 			extent = {m_window.getWidth(),m_window.getHeight()};
@@ -60,10 +62,12 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::cleanupSwapChain() {
+		VC_PROFILER_FUNCTION();
 		m_swapChain->cleanup();
 	}
 
 	void VulkanRenderer::createCommandBuffers() {
+		VC_PROFILER_FUNCTION();
 		m_commandBuffers.resize(m_swapChain->imageCount());
 
 		VkCommandBufferAllocateInfo allocInfo{};
@@ -78,12 +82,14 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::freeCommandBuffers() {
+		VC_PROFILER_FUNCTION();
 		if (m_commandBuffers.empty()) return;
 		vkFreeCommandBuffers(m_device.device(),m_device.getCommandPool(),static_cast<uint32_t>(m_commandBuffers.size()),m_commandBuffers.data());
 		m_commandBuffers.clear();
 	}
 
 	VkCommandBuffer VulkanRenderer::beginFrame() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(!isFrameStarted, "Frame already started");
 
 		VkResult result = m_swapChain->acquireNextImage(&currentImageIndex);
@@ -111,6 +117,7 @@ namespace Vectrix {
 
 
 	void VulkanRenderer::endFrame() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(isFrameStarted, "Frame not started");
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
@@ -138,6 +145,7 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
 
@@ -170,6 +178,7 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) const {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(),"Can't end render pass on command buffer from a different frame");
 		VC_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE,"Can't end render pass if commandBuffer is VK_NULL_HANDLE");
@@ -177,11 +186,13 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::Submit(Shader& shader, const VertexArray &vertexArray, const Transform &transform) {
+		VC_PROFILER_FUNCTION();
 		vertexArray.bind();
 		RenderCommand::drawIndexed(vertexArray);
 	}
 
 	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() const {
+		VC_PROFILER_FUNCTION();
 		DebugFrameInfo f{};
 		f.frameIndex = m_swapChain->getFrameIndex();
 		f.swapchainImageIndex = currentImageIndex;

@@ -32,6 +32,9 @@ var hierarchy =
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
     [ "Vectrix::PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
+    [ "Vectrix::Profiler", "classVectrix_1_1Profiler.html", null ],
+    [ "Vectrix::ProfilerResult", "structVectrix_1_1ProfilerResult.html", null ],
+    [ "Vectrix::ProfilerSession", "structVectrix_1_1ProfilerSession.html", null ],
     [ "Vectrix::RenderCommand", "classVectrix_1_1RenderCommand.html", null ],
     [ "Vectrix::Renderer", "classVectrix_1_1Renderer.html", null ],
     [ "Vectrix::RendererAPI", "classVectrix_1_1RendererAPI.html", null ],
@@ -48,6 +51,5 @@ var hierarchy =
     [ "Vectrix::VertexBuffer", "classVectrix_1_1VertexBuffer.html", null ],
     [ "Vectrix::Window", "classVectrix_1_1Window.html", null ],
     [ "Vectrix::WindowAttributes", "structVectrix_1_1WindowAttributes.html", null ],
-    [ "Vectrix::Window::WindowData", "structVectrix_1_1Window_1_1WindowData.html", null ],
     [ "XXH3", "structXXH3.html", null ]
 ];

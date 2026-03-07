@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Core/Window.h"
 #include "Core/AppInfo.h"
 #include "Core/Core.h"
-#include "Core/Window.h"
 
 #include "Vectrix/Layers/LayerStack.h"
 #include "Events/Event.h"
@@ -19,7 +19,7 @@ extern AppInfoFunc g_getAppInfo;
 
 namespace Vectrix {
 
-	class Vectrix_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -33,8 +33,8 @@ namespace Vectrix {
 		void PushOverlay(const Ref<Layer>&  layer);
 
 		[[nodiscard]] Window &window() const { return *m_window; }
-		[[nodiscard]] ImGuiLayer &imguiLayer() const {return *m_imGuiLayer;}
-		[[nodiscard]] DeltaTime getDeltaTime() const {return m_deltaTime;}
+		[[nodiscard]] ImGuiLayer &imguiLayer() const { return *m_imGuiLayer; }
+		[[nodiscard]] DeltaTime getDeltaTime() const { return m_deltaTime; }
 
 		static Application& instance() { return *s_instance; }
 		static ApplicationInfo getAppInfo() {

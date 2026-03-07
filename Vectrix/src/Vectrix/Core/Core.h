@@ -1,16 +1,8 @@
-#pragma once
-
-#include <memory>
+#ifndef VECTRIXWORKSPACE_CORE_H
+#define VECTRIXWORKSPACE_CORE_H
 
 #ifdef VC_PLATFORM_WINDOWS
-	#if VC_DYNAMIC_LINK
-		#ifdef VC_BUILD_DLL
-			#define Vectrix_API __declspec(dllexport)
-		#else
-			#define Vectrix_API __declspec(dllimport)
-		#endif
-	#endif
-		#define VC_DEBUGBREAK() __debugbreak()
+#define VC_DEBUGBREAK() __debugbreak()
 	#define VC_PLATFORM_ID 1
 #else
 	#ifdef VC_PLATFORM_LINUX
@@ -22,19 +14,20 @@
 	#endif
 #endif
 
-#ifndef Vectrix_API
-	#define Vectrix_API
-#endif
-
 #ifdef VC_DEBUG
 	#define VC_ASSERT(x, ...) { if(!(x)) { VC_ERROR("Assertion Failed: {0}", __VA_ARGS__); VC_DEBUGBREAK(); } }
 	#define VC_CORE_ASSERT(x, ...) { if(!(x)) { VC_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); VC_DEBUGBREAK(); } }
+	#ifndef VC_PROFILER_ENABLE
+		#define VC_PROFILER_ENABLE 1
+	#endif
 #else
 	#define VC_ASSERT(x, ...)
 	#define VC_CORE_ASSERT(x, ...)
 #endif
 
 #define BIT(x) (1 << x)
+
+#include "memory"
 
 /**
  * @namespace Vectrix
@@ -49,3 +42,5 @@ namespace Vectrix {
 	using Ref = std::shared_ptr<T>;
 
 }
+
+#endif

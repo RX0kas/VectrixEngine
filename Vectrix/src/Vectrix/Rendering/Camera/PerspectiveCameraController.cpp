@@ -1,5 +1,6 @@
 #include "PerspectiveCameraController.h"
 
+#include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Input/Input.h"
 #include "Vectrix/Input/KeyCodes.h"
 
@@ -9,11 +10,13 @@ namespace Vectrix {
     }
 
     void PerspectiveCameraController::onEvent(Event &e) {
+        VC_PROFILER_FUNCTION();
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowResizeEvent>(VC_BIND_EVENT_FN_RETURN(onWindowResized));
     }
 
     void PerspectiveCameraController::onUpdate(DeltaTime dt) {
+        VC_PROFILER_FUNCTION();
         glm::vec3 cameraRot = m_camera.getRotation();
         if (Input::isKeyPressed(VC_KEY_LEFT))
             cameraRot.y -= m_cameraRotationSpeed * dt;

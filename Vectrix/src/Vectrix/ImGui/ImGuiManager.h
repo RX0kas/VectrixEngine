@@ -4,6 +4,7 @@
 #include "Vectrix/Core/Window.h"
 
 namespace Vectrix {
+    class Window;
     class ImGuiManager {
     public:
         virtual ~ImGuiManager() = default;

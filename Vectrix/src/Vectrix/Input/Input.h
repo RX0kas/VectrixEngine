@@ -1,10 +1,7 @@
 #pragma once
 
-#include "../Core/Core.h"
-
 namespace Vectrix {
-	class Vectrix_API Input
-	{
+	class Input	{
 	public:
 		virtual ~Input() = default;
 
