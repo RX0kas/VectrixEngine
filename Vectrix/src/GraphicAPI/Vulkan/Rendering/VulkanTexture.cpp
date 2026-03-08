@@ -6,6 +6,7 @@
 #include "stb_image.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Utils/Data.h"
 
 namespace Vectrix {
 
