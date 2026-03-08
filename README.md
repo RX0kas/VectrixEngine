@@ -43,6 +43,8 @@ file(GLOB_RECURSE PROJECT_SOURCES
 add_executable(Project ${PROJECT_SOURCES})
 
 # Link your project with Vectrix
+add_subdirectory(extern/VectrixEngine)
+
 target_link_libraries(Project PRIVATE Vectrix)
 target_include_directories(Project PRIVATE
     $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
@@ -64,59 +66,62 @@ class CustomLayer : public Vectrix::Layer
 {
 public:
     CustomLayer() : Layer("Example") {
-        // Load a model
+        // Load a model and texture
         m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
-
+        Vectrix::TextureManager::instance().createTexture("mainT","./mytexture.png");
         // Create a layout for the main shader
         Vectrix::ShaderUniformLayout layout;
         layout.add("time",Vectrix::ShaderUniformType::Float);
         // Create the shader and tell it how to load Obj Files
         Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout, Vectrix::getTinyObjLayout(),true);
         // Save the shader in a variable
-        main = Vectrix::ShaderManager::instance().get("main");
+        m_main = Vectrix::ShaderManager::instance().get("main");
+        m_texture = Vectrix::TextureManager::instance().get("mainT");
     }
 
     // Do something each frame
     void OnUpdate(const Vectrix::DeltaTime& dt) override
-	{
-		m_cameraController.onUpdate(dt);
-	}
+    {
+        m_cameraController.onUpdate(dt);
+    }
 
     // Same but for rendering stuff
     void OnRender() override {
         // Tell the renderer to start rendering a scene
-        Vectrix::Renderer::BeginScene(*m_camera);
+        Vectrix::Renderer::beginScene(m_cameraController.getCamera());
+        // Set the texture
+        m_main->setTexture(0,m_texture);
         // Tell to draw the model
-        Vectrix::Renderer::Submit(*main.get(),*m_model);
+        Vectrix::Renderer::submit(*m_main.get(),*m_model);
         // Send the frame
-        Vectrix::Renderer::EndScene();
+        Vectrix::Renderer::endScene();
     }
 
     void OnEvent(Vectrix::Event &event) override {
-		m_cameraController.onEvent(event);
-	}
+        m_cameraController.onEvent(event);
+    }
 private:
     Vectrix::PerspectiveCameraController m_cameraController;
-	Vectrix::Own<Vectrix::PerspectiveCamera> m_camera;
-	Vectrix::Ref<Vectrix::Shader> main;
-	Vectrix::Own<Vectrix::Model> m_model;
+    Vectrix::Ref<Vectrix::Shader> m_main;
+    Vectrix::Own<Vectrix::Model> m_model;
+    Vectrix::Ref<Vectrix::Texture> m_texture;
 };
 
 // Create a custom application
 class TestApp : public Vectrix::Application {
 public:
-	TestApp() {
-            m_exampleLayer = std::make_shared<CustomLayer>();
-            PushLayer(m_exampleLayer);
-	}
-	~TestApp() override = default;
+    TestApp() {
+        m_exampleLayer = std::make_shared<CustomLayer>();
+        PushLayer(m_exampleLayer);
+    }
+    ~TestApp() override = default;
 
 private:
-	Vectrix::Ref<CustomLayer> m_exampleLayer;
+    Vectrix::Ref<CustomLayer> m_exampleLayer;
 };
 Vectrix::Application* Vectrix::createApplication()
 {
-	return new TestApp();
+    return new TestApp();
 }
 
 VC_SET_APP_INFO("Sandbox",0,1,0);
@@ -130,7 +135,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
-- [ ] Refactor to have the same naming convention everywhere and add better comments
+- [ ] Make a profiler (In progress)
 - [ ] Create the API documentation (In progress)
 - [ ] Add a material system
 - [ ] Add an editor
