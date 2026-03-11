@@ -1,0 +1,245 @@
+#ifndef VECTRIXWORKSPACE_PROFILER_H
+#define VECTRIXWORKSPACE_PROFILER_H
+#include <algorithm>
+#include <chrono>
+#include <fstream>
+#include <string>
+#include <thread>
+
+#include "Vectrix/Application.h"
+#include "Vectrix/Core/AppInfo.h"
+#include "Vectrix/Rendering/RendererAPI.h"
+
+#define VC_PROFILER_VERSION "1.0"
+
+/**
+ * @file Profiler.h
+ * @brief Class that provides time analysis on how the application and the engine run
+ * @ingroup debugtools
+ */
+
+namespace Vectrix {
+    /**
+     * @brief Data obtained on the execution of a function
+     */
+    struct ProfilerResult
+    {
+        const char* name;
+        long long start, end;
+        uint32_t threadID;
+    };
+
+    /**
+     * @brief Data on the current session
+     */
+    struct ProfilerSession
+    {
+        const char* name;
+    };
+
+    /**
+     * @brief Main Profiler class
+     */
+    class Profiler
+    {
+    public:
+        /// @cond INTERNAL
+        void beginSession(const char* name, const char* filepath = "results.json") {
+            m_outputStream.open(filepath);
+            writeHeader();
+            m_currentSession = new ProfilerSession{ name };
+            registerSignalHandlers();
+        }
+
+        void endSession() {
+            writeFooter();
+            m_outputStream.close();
+            delete m_currentSession;
+            m_currentSession = nullptr;
+            m_profileCount = 0;
+            restoreSignalHandlers();
+        }
+        /// @endcond
+        static Profiler& get()
+        {
+            static Profiler instance;
+            return instance;
+        }
+
+        static bool isCompatible(const std::string &filePath) {
+            JsonValue root = Json::load(filePath);
+            std::string profiler_version = root["data"]["profiler_version"].getString();
+            size_t pointPos = profiler_version.find('.');
+            std::string majorStr = profiler_version.substr(0, pointPos);
+            std::string minorStr = profiler_version.substr(pointPos + 1);
+            std::string currentMajorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(0,pointPos);
+            std::string currentMinorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(pointPos+1,static_cast<std::string>(VC_PROFILER_VERSION).size()-pointPos);
+
+
+            if (std::stoi(majorStr)!=std::stoi(currentMajorStr)) return false;
+
+            if (std::stoi(currentMinorStr) < std::stoi(minorStr)) return false;
+
+            return true;
+        }
+    private:
+        Profiler() : m_currentSession(nullptr), m_profileCount(0) {}
+        friend class Timer;
+
+        std::mutex m_mutex;
+
+        void writeResult(const ProfilerResult& result) {
+            std::lock_guard<std::mutex> lock(m_mutex);
+
+            if (!m_currentSession)
+                return;
+
+            if (m_profileCount++ > 0)
+                m_outputStream << ",";
+
+            std::string name = result.name;
+            std::replace(name.begin(), name.end(), '"', '\'');
+
+            m_outputStream << '{';
+            m_outputStream << R"("duration":)" << (result.end - result.start) << ',';
+            m_outputStream << R"("name":")" << name << "\",";
+            m_outputStream << R"("threadID":)" << result.threadID << ',';
+            m_outputStream << R"("start":)" << result.start;
+            m_outputStream << '}';
+
+            m_outputStream.flush();
+        }
+
+        void writeHeader() {
+            m_outputStream << R"({"data": {)";
+            writeData();
+            m_outputStream << R"(},"traceEvents":[)";
+            m_outputStream.flush();
+        }
+
+        void writeFooter() {
+            m_outputStream << "]}";
+            m_outputStream.flush();
+        }
+        void writeData() {
+            ApplicationInfo appInfo = Application::getAppInfo();
+            m_outputStream << R"("profiler_version": ")" << VC_PROFILER_VERSION << "\",";
+            m_outputStream << R"("engine_name": ")" << ApplicationInfo::getEngineName() << "\",";
+            m_outputStream << R"("engine_build": ")" << toString(ApplicationInfo::getEngineVersion()) << "\",";
+            m_outputStream << R"("app_name": ")" << appInfo.getAppName() << "\",";
+            m_outputStream << R"("app_build": ")" << toString(appInfo.getAppVersion()) << "\",";
+            const char* rendererAPI = RendererAPI::getAPI()==RendererAPI::API::Vulkan ? "Vulkan" : "None";
+            m_outputStream << R"("graphic_api": ")" << rendererAPI << '"';
+        }
+
+        static void signalHandler(int signal) {
+            // Try to properly end the file
+            Profiler& profiler = Profiler::get();
+            if (profiler.m_currentSession) {
+                profiler.writeFooter();
+                profiler.m_outputStream.flush();
+                profiler.m_outputStream.close();
+            }
+
+            std::signal(signal, SIG_DFL);
+            std::raise(signal);
+        }
+
+        void registerSignalHandlers() {
+            m_prevSigabrt = std::signal(SIGABRT, signalHandler);
+            m_prevSigterm = std::signal(SIGTERM, signalHandler);
+            m_prevSigsegv = std::signal(SIGSEGV, signalHandler);
+            m_prevSigint  = std::signal(SIGINT,  signalHandler);
+        }
+
+        void restoreSignalHandlers() {
+            std::signal(SIGABRT, m_prevSigabrt);
+            std::signal(SIGTERM, m_prevSigterm);
+            std::signal(SIGSEGV, m_prevSigsegv);
+            std::signal(SIGINT,  m_prevSigint);
+        }
+
+        using SignalHandler = void(*)(int);
+        SignalHandler m_prevSigabrt = SIG_DFL;
+        SignalHandler m_prevSigterm = SIG_DFL;
+        SignalHandler m_prevSigsegv = SIG_DFL;
+        SignalHandler m_prevSigint  = SIG_DFL;
+
+        ProfilerSession* m_currentSession;
+        std::ofstream m_outputStream;
+        int m_profileCount;
+    };
+
+    /// @cond INTERNAL
+    class Timer {
+    public:
+        Timer(const char* name) : m_name(name), m_stopped(false) {
+            m_startTimepoint = std::chrono::high_resolution_clock::now();
+        }
+
+        ~Timer() {
+            if (!m_stopped)
+                stop();
+        }
+
+        void stop() {
+            auto endTimepoint = std::chrono::high_resolution_clock::now();
+
+            long long start = std::chrono::time_point_cast<std::chrono::nanoseconds>(m_startTimepoint).time_since_epoch().count();
+            long long end = std::chrono::time_point_cast<std::chrono::nanoseconds>(endTimepoint).time_since_epoch().count();
+
+            uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+            Profiler::get().writeResult({ m_name,start, end, threadID });
+
+            m_stopped = true;
+        }
+    private:
+        const char* m_name;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimepoint;
+        bool m_stopped;
+    };
+    /// @endcond
+
+    /*!
+        \def VC_PROFILER_SCOPE(name)
+        @brief Can be used to more precicely describe what a function is doing
+        @warning Recommended to be used inside a function marked with VC_PROFILER_FUNCTION()
+    */
+    /*!
+        \def VC_PROFILER_FUNCTION()
+        @brief Used to say that this function will be measured by the profiler
+    */
+}
+
+#if VC_PROFILER_ENABLE
+#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+#define VC_FUNC_NAME __PRETTY_FUNCTION__
+#elif defined(__DMC__) && (__DMC__ >= 0x810)
+#define VC_FUNC_NAME __PRETTY_FUNCTION__
+#elif (defined(__FUNCSIG__) || (_MSC_VER))
+#define VC_FUNC_NAME __FUNCSIG__
+#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+#define VC_FUNC_NAME __FUNCTION__
+#elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
+#define VC_FUNC_NAME __FUNC__
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+#define VC_FUNC_NAME __func__
+#elif defined(__cplusplus) && (__cplusplus >= 201103)
+#define VC_FUNC_NAME __func__
+#else
+#define VC_FUNC_NAME "VC_FUNC_NAME unknown"
+#endif
+/// @cond INTERNAL
+#define VC_PROFILER_BEGIN_SESSION(name, filepath) ::Vectrix::Profiler::get().beginSession(name, filepath)
+#define VC_PROFILER_END_SESSION() ::Vectrix::Profiler::get().endSession()
+/// @endcond
+#define VC_PROFILER_SCOPE(name) ::Vectrix::Timer timer##__LINE__(name);
+#define VC_PROFILER_FUNCTION() VC_PROFILER_SCOPE(VC_FUNC_NAME)
+#else
+#define VC_PROFILER_BEGIN_SESSION(name, filepath)
+#define VC_PROFILER_END_SESSION()
+#define VC_PROFILER_SCOPE(name)
+#define VC_PROFILER_FUNCTION()
+#endif
+
+#endif //VECTRIXWORKSPACE_PROFILER_H
