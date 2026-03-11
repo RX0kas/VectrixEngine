@@ -10,12 +10,6 @@ namespace Vectrix {
         VC_CORE_INFO("Initializing ShaderManager");
         VC_CORE_ASSERT(!s_instance, "ShaderManager already exists!");
         s_instance = this;
-        m_cache.reserve(256);
-        m_cache.max_load_factor(0.7f);
-    }
-
-    ShaderManager::~ShaderManager() {
-        m_cache.clear();
     }
 
 

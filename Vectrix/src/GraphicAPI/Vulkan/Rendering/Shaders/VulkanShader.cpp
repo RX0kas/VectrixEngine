@@ -172,17 +172,6 @@ namespace Vectrix {
 		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(glm::mat4), sizeof(unsigned int) , &index);
 	}
 
-	std::string readUTF8(const std::string& path) {
-		VC_PROFILER_FUNCTION();
-		std::ifstream fichier(path, std::ios::binary);
-		if (!fichier.is_open()) {
-			VC_CORE_ERROR("Can't open: {}", path);
-		}
-		std::stringstream buffer;
-		buffer << fichier.rdbuf();
-		return buffer.str();
-	}
-
 	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_pipelineLayout != nullptr, "Cannot create pipeline before pipeline layout");

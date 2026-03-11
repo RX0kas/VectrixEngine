@@ -95,7 +95,7 @@ namespace Vectrix {
         createInfo.pCode = code.data();
 
         if (vkCreateShaderModule(m_device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create shader module");
+            VC_CORE_ERROR("Failed to create shader module");
         }
     }
 

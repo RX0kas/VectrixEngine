@@ -25,7 +25,8 @@ private:
         VkDescriptorPool createImGuiDescriptorPool();
         VkRenderPass createImGuiRenderPass();
         void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex);
-        void endImGuiRenderPass(VkCommandBuffer commandBuffer);
+
+        static void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
 	private:
 		Ref<VulkanDebugWidget> m_debugWidget;

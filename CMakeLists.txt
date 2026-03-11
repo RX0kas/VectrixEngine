@@ -1,51 +1,37 @@
 cmake_minimum_required(VERSION 3.20)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Dist")
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+
 project(VectrixWorkspace VERSION 0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Release by default
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Dist")
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
 set(OUTPUT_DIR ${CMAKE_BUILD_TYPE}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
-message(STATUS "Updating documentation")
-# Is certainly not a good way, TODO : Find a better way to fix this bug
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    configure_file(
-            "./templates/Doxyfile.in"
-            "./Doxyfile"
-            @ONLY
-    )
-
-    configure_file(
-            "${PROJECT_SOURCE_DIR}/templates/README.in"
-            "${PROJECT_SOURCE_DIR}/README.md"
-            @ONLY
-    )
-else ()
-    configure_file(
-            "${CMAKE_CURRENT_SOURCE_DIR}/templates/Doxyfile.in"
-            "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
-            @ONLY
-    )
-
-    configure_file(
-            "${CMAKE_CURRENT_SOURCE_DIR}/templates/README.in"
-            "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            @ONLY
-    )
-endif ()
+# message(STATUS "Updating documentation")
+# configure_file(
+#         "${PROJECT_SOURCE_DIR}/templates/Doxyfile.in"
+#         "${PROJECT_SOURCE_DIR}/Doxyfile"
+#         @ONLY
+# )
+#
+# configure_file(
+#         "${PROJECT_SOURCE_DIR}/templates/README.in"
+#         "${PROJECT_SOURCE_DIR}/README.md"
+#         @ONLY
+# )
 
 message(STATUS "Initializing Vectrix dependencies")
 

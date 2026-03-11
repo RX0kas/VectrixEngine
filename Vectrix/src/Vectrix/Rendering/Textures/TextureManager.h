@@ -1,10 +1,10 @@
 #ifndef VECTRIXWORKSPACE_TEXTURE_MANAGER_H
 #define VECTRIXWORKSPACE_TEXTURE_MANAGER_H
-#include <unordered_map>
 #include "Vectrix/Core/Core.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
 #include "Vectrix/Utils/Hashing.h"
+#include "Vectrix/Utils/Memory.h"
 
 /**
  * @file TextureManager.h
@@ -18,7 +18,6 @@ namespace Vectrix {
      */
     class TextureManager {
     public:
-        ~TextureManager();
 
 
         /**
@@ -41,13 +40,7 @@ namespace Vectrix {
          * @return The texture programs created
          */
         std::vector<Ref<Texture>> getAll() {
-            std::vector<Ref<Texture>> vals;
-            vals.reserve(p_cache.size());
-
-            for(const auto&[fst, snd] : p_cache) {
-                vals.push_back(snd);
-            }
-            return vals;
+            return p_cache.getAllItems();
         }
 
         /**
@@ -55,13 +48,7 @@ namespace Vectrix {
          * @return The texture programs created
          */
         std::vector<std::pair<std::string,Ref<Texture>>> getAllWithName() {
-            std::vector<std::pair<std::string,Ref<Texture>>> vals;
-            vals.reserve(p_cache.size());
-
-            for(const auto& t : p_cache) {
-                vals.emplace_back(t);
-            }
-            return vals;
+            return p_cache.getAll();
         }
 
         /**
@@ -82,7 +69,7 @@ namespace Vectrix {
         TextureManager();
         bool remove(const std::string& name);
         void add(const std::string& name,Ref<Texture> texture);
-        std::unordered_map<std::string,Ref<Texture>,XXH3> p_cache;
+        Cache<std::string,Ref<Texture>> p_cache;
         Ref<Texture> m_notFoundTexture;
 
     private:

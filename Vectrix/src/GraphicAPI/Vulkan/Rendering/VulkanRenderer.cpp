@@ -137,7 +137,7 @@ namespace Vectrix {
 		}
 
 		if (result != VK_SUCCESS) {
-			throw std::runtime_error("failed to present swap chain image!");
+			VC_CORE_ERROR("Failed to present swap chain image");
 		}
 
 		isFrameStarted = false;
