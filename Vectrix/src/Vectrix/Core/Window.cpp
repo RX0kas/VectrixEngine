@@ -6,7 +6,7 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 namespace Vectrix {
-    static bool s_GLFWInitialized = false; // Might be multiple window
+	static uint8_t s_GLFWWindowCount = 0;
 
 	static void errorCallback(int error, const char* description) {
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
@@ -17,10 +17,9 @@ namespace Vectrix {
 		VC_CORE_INFO("Destroying Window");
 		glfwDestroyWindow(m_window);
 
-		if (s_GLFWInitialized)
-		{
+		if (s_GLFWWindowCount-- == 0) {
+			VC_CORE_INFO("Terminating GLFW");
 			glfwTerminate();
-			s_GLFWInitialized = false;
 		}
 
 		GraphicsContext* g = m_context.release();
@@ -29,17 +28,16 @@ namespace Vectrix {
 
 	Window::Window() : m_window(nullptr), m_data() {
 		VC_PROFILER_FUNCTION();
-		if (!s_GLFWInitialized) {
+		if (!s_GLFWWindowCount) {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			VC_CORE_ASSERT(success, "Could not intialize GLFW!");
 
 			glfwSetErrorCallback(errorCallback);
 
-			s_GLFWInitialized = true;
-
 			setClientAPI();
 		}
+		s_GLFWWindowCount++;
 	}
 
 	Window::~Window() {
@@ -160,7 +158,7 @@ namespace Vectrix {
 		return new Window();
 	}
 
-	void Window::onUpdate()	{
+	void Window::onUpdate() const {
 		VC_PROFILER_FUNCTION();
 		m_context->swapBuffers();
 	}

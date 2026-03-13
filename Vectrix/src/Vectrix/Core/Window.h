@@ -26,7 +26,7 @@ namespace Vectrix {
 		void init(const WindowAttributes& data = WindowAttributes());
 		~Window();
 
-		void onUpdate();
+		void onUpdate() const;
 
 		[[nodiscard]] unsigned int getWidth() const { return m_data.Width; }
 		[[nodiscard]] unsigned int getHeight() const { return m_data.Height;}

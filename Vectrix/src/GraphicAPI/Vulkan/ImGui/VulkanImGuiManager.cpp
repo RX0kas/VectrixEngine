@@ -22,7 +22,7 @@ namespace Vectrix {
 	}
 
     void VulkanImGuiManager::attachDebugGraphicWidget() {
-    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
+    	m_debugWidget = createRef<VulkanDebugWidget>();
     	Application::instance().imguiLayer().addWidget(m_debugWidget);
     }
 
@@ -217,7 +217,7 @@ namespace Vectrix {
     	return renderPass;
     }
 
-	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) {
+	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) const {
     	VC_CORE_ASSERT(m_imGuiRenderPass != VK_NULL_HANDLE, "ImGui render pass not created");
     	VC_CORE_ASSERT(imageIndex < m_imGuiFramebuffers.size(), "Invalid ImGui framebuffer index");
 

@@ -12,7 +12,7 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "VulkanContext already exists!");
 		s_instance = this;
 		VC_CORE_ASSERT(windowHandle, "Window handle is null!");
-		m_compiler = std::make_unique<VulkanShaderCompiler>();
+		m_compiler = createOwn<VulkanShaderCompiler>();
 	}
 
 	VulkanContext::~VulkanContext() {
@@ -31,8 +31,8 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		DescriptorPoolConfig cfg {64,64,64,64};
-		m_device = std::make_unique<Device>(Application::instance().window(),cfg);
-		m_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*m_device);
+		m_device = createOwn<Device>(Application::instance().window(),cfg);
+		m_renderer = createOwn<VulkanRenderer>(Application::instance().window(),*m_device);
 	}
 
 	void VulkanContext::swapBuffers() {
