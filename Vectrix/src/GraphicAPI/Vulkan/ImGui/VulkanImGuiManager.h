@@ -24,7 +24,7 @@ namespace Vectrix {
 private:
         VkDescriptorPool createImGuiDescriptorPool();
         VkRenderPass createImGuiRenderPass();
-        void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex);
+        void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) const;
 
         static void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);

@@ -28,7 +28,7 @@ namespace Vectrix {
         stagingBuffer.map();
         stagingBuffer.writeToBuffer((void*) vertices.data());
 
-        buffer = std::make_unique<Buffer>(vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        buffer = createOwn<Buffer>(vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
     }
@@ -91,7 +91,7 @@ namespace Vectrix {
         stagingBuffer.writeToBuffer((void*)indices);
         stagingBuffer.unmap(); // Important: unmapper après écriture
 
-        buffer = std::make_unique<Buffer>(
+        buffer = createOwn<Buffer>(
             sizeof(indices[0]),
             _IndexCount,
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,

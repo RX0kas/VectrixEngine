@@ -2,11 +2,9 @@
 #define VECTRIXWORKSPACE_EXAMPLELAYER_H
 
 #include "Vectrix.h"
-#include "imgui.h"
 #include "../CameraWidget.h"
 
-class ExampleLayer : public Vectrix::Layer
-{
+class ExampleLayer : public Vectrix::Layer {
 public:
 	ExampleLayer() : Layer("Example") {
 		m_cameraController.getCamera().setPosition({0.0f,0.0f,3.0f});
@@ -29,9 +27,6 @@ public:
 
 		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
 		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
-
-		VC_CORE_INFO("Is compatible: {}",Vectrix::Profiler::isCompatible("Profile-Shutdown.json"));
-		VC_CORE_INFO("Is isValidFormat: {}",Vectrix::Profiler::isValidFormat("Profile-Shutdown.json"));
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override

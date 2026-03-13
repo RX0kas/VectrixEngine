@@ -4,7 +4,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
-	Own<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<SceneData>();
+	Own<Renderer::SceneData> Renderer::m_SceneData = createOwn<SceneData>();
 
 	void Renderer::beginScene(PerspectiveCamera& camera) {
 		VC_PROFILER_FUNCTION();

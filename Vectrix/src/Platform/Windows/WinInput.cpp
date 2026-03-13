@@ -4,7 +4,7 @@
 #include "Vectrix/Application.h"
 
 namespace Vectrix {
-	Input* Input::_instance = new WinInput();
+	Input* Input::s_instance = new WinInput();
 
 	bool WinInput::isKeyPressedImpl(int keycode)
 	{

@@ -41,13 +41,13 @@ namespace Vectrix {
 		vkDeviceWaitIdle(m_device.device());
 
 		if (m_swapChain == nullptr) {
-			m_swapChain = std::make_unique<SwapChain>(m_device, extent);
+			m_swapChain = createOwn<SwapChain>(m_device, extent);
 		}
 		else {
 			vkDeviceWaitIdle(m_device.device());
 			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
 			Ref<SwapChain> oldSwapChain = std::move(m_swapChain);
-			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain);
+			m_swapChain = createOwn<SwapChain>(m_device, extent, oldSwapChain);
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
 			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {

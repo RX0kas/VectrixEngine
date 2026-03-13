@@ -10,11 +10,11 @@
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
-		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
+		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(createOwn<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
 	{
 		VC_PROFILER_FUNCTION();
 		finalize(m_layout.get());
-		m_ssbo = std::make_unique<SSBO>(m_device,*m_layout);
+		m_ssbo = createOwn<SSBO>(m_device,*m_layout);
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
 		vkDeviceWaitIdle(m_device.device());
@@ -192,7 +192,7 @@ namespace Vectrix {
 		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);
 
-		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
+		m_pipeline = createOwn<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
 	}
 
 	void VulkanShader::createPipelineLayout() {
