@@ -49,7 +49,7 @@ namespace Vectrix {
 		Ref<Window> m_window;
 		Ref<ShaderManager> m_shaderManager;
 		Ref<TextureManager> m_textureManager;
-		Ref<ImGuiLayer> m_imGuiLayer;
+		Own<ImGuiLayer> m_imGuiLayer;
 		Own<ApplicationInfo> m_appInfo;
 		bool m_running = true;
 

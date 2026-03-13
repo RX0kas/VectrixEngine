@@ -1,9 +1,12 @@
 #ifndef VECTRIXWORKSPACE_MEMORY_H
 #define VECTRIXWORKSPACE_MEMORY_H
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 
-#include "Hashing.h"
-#include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Core/Log.h"
+#include "Vectrix/Utils/Hashing.h"
 
 namespace Vectrix {
 #define ALIGN_TO(offset,align) (offset + (align - 1)) & ~(align - 1)
@@ -44,7 +47,6 @@ namespace Vectrix {
     };
 
     inline std::string readUTF8(const std::string& path) {
-        VC_PROFILER_FUNCTION();
         std::ifstream fichier(path, std::ios::binary);
         if (!fichier.is_open()) {
             VC_CORE_ERROR("Can't open: {}", path);

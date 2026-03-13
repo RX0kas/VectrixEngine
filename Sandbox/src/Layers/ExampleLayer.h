@@ -29,6 +29,9 @@ public:
 
 		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
 		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
+
+		VC_CORE_INFO("Is compatible: {}",Vectrix::Profiler::isCompatible("Profile-Shutdown.json"));
+		VC_CORE_INFO("Is isValidFormat: {}",Vectrix::Profiler::isValidFormat("Profile-Shutdown.json"));
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override
