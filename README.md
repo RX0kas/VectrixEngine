@@ -1,6 +1,6 @@
 # Vectrix
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Version](https://img.shields.io/badge/version-0.1.2-green.svg)
+![Version](https://img.shields.io/badge/version-0.3.0-green.svg)
 
 An engine made to run all of my little graphics project
 
@@ -129,7 +129,8 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
-- [ ] Refactor to have the same naming convention everywhere and add better comments
+- [x] Make a profiler
+- [ ] Make a profiler viewer tool
 - [ ] Create the API documentation (In progress)
 - [ ] Add a material system
 - [ ] Add an editor

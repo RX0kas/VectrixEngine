@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.2.0 LANGUAGES CXX)
+project(VectrixWorkspace VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,18 +20,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
-# message(STATUS "Updating documentation")
-# configure_file(
-#         "${PROJECT_SOURCE_DIR}/templates/Doxyfile.in"
-#         "${PROJECT_SOURCE_DIR}/Doxyfile"
-#         @ONLY
-# )
-#
-# configure_file(
-#         "${PROJECT_SOURCE_DIR}/templates/README.in"
-#         "${PROJECT_SOURCE_DIR}/README.md"
-#         @ONLY
-# )
 
 message(STATUS "Initializing Vectrix dependencies")
 
@@ -81,12 +69,6 @@ add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
 # Vectrix
 message(STATUS "Initializing Vectrix")
-
-configure_file(
-        "${PROJECT_SOURCE_DIR}/templates/version.h.in"
-        "${PROJECT_SOURCE_DIR}/Vectrix/src/Vectrix/Core/version.h"
-        @ONLY
-)
 
 file(GLOB_RECURSE Vectrix_SOURCES
         Vectrix/src/Vectrix/*.cpp
