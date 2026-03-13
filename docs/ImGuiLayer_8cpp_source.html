@@ -111,7 +111,7 @@ $(function(){initNavTree('ImGuiLayer_8cpp_source.html','',''); });
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordflow">if</span> (m_attached)</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            m_manager-&gt;cleanup();</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">auto</span>* m = m_manager.release();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">const</span> <span class="keyword">auto</span>* m = m_manager.release();</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">delete</span> m;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    };</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
@@ -123,7 +123,7 @@ $(function(){initNavTree('ImGuiLayer_8cpp_source.html','',''); });
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> ImGuiLayer::OnUpdate(<span class="keyword">const</span> DeltaTime&amp; deltaTime) {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        m_manager-&gt;update();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        ImGuiIO&amp; io = ImGui::GetIO(); (void)io;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">const</span> ImGuiIO&amp; io = ImGui::GetIO(); (void)io;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">// Update and Render additional Platform Windows</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">if</span> (io.ConfigFlags &amp; ImGuiConfigFlags_ViewportsEnable) {</div>
@@ -153,7 +153,7 @@ $(function(){initNavTree('ImGuiLayer_8cpp_source.html','',''); });
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
 <div class="ttc" id="aProfiler_8h_html"><div class="ttname"><a href="Profiler_8h.html">Profiler.h</a></div><div class="ttdoc">Class that provides time analysis on how the application and the engine run.</div></div>
-<div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00185">Profiler.h:185</a></div></div>
+<div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00248">Profiler.h:248</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00022">Application.h:23</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ImGuiManager_html"><div class="ttname"><a href="classVectrix_1_1ImGuiManager.html">Vectrix::ImGuiManager</a></div><div class="ttdef"><b>Definition</b> <a href="ImGuiManager_8h_source.html#l00008">ImGuiManager.h:8</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Layer_html"><div class="ttname"><a href="classVectrix_1_1Layer.html">Vectrix::Layer</a></div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00007">Layer.h:8</a></div></div>

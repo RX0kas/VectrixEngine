@@ -99,7 +99,7 @@ namespace Vectrix {
         }
 #endif
         VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
-        ApplicationInfo i = Application::getAppInfo();
+        const ApplicationInfo i = Application::getAppInfo();
         appInfo.pApplicationName = i.getAppName();
         appInfo.applicationVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getAppVersion());
         appInfo.pEngineName = ApplicationInfo::getEngineName();
@@ -109,7 +109,7 @@ namespace Vectrix {
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
 
-        auto extensions = getRequiredExtensions();
+        const auto extensions = getRequiredExtensions();
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
@@ -212,7 +212,7 @@ namespace Vectrix {
 
     void Device::createCommandPool() {
         VC_PROFILER_FUNCTION();
-        QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
+        const QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
 
         VkCommandPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -377,7 +377,7 @@ namespace Vectrix {
             available.insert(extension.extensionName);
         }
 
-        auto requiredExtensions = getRequiredExtensions();
+        const auto requiredExtensions = getRequiredExtensions();
         for (const auto& required : requiredExtensions) {
             if (available.find(required) == available.end()) {
                 VC_CORE_CRITICAL("Missing required glfw extension: {0}", required);
@@ -457,9 +457,9 @@ namespace Vectrix {
         return details;
     }
 
-    VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+    VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features) const {
         VC_PROFILER_FUNCTION();
-        for (VkFormat format : candidates) {
+        for (const VkFormat format : candidates) {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(m_physicalDevice, format, &props);
 
@@ -542,9 +542,9 @@ namespace Vectrix {
         vkFreeCommandBuffers(m_device, m_commandPool, 1, &commandBuffer);
     }
 
-    void Device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+    void Device::copyBuffer(const VkBuffer srcBuffer, const VkBuffer dstBuffer, const VkDeviceSize size) {
         VC_PROFILER_FUNCTION();
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferCopy copyRegion{};
         copyRegion.srcOffset = 0;  // Optional
@@ -555,9 +555,9 @@ namespace Vectrix {
         endSingleTimeCommands(commandBuffer);
     }
 
-    void Device::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount) {
+    void Device::copyBufferToImage(const VkBuffer buffer, const VkImage image, const uint32_t width, const uint32_t height, const uint32_t layerCount) {
         VC_PROFILER_FUNCTION();
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferImageCopy region{};
         region.bufferOffset = 0;

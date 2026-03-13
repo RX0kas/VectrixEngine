@@ -99,7 +99,7 @@ $(function(){initNavTree('Renderer_8cpp_source.html','',''); });
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/VulkanContext.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    Own&lt;Renderer::SceneData&gt; Renderer::m_SceneData = std::make_unique&lt;SceneData&gt;();</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    Own&lt;Renderer::SceneData&gt; Renderer::m_SceneData = createOwn&lt;SceneData&gt;();</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">    9</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">Renderer::beginScene</a>(<a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>&amp; camera) {</div>
@@ -136,7 +136,7 @@ $(function(){initNavTree('Renderer_8cpp_source.html','',''); });
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
 </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
-<div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00185">Profiler.h:185</a></div></div>
+<div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00248">Profiler.h:248</a></div></div>
 <div class="ttc" id="aRenderCommand_8h_html"><div class="ttname"><a href="RenderCommand_8h.html">RenderCommand.h</a></div><div class="ttdoc">Defines the RenderCommand class for issuing rendering commands.</div></div>
 <div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Main renderer class definition.</div></div>
 <div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00007">Model.h:7</a></div></div>

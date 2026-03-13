@@ -26,7 +26,7 @@ namespace Vectrix {
     }
 
     Ref<Texture> TextureManager::get(const std::string& name) {
-        auto it = p_cache.find(name);
+        const auto it = p_cache.find(name);
         if (it == p_cache.end()) {
             VC_CORE_ERROR("Texture with the name \"{}\" doesn't exist", name);
         }

@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 #ifdef VC_PLATFORM_WINDOWS
 	VC_CORE_WARN("The support for Windows is still experimental");
 #endif
-	auto app = Vectrix::createApplication();
+	const auto app = Vectrix::createApplication();
 	VC_PROFILER_END_SESSION();
 
 	VC_PROFILER_BEGIN_SESSION("Runtime","Profile-Runtime.json");

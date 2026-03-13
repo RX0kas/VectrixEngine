@@ -12,92 +12,93 @@
 namespace Vectrix {
 
     // Vertex && Index Buffer
-    VulkanVertexBuffer::VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size) {
+    VulkanVertexBuffer::VulkanVertexBuffer(std::vector<Vertex> vertices, uint32_t size) {
         VC_PROFILER_FUNCTION();
-        _vertexCount = static_cast<uint32_t>(vertices.size());
-        VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
+        m_vertexCount = static_cast<uint32_t>(vertices.size());
+        const VkDeviceSize bufferSize = sizeof(vertices[0]) * m_vertexCount;
         uint32_t vertexSize = sizeof(vertices[0]);
 
         Buffer stagingBuffer{
             vertexSize,
-            _vertexCount,
+            m_vertexCount,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         };
 
         stagingBuffer.map();
-        stagingBuffer.writeToBuffer((void*) vertices.data());
+        void* data = vertices.data();
+        stagingBuffer.writeToBuffer(data);
 
-        buffer = createOwn<Buffer>(vertexSize, _vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        m_buffer = createOwn<Buffer>(vertexSize, m_vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), buffer->getBuffer(), bufferSize);
+        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), m_buffer->getBuffer(), bufferSize);
     }
 
-    void VulkanVertexBuffer::draw() {
+    void VulkanVertexBuffer::draw() const {
         VC_PROFILER_FUNCTION();
-        vkCmdDraw(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(), _vertexCount, 1, 0, 0);
+        vkCmdDraw(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(), m_vertexCount, 1, 0, 0);
     }
 
     void VulkanVertexBuffer::bind() {
         VC_PROFILER_FUNCTION();
-        VC_CORE_ASSERT(m_Layout.getStride() == sizeof(Vertex), "Vertex stride mismatch: layout != sizeof(Vertex): layout = {}, sizeof(Vertex)={}",m_Layout.getStride(),sizeof(Vertex));
-        VkBuffer buffers[] = {buffer->getBuffer() };
-        VkDeviceSize offsets[] = { 0 };
+        const VkBuffer buffers[] = {m_buffer->getBuffer() };
+        constexpr VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(VulkanContext::instance().getRenderer().getCurrentCommandBuffer(), 0, 1, buffers, offsets);
-        _enable = true;
+        m_enable = true;
     }
 
-    void VulkanIndexBuffer::draw() {
+    void VulkanIndexBuffer::draw() const {
         VC_PROFILER_FUNCTION();
-        VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
-        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
-        VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer invalide");
-        VC_CORE_ASSERT(_IndexCount > 0, "IndexCount invalide");
+        const VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "The CommandBuffer is not valid");
+        VC_CORE_ASSERT(m_buffer && m_buffer->getBuffer() != VK_NULL_HANDLE, "The Index buffer is not valid");
+        VC_CORE_ASSERT(m_indexCount > 0, "IndexCount must not zero");
 
-        vkCmdDrawIndexed(cmd, _IndexCount, 1, 0, 0, 0);
+        vkCmdDrawIndexed(cmd, m_indexCount, 1, 0, 0, 0);
     }
 
 
     void VulkanIndexBuffer::bind() {
         VC_PROFILER_FUNCTION();
-        VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
-        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer invalide");
-        VC_CORE_ASSERT(buffer && buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer VkBuffer invalide");
-        VC_CORE_ASSERT(_IndexCount > 0, "IndexCount invalide");
+        const VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+        VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "CommandBuffer is null");
+        VC_CORE_ASSERT(m_buffer && m_buffer->getBuffer() != VK_NULL_HANDLE, "Index buffer VkBuffer not valid");
+        VC_CORE_ASSERT(m_indexCount > 0, "IndexCount must not be zero");
 
 
-        vkCmdBindIndexBuffer(cmd, buffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
-        _enable = true;
+        vkCmdBindIndexBuffer(cmd, m_buffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+        m_enable = true;
     }
 
 
-    VulkanIndexBuffer::VulkanIndexBuffer(const uint32_t* indices, uint32_t count) {
+    VulkanIndexBuffer::VulkanIndexBuffer(uint32_t* indices, uint32_t count) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(indices != nullptr, "indices pointer is null");
         VC_CORE_ASSERT(count > 0, "Indices array is empty");
 
-        _IndexCount = count;
-        VkDeviceSize bufferSize = sizeof(indices[0]) * _IndexCount;
+        m_indexCount = count;
+        const VkDeviceSize bufferSize = sizeof(indices[0]) * m_indexCount;
 
         // Utiliser Buffer comme pour VertexBuffer
         Buffer stagingBuffer{
             sizeof(indices[0]),
-            _IndexCount,
+            m_indexCount,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
         };
 
         stagingBuffer.map();
-        stagingBuffer.writeToBuffer((void*)indices);
-        stagingBuffer.unmap(); // Important: unmapper après écriture
+        void *data = indices;
+        stagingBuffer.writeToBuffer(data);
+        stagingBuffer.unmap();
 
-        buffer = createOwn<Buffer>(
+        m_buffer = createOwn<Buffer>(
             sizeof(indices[0]),
-            _IndexCount,
+            m_indexCount,
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(),buffer->getBuffer(),bufferSize);
+        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(),m_buffer->getBuffer(),bufferSize);
     }
 
 
@@ -116,7 +117,7 @@ namespace Vectrix {
         VC_PROFILER_FUNCTION();
         VkVertexInputBindingDescription binding{};
         binding.binding = 0;
-        binding.stride = layout.getStride(); // DOIT être sizeof(Vertex)
+        binding.stride = layout.getStride();
         binding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
         return { binding };
@@ -150,6 +151,9 @@ namespace Vectrix {
                 case ShaderDataType::Float4:
                     attr.format = VK_FORMAT_R32G32B32A32_SFLOAT;
                     break;
+                case ShaderDataType::None:
+                    attr.format = VK_FORMAT_UNDEFINED;
+                    break;
             }
 
             attributes.push_back(attr);
@@ -171,7 +175,7 @@ namespace Vectrix {
      *
      * @return VkResult of the buffer mapping call
      */
-    VkDeviceSize Buffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
+    VkDeviceSize Buffer::getAlignment(const VkDeviceSize instanceSize, const VkDeviceSize minOffsetAlignment) {
         VC_PROFILER_FUNCTION();
         if (minOffsetAlignment > 0) {
             return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
@@ -179,8 +183,8 @@ namespace Vectrix {
         return instanceSize;
     }
 
-    Buffer::Buffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment)
-            : m_device{ VulkanContext::instance().getDevice()}, m_instanceSize{ instanceSize }, m_instanceCount{ instanceCount }, m_usageFlags{ usageFlags }, m_memoryPropertyFlags{ memoryPropertyFlags } {
+    Buffer::Buffer(const VkDeviceSize instanceSize, const uint32_t instanceCount, const VkBufferUsageFlags usageFlags, const VkMemoryPropertyFlags memoryPropertyFlags, const VkDeviceSize minOffsetAlignment)
+            : m_device{ VulkanContext::instance().getDevice()}, m_instanceCount{ instanceCount }, m_instanceSize{ instanceSize }, m_usageFlags{ usageFlags }, m_memoryPropertyFlags{ memoryPropertyFlags } {
         VC_PROFILER_FUNCTION();
         m_alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
         m_bufferSize = m_alignmentSize * instanceCount;
@@ -233,7 +237,7 @@ namespace Vectrix {
      * @param offset (Optional) Byte offset from beginning of mapped region
      *
      */
-    void Buffer::writeToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset) {
+    void Buffer::writeToBuffer(const void* data, const VkDeviceSize size, const VkDeviceSize offset) const {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(m_mapped, "Cannot copy to unmapped buffer");
 
@@ -257,7 +261,7 @@ namespace Vectrix {
      *
      * @return VkResult of the flush call
      */
-    VkResult Buffer::flush(VkDeviceSize size, VkDeviceSize offset) {
+    VkResult Buffer::flush(VkDeviceSize size, VkDeviceSize offset) const {
         VC_PROFILER_FUNCTION();
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -282,7 +286,7 @@ namespace Vectrix {
      *
      * @return VkResult of the invalidate call
      */
-    VkResult Buffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
+    VkResult Buffer::invalidate(VkDeviceSize size, VkDeviceSize offset) const {
         VC_PROFILER_FUNCTION();
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -304,7 +308,7 @@ namespace Vectrix {
      *
      * @return VkDescriptorBufferInfo of specified offset and range
      */
-    VkDescriptorBufferInfo Buffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
+    VkDescriptorBufferInfo Buffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) const {
         return VkDescriptorBufferInfo{
             m_buffer,
             offset,
@@ -318,7 +322,7 @@ namespace Vectrix {
      * @param index Used in offset calculation
      *
      */
-    VkResult Buffer::flushIndex(int index) { return flush(m_alignmentSize, index * m_alignmentSize); }
+    VkResult Buffer::flushIndex(int index) const { return flush(m_alignmentSize, index * m_alignmentSize); }
 
     /**
      * Create a buffer info descriptor
@@ -327,7 +331,7 @@ namespace Vectrix {
      *
      * @return VkDescriptorBufferInfo for instance at index
      */
-    VkDescriptorBufferInfo Buffer::descriptorInfoForIndex(int index) {
+    VkDescriptorBufferInfo Buffer::descriptorInfoForIndex(int index) const {
         return descriptorInfo(m_alignmentSize, index * m_alignmentSize);
     }
 
@@ -340,7 +344,7 @@ namespace Vectrix {
      *
      * @return VkResult of the invalidate call
      */
-    VkResult Buffer::invalidateIndex(int index) {
+    VkResult Buffer::invalidateIndex(int index) const {
         return invalidate(m_alignmentSize, index * m_alignmentSize);
     }
 }

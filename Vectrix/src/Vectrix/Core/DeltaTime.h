@@ -4,12 +4,9 @@ namespace Vectrix {
     class DeltaTime
     {
     public:
-        DeltaTime(float time = 0.0f)
-            : m_Time(time)
-        {
-        }
+        explicit DeltaTime(float time = 0.0f) : m_Time(time) {}
 
-        operator float() const { return m_Time; }
+        explicit operator float() const { return m_Time; }
 
         [[nodiscard]] float getSeconds() const { return m_Time; }
         [[nodiscard]] float getMilliseconds() const { return m_Time * 1000.0f; }

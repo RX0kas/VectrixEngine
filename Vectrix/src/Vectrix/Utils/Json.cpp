@@ -40,7 +40,7 @@ namespace Vectrix {
     }
 
     std::variant<bool,nullptr_t> Json::parseBool(const std::string& src, size_t& pos) {
-        auto word = src.substr(pos, 4);
+        const auto word = src.substr(pos, 4);
         if (word=="true") {
             pos+=4;
             return true;
@@ -101,7 +101,7 @@ namespace Vectrix {
     }
 
     JsonValue Json::parseValue(const std::string& src, size_t& pos) {
-        char next = peek(src,pos);
+        const char next = peek(src,pos);
 
         if (next=='"') // String
             return {parseString(src,pos)};

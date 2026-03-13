@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['uniformalignment_0',['uniformAlignment',['../namespaceVectrix.html#add762e9c3c2f921ca240998c51b098a2',1,'Vectrix']]],
-  ['uniformsizeinbytes_1',['uniformSizeInBytes',['../namespaceVectrix.html#aa98fdc13824ee10e019b88443a9bce40',1,'Vectrix']]]
+  ['operator_5b_5d_0',['operator[]',['../classVectrix_1_1JsonValue.html#a0fb7fc719708fd7b919c7977509bf3ca',1,'Vectrix::JsonValue::operator[](const std::string &amp;key)'],['../classVectrix_1_1JsonValue.html#ac1fe5b08bee5485ac732918ad07457e6',1,'Vectrix::JsonValue::operator[](size_t index)']]]
 ];

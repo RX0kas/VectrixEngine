@@ -28,7 +28,7 @@ namespace Vectrix {
 
         std::string err;
 
-        bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,filepath.c_str());
+        const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,filepath.c_str());
 
 
         if (!err.empty()) {

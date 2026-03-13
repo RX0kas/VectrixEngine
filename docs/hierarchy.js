@@ -24,6 +24,8 @@ var hierarchy =
     [ "Vectrix::ImGuiWidget", "classVectrix_1_1ImGuiWidget.html", null ],
     [ "Vectrix::IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
     [ "Vectrix::Input", "classVectrix_1_1Input.html", null ],
+    [ "Vectrix::Json", "classVectrix_1_1Json.html", null ],
+    [ "Vectrix::JsonValue", "classVectrix_1_1JsonValue.html", null ],
     [ "Vectrix::Layer", "classVectrix_1_1Layer.html", [
       [ "Vectrix::ImGuiLayer", "classVectrix_1_1ImGuiLayer.html", null ]
     ] ],
@@ -46,6 +48,9 @@ var hierarchy =
     [ "Vectrix::TextureManager", "classVectrix_1_1TextureManager.html", null ],
     [ "Vectrix::Transform", "classVectrix_1_1Transform.html", null ],
     [ "Vectrix::UniformElement", "structVectrix_1_1UniformElement.html", null ],
+    [ "std::unordered_map", null, [
+      [ "Vectrix::Cache< K, I >", "classVectrix_1_1Cache.html", null ]
+    ] ],
     [ "Vectrix::Vertex", "structVectrix_1_1Vertex.html", null ],
     [ "Vectrix::VertexArray", "classVectrix_1_1VertexArray.html", null ],
     [ "Vectrix::VertexBuffer", "classVectrix_1_1VertexBuffer.html", null ],

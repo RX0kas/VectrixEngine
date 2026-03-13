@@ -159,6 +159,10 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a9de8296255aca79fa26aa92ba90765ea template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a9de8296255aca79fa26aa92ba90765ea">Own</a> = std::unique_ptr&lt;T&gt;</td></tr>
 <tr class="memitem:ace619c1ebfea9dc23f05a46195b0cba4" id="r_ace619c1ebfea9dc23f05a46195b0cba4"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ace619c1ebfea9dc23f05a46195b0cba4 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ace619c1ebfea9dc23f05a46195b0cba4">Ref</a> = std::shared_ptr&lt;T&gt;</td></tr>
+<tr class="memitem:a52db7e1d6e93e028ead29b1c5b3865b9" id="r_a52db7e1d6e93e028ead29b1c5b3865b9"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a52db7e1d6e93e028ead29b1c5b3865b9">JsonArray</a> = std::vector&lt;<a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td></tr>
+<tr class="memdesc:a52db7e1d6e93e028ead29b1c5b3865b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias for a JSON array (vector of <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>).  <br /></td></tr>
+<tr class="memitem:a4e5b9b27dd883839ee885ab04d027079" id="r_a4e5b9b27dd883839ee885ab04d027079"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a4e5b9b27dd883839ee885ab04d027079">JsonObject</a> = std::map&lt;std::string, <a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td></tr>
+<tr class="memdesc:a4e5b9b27dd883839ee885ab04d027079"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias for a JSON object (map of string to <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -170,6 +174,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a56ae7d290427ef8cb915799541a0b753" id="r_a56ae7d290427ef8cb915799541a0b753"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a56ae7d290427ef8cb915799541a0b753">getMinor</a> (const Version version)</td></tr>
 <tr class="memitem:a27ac7eea7e64e862ebcf219043c09e25" id="r_a27ac7eea7e64e862ebcf219043c09e25"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a27ac7eea7e64e862ebcf219043c09e25">getPatch</a> (const Version version)</td></tr>
 <tr class="memitem:ae70f210e8290ec11f81695b01761853a" id="r_ae70f210e8290ec11f81695b01761853a"><td class="memItemLeft">static std::string&#160;</td><td class="memItemRight"><a class="el" href="#ae70f210e8290ec11f81695b01761853a">toString</a> (const Version version)</td></tr>
+<tr class="memitem:a8f14bad208effddb6eab3972f12de303" id="r_a8f14bad208effddb6eab3972f12de303"><td class="memTemplParams" colspan="2">template&lt;typename T, typename ... Args&gt; </td></tr>
+<tr class="memitem:a8f14bad208effddb6eab3972f12de303 template"><td class="memItemLeft">constexpr Own&lt; T &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8f14bad208effddb6eab3972f12de303">createOwn</a> (Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a00bead6b837753f240f7fce2fd11298c" id="r_a00bead6b837753f240f7fce2fd11298c"><td class="memTemplParams" colspan="2">template&lt;typename T, typename ... Args&gt; </td></tr>
+<tr class="memitem:a00bead6b837753f240f7fce2fd11298c template"><td class="memItemLeft">constexpr Ref&lt; T &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a00bead6b837753f240f7fce2fd11298c">createRef</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memitem:aefdd4c404f7568655bcfdc23f444c2c1" id="r_aefdd4c404f7568655bcfdc23f444c2c1"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#aefdd4c404f7568655bcfdc23f444c2c1">errorCallback</a> (int error, const char *description)</td></tr>
 <tr class="memitem:a8ec605805c50a91f592b902a3cbfce5d" id="r_a8ec605805c50a91f592b902a3cbfce5d"><td class="memItemLeft">std::ostream &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a8ec605805c50a91f592b902a3cbfce5d">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classVectrix_1_1Event.html">Event</a> &amp;e)</td></tr>
 <tr class="memitem:ae5980ca94a79ed9db178659adb22410e" id="r_ae5980ca94a79ed9db178659adb22410e"><td class="memItemLeft">static uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#ae5980ca94a79ed9db178659adb22410e">ShaderDataTypeSize</a> (ShaderDataType type)</td></tr>
@@ -181,10 +189,47 @@ Functions</h2></td></tr>
 <tr class="memdesc:aa98fdc13824ee10e019b88443a9bce40"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the bytes size for the <a class="el" href="#a3a908b976ab6090113b25da77b7f8f6c" title="This is an Enum that stores every type of data that can be sent to the GPU.">ShaderUniformType</a> given (std430 rules).  <br /></td></tr>
 <tr class="memitem:aa23057e1c3704a4c3eaec6949a58e6a1" id="r_aa23057e1c3704a4c3eaec6949a58e6a1"><td class="memItemLeft">constexpr const char *&#160;</td><td class="memItemRight"><a class="el" href="#aa23057e1c3704a4c3eaec6949a58e6a1">toString</a> (<a class="el" href="#a3a908b976ab6090113b25da77b7f8f6c">ShaderUniformType</a> t)</td></tr>
 <tr class="memdesc:aa23057e1c3704a4c3eaec6949a58e6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function returns the name of the <a class="el" href="#a3a908b976ab6090113b25da77b7f8f6c" title="This is an Enum that stores every type of data that can be sent to the GPU.">ShaderUniformType</a> given so it can be logged or for other purpose.  <br /></td></tr>
+<tr class="memitem:acbca95179a28cab504325eb5bd1a865b" id="r_acbca95179a28cab504325eb5bd1a865b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#acbca95179a28cab504325eb5bd1a865b">readUTF8</a> (const std::string &amp;path)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespaceVectrix.html" title="Vectrix Engine namespace.">Vectrix</a> Engine namespace. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="a52db7e1d6e93e028ead29b1c5b3865b9" name="a52db7e1d6e93e028ead29b1c5b3865b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52db7e1d6e93e028ead29b1c5b3865b9">&#9670;&#160;</a></span>JsonArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a52db7e1d6e93e028ead29b1c5b3865b9">Vectrix::JsonArray</a> = std::vector&lt;<a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type alias for a JSON array (vector of <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>). </p>
+
+<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00028">28</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
+
+</div>
+</div>
+<a id="a4e5b9b27dd883839ee885ab04d027079" name="a4e5b9b27dd883839ee885ab04d027079"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e5b9b27dd883839ee885ab04d027079">&#9670;&#160;</a></span>JsonObject</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a4e5b9b27dd883839ee885ab04d027079">Vectrix::JsonObject</a> = std::map&lt;std::string, <a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type alias for a JSON object (map of string to <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>). </p>
+
+<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00033">33</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
+
+</div>
+</div>
 <a id="a9de8296255aca79fa26aa92ba90765ea" name="a9de8296255aca79fa26aa92ba90765ea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9de8296255aca79fa26aa92ba90765ea">&#9670;&#160;</a></span>Own</h2>
 
@@ -217,7 +262,7 @@ template&lt;typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00042">42</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00047">47</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
 
 </div>
 </div>
@@ -282,7 +327,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00009">9</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00010">10</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -313,6 +358,64 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a8f14bad208effddb6eab3972f12de303" name="a8f14bad208effddb6eab3972f12de303"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f14bad208effddb6eab3972f12de303">&#9670;&#160;</a></span>createOwn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, typename ... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Own&lt; T &gt; Vectrix::createOwn </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>args</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00041">41</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
+
+</div>
+</div>
+<a id="a00bead6b837753f240f7fce2fd11298c" name="a00bead6b837753f240f7fce2fd11298c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00bead6b837753f240f7fce2fd11298c">&#9670;&#160;</a></span>createRef()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, typename ... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Ref&lt; T &gt; Vectrix::createRef </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>args</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Core_8h_source.html#l00049">49</a> of file <a class="el" href="Core_8h_source.html">Core.h</a>.</p>
+
+</div>
+</div>
 <a id="aefdd4c404f7568655bcfdc23f444c2c1" name="aefdd4c404f7568655bcfdc23f444c2c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefdd4c404f7568655bcfdc23f444c2c1">&#9670;&#160;</a></span>errorCallback()</h2>
 
@@ -582,6 +685,33 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
+<a id="acbca95179a28cab504325eb5bd1a865b" name="acbca95179a28cab504325eb5bd1a865b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbca95179a28cab504325eb5bd1a865b">&#9670;&#160;</a></span>readUTF8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::readUTF8 </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00049">49</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+
+</div>
+</div>
 <a id="ae5980ca94a79ed9db178659adb22410e" name="ae5980ca94a79ed9db178659adb22410e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae5980ca94a79ed9db178659adb22410e">&#9670;&#160;</a></span>ShaderDataTypeSize()</h2>
 
@@ -605,7 +735,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00014">14</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00015">15</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -745,8 +875,8 @@ template&lt;typename T&gt; </div>
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="a78ffb2d2242af5251fb7b58dd4f2871e" name="a78ffb2d2242af5251fb7b58dd4f2871e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78ffb2d2242af5251fb7b58dd4f2871e">&#9670;&#160;</a></span>s_GLFWInitialized</h2>
+<a id="a882def312c5e4713bd18a2b872c68847" name="a882def312c5e4713bd18a2b872c68847"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a882def312c5e4713bd18a2b872c68847">&#9670;&#160;</a></span>s_GLFWWindowCount</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -755,7 +885,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Vectrix::s_GLFWInitialized = false</td>
+          <td class="memname">uint8_t Vectrix::s_GLFWWindowCount</td>
         </tr>
       </table>
   </td>

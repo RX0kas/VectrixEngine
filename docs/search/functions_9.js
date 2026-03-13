@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tostring_0',['toString',['../namespaceVectrix.html#aa23057e1c3704a4c3eaec6949a58e6a1',1,'Vectrix']]]
+  ['load_0',['load',['../classVectrix_1_1Json.html#a3f6d3f2a37624b93bf4afa036814fe85',1,'Vectrix::Json']]]
 ];

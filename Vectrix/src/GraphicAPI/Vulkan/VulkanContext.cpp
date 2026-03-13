@@ -18,12 +18,12 @@ namespace Vectrix {
 	VulkanContext::~VulkanContext() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Graphic context");
-		VulkanRenderer* r = m_renderer.release();
+		const VulkanRenderer* r = m_renderer.release();
 		delete r;
-		VulkanShaderCompiler* c = m_compiler.release();
+		const VulkanShaderCompiler* c = m_compiler.release();
 		delete c;
 
-		Device* d = m_device.release();
+		const Device* d = m_device.release();
 		delete d;
 	}
 

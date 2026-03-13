@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['vertex_0',['Vertex',['../structVectrix_1_1Vertex.html',1,'Vectrix']]],
-  ['vertexarray_1',['VertexArray',['../classVectrix_1_1VertexArray.html',1,'Vectrix']]],
-  ['vertexbuffer_2',['VertexBuffer',['../classVectrix_1_1VertexBuffer.html',1,'Vectrix']]]
+  ['texture_0',['Texture',['../classVectrix_1_1Texture.html',1,'Vectrix']]],
+  ['texturemanager_1',['TextureManager',['../classVectrix_1_1TextureManager.html',1,'Vectrix']]],
+  ['transform_2',['Transform',['../classVectrix_1_1Transform.html',1,'Vectrix']]]
 ];
