@@ -14,7 +14,7 @@ namespace Vectrix {
 
 
 
-    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, BufferLayout layout,bool affectedByCamera) {
+    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
         VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
         Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
         instance().add(name,std::move(shader));
@@ -26,7 +26,7 @@ namespace Vectrix {
     }
 
     Ref<Shader> ShaderManager::get(const std::string& name) {
-        auto it = m_cache.find(name);
+        const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Shader with the name \"{}\" doesn't exist", name);
         }

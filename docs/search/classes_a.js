@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['scenedata_0',['SceneData',['../structVectrix_1_1Renderer_1_1SceneData.html',1,'Vectrix::Renderer']]],
-  ['shader_1',['Shader',['../classVectrix_1_1Shader.html',1,'Vectrix']]],
-  ['shadermanager_2',['ShaderManager',['../classVectrix_1_1ShaderManager.html',1,'Vectrix']]],
-  ['shaderuniformlayout_3',['ShaderUniformLayout',['../classVectrix_1_1ShaderUniformLayout.html',1,'Vectrix']]]
+  ['perspectivecamera_0',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
+  ['perspectivecameracontroller_1',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]],
+  ['profiler_2',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
+  ['profilerresult_3',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
+  ['profilersession_4',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]]
 ];

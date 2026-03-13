@@ -2,7 +2,7 @@
 
 #include "vulkan/vulkan.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "../../../Vectrix/Rendering/Models/Vertex.h"
+#include "Vectrix/Rendering/Models/Vertex.h"
 
 #include "Vectrix/Rendering/Buffer.h"
 
@@ -27,23 +27,23 @@ namespace Vectrix {
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         void unmap();
 
-        void writeToBuffer(void* data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-        VkResult flush(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-        VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
-        VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+        void writeToBuffer(const void* data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
+        VkResult flush(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
+        VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
+        VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0) const;
 
-        VkResult flushIndex(int index);
-        VkDescriptorBufferInfo descriptorInfoForIndex(int index);
-        VkResult invalidateIndex(int index);
+        VkResult flushIndex(int index) const;
+        VkDescriptorBufferInfo descriptorInfoForIndex(int index) const;
+        VkResult invalidateIndex(int index) const;
 
-        VkBuffer getBuffer() const { return m_buffer; }
-        void* getMappedMemory() const { return m_mapped; }
-        uint32_t getInstanceCount() const { return m_instanceCount; }
-        VkDeviceSize getInstanceSize() const { return m_instanceSize; }
-        VkDeviceSize getAlignmentSize() const { return m_instanceSize; }
-        VkBufferUsageFlags getUsageFlags() const { return m_usageFlags; }
-        VkMemoryPropertyFlags getMemoryPropertyFlags() const { return m_memoryPropertyFlags; }
-        VkDeviceSize getBufferSize() const { return m_bufferSize; }
+        [[nodiscard]] VkBuffer getBuffer() const { return m_buffer; }
+        [[nodiscard]] void* getMappedMemory() const { return m_mapped; }
+        [[nodiscard]] uint32_t getInstanceCount() const { return m_instanceCount; }
+        [[nodiscard]] VkDeviceSize getInstanceSize() const { return m_instanceSize; }
+        [[nodiscard]] VkDeviceSize getAlignmentSize() const { return m_instanceSize; }
+        [[nodiscard]] VkBufferUsageFlags getUsageFlags() const { return m_usageFlags; }
+        [[nodiscard]] VkMemoryPropertyFlags getMemoryPropertyFlags() const { return m_memoryPropertyFlags; }
+        [[nodiscard]] VkDeviceSize getBufferSize() const { return m_bufferSize; }
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
@@ -62,39 +62,39 @@ namespace Vectrix {
     
     class VulkanVertexBuffer : public VertexBuffer {
     public:
-        VulkanVertexBuffer(const std::vector<Vertex>& vertices, uint32_t size);
+        VulkanVertexBuffer(std::vector<Vertex> vertices, uint32_t size);
         ~VulkanVertexBuffer() override;
 
-        void draw();
+        void draw() const;
 
         void bind() override;
         //virtual void unbind();
         static std::vector<VkVertexInputBindingDescription> getBindingDescriptions(const BufferLayout& layout);
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(const BufferLayout& layout);
-        [[nodiscard]] const BufferLayout& getLayout() const override { return m_Layout; }
-        void setLayout(const BufferLayout& layout) override { m_Layout = layout; }
+        [[nodiscard]] const BufferLayout& getLayout() const override { return m_layout; }
+        void setLayout(const BufferLayout& layout) override { m_layout = layout; }
     private:
-        uint32_t _vertexCount{ 0 };
-        Ref<Buffer> buffer;
-        bool _enable = false;
-        BufferLayout m_Layout;
+        uint32_t m_vertexCount{ 0 };
+        Ref<Buffer> m_buffer;
+        bool m_enable = false;
+        BufferLayout m_layout;
     };
 
     class VulkanIndexBuffer : public IndexBuffer {
     public:
-        VulkanIndexBuffer(const uint32_t* indices, uint32_t count);
+        VulkanIndexBuffer(uint32_t* indices, uint32_t count);
         ~VulkanIndexBuffer() override;
 
-        void draw();
+        void draw() const;
 
         void bind() override;
         //virtual void unbind();
 
-        [[nodiscard]] uint32_t getCount() const override { return _IndexCount; }
+        [[nodiscard]] uint32_t getCount() const override { return m_indexCount; }
     private:
-        Ref<Buffer> buffer;
-        uint32_t _IndexCount;
-        bool _enable = false;
+        Ref<Buffer> m_buffer;
+        uint32_t m_indexCount;
+        bool m_enable = false;
     };
 
     class VulkanUniformBuffer {
@@ -106,7 +106,7 @@ namespace Vectrix {
 
 template <>
 struct fmt::formatter<glm::vec2> {
-    constexpr auto parse(format_parse_context& ctx) {
+    static constexpr auto parse(const format_parse_context& ctx) {
         return ctx.begin();
     }
 
@@ -119,7 +119,7 @@ struct fmt::formatter<glm::vec2> {
 
 template <>
 struct fmt::formatter<Vectrix::BufferLayout> {
-    constexpr auto parse(format_parse_context& ctx) {
+    static constexpr auto parse(const format_parse_context& ctx) {
         return ctx.begin();
     }
 
@@ -140,8 +140,7 @@ struct fmt::formatter<Vectrix::BufferLayout> {
 
 template <>
 struct fmt::formatter<VkResult> : fmt::formatter<std::string> {
-
-    constexpr auto parse(format_parse_context& ctx) {
+    static constexpr auto parse(const format_parse_context& ctx) {
         return ctx.begin();
     }
 

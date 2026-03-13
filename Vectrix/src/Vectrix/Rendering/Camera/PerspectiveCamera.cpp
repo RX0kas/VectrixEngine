@@ -71,7 +71,7 @@ namespace Vectrix {
 
 	void PerspectiveCamera::recalculateProjectionMatrix() {
 		VC_PROFILER_FUNCTION();
-		float aspect = Application::instance().window().getAspect();
+		const float aspect = Application::instance().window().getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
 
 		const float tanHalfFovy = std::tan(m_fov / 2.f);

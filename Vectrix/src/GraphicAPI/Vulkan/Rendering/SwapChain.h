@@ -24,7 +24,7 @@ namespace Vectrix {
         void destroyFrameBuffers() {
             VC_CORE_INFO("Destroying FrameBuffers");
             if (!m_swapChainFramebuffers.empty()) {
-                for (auto framebuffer : m_swapChainFramebuffers) {
+                for (const auto framebuffer : m_swapChainFramebuffers) {
                     if (framebuffer != VK_NULL_HANDLE) {
                         vkDestroyFramebuffer(m_device.device(), framebuffer, nullptr);
                     }
@@ -49,9 +49,9 @@ namespace Vectrix {
         [[nodiscard]] float extentAspectRatio() const {
             return static_cast<float>(m_swapChainExtent.width) / static_cast<float>(m_swapChainExtent.height);
         }
-        VkFormat findDepthFormat();
+        VkFormat findDepthFormat() const;
 
-        VkResult acquireNextImage(uint32_t* imageIndex);
+        VkResult acquireNextImage(uint32_t* imageIndex) const;
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex);
 
 		[[nodiscard]] bool compareSwapFormats(const SwapChain& swapChain) const {
@@ -106,7 +106,7 @@ namespace Vectrix {
     private:
         void destroyImageviews() {
             if (!m_swapChainImageViews.empty()) {
-                for (auto view  : m_swapChainImageViews) {
+                for (const auto view  : m_swapChainImageViews) {
                     if (view  != VK_NULL_HANDLE) {
                         vkDestroyImageView(m_device.device(), view, nullptr);
                     }
@@ -117,7 +117,7 @@ namespace Vectrix {
 
         void destroyDepthImageviews() {
             if (!m_depthImageViews.empty()) {
-                for (auto view  : m_depthImageViews) {
+                for (const auto view  : m_depthImageViews) {
                     if (view  != VK_NULL_HANDLE) {
                         vkDestroyImageView(m_device.device(), view, nullptr);
                     }
@@ -128,7 +128,7 @@ namespace Vectrix {
 
         void destroySwapChainImages() {
             if (!m_swapChainImages.empty()) {
-                for (auto image  : m_swapChainImages) {
+                for (const auto image  : m_swapChainImages) {
                     if (image  != VK_NULL_HANDLE) {
                         vkDestroyImage(m_device.device(), image, nullptr);
                     }
@@ -154,9 +154,10 @@ namespace Vectrix {
         void createSyncObjects();
 
         // Helper functions
-        VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-        VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+        static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+
+        static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 
         VkFormat m_swapChainImageFormat;
         VkFormat m_swapChainDepthFormat;

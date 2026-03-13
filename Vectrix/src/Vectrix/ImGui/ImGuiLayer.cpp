@@ -16,7 +16,7 @@ namespace Vectrix {
 		if (m_attached)
 			m_manager->cleanup();
 
-		auto* m = m_manager.release();
+		const auto* m = m_manager.release();
 		delete m;
 	};
 
@@ -28,7 +28,7 @@ namespace Vectrix {
 	void ImGuiLayer::OnUpdate(const DeltaTime& deltaTime) {
 		VC_PROFILER_FUNCTION();
 		m_manager->update();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		const ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 		// Update and Render additional Platform Windows
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

@@ -56,7 +56,7 @@ namespace Vectrix {
 		LayerStack m_layerStack;
 		float m_LastFrameTime = 0.0f;
 		DeltaTime m_deltaTime;
-	private:
+
 		static Application* s_instance;
 	};
 

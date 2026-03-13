@@ -43,7 +43,7 @@ namespace Vectrix {
 			m_descriptorPool = VK_NULL_HANDLE;
 		}
 
-    	for (auto f : m_imGuiFramebuffers) {
+    	for (const auto f : m_imGuiFramebuffers) {
     		if (f!=VK_NULL_HANDLE)
     			vkDestroyFramebuffer(m_device.device(),f,nullptr);
     	}
@@ -56,7 +56,7 @@ namespace Vectrix {
 
     	for (int i = 0; i < m_imGuiFramebuffers.size(); i++) {
     		VC_CORE_ASSERT(m_renderer->getSwapChainImageView(i) != VK_NULL_HANDLE,"Swapchain image view is null for index {}", i);
-    		VkImageView attachments[] = { m_renderer->getSwapChainImageView(i) };
+    		const VkImageView attachments[] = { m_renderer->getSwapChainImageView(i) };
 
     		VkFramebufferCreateInfo framebufferInfo{};
     		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -74,7 +74,7 @@ namespace Vectrix {
     }
 
 	void VulkanImGuiManager::destroyImGuiFramebuffers() {
-    	for (auto fb : m_imGuiFramebuffers) {
+    	for (const auto fb : m_imGuiFramebuffers) {
     		if (fb != VK_NULL_HANDLE) {
     			vkDestroyFramebuffer(m_device.device(), fb, nullptr);
     		}
@@ -85,7 +85,7 @@ namespace Vectrix {
 
 
 	void VulkanImGuiManager::render() {
-    	VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+    	const VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
     	beginImGuiRenderPass(cmd,VulkanContext::instance().getRenderer().getCurrentImageIndex());
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -256,7 +256,7 @@ namespace Vectrix {
 	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {
-		VkDescriptorPoolSize pool_sizes[] = {
+		const VkDescriptorPoolSize pool_sizes[] = {
 			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },

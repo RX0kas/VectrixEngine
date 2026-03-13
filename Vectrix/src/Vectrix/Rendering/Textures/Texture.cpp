@@ -34,7 +34,7 @@ namespace Vectrix {
         switch (Renderer::getAPI())
         {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported");
-            case RendererAPI::API::Vulkan:  auto t = new VulkanTexture();return std::shared_ptr<VulkanTexture>(t);
+            case RendererAPI::API::Vulkan:  const auto t = new VulkanTexture();return std::shared_ptr<VulkanTexture>(t);
         }
 
         VC_CORE_ERROR("Unknown RendererAPI");

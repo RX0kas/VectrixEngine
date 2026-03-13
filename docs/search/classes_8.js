@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['perspectivecamera_0',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
-  ['perspectivecameracontroller_1',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]],
-  ['profiler_2',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
-  ['profilerresult_3',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
-  ['profilersession_4',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]]
+  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
+  ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
+  ['log_2',['Log',['../classVectrix_1_1Log.html',1,'Vectrix']]]
 ];

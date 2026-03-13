@@ -4,18 +4,18 @@
 
 namespace Vectrix {
     void Profiler::registerTimer(Timer* timer) {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         if (!m_currentSession) return;
         m_activeTimers.insert(timer);
     }
 
     void Profiler::unregisterTimer(Timer* timer) {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         m_activeTimers.erase(timer);
     }
 
     void Profiler::writeResult(const ProfilerResult& result) {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         if (!m_currentSession) return;
         if (!m_outputStream.is_open()) return;
 
@@ -41,7 +41,7 @@ namespace Vectrix {
     }
 
     void Profiler::writeData() {
-        ApplicationInfo appInfo = Application::getAppInfo();
+        const ApplicationInfo appInfo = Application::getAppInfo();
         m_outputStream << R"("profiler_version": ")" << VC_PROFILER_VERSION << "\",";
         m_outputStream << R"("engine_name": ")" << ApplicationInfo::getEngineName() << "\",";
         m_outputStream << R"("engine_build": ")" << toString(ApplicationInfo::getEngineVersion()) << "\",";
@@ -64,14 +64,14 @@ namespace Vectrix {
         Profiler::get().unregisterTimer(this);
     }
 
-    void Timer::stop(bool internal) {
+    void Timer::stop(const bool internal) {
         if (m_stopped) return;
-        auto endTimepoint = std::chrono::high_resolution_clock::now();
+        const auto endTimepoint = std::chrono::high_resolution_clock::now();
 
-        long long start = std::chrono::time_point_cast<std::chrono::nanoseconds>(m_startTimepoint).time_since_epoch().count();
-        long long end = std::chrono::time_point_cast<std::chrono::nanoseconds>(endTimepoint).time_since_epoch().count();
+        const long long start = std::chrono::time_point_cast<std::chrono::nanoseconds>(m_startTimepoint).time_since_epoch().count();
+        const long long end = std::chrono::time_point_cast<std::chrono::nanoseconds>(endTimepoint).time_since_epoch().count();
 
-        uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        const uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
 
         if (internal)
             Profiler::get().writeResultInternal({ m_name, start, end, threadID });

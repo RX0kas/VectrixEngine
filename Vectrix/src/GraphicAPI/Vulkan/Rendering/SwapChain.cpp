@@ -35,7 +35,7 @@ namespace Vectrix {
     void SwapChain::cleanup() {
         vkDeviceWaitIdle(m_device.device());
 
-        for (auto imageView : m_swapChainImageViews) {
+        for (const auto imageView : m_swapChainImageViews) {
             vkDestroyImageView(m_device.device(), imageView, nullptr);
         }
         m_swapChainImageViews.clear();
@@ -53,7 +53,7 @@ namespace Vectrix {
         m_depthImageAllocations.clear();
         m_depthImageViews.clear();
 
-        for (auto framebuffer : m_swapChainFramebuffers) {
+        for (const auto framebuffer : m_swapChainFramebuffers) {
             vkDestroyFramebuffer(m_device.device(), framebuffer, nullptr);
         }
         m_swapChainFramebuffers.clear();
@@ -63,27 +63,27 @@ namespace Vectrix {
             m_renderPass = VK_NULL_HANDLE;
         }
 
-        for (auto semaphore : m_renderFinishedSemaphores) {
+        for (const auto semaphore : m_renderFinishedSemaphores) {
             vkDestroySemaphore(m_device.device(), semaphore, nullptr);
         }
         m_renderFinishedSemaphores.clear();
 
-        for (auto semaphore : m_imageAvailableSemaphores) {
+        for (const auto semaphore : m_imageAvailableSemaphores) {
             vkDestroySemaphore(m_device.device(), semaphore, nullptr);
         }
         m_imageAvailableSemaphores.clear();
 
-        for (auto fence : m_inFlightFences) {
+        for (const auto fence : m_inFlightFences) {
             vkDestroyFence(m_device.device(), fence, nullptr);
         }
         m_inFlightFences.clear();
     }
 
-    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) {
+    VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) const {
         // Wait for the current frame's fence to ensure the CPU isn't overlapping frame usage
         vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
 
-        VkResult result = vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
+        const VkResult result = vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
 
         // The caller should handle VK_ERROR_OUT_OF_DATE_KHR or VK_SUBOPTIMAL_KHR
         return result;
@@ -100,9 +100,9 @@ namespace Vectrix {
 
         vkResetFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame]);
 
-        VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
-        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-        VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[*imageIndex] };
+        const VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
+        constexpr VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        const VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[*imageIndex] };
 
         VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
         submitInfo.waitSemaphoreCount = 1;
@@ -133,21 +133,21 @@ namespace Vectrix {
 
 
     void SwapChain::createSwapChain() {
-        SwapChainSupportDetails swapChainSupport = m_device.getSwapChainSupport();
+        auto [capabilities, formats, presentModes] = m_device.getSwapChainSupport();
 
-        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-        VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+        const auto [format, colorSpace] = chooseSwapSurfaceFormat(formats);
+        const VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes);
+        const VkExtent2D extent = chooseSwapExtent(capabilities);
 
-        uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+        uint32_t imageCount = capabilities.minImageCount + 1;
 
-        if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
-            imageCount = swapChainSupport.capabilities.maxImageCount;
+        if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
+            imageCount = capabilities.maxImageCount;
         }
 
 
-        VC_CORE_INFO("capabilities.minImageCount = {0}", swapChainSupport.capabilities.minImageCount);
-        VC_CORE_INFO("capabilities.maxImageCount = {0}", swapChainSupport.capabilities.maxImageCount);
+        VC_CORE_INFO("capabilities.minImageCount = {0}", capabilities.minImageCount);
+        VC_CORE_INFO("capabilities.maxImageCount = {0}", capabilities.maxImageCount);
 
 
         VkSwapchainCreateInfoKHR createInfo = {};
@@ -155,14 +155,14 @@ namespace Vectrix {
         createInfo.surface = m_device.surface();
 
         createInfo.minImageCount = imageCount;
-        createInfo.imageFormat = surfaceFormat.format;
-        createInfo.imageColorSpace = surfaceFormat.colorSpace;
+        createInfo.imageFormat = format;
+        createInfo.imageColorSpace = colorSpace;
         createInfo.imageExtent = extent;
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = m_device.findPhysicalQueueFamilies();
-        uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
+        const QueueFamilyIndices indices = m_device.findPhysicalQueueFamilies();
+        const uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
         if (indices.graphicsFamily != indices.presentFamily) {
             createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
@@ -175,7 +175,7 @@ namespace Vectrix {
             createInfo.pQueueFamilyIndices = nullptr;  // Optional
         }
 
-        createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+        createInfo.preTransform = capabilities.currentTransform;
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 
         createInfo.presentMode = presentMode;
@@ -199,7 +199,7 @@ namespace Vectrix {
         m_swapChainImages.resize(imageCount);
         vkGetSwapchainImagesKHR(m_device.device(), m_swapChain, &imageCount, m_swapChainImages.data());
 
-        m_swapChainImageFormat = surfaceFormat.format;
+        m_swapChainImageFormat = format;
         m_swapChainExtent = extent;
     }
 
@@ -269,7 +269,7 @@ namespace Vectrix {
         dependency.srcStageMask =
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 
-        std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
+        const std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
         VkRenderPassCreateInfo renderPassInfo = {};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -306,9 +306,9 @@ namespace Vectrix {
     }
 
     void SwapChain::createDepthResources() {
-        VkFormat depthFormat = findDepthFormat();
+        const VkFormat depthFormat = findDepthFormat();
         m_swapChainDepthFormat = depthFormat;
-        VkExtent2D newSwapChainExtent = getSwapChainExtent();
+        const auto [width, height] = getSwapChainExtent();
 
         m_depthImages.resize(imageCount());
         m_depthImageAllocations.resize(imageCount());
@@ -318,8 +318,8 @@ namespace Vectrix {
             VkImageCreateInfo imageInfo{};
             imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
             imageInfo.imageType = VK_IMAGE_TYPE_2D;
-            imageInfo.extent.width = newSwapChainExtent.width;
-            imageInfo.extent.height = newSwapChainExtent.height;
+            imageInfo.extent.width = width;
+            imageInfo.extent.height = height;
             imageInfo.extent.depth = 1;
             imageInfo.mipLevels = 1;
             imageInfo.arrayLayers = 1;
@@ -375,8 +375,7 @@ namespace Vectrix {
     }
 
 
-    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
-        const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+    VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
         for (const auto& availableFormat : availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -387,8 +386,7 @@ namespace Vectrix {
         return availableFormats[0];
     }
 
-    VkPresentModeKHR SwapChain::chooseSwapPresentMode(
-        const std::vector<VkPresentModeKHR>& availablePresentModes) {
+    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
         for (const auto& availablePresentMode : availablePresentModes) {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
                 VC_CORE_INFO("Present mode: Mailbox");
@@ -407,7 +405,7 @@ namespace Vectrix {
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+    VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
             return capabilities.currentExtent;
         }
@@ -424,7 +422,7 @@ namespace Vectrix {
 
     }
 
-    VkFormat SwapChain::findDepthFormat() {
+    VkFormat SwapChain::findDepthFormat() const {
         return m_device.findSupportedFormat(
             { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
             VK_IMAGE_TILING_OPTIMAL,

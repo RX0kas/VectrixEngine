@@ -24,11 +24,11 @@ namespace Vectrix {
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		auto tm = new TextureManager();
+		const auto tm = new TextureManager();
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
-		auto sm = new ShaderManager();
+		const auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
-		auto i = new ImGuiLayer();
+		const auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 	}
@@ -55,7 +55,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {
-			auto time = static_cast<float>(glfwGetTime());
+			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 			if (RenderCommand::setupFrame()) {

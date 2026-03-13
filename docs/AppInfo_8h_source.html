@@ -132,34 +132,33 @@ $(function(){initNavTree('AppInfo_8h_source.html','',''); });
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">static</span> std::string toString(<span class="keyword">const</span> Version version) {</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">char</span> r[32];</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        printf(<span class="stringliteral">&quot;%u&quot;</span>,getOS(version));</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        sprintf(r,<span class="stringliteral">&quot;%s-%u.%u.%u&quot;</span>,getOS(version) ? <span class="stringliteral">&quot;Windows&quot;</span> : <span class="stringliteral">&quot;Linux&quot;</span>,getMajor(version),getMinor(version),getPatch(version));</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordflow">return</span> {r};</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classVectrix_1_1ApplicationInfo.html">   45</a></span>    <span class="keyword">class </span>ApplicationInfo {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        ApplicationInfo(<span class="keyword">const</span> std::string &amp;appName,Version appVersion);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        ApplicationInfo(<span class="keyword">const</span> std::string &amp;appName,std::uint32_t major, std::uint32_t minor, std::uint32_t patch);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [[nodiscard]] <span class="keyword">const</span> <span class="keywordtype">char</span>* getAppName() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        [[nodiscard]] Version getAppVersion() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        [[nodiscard]] <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> getEngineName() {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordflow">return</span> m_engineName;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        [[nodiscard]] <span class="keyword">static</span> Version getEngineVersion() {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keywordflow">return</span> makeVersion(VC_VERSION_MAJOR,VC_VERSION_MINOR,VC_VERSION_PATCH);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordtype">void</span> init(<span class="keyword">const</span> std::string &amp;appName, Version appVersion);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        std::string m_appName;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        Version m_appVersion;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> m_engineName = <span class="stringliteral">&quot;Vectrix&quot;</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    };</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        sprintf(r,<span class="stringliteral">&quot;%s-%u.%u.%u&quot;</span>,getOS(version) ? <span class="stringliteral">&quot;Windows&quot;</span> : <span class="stringliteral">&quot;Linux&quot;</span>,getMajor(version),getMinor(version),getPatch(version));</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> {r};</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="};">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classVectrix_1_1ApplicationInfo.html">   44</a></span>    <span class="keyword">class </span>ApplicationInfo {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        ApplicationInfo(<span class="keyword">const</span> std::string &amp;appName,Version appVersion);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        ApplicationInfo(<span class="keyword">const</span> std::string &amp;appName,std::uint32_t major, std::uint32_t minor, std::uint32_t patch);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] <span class="keyword">const</span> <span class="keywordtype">char</span>* getAppName() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [[nodiscard]] Version getAppVersion() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        [[nodiscard]] <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> getEngineName() {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> m_engineName;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        [[nodiscard]] <span class="keyword">static</span> Version getEngineVersion() {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> makeVersion(VC_VERSION_MAJOR,VC_VERSION_MINOR,VC_VERSION_PATCH);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordtype">void</span> init(<span class="keyword">const</span> std::string &amp;appName, Version appVersion);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        std::string m_appName;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        Version m_appVersion;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> m_engineName = <span class="stringliteral">&quot;Vectrix&quot;</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    };</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_APP_INFO_H</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_APP_INFO_H</span></div>
 <div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

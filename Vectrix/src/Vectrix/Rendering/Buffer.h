@@ -48,7 +48,7 @@ namespace Vectrix {
 		[[nodiscard]] uint32_t getStride() const { return m_Stride; }
 		[[nodiscard]] const std::vector<BufferElement>& getElements() const { return m_Elements; }
 		[[nodiscard]] bool has(const std::string& name) const {
-			auto end = m_Elements.end();
+			const auto end = m_Elements.end();
 			return std::any_of(m_Elements.begin(), end, [name](const BufferElement& x) { return x.Name == name; });
 		}
 	private:

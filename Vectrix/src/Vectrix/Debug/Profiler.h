@@ -105,11 +105,11 @@ namespace Vectrix {
 
             JsonValue root = Json::load(filePath);
             std::string profiler_version = root["data"]["profiler_version"].getString();
-            size_t pointPos = profiler_version.find('.');
-            std::string majorStr = profiler_version.substr(0, pointPos);
-            std::string minorStr = profiler_version.substr(pointPos + 1);
-            std::string currentMajorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(0,pointPos);
-            std::string currentMinorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(pointPos+1,static_cast<std::string>(VC_PROFILER_VERSION).size()-pointPos);
+            const size_t pointPos = profiler_version.find('.');
+            const std::string majorStr = profiler_version.substr(0, pointPos);
+            const std::string minorStr = profiler_version.substr(pointPos + 1);
+            const std::string currentMajorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(0,pointPos);
+            const std::string currentMinorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(pointPos+1,static_cast<std::string>(VC_PROFILER_VERSION).size()-pointPos);
 
 
             if (std::stoi(majorStr)!=std::stoi(currentMajorStr)) return false;

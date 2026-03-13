@@ -4,7 +4,7 @@
 
 namespace Vectrix {
     Model::Model(const std::vector<Vertex>& vertices, const BufferLayout& layout) {
-        auto vertexBuffer =  Ref<VertexBuffer>(VertexBuffer::create(vertices, vertices.size()));
+        const auto vertexBuffer =  Ref<VertexBuffer>(VertexBuffer::create(vertices, vertices.size()));
 
         vertexBuffer->setLayout(layout);
 
@@ -15,8 +15,8 @@ namespace Vectrix {
     }
 
     Model::Model(const std::vector<Vertex>& vertices,std::vector<uint32_t> indices, const BufferLayout& layout) {
-        Ref<VertexBuffer> vertexBuffer = Ref<VertexBuffer>(VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size())));
-        Ref<IndexBuffer> indexBuffer = Ref<IndexBuffer>(IndexBuffer::create(indices.data(),static_cast<uint32_t>(indices.size())));
+        const auto vertexBuffer = Ref<VertexBuffer>(VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size())));
+        const auto indexBuffer = Ref<IndexBuffer>(IndexBuffer::create(indices.data(),static_cast<uint32_t>(indices.size())));
         vertexBuffer->setLayout(layout);
 
         m_vertexArray = Ref<VertexArray>(VertexArray::create());

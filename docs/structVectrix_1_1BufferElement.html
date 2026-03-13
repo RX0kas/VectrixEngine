@@ -96,8 +96,8 @@ $(function(){initNavTree('structVectrix_1_1BufferElement.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae30fc4b28b9cde020a462e9ca2a41b33" id="r_ae30fc4b28b9cde020a462e9ca2a41b33"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae30fc4b28b9cde020a462e9ca2a41b33">BufferElement</a> (ShaderDataType type, const std::string &amp;name)</td></tr>
-<tr class="memitem:aa0003386d5dd5083765c0c32495239d6" id="r_aa0003386d5dd5083765c0c32495239d6"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa0003386d5dd5083765c0c32495239d6">operator==</a> (BufferElement e) const</td></tr>
+<tr class="memitem:acbd0af773ea46042a0893fc52ac0214c" id="r_acbd0af773ea46042a0893fc52ac0214c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#acbd0af773ea46042a0893fc52ac0214c">BufferElement</a> (ShaderDataType type, std::string name)</td></tr>
+<tr class="memitem:a557145697c2ed9f015a1cda9f0b1f441" id="r_a557145697c2ed9f015a1cda9f0b1f441"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a557145697c2ed9f015a1cda9f0b1f441">operator==</a> (const BufferElement &amp;e) const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -108,10 +108,10 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00024">24</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00026">26</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
-<a id="ae30fc4b28b9cde020a462e9ca2a41b33" name="ae30fc4b28b9cde020a462e9ca2a41b33"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae30fc4b28b9cde020a462e9ca2a41b33">&#9670;&#160;</a></span>BufferElement()</h2>
+<a id="acbd0af773ea46042a0893fc52ac0214c" name="acbd0af773ea46042a0893fc52ac0214c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbd0af773ea46042a0893fc52ac0214c">&#9670;&#160;</a></span>BufferElement()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,7 +127,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -137,13 +137,13 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00030">30</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00032">32</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="aa0003386d5dd5083765c0c32495239d6" name="aa0003386d5dd5083765c0c32495239d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0003386d5dd5083765c0c32495239d6">&#9670;&#160;</a></span>operator==()</h2>
+<a id="a557145697c2ed9f015a1cda9f0b1f441" name="a557145697c2ed9f015a1cda9f0b1f441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a557145697c2ed9f015a1cda9f0b1f441">&#9670;&#160;</a></span>operator==()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +154,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">bool Vectrix::BufferElement::operator== </td>
           <td>(</td>
-          <td class="paramtype">BufferElement</td>          <td class="paramname"><span class="paramname"><em>e</em></span></td><td>)</td>
+          <td class="paramtype">const BufferElement &amp;</td>          <td class="paramname"><span class="paramname"><em>e</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -165,7 +165,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00033">33</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00035">35</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -182,7 +182,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00025">25</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00027">27</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -198,7 +198,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00028">28</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00030">30</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -214,7 +214,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00027">27</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00029">29</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -230,7 +230,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00026">26</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00028">28</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
