@@ -37,7 +37,6 @@ namespace Vectrix {
 
     static std::string toString(const Version version) {
         char r[32];
-        printf("%u",getOS(version));
         sprintf(r,"%s-%u.%u.%u",getOS(version) ? "Windows" : "Linux",getMajor(version),getMinor(version),getPatch(version));
         return {r};
     }

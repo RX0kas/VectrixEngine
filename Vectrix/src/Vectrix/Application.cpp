@@ -17,10 +17,9 @@ namespace Vectrix {
 	Application* Application::s_instance = nullptr;
 
 	Application::Application() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
-
-		VC_PROFILER_FUNCTION();
 
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
@@ -30,7 +29,7 @@ namespace Vectrix {
 		auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
 		auto i = new ImGuiLayer();
-		m_imGuiLayer = std::shared_ptr<ImGuiLayer>(i);
+		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 	}
 

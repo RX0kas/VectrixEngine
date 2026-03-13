@@ -6,9 +6,9 @@
 #include <string>
 #include <thread>
 
+#include <unordered_set>
 #include "Vectrix/Application.h"
-#include "Vectrix/Core/AppInfo.h"
-#include "Vectrix/Rendering/RendererAPI.h"
+#include "Vectrix/Utils/Json.h"
 
 #define VC_PROFILER_VERSION "1.0"
 
@@ -37,12 +37,32 @@ namespace Vectrix {
         const char* name;
     };
 
+    /// @cond INTERNAL
+    class Timer {
+    public:
+        Timer(const char* name);
+        ~Timer();
+
+        void stop(bool internal = false);
+    private:
+        const char* m_name;
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimepoint;
+        bool m_stopped;
+    };
+    /// @endcond
+
+
     /**
      * @brief Main Profiler class
      */
     class Profiler
     {
     public:
+        ~Profiler() {
+            if (m_currentSession)
+                endSession();
+        }
+
         /// @cond INTERNAL
         void beginSession(const char* name, const char* filepath = "results.json") {
             m_outputStream.open(filepath);
@@ -52,10 +72,19 @@ namespace Vectrix {
         }
 
         void endSession() {
+            std::vector<Timer*> timersToStop;
+            {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                timersToStop.assign(m_activeTimers.begin(), m_activeTimers.end());
+                m_activeTimers.clear();
+                delete m_currentSession;
+                m_currentSession = nullptr;
+            }
+            for (Timer* timer : timersToStop)
+                timer->stop(true);
+
             writeFooter();
             m_outputStream.close();
-            delete m_currentSession;
-            m_currentSession = nullptr;
             m_profileCount = 0;
             restoreSignalHandlers();
         }
@@ -66,7 +95,14 @@ namespace Vectrix {
             return instance;
         }
 
+        /**
+         * @brief This function return true if the file given is compatible with the current version of the profiler
+         * @param filePath path of a profiler data file
+         * @return true if the file is compatible
+         */
         static bool isCompatible(const std::string &filePath) {
+            if (!isValidFormat(filePath)) return false;
+
             JsonValue root = Json::load(filePath);
             std::string profiler_version = root["data"]["profiler_version"].getString();
             size_t pointPos = profiler_version.find('.');
@@ -82,33 +118,40 @@ namespace Vectrix {
 
             return true;
         }
+
+        static bool isValidFormat(const std::string &filePath) {
+            JsonValue root = Json::load(filePath);
+            if (!root.contains("data")) {
+                return false;
+            }
+            JsonValue data = root["data"];
+            if (!data.isType<JsonObject>()) {
+                return false;
+            }
+
+            if (!root.contains("traceEvents")) {
+                return false;
+            }
+
+            JsonValue traceEvents = root["traceEvents"];
+            if (!traceEvents.isType<JsonArray>()) {
+                return false;
+            }
+
+            return true;
+        }
     private:
         Profiler() : m_currentSession(nullptr), m_profileCount(0) {}
         friend class Timer;
 
-        std::mutex m_mutex;
+        std::mutex m_mutex{};
+        std::unordered_set<Timer*> m_activeTimers{};
 
-        void writeResult(const ProfilerResult& result) {
-            std::lock_guard<std::mutex> lock(m_mutex);
+        void registerTimer(Timer* timer);
+        void unregisterTimer(Timer* timer);
 
-            if (!m_currentSession)
-                return;
-
-            if (m_profileCount++ > 0)
-                m_outputStream << ",";
-
-            std::string name = result.name;
-            std::replace(name.begin(), name.end(), '"', '\'');
-
-            m_outputStream << '{';
-            m_outputStream << R"("duration":)" << (result.end - result.start) << ',';
-            m_outputStream << R"("name":")" << name << "\",";
-            m_outputStream << R"("threadID":)" << result.threadID << ',';
-            m_outputStream << R"("start":)" << result.start;
-            m_outputStream << '}';
-
-            m_outputStream.flush();
-        }
+        void writeResultInternal(const ProfilerResult& result);
+        void writeResult(const ProfilerResult& result);
 
         void writeHeader() {
             m_outputStream << R"({"data": {)";
@@ -118,19 +161,12 @@ namespace Vectrix {
         }
 
         void writeFooter() {
+            if (!m_outputStream.is_open()) return;
             m_outputStream << "]}";
             m_outputStream.flush();
         }
-        void writeData() {
-            ApplicationInfo appInfo = Application::getAppInfo();
-            m_outputStream << R"("profiler_version": ")" << VC_PROFILER_VERSION << "\",";
-            m_outputStream << R"("engine_name": ")" << ApplicationInfo::getEngineName() << "\",";
-            m_outputStream << R"("engine_build": ")" << toString(ApplicationInfo::getEngineVersion()) << "\",";
-            m_outputStream << R"("app_name": ")" << appInfo.getAppName() << "\",";
-            m_outputStream << R"("app_build": ")" << toString(appInfo.getAppVersion()) << "\",";
-            const char* rendererAPI = RendererAPI::getAPI()==RendererAPI::API::Vulkan ? "Vulkan" : "None";
-            m_outputStream << R"("graphic_api": ")" << rendererAPI << '"';
-        }
+
+        void writeData();
 
         static void signalHandler(int signal) {
             // Try to properly end the file
@@ -169,36 +205,6 @@ namespace Vectrix {
         std::ofstream m_outputStream;
         int m_profileCount;
     };
-
-    /// @cond INTERNAL
-    class Timer {
-    public:
-        Timer(const char* name) : m_name(name), m_stopped(false) {
-            m_startTimepoint = std::chrono::high_resolution_clock::now();
-        }
-
-        ~Timer() {
-            if (!m_stopped)
-                stop();
-        }
-
-        void stop() {
-            auto endTimepoint = std::chrono::high_resolution_clock::now();
-
-            long long start = std::chrono::time_point_cast<std::chrono::nanoseconds>(m_startTimepoint).time_since_epoch().count();
-            long long end = std::chrono::time_point_cast<std::chrono::nanoseconds>(endTimepoint).time_since_epoch().count();
-
-            uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-            Profiler::get().writeResult({ m_name,start, end, threadID });
-
-            m_stopped = true;
-        }
-    private:
-        const char* m_name;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimepoint;
-        bool m_stopped;
-    };
-    /// @endcond
 
     /*!
         \def VC_PROFILER_SCOPE(name)

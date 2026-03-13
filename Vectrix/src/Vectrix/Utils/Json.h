@@ -25,25 +25,30 @@ namespace Vectrix {
         JsonValue(const JsonArray& value) : m_data(value) {}
         JsonValue(const JsonObject& value) : m_data(value) {}
 
-        std::string getString() {
+        [[nodiscard]] std::string getString() const {
             if (std::holds_alternative<std::string>(m_data))
                 return std::get<std::string>(m_data);
             VC_CORE_ERROR("JsonValue is not a string");
         }
 
-        double getDouble() {
+        template<typename T>
+        [[nodiscard]] bool isType() const {
+            return std::holds_alternative<T>(m_data);
+        }
+
+        [[nodiscard]] double getDouble() const {
             if (std::holds_alternative<double>(m_data))
                 return std::get<double>(m_data);
             VC_CORE_ERROR("JsonValue is not a double");
         }
 
-        bool getBool() {
+        [[nodiscard]] bool getBool() const {
             if (std::holds_alternative<bool>(m_data))
                 return std::get<bool>(m_data);
             VC_CORE_ERROR("JsonValue is not a boolean");
         }
 
-        bool isNull() {
+        [[nodiscard]] bool isNull() const {
             return std::holds_alternative<nullptr_t>(m_data);
         }
 
@@ -56,6 +61,14 @@ namespace Vectrix {
             if (std::holds_alternative<JsonArray>(m_data))
                 return std::get<JsonArray>(m_data)[index];
             VC_CORE_ERROR("JsonValue is not an array");
+        }
+
+        [[nodiscard]] bool contains(const std::string& name) const {
+            if (std::holds_alternative<JsonObject>(m_data)) {
+                const auto& o = std::get<JsonObject>(m_data);
+                return o.find(name)!=o.end();
+            }
+            VC_CORE_ERROR("JsonValue is not an object");
         }
     private:
         std::variant<std::string, double, bool, nullptr_t, JsonArray, JsonObject> m_data;

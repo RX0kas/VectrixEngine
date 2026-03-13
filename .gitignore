@@ -28,8 +28,6 @@ GLOB_RECURSE
 mono_crash.*
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
