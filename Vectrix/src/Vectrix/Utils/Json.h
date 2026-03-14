@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_JSON_H
 #include <any>
 #include <cstddef>
+#include <cstddef>
 #include <map>
 #include <string>
 #include <variant>
@@ -122,7 +123,7 @@ namespace Vectrix {
          * @return true if the value is null, false otherwise.
          */
         [[nodiscard]] bool isNull() const {
-            return std::holds_alternative<nullptr_t>(m_data);
+            return std::holds_alternative<std::nullptr_t>(m_data);
         }
 
         /**
@@ -165,7 +166,7 @@ namespace Vectrix {
         }
 
     private:
-        std::variant<std::string, double, bool, nullptr_t, JsonArray, JsonObject> m_data;
+        std::variant<std::string, double, bool, std::nullptr_t, JsonArray, JsonObject> m_data;
     };
 
     /**
@@ -198,7 +199,10 @@ namespace Vectrix {
          * @param pos Current parsing position (updated to skip whitespace).
          * @return The next non-whitespace character.
          */
-        static char peek(const std::string& src, size_t& pos);
+        static char peek(const std::string& src, size_t& pos) {
+            while (pos < src.size() && std::isspace(src[pos])) pos++;
+            return src[pos];
+        }
 
         /**
          * @brief Consumes and returns the current character, advancing the position.
@@ -206,7 +210,9 @@ namespace Vectrix {
          * @param pos Current parsing position.
          * @return The character at the current position before advancing.
          */
-        static char consume(const std::string& src, size_t& pos);
+        static char consume(const std::string& src, size_t& pos) {
+            return src[pos++];
+        }
 
         /**
          * @brief Parses a JSON string enclosed in double quotes.
@@ -230,7 +236,7 @@ namespace Vectrix {
          * @param pos Current parsing position (updated to after the token).
          * @return A variant holding either bool or nullptr_t.
          */
-        static std::variant<bool, nullptr_t> parseBool(const std::string& src, size_t& pos);
+        static std::variant<bool, std::nullptr_t> parseBool(const std::string& src, size_t& pos);
 
         /**
          * @brief Parses a JSON array (e.g., [value, value, ...]).

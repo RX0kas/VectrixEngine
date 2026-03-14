@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_PROFILER_H
 #include <algorithm>
 #include <chrono>
+#include <csignal>
 #include <fstream>
 #include <string>
 #include <thread>
@@ -52,6 +53,7 @@ namespace Vectrix {
     /// @endcond
 
 
+
     /**
      * @brief Main Profiler class
      */
@@ -68,7 +70,6 @@ namespace Vectrix {
             m_outputStream.open(filepath);
             writeHeader();
             m_currentSession = new ProfilerSession{ name };
-            registerSignalHandlers();
         }
 
         void endSession() {
@@ -86,7 +87,6 @@ namespace Vectrix {
             writeFooter();
             m_outputStream.close();
             m_profileCount = 0;
-            restoreSignalHandlers();
         }
         /// @endcond
         static Profiler& get()
@@ -167,39 +167,6 @@ namespace Vectrix {
         }
 
         void writeData();
-
-        static void signalHandler(int signal) {
-            // Try to properly end the file
-            Profiler& profiler = Profiler::get();
-            if (profiler.m_currentSession) {
-                profiler.writeFooter();
-                profiler.m_outputStream.flush();
-                profiler.m_outputStream.close();
-            }
-
-            std::signal(signal, SIG_DFL);
-            std::raise(signal);
-        }
-
-        void registerSignalHandlers() {
-            m_prevSigabrt = std::signal(SIGABRT, signalHandler);
-            m_prevSigterm = std::signal(SIGTERM, signalHandler);
-            m_prevSigsegv = std::signal(SIGSEGV, signalHandler);
-            m_prevSigint  = std::signal(SIGINT,  signalHandler);
-        }
-
-        void restoreSignalHandlers() {
-            std::signal(SIGABRT, m_prevSigabrt);
-            std::signal(SIGTERM, m_prevSigterm);
-            std::signal(SIGSEGV, m_prevSigsegv);
-            std::signal(SIGINT,  m_prevSigint);
-        }
-
-        using SignalHandler = void(*)(int);
-        SignalHandler m_prevSigabrt = SIG_DFL;
-        SignalHandler m_prevSigterm = SIG_DFL;
-        SignalHandler m_prevSigsegv = SIG_DFL;
-        SignalHandler m_prevSigint  = SIG_DFL;
 
         ProfilerSession* m_currentSession;
         std::ofstream m_outputStream;

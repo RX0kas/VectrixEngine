@@ -39,7 +39,7 @@ namespace Vectrix {
         return std::stod(content);
     }
 
-    std::variant<bool,nullptr_t> Json::parseBool(const std::string& src, size_t& pos) {
+    std::variant<bool,std::nullptr_t> Json::parseBool(const std::string& src, size_t& pos) {
         const auto word = src.substr(pos, 4);
         if (word=="true") {
             pos+=4;

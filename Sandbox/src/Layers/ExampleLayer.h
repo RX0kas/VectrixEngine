@@ -19,7 +19,6 @@ public:
 #ifdef VC_PLATFORM_WINDOWS
 		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert", ".\\shaders\\f.frag",layout, Vectrix::getTinyObjLayout(),true);
 		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\fox.png");
-		Vectrix::TextureManager::createTexture("t2", "./textures/test.png");
 #elif defined(VC_PLATFORM_LINUX)
 		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
 		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
@@ -29,8 +28,7 @@ public:
 		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
 	}
 
-	void OnUpdate(const Vectrix::DeltaTime& dt) override
-	{
+	void OnUpdate(const Vectrix::DeltaTime& dt) override {
 		m_cameraController.onUpdate(dt);
 	}
 
