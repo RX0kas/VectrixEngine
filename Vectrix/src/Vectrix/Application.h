@@ -17,6 +17,8 @@ extern AppInfoFunc g_getAppInfo;
 
 #define VC_SET_APP_INFO(name,major,minor,patch) AppInfoFunc g_getAppInfo = []() {return Vectrix::ApplicationInfo(name, major, minor, patch);};
 
+int main(int argc, char** argv);
+
 namespace Vectrix {
 
 	class Application
@@ -24,7 +26,6 @@ namespace Vectrix {
 	public:
 		Application();
 		virtual ~Application();
-		void run();
 
 		void onEvent(Event& e);
 		bool onWindowClose(WindowCloseEvent& e);
@@ -46,6 +47,8 @@ namespace Vectrix {
 
 		void renderImGui();
 	private:
+		friend int ::main(int argc, char** argv);
+		void run();
 		Ref<Window> m_window;
 		Ref<ShaderManager> m_shaderManager;
 		Ref<TextureManager> m_textureManager;

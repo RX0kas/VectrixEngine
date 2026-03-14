@@ -31,10 +31,10 @@ namespace Vectrix {
         std::replace(name.begin(), name.end(), '"', '\'');
 
         m_outputStream << '{';
-        m_outputStream << R"("duration":)" << (result.end - result.start) << ',';
+        m_outputStream << R"("duration":)" << (result.elapsedTime.count()) << ',';
         m_outputStream << R"("name":")" << name << "\",";
         m_outputStream << R"("threadID":)" << result.threadID << ',';
-        m_outputStream << R"("start":)" << result.start;
+        m_outputStream << R"("start":)" << result.start.count();
         m_outputStream << '}';
 
         m_outputStream.flush();
@@ -52,7 +52,7 @@ namespace Vectrix {
     }
 
     Timer::Timer(const char* name) : m_name(name), m_stopped(false) {
-        m_startTimepoint = std::chrono::high_resolution_clock::now();
+        m_startTimepoint = std::chrono::steady_clock::now();
         Profiler::get().registerTimer(this);
         if (!Profiler::get().m_currentSession)
             m_stopped = true;
@@ -66,17 +66,17 @@ namespace Vectrix {
 
     void Timer::stop(const bool internal) {
         if (m_stopped) return;
-        const auto endTimepoint = std::chrono::high_resolution_clock::now();
 
-        const long long start = std::chrono::time_point_cast<std::chrono::nanoseconds>(m_startTimepoint).time_since_epoch().count();
-        const long long end = std::chrono::time_point_cast<std::chrono::nanoseconds>(endTimepoint).time_since_epoch().count();
+        auto endTimepoint = std::chrono::steady_clock::now();
+        auto highResStart = FloatingPointMicroseconds{ m_startTimepoint.time_since_epoch() };
+        auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_startTimepoint).time_since_epoch();
 
         const uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
 
         if (internal)
-            Profiler::get().writeResultInternal({ m_name, start, end, threadID });
+            Profiler::get().writeResultInternal({ m_name, highResStart, elapsedTime, threadID });
         else
-            Profiler::get().writeResult({ m_name, start, end, threadID });
+            Profiler::get().writeResult({ m_name, highResStart, elapsedTime, threadID });
 
         m_stopped = true;
     }

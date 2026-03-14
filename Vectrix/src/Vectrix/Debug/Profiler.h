@@ -11,7 +11,7 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Utils/Json.h"
 
-#define VC_PROFILER_VERSION "1.0"
+#define VC_PROFILER_VERSION "1.1"
 
 /**
  * @file Profiler.h
@@ -20,13 +20,15 @@
  */
 
 namespace Vectrix {
+    using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
     /**
      * @brief Data obtained on the execution of a function
      */
     struct ProfilerResult
     {
         const char* name;
-        long long start, end;
+        FloatingPointMicroseconds start;
+        std::chrono::microseconds elapsedTime;
         uint32_t threadID;
     };
 
@@ -47,7 +49,7 @@ namespace Vectrix {
         void stop(bool internal = false);
     private:
         const char* m_name;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimepoint;
+        std::chrono::time_point<std::chrono::steady_clock> m_startTimepoint;
         bool m_stopped;
     };
     /// @endcond
