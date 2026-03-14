@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.2.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -98,6 +98,7 @@ $(function(){initNavTree('Profiler_8h.html','',''); });
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;csignal&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;thread&gt;</code><br />
@@ -123,13 +124,17 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a3fefdda4a2afd9fa3713c5cf95e6fd6b" id="r_a3fefdda4a2afd9fa3713c5cf95e6fd6b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a3fefdda4a2afd9fa3713c5cf95e6fd6b">VC_PROFILER_VERSION</a>&#160;&#160;&#160;&quot;1.0&quot;</td></tr>
+<tr class="memitem:a3fefdda4a2afd9fa3713c5cf95e6fd6b" id="r_a3fefdda4a2afd9fa3713c5cf95e6fd6b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a3fefdda4a2afd9fa3713c5cf95e6fd6b">VC_PROFILER_VERSION</a>&#160;&#160;&#160;&quot;1.1&quot;</td></tr>
 <tr class="memitem:a50cf83f3135ffdd727189fc23e420833" id="r_a50cf83f3135ffdd727189fc23e420833"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a50cf83f3135ffdd727189fc23e420833">VC_PROFILER_BEGIN_SESSION</a>(name,  filepath)</td></tr>
 <tr class="memitem:a1bc163c81166fc90c0d2f9f39967e8f1" id="r_a1bc163c81166fc90c0d2f9f39967e8f1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a1bc163c81166fc90c0d2f9f39967e8f1">VC_PROFILER_END_SESSION</a>()</td></tr>
 <tr class="memitem:a4545cbd6de7a64b3b857d7c777a10502" id="r_a4545cbd6de7a64b3b857d7c777a10502"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a4545cbd6de7a64b3b857d7c777a10502">VC_PROFILER_SCOPE</a>(name)</td></tr>
 <tr class="memdesc:a4545cbd6de7a64b3b857d7c777a10502"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be used to more precicely describe what a function is doing.  <br /></td></tr>
 <tr class="memitem:a5e986678fc9d613e1cb7b80b2ff3963b" id="r_a5e986678fc9d613e1cb7b80b2ff3963b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>()</td></tr>
 <tr class="memdesc:a5e986678fc9d613e1cb7b80b2ff3963b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to say that this function will be measured by the profiler.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ae79ae05ebde1a8ac02050f58f9d8f558" id="r_ae79ae05ebde1a8ac02050f58f9d8f558"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#ae79ae05ebde1a8ac02050f58f9d8f558">Vectrix::FloatingPointMicroseconds</a> = std::chrono::duration&lt;double, std::micro&gt;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class that provides time analysis on how the application and the engine run. </p>
@@ -155,7 +160,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00245">245</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00214">214</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
@@ -174,7 +179,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00246">246</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00215">215</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
@@ -195,7 +200,7 @@ Macros</h2></td></tr>
 
 <p>Used to say that this function will be measured by the profiler. </p>
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00248">248</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00217">217</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="Renderer_8cpp_source.html#l00009">Vectrix::Renderer::beginScene()</a>, <a class="el" href="RenderCommand_8h_source.html#l00050">Vectrix::RenderCommand::drawIndexed()</a>, <a class="el" href="Renderer_8cpp_source.html#l00014">Vectrix::Renderer::endScene()</a>, <a class="el" href="RenderCommand_8h_source.html#l00036">Vectrix::RenderCommand::setClearColor()</a>, <a class="el" href="Renderer_8cpp_source.html#l00018">Vectrix::Renderer::submit()</a>, and <a class="el" href="Renderer_8cpp_source.html#l00031">Vectrix::Renderer::submit()</a>.</p>
 
@@ -219,7 +224,7 @@ Macros</h2></td></tr>
 <p>Can be used to more precicely describe what a function is doing. </p>
 <dl class="section warning"><dt>Warning</dt><dd>Recommended to be used inside a function marked with <a class="el" href="#a5e986678fc9d613e1cb7b80b2ff3963b" title="Used to say that this function will be measured by the profiler.">VC_PROFILER_FUNCTION()</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00247">247</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00216">216</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
@@ -230,12 +235,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VC_PROFILER_VERSION&#160;&#160;&#160;&quot;1.0&quot;</td>
+          <td class="memname">#define VC_PROFILER_VERSION&#160;&#160;&#160;&quot;1.1&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00013">13</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00014">14</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>

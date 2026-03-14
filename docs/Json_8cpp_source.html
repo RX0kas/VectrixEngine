@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.2.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -138,7 +138,7 @@ $(function(){initNavTree('Json_8cpp_source.html','',''); });
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordflow">return</span> std::stod(content);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    }</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::variant&lt;bool,nullptr_t&gt; Json::parseBool(<span class="keyword">const</span> std::string&amp; src, <span class="keywordtype">size_t</span>&amp; pos) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::variant&lt;bool,std::nullptr_t&gt; Json::parseBool(<span class="keyword">const</span> std::string&amp; src, <span class="keywordtype">size_t</span>&amp; pos) {</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keyword">const</span> <span class="keyword">auto</span> word = src.substr(pos, 4);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordflow">if</span> (word==<span class="stringliteral">&quot;true&quot;</span>) {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            pos+=4;</div>
@@ -227,12 +227,12 @@ $(function(){initNavTree('Json_8cpp_source.html','',''); });
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    }</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>} <span class="comment">// Vectrix</span></div>
 <div class="ttc" id="aJson_8h_html"><div class="ttname"><a href="Json_8h.html">Json.h</a></div><div class="ttdoc">JSON parsing and value representation classes.</div></div>
-<div class="ttc" id="aclassVectrix_1_1JsonValue_html"><div class="ttname"><a href="classVectrix_1_1JsonValue.html">Vectrix::JsonValue</a></div><div class="ttdoc">Represents any JSON value (null, boolean, number, string, array, object).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00039">Json.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1JsonValue_html"><div class="ttname"><a href="classVectrix_1_1JsonValue.html">Vectrix::JsonValue</a></div><div class="ttdoc">Represents any JSON value (null, boolean, number, string, array, object).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00040">Json.h:40</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Json_html_a08cf986f79a59623f4c06d7d7e369aec"><div class="ttname"><a href="classVectrix_1_1Json.html#a08cf986f79a59623f4c06d7d7e369aec">Vectrix::Json::parse</a></div><div class="ttdeci">static JsonValue parse(const std::string &amp;fileData)</div><div class="ttdoc">Parses a JSON string and returns the root JsonValue.</div><div class="ttdef"><b>Definition</b> <a href="#l00013">Json.cpp:13</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Json_html_a3f6d3f2a37624b93bf4afa036814fe85"><div class="ttname"><a href="classVectrix_1_1Json.html#a3f6d3f2a37624b93bf4afa036814fe85">Vectrix::Json::load</a></div><div class="ttdeci">static JsonValue load(const std::string &amp;filePath)</div><div class="ttdoc">Loads a JSON file from disk and parses its contents.</div><div class="ttdef"><b>Definition</b> <a href="#l00009">Json.cpp:9</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html_a4e5b9b27dd883839ee885ab04d027079"><div class="ttname"><a href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">Vectrix::JsonObject</a></div><div class="ttdeci">std::map&lt; std::string, JsonValue &gt; JsonObject</div><div class="ttdoc">Type alias for a JSON object (map of string to JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00033">Json.h:33</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html_a52db7e1d6e93e028ead29b1c5b3865b9"><div class="ttname"><a href="namespaceVectrix.html#a52db7e1d6e93e028ead29b1c5b3865b9">Vectrix::JsonArray</a></div><div class="ttdeci">std::vector&lt; JsonValue &gt; JsonArray</div><div class="ttdoc">Type alias for a JSON array (vector of JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00028">Json.h:28</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html_a4e5b9b27dd883839ee885ab04d027079"><div class="ttname"><a href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">Vectrix::JsonObject</a></div><div class="ttdeci">std::map&lt; std::string, JsonValue &gt; JsonObject</div><div class="ttdoc">Type alias for a JSON object (map of string to JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00034">Json.h:34</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html_a52db7e1d6e93e028ead29b1c5b3865b9"><div class="ttname"><a href="namespaceVectrix.html#a52db7e1d6e93e028ead29b1c5b3865b9">Vectrix::JsonArray</a></div><div class="ttdeci">std::vector&lt; JsonValue &gt; JsonArray</div><div class="ttdoc">Type alias for a JSON array (vector of JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00029">Json.h:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

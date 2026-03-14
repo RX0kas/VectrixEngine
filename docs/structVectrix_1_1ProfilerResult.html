@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.2.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -102,28 +102,28 @@ $(function(){initNavTree('structVectrix_1_1ProfilerResult.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a9e34541235c31d8808d12e9388f56f58" id="r_a9e34541235c31d8808d12e9388f56f58"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="#a9e34541235c31d8808d12e9388f56f58">name</a></td></tr>
-<tr class="memitem:a77cd36aa632f64fc7984d977c9e64c1d" id="r_a77cd36aa632f64fc7984d977c9e64c1d"><td class="memItemLeft">long long&#160;</td><td class="memItemRight"><a class="el" href="#a77cd36aa632f64fc7984d977c9e64c1d">start</a></td></tr>
-<tr class="memitem:a973388ecad05fc8391e62231c042c334" id="r_a973388ecad05fc8391e62231c042c334"><td class="memItemLeft">long long&#160;</td><td class="memItemRight"><a class="el" href="#a973388ecad05fc8391e62231c042c334">end</a></td></tr>
+<tr class="memitem:a2ebf8056fe08af4197c95ce5bea529d4" id="r_a2ebf8056fe08af4197c95ce5bea529d4"><td class="memItemLeft">FloatingPointMicroseconds&#160;</td><td class="memItemRight"><a class="el" href="#a2ebf8056fe08af4197c95ce5bea529d4">start</a></td></tr>
+<tr class="memitem:a34d4af9a56a76eb01ce351b68950f704" id="r_a34d4af9a56a76eb01ce351b68950f704"><td class="memItemLeft">std::chrono::microseconds&#160;</td><td class="memItemRight"><a class="el" href="#a34d4af9a56a76eb01ce351b68950f704">elapsedTime</a></td></tr>
 <tr class="memitem:ae82c7bf1b1543c2a094cd8200423fa50" id="r_ae82c7bf1b1543c2a094cd8200423fa50"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#ae82c7bf1b1543c2a094cd8200423fa50">threadID</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data obtained on the execution of a function. </p>
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00025">25</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00027">27</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Variables</h2>
-<a id="a973388ecad05fc8391e62231c042c334" name="a973388ecad05fc8391e62231c042c334"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a973388ecad05fc8391e62231c042c334">&#9670;&#160;</a></span>end</h2>
+<a id="a34d4af9a56a76eb01ce351b68950f704" name="a34d4af9a56a76eb01ce351b68950f704"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34d4af9a56a76eb01ce351b68950f704">&#9670;&#160;</a></span>elapsedTime</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long long Vectrix::ProfilerResult::end</td>
+          <td class="memname">std::chrono::microseconds Vectrix::ProfilerResult::elapsedTime</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00028">28</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00031">31</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
@@ -139,23 +139,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00027">27</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00029">29</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
-<a id="a77cd36aa632f64fc7984d977c9e64c1d" name="a77cd36aa632f64fc7984d977c9e64c1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77cd36aa632f64fc7984d977c9e64c1d">&#9670;&#160;</a></span>start</h2>
+<a id="a2ebf8056fe08af4197c95ce5bea529d4" name="a2ebf8056fe08af4197c95ce5bea529d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ebf8056fe08af4197c95ce5bea529d4">&#9670;&#160;</a></span>start</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long long Vectrix::ProfilerResult::start</td>
+          <td class="memname">FloatingPointMicroseconds Vectrix::ProfilerResult::start</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00028">28</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00030">30</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>
@@ -171,7 +171,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00029">29</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00032">32</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
 
 </div>
 </div>

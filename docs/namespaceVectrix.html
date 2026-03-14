@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.2.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -159,6 +159,7 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a9de8296255aca79fa26aa92ba90765ea template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a9de8296255aca79fa26aa92ba90765ea">Own</a> = std::unique_ptr&lt;T&gt;</td></tr>
 <tr class="memitem:ace619c1ebfea9dc23f05a46195b0cba4" id="r_ace619c1ebfea9dc23f05a46195b0cba4"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ace619c1ebfea9dc23f05a46195b0cba4 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ace619c1ebfea9dc23f05a46195b0cba4">Ref</a> = std::shared_ptr&lt;T&gt;</td></tr>
+<tr class="memitem:ae79ae05ebde1a8ac02050f58f9d8f558" id="r_ae79ae05ebde1a8ac02050f58f9d8f558"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ae79ae05ebde1a8ac02050f58f9d8f558">FloatingPointMicroseconds</a> = std::chrono::duration&lt;double, std::micro&gt;</td></tr>
 <tr class="memitem:a52db7e1d6e93e028ead29b1c5b3865b9" id="r_a52db7e1d6e93e028ead29b1c5b3865b9"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a52db7e1d6e93e028ead29b1c5b3865b9">JsonArray</a> = std::vector&lt;<a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td></tr>
 <tr class="memdesc:a52db7e1d6e93e028ead29b1c5b3865b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type alias for a JSON array (vector of <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>).  <br /></td></tr>
 <tr class="memitem:a4e5b9b27dd883839ee885ab04d027079" id="r_a4e5b9b27dd883839ee885ab04d027079"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a4e5b9b27dd883839ee885ab04d027079">JsonObject</a> = std::map&lt;std::string, <a class="el" href="classVectrix_1_1JsonValue.html">JsonValue</a>&gt;</td></tr>
@@ -194,6 +195,22 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="namespaceVectrix.html" title="Vectrix Engine namespace.">Vectrix</a> Engine namespace. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="ae79ae05ebde1a8ac02050f58f9d8f558" name="ae79ae05ebde1a8ac02050f58f9d8f558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae79ae05ebde1a8ac02050f58f9d8f558">&#9670;&#160;</a></span>FloatingPointMicroseconds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using Vectrix::FloatingPointMicroseconds = std::chrono::duration&lt;double, std::micro&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00023">23</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
 <a id="a52db7e1d6e93e028ead29b1c5b3865b9" name="a52db7e1d6e93e028ead29b1c5b3865b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a52db7e1d6e93e028ead29b1c5b3865b9">&#9670;&#160;</a></span>JsonArray</h2>
 
@@ -208,7 +225,7 @@ Functions</h2></td></tr>
 
 <p>Type alias for a JSON array (vector of <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>). </p>
 
-<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00028">28</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00029">29</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
 
 </div>
 </div>
@@ -226,7 +243,7 @@ Functions</h2></td></tr>
 
 <p>Type alias for a JSON object (map of string to <a class="el" href="classVectrix_1_1JsonValue.html" title="Represents any JSON value (null, boolean, number, string, array, object).">JsonValue</a>). </p>
 
-<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00033">33</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Json_8h_source.html#l00034">34</a> of file <a class="el" href="Json_8h_source.html">Json.h</a>.</p>
 
 </div>
 </div>
