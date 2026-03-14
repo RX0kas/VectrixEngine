@@ -1,6 +1,8 @@
 #ifndef VECTRIXWORKSPACE_TEXTURE_H
 #define VECTRIXWORKSPACE_TEXTURE_H
+
 #include "Vectrix/Core/Core.h"
+#include <cstdint>
 
 /**
  * @file Texture.h
