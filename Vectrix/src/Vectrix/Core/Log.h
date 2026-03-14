@@ -1,12 +1,12 @@
-#pragma once
+#ifndef VECTRIXWORKSPACE_LOG_H
+#define VECTRIXWORKSPACE_LOG_H
 
 #include "Core.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace Vectrix {
-	class Vectrix_API Log
-	{
+	class Log {
 	public:
 		static void init();
 
@@ -31,3 +31,5 @@ namespace Vectrix {
 #define VC_WARN(...)    ::Vectrix::Log::getClientLogger()->warn(__VA_ARGS__)
 #define VC_INFO(...)    ::Vectrix::Log::getClientLogger()->info(__VA_ARGS__)
 #define VC_TRACE(...)   ::Vectrix::Log::getClientLogger()->trace(__VA_ARGS__)
+
+#endif

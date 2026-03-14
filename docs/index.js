@@ -10,5 +10,6 @@ var index =
           [ "4. <a class=\"el\" href=\"group__textures.html\" title=\"Textures\">Textures</a>", "rendering_overview.html#autotoc_md7", null ]
         ] ]
       ] ]
-    ] ]
+    ] ],
+    [ "Tools Guide", "tools_overview.html", null ]
 ];

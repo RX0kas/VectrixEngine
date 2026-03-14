@@ -4,8 +4,7 @@
 #include "Layer.h"
 
 namespace Vectrix {
-	class Vectrix_API LayerStack
-	{
+	class LayerStack {
 	public:
 		LayerStack();
 		~LayerStack();

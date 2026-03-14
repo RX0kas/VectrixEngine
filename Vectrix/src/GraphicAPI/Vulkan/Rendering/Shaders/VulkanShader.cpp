@@ -4,27 +4,30 @@
 #include <utility>
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Debug/Profiler.h"
 
 #define OPTIMIZE
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
-		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
+		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(createOwn<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
 	{
+		VC_PROFILER_FUNCTION();
 		finalize(m_layout.get());
-		m_ssbo = std::make_unique<SSBO>(m_device,*m_layout);
+		m_ssbo = createOwn<SSBO>(m_device,*m_layout);
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
 		vkDeviceWaitIdle(m_device.device());
 		createPipeline(m_renderer.getSwapChainRenderPass(), vertexPath, fragmentPath, std::move(buffer_layout));
 	}
 
-    VulkanShader::~VulkanShader()
-	{
+    VulkanShader::~VulkanShader() {
+		VC_PROFILER_FUNCTION();
 		vkDestroyPipelineLayout(m_device.device(), m_pipelineLayout, nullptr);
 	}
 
 	void VulkanShader::bind() const {
+		VC_PROFILER_FUNCTION();
 		m_pipeline->bind(m_renderer.getCurrentCommandBuffer());
 		int currentFrame = m_renderer.getFrameIndex();
 		m_ssbo->uploadFrame(currentFrame, m_ssbo->framePtr(currentFrame));
@@ -33,6 +36,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniformBool(const std::string &name, bool value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -45,6 +49,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform1i(const std::string &name, int value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -57,6 +62,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform1u(const std::string &name, unsigned int value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -69,6 +75,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform1f(const std::string &name, float value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -81,6 +88,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform2f(const std::string &name, glm::vec2 value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -93,6 +101,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform3f(const std::string &name, glm::vec3 value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -105,6 +114,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniform4f(const std::string &name, glm::vec4 value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -117,6 +127,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::setUniformMat4f(const std::string &name, glm::mat4 value) const {
+		VC_PROFILER_FUNCTION();
 		VC_VERIFY_UNIFORM_NAME(name);
 		auto* e = m_layout->find(name);
 		if (e==nullptr) {
@@ -129,6 +140,7 @@ namespace Vectrix {
 	}
 
 	void VulkanShader::sendCameraUniform(const glm::mat4& camera) const {
+		VC_PROFILER_FUNCTION();
 		auto* e = m_layout->find("vc_cameraTransform");
 		if (e == nullptr) {
 			VC_CORE_ERROR("Sending camera uniform in a shader that doesn't support camera");
@@ -136,10 +148,12 @@ namespace Vectrix {
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
 	void VulkanShader::setModelMatrix(const glm::mat4& model) const {
+		VC_PROFILER_FUNCTION();
 		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::mat4), &model);
 	}
 
 	void VulkanShader::setTexture(uint32_t index, Ref<Texture> texture) {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(index < Texture::getMaxTexturePerShader(), "Index out of range");
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
 		auto textures = m_ssbo->textures();
@@ -158,17 +172,8 @@ namespace Vectrix {
 		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(glm::mat4), sizeof(unsigned int) , &index);
 	}
 
-	std::string readUTF8(const std::string& path) {
-		std::ifstream fichier(path, std::ios::binary);
-		if (!fichier.is_open()) {
-			VC_CORE_ERROR("Can't open: {}", path);
-		}
-		std::stringstream buffer;
-		buffer << fichier.rdbuf();
-		return buffer.str();
-	}
-
 	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_pipelineLayout != nullptr, "Cannot create pipeline before pipeline layout");
 
 		PipelineConfigInfo pipelineConfig{};
@@ -187,10 +192,11 @@ namespace Vectrix {
 		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);
 
-		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
+		m_pipeline = createOwn<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
 	}
 
 	void VulkanShader::createPipelineLayout() {
+		VC_PROFILER_FUNCTION();
 		VkDescriptorSetLayout dsl = m_ssbo->descriptorSetLayout();
 
 		if (dsl == VK_NULL_HANDLE) {

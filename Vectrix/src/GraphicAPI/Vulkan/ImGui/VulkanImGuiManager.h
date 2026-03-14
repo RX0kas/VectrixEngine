@@ -1,11 +1,5 @@
 #pragma once
 #include "Vectrix/ImGui/ImGuiManager.h"
-
-#ifdef VC_PLATFORM_WINDOWS
-#include "Platform/Windows/WinWindow.h"
-#elif defined(VC_PLATFORM_LINUX)
-#include "Platform/Linux/LinWindow.h"
-#endif
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
 
@@ -30,8 +24,9 @@ namespace Vectrix {
 private:
         VkDescriptorPool createImGuiDescriptorPool();
         VkRenderPass createImGuiRenderPass();
-        void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex);
-        void endImGuiRenderPass(VkCommandBuffer commandBuffer);
+        void beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) const;
+
+        static void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
 	private:
 		Ref<VulkanDebugWidget> m_debugWidget;

@@ -7,6 +7,11 @@
 
 // For application
 #include "Vectrix/Core/Core.h"
+
+#ifdef VC_PROFILER_ENABLE
+#include "Vectrix/Debug/Profiler.h"
+#endif
+
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Layers/Layer.h"

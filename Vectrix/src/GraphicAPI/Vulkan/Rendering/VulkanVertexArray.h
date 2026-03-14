@@ -1,5 +1,6 @@
 #ifndef VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
 #define VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
+#include "Vectrix/Core/Core.h"
 #include "Vectrix/Rendering/Models/VertexArray.h"
 
 namespace Vectrix {
@@ -9,7 +10,6 @@ namespace Vectrix {
         ~VulkanVertexArray() override;
 
         void bind() const override;
-        void unbind() const override;
 
         void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
         void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;

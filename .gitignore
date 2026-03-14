@@ -28,8 +28,6 @@ GLOB_RECURSE
 mono_crash.*
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
@@ -380,3 +378,6 @@ FodyWeavers.xsd
 
 */imgui.ini
 /.env
+run/Profile-Startup.json
+run/Profile-Runtime.json
+run/Profile-Shutdown.json

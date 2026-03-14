@@ -12,14 +12,7 @@ namespace Vectrix {
         VC_CORE_INFO("Initializing TextureManager");
         VC_CORE_ASSERT(!p_instance, "TextureManager already exists!");
         p_instance = this;
-        p_cache.reserve(256);
-        p_cache.max_load_factor(0.7f);
-
         m_notFoundTexture = Texture::createDefaultTexture();
-    }
-
-    TextureManager::~TextureManager() {
-        p_cache.clear();
     }
 
     void TextureManager::createTexture(const std::string &name, const std::string &path) {
@@ -33,7 +26,7 @@ namespace Vectrix {
     }
 
     Ref<Texture> TextureManager::get(const std::string& name) {
-        auto it = p_cache.find(name);
+        const auto it = p_cache.find(name);
         if (it == p_cache.end()) {
             VC_CORE_ERROR("Texture with the name \"{}\" doesn't exist", name);
         }

@@ -7,6 +7,9 @@ var annotated_dup =
       [ "Log", "classVectrix_1_1Log.html", null ],
       [ "WindowAttributes", "structVectrix_1_1WindowAttributes.html", null ],
       [ "Window", "classVectrix_1_1Window.html", null ],
+      [ "ProfilerResult", "structVectrix_1_1ProfilerResult.html", null ],
+      [ "ProfilerSession", "structVectrix_1_1ProfilerSession.html", null ],
+      [ "Profiler", "classVectrix_1_1Profiler.html", "classVectrix_1_1Profiler" ],
       [ "Event", "classVectrix_1_1Event.html", null ],
       [ "EventDispatcher", "classVectrix_1_1EventDispatcher.html", null ],
       [ "KeyEvent", "classVectrix_1_1KeyEvent.html", null ],
@@ -43,7 +46,10 @@ var annotated_dup =
       [ "UniformElement", "structVectrix_1_1UniformElement.html", "structVectrix_1_1UniformElement" ],
       [ "ShaderUniformLayout", "classVectrix_1_1ShaderUniformLayout.html", "classVectrix_1_1ShaderUniformLayout" ],
       [ "Texture", "classVectrix_1_1Texture.html", "classVectrix_1_1Texture" ],
-      [ "TextureManager", "classVectrix_1_1TextureManager.html", "classVectrix_1_1TextureManager" ]
+      [ "TextureManager", "classVectrix_1_1TextureManager.html", "classVectrix_1_1TextureManager" ],
+      [ "JsonValue", "classVectrix_1_1JsonValue.html", "classVectrix_1_1JsonValue" ],
+      [ "Json", "classVectrix_1_1Json.html", "classVectrix_1_1Json" ],
+      [ "Cache", "classVectrix_1_1Cache.html", null ]
     ] ],
     [ "XXH3", "structXXH3.html", null ]
 ];

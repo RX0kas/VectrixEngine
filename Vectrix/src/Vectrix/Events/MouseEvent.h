@@ -1,20 +1,17 @@
 #pragma once
 
+#include "vcpch.h"
 #include "Event.h"
 
 namespace Vectrix {
-	class Vectrix_API MouseMovedEvent : public Event
-	{
+	class MouseMovedEvent : public Event {
 	public:
-		MouseMovedEvent(float x, float y)
-			: m_MouseX(x), m_MouseY(y) {
-		}
+		MouseMovedEvent(float x, float y) : m_MouseX(x), m_MouseY(y) {}
 
 		float getX() const { return m_MouseX; }
 		float getY() const { return m_MouseY; }
 
-		std::string toString() const override
-		{
+		std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
 			return ss.str();
@@ -26,52 +23,41 @@ namespace Vectrix {
 		float m_MouseX, m_MouseY;
 	};
 
-	class Vectrix_API MouseScrolledEvent : public Event
-	{
+	class MouseScrolledEvent : public Event {
 	public:
-		MouseScrolledEvent(float xOffset, float yOffset)
-			: m_XOffset(xOffset), m_YOffset(yOffset) {
-		}
+		MouseScrolledEvent(float xOffset, float yOffset) : m_XOffset(xOffset), m_YOffset(yOffset) {}
 
-		inline float getXOffset() const { return m_XOffset; }
-		inline float getYOffset() const { return m_YOffset; }
+		float getXOffset() const { return m_XOffset; }
+		float getYOffset() const { return m_YOffset; }
 
-		std::string toString() const override
-		{
+		std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: " << getXOffset() << ", " << getYOffset();
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
-			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
 		float m_XOffset, m_YOffset;
 	};
 
-	class Vectrix_API MouseButtonEvent : public Event
-	{
+	class MouseButtonEvent : public Event {
 	public:
 		int getMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button)
-			: m_Button(button) {
-		}
+		MouseButtonEvent(int button) : m_Button(button) {}
 
 		int m_Button;
 	};
 
-	class Vectrix_API MouseButtonPressedEvent : public MouseButtonEvent
-	{
+	class MouseButtonPressedEvent : public MouseButtonEvent	{
 	public:
-		MouseButtonPressedEvent(int button)
-			: MouseButtonEvent(button) {
-		}
+		MouseButtonPressedEvent(int button)	: MouseButtonEvent(button) {}
 
-		std::string toString() const override
-		{
+		std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << m_Button;
 			return ss.str();
@@ -80,15 +66,11 @@ namespace Vectrix {
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class Vectrix_API MouseButtonReleasedEvent : public MouseButtonEvent
-	{
+	class MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
-		MouseButtonReleasedEvent(int button)
-			: MouseButtonEvent(button) {
-		}
+		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
 
-		std::string toString() const override
-		{
+		std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << m_Button;
 			return ss.str();

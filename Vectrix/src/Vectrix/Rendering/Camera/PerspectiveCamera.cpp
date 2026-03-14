@@ -6,23 +6,24 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
 
-	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_ViewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear)
-	{
+	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_ViewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
 		recalculateMatrices();
 	}
 
 	void PerspectiveCamera::recalculateMatrices() {
+		VC_PROFILER_FUNCTION();
 		recalculateProjectionMatrix();
 		recalculateViewMatrix();
 		recalculateTransformationMatrix();
 	}
 
-	void PerspectiveCamera::recalculateViewMatrix()
-	{
+	void PerspectiveCamera::recalculateViewMatrix()	{
+		VC_PROFILER_FUNCTION();
 		const float c1 = glm::cos(m_Rotation.y); // yaw
 		const float s1 = glm::sin(m_Rotation.y);
 		const float c2 = glm::cos(m_Rotation.x); // pitch
@@ -69,7 +70,8 @@ namespace Vectrix {
 	}
 
 	void PerspectiveCamera::recalculateProjectionMatrix() {
-		float aspect = Application::instance().window().getAspect();
+		VC_PROFILER_FUNCTION();
+		const float aspect = Application::instance().window().getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
 
 		const float tanHalfFovy = std::tan(m_fov / 2.f);
@@ -84,6 +86,7 @@ namespace Vectrix {
 	}
 
 	void PerspectiveCamera::setViewDirection(glm::vec3 position, glm::vec3 direction) {
+		VC_PROFILER_FUNCTION();
 		const glm::vec3 up = {0.0f, 1.0f, 0.0f};
 		const glm::vec3 w{glm::normalize(direction)};
 		const glm::vec3 u{glm::normalize(glm::cross(w, up))};
@@ -107,10 +110,12 @@ namespace Vectrix {
 	}
 
 	void PerspectiveCamera::setViewTarget(glm::vec3 position, glm::vec3 target) {
+		VC_PROFILER_FUNCTION();
 		setViewDirection(position, target - position);
 	}
 
 	void PerspectiveCamera::setViewYXZ(glm::vec3 position, glm::vec3 rotation) {
+		VC_PROFILER_FUNCTION();
 		const float c3 = glm::cos(rotation.z);
 		const float s3 = glm::sin(rotation.z);
 		const float c2 = glm::cos(rotation.x);

@@ -4,7 +4,7 @@
 #include "Vectrix/Application.h"
 
 namespace Vectrix {
-	Input* Input::_instance = new WinInput();
+	Input* Input::s_instance = new WinInput();
 
 	bool WinInput::isKeyPressedImpl(int keycode)
 	{
@@ -26,7 +26,7 @@ namespace Vectrix {
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 
-		return { (float)xpos, (float)ypos };
+		return { static_cast<float>(xpos), static_cast<float>(ypos) };
 	}
 
 	float WinInput::getMouseXImpl()

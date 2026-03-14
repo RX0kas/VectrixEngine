@@ -4,10 +4,7 @@ namespace Vectrix {
     class DeltaTime
     {
     public:
-        DeltaTime(float time = 0.0f)
-            : m_Time(time)
-        {
-        }
+        DeltaTime(float time = 0.0f) : m_Time(time) {}
 
         operator float() const { return m_Time; }
 

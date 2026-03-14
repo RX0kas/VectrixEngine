@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Core/DeltaTime.h"
-#include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Debug/Profiler.h"
 #include "Rendering/RenderCommand.h"
 #include "Rendering/Renderer.h"
 
@@ -17,27 +17,29 @@ namespace Vectrix {
 	Application* Application::s_instance = nullptr;
 
 	Application::Application() {
+		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
-
 
 		m_window = Ref<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		auto tm = new TextureManager();
+		const auto tm = new TextureManager();
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
-		auto sm = new ShaderManager();
+		const auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
-		auto i = new ImGuiLayer();
-		m_imGuiLayer = std::shared_ptr<ImGuiLayer>(i);
+		const auto i = new ImGuiLayer();
+		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 	}
 
 	Application::~Application() {
+		VC_PROFILER_FUNCTION();
 		m_imGuiLayer.reset();
 	}
 
 	void Application::onEvent(Event& e) {
+		VC_PROFILER_FUNCTION();
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
 
@@ -50,9 +52,10 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {
-			auto time = static_cast<float>(glfwGetTime());
+			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 			if (RenderCommand::setupFrame()) {
@@ -71,24 +74,26 @@ namespace Vectrix {
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {
+		VC_PROFILER_FUNCTION();
 		m_running = false;
 		return true;
 	}
 
-	void Application::PushLayer(const Ref<Layer>& layer)
-	{
+	void Application::PushLayer(const Ref<Layer>& layer) {
+		VC_PROFILER_FUNCTION();
 		m_layerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(const Ref<Layer>& layer)
-	{
+	void Application::PushOverlay(const Ref<Layer>& layer) {
+		VC_PROFILER_FUNCTION();
 		m_layerStack.PushOverlay(layer);
 		layer->OnAttach();
 	}
 
 
 	void Application::renderImGui() {
+		VC_PROFILER_FUNCTION();
 		for (const Ref<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
 		m_imGuiLayer->OnImGuiRender();

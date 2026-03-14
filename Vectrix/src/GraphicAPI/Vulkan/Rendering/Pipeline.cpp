@@ -1,27 +1,30 @@
 #include "vcpch.h"
 #include "Pipeline.h"
 
-#include "../../../Vectrix/Rendering/Shaders/ShaderManager.h"
+#include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanBuffer.h"
 
-#include "fstream"
+#include "Vectrix/Debug/Profiler.h"
 
 //#define NO_CULLING
 
 namespace Vectrix {
 
     Pipeline::Pipeline(Device& device,const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo) : m_device{ device } {
+        VC_PROFILER_FUNCTION();
         createGraphicsPipeline(vertCode, fragCode, configInfo);
     }
 
     Pipeline::~Pipeline() {
+        VC_PROFILER_FUNCTION();
         vkDestroyShaderModule(m_device.device(), m_vertShaderModule, nullptr);
         vkDestroyShaderModule(m_device.device(), m_fragShaderModule, nullptr);
         vkDestroyPipeline(m_device.device(), m_graphicsPipeline, nullptr);
     }
 
     void Pipeline::createGraphicsPipeline(const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo) {
+        VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(configInfo.pipelineLayout != VK_NULL_HANDLE,"Cannot create graphics pipeline: no pipelineLayout provided in configInfo");
         VC_CORE_ASSERT(configInfo.renderPass != VK_NULL_HANDLE,"Cannot create graphics pipeline: no renderPass provided in configInfo");
 
@@ -80,17 +83,19 @@ namespace Vectrix {
     }
 
     void Pipeline::bind(VkCommandBuffer commandBuffer) const {
+        VC_PROFILER_FUNCTION();
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
     }
 
     void Pipeline::createShaderModule(const std::vector<uint32_t>& code,VkShaderModule* shaderModule) {
+        VC_PROFILER_FUNCTION();
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = code.size() * sizeof(uint32_t);
         createInfo.pCode = code.data();
 
         if (vkCreateShaderModule(m_device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create shader module");
+            VC_CORE_ERROR("Failed to create shader module");
         }
     }
 

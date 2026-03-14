@@ -24,6 +24,8 @@ var hierarchy =
     [ "Vectrix::ImGuiWidget", "classVectrix_1_1ImGuiWidget.html", null ],
     [ "Vectrix::IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
     [ "Vectrix::Input", "classVectrix_1_1Input.html", null ],
+    [ "Vectrix::Json", "classVectrix_1_1Json.html", null ],
+    [ "Vectrix::JsonValue", "classVectrix_1_1JsonValue.html", null ],
     [ "Vectrix::Layer", "classVectrix_1_1Layer.html", [
       [ "Vectrix::ImGuiLayer", "classVectrix_1_1ImGuiLayer.html", null ]
     ] ],
@@ -32,6 +34,9 @@ var hierarchy =
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
     [ "Vectrix::PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
+    [ "Vectrix::Profiler", "classVectrix_1_1Profiler.html", null ],
+    [ "Vectrix::ProfilerResult", "structVectrix_1_1ProfilerResult.html", null ],
+    [ "Vectrix::ProfilerSession", "structVectrix_1_1ProfilerSession.html", null ],
     [ "Vectrix::RenderCommand", "classVectrix_1_1RenderCommand.html", null ],
     [ "Vectrix::Renderer", "classVectrix_1_1Renderer.html", null ],
     [ "Vectrix::RendererAPI", "classVectrix_1_1RendererAPI.html", null ],
@@ -43,11 +48,13 @@ var hierarchy =
     [ "Vectrix::TextureManager", "classVectrix_1_1TextureManager.html", null ],
     [ "Vectrix::Transform", "classVectrix_1_1Transform.html", null ],
     [ "Vectrix::UniformElement", "structVectrix_1_1UniformElement.html", null ],
+    [ "std::unordered_map", null, [
+      [ "Vectrix::Cache< K, I >", "classVectrix_1_1Cache.html", null ]
+    ] ],
     [ "Vectrix::Vertex", "structVectrix_1_1Vertex.html", null ],
     [ "Vectrix::VertexArray", "classVectrix_1_1VertexArray.html", null ],
     [ "Vectrix::VertexBuffer", "classVectrix_1_1VertexBuffer.html", null ],
     [ "Vectrix::Window", "classVectrix_1_1Window.html", null ],
     [ "Vectrix::WindowAttributes", "structVectrix_1_1WindowAttributes.html", null ],
-    [ "Vectrix::Window::WindowData", "structVectrix_1_1Window_1_1WindowData.html", null ],
     [ "XXH3", "structXXH3.html", null ]
 ];

@@ -1,10 +1,12 @@
 #include "vcpch.h"
 #include "GraphicAPI/Vulkan/Rendering/Device.h"
 
-#include "Platform/Windows/WinWindow.h"
+#include "GraphicAPI/Vulkan/Enum_str.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Core/AppInfo.h"
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Debug/Profiler.h"
 
 
 namespace Vectrix {
@@ -49,7 +51,7 @@ namespace Vectrix {
 
     // class member functions
     Device::Device(Window& window,DescriptorPoolConfig cfg) : m_window{ window } {
-        VC_CORE_INFO("Device created");
+        VC_PROFILER_FUNCTION();
         createInstance();
         setupDebugMessenger();
         createSurface();
@@ -66,9 +68,11 @@ namespace Vectrix {
 
         createCommandPool();
         createDescriptorPool(cfg);
+        VC_CORE_INFO("Device created");
     }
 
     Device::~Device() {
+        VC_PROFILER_FUNCTION();
         vkDestroyCommandPool(m_device, m_commandPool, nullptr);
         vkDestroyDescriptorPool(m_device,m_descriptorPool,nullptr);
         vmaDestroyAllocator(m_allocator);
@@ -87,6 +91,7 @@ namespace Vectrix {
     }
 
     void Device::createInstance() {
+        VC_PROFILER_FUNCTION();
 #ifdef VC_DEBUG
         if (enableValidationLayers && !checkValidationLayerSupport()) {
             VC_CORE_WARN("Validation layers requested but not available, disabling.");
@@ -94,7 +99,7 @@ namespace Vectrix {
         }
 #endif
         VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
-        ApplicationInfo i = Application::getAppInfo();
+        const ApplicationInfo i = Application::getAppInfo();
         appInfo.pApplicationName = i.getAppName();
         appInfo.applicationVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getAppVersion());
         appInfo.pEngineName = ApplicationInfo::getEngineName();
@@ -104,7 +109,7 @@ namespace Vectrix {
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
 
-        auto extensions = getRequiredExtensions();
+        const auto extensions = getRequiredExtensions();
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
@@ -128,6 +133,7 @@ namespace Vectrix {
     }
 
     void Device::pickPhysicalDevice() {
+        VC_PROFILER_FUNCTION();
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
         if (deviceCount == 0) {
@@ -151,6 +157,7 @@ namespace Vectrix {
     }
 
     void Device::createLogicalDevice() {
+        VC_PROFILER_FUNCTION();
         QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -204,7 +211,8 @@ namespace Vectrix {
     }
 
     void Device::createCommandPool() {
-        QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
+        VC_PROFILER_FUNCTION();
+        const QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
 
         VkCommandPoolCreateInfo poolInfo = {};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -218,6 +226,7 @@ namespace Vectrix {
     }
 
     void Device::createDescriptorPool(const DescriptorPoolConfig& cfg) {
+        VC_PROFILER_FUNCTION();
         std::vector<VkDescriptorPoolSize> sizes;
 
         if (cfg.uboCount)
@@ -239,6 +248,7 @@ namespace Vectrix {
     }
 
     VkDescriptorSetLayout Device::createFrameSSBOLayout() {
+        VC_PROFILER_FUNCTION();
         VkDescriptorSetLayoutBinding binding{};
         binding.binding = 0;
         binding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
@@ -259,12 +269,14 @@ namespace Vectrix {
     }
 
     void Device::createSurface() {
+        VC_PROFILER_FUNCTION();
         if (glfwCreateWindowSurface(m_instance, static_cast<GLFWwindow*>(m_window.getNativeWindow()), nullptr, &m_surface) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create window surface");
         }
     }
 
     bool Device::isDeviceSuitable(VkPhysicalDevice physicalDevice) {
+        VC_PROFILER_FUNCTION();
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
         bool extensionsSupported = checkDeviceExtensionSupport(physicalDevice);
@@ -293,6 +305,7 @@ namespace Vectrix {
     }
 
     void Device::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+        VC_PROFILER_FUNCTION();
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
@@ -302,6 +315,7 @@ namespace Vectrix {
     }
 
     void Device::setupDebugMessenger() {
+        VC_PROFILER_FUNCTION();
         if (!enableValidationLayers) return;
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         populateDebugMessengerCreateInfo(createInfo);
@@ -312,6 +326,7 @@ namespace Vectrix {
     }
 
     bool Device::checkValidationLayerSupport() {
+        VC_PROFILER_FUNCTION();
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -337,6 +352,7 @@ namespace Vectrix {
     }
 
     std::vector<const char*> Device::getRequiredExtensions() {
+        VC_PROFILER_FUNCTION();
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
@@ -350,6 +366,7 @@ namespace Vectrix {
     }
 
     void Device::hasGflwRequiredInstanceExtensions() {
+        VC_PROFILER_FUNCTION();
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -360,7 +377,7 @@ namespace Vectrix {
             available.insert(extension.extensionName);
         }
 
-        auto requiredExtensions = getRequiredExtensions();
+        const auto requiredExtensions = getRequiredExtensions();
         for (const auto& required : requiredExtensions) {
             if (available.find(required) == available.end()) {
                 VC_CORE_CRITICAL("Missing required glfw extension: {0}", required);
@@ -369,6 +386,7 @@ namespace Vectrix {
     }
 
     bool Device::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+        VC_PROFILER_FUNCTION();
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -385,6 +403,7 @@ namespace Vectrix {
     }
 
     QueueFamilyIndices Device::findQueueFamilies(VkPhysicalDevice device) {
+        VC_PROFILER_FUNCTION();
         QueueFamilyIndices indices;
 
         uint32_t queueFamilyCount = 0;
@@ -416,6 +435,7 @@ namespace Vectrix {
     }
 
     SwapChainSupportDetails Device::querySwapChainSupport(VkPhysicalDevice device) {
+        VC_PROFILER_FUNCTION();
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_surface, &details.capabilities);
 
@@ -437,8 +457,9 @@ namespace Vectrix {
         return details;
     }
 
-    VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
-        for (VkFormat format : candidates) {
+    VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features) const {
+        VC_PROFILER_FUNCTION();
+        for (const VkFormat format : candidates) {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(m_physicalDevice, format, &props);
 
@@ -454,6 +475,7 @@ namespace Vectrix {
     }
 
     uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memoryProperties) {
+        VC_PROFILER_FUNCTION();
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memProperties);
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -467,6 +489,7 @@ namespace Vectrix {
     }
 
     void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation) {
+        VC_PROFILER_FUNCTION();
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -486,6 +509,7 @@ namespace Vectrix {
     }
 
     VkCommandBuffer Device::beginSingleTimeCommands() {
+        VC_PROFILER_FUNCTION();
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -504,6 +528,7 @@ namespace Vectrix {
     }
 
     void Device::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+        VC_PROFILER_FUNCTION();
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
@@ -517,8 +542,9 @@ namespace Vectrix {
         vkFreeCommandBuffers(m_device, m_commandPool, 1, &commandBuffer);
     }
 
-    void Device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+    void Device::copyBuffer(const VkBuffer srcBuffer, const VkBuffer dstBuffer, const VkDeviceSize size) {
+        VC_PROFILER_FUNCTION();
+        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferCopy copyRegion{};
         copyRegion.srcOffset = 0;  // Optional
@@ -529,9 +555,9 @@ namespace Vectrix {
         endSingleTimeCommands(commandBuffer);
     }
 
-    void Device::copyBufferToImage(
-        VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount) {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+    void Device::copyBufferToImage(const VkBuffer buffer, const VkImage image, const uint32_t width, const uint32_t height, const uint32_t layerCount) {
+        VC_PROFILER_FUNCTION();
+        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
         VkBufferImageCopy region{};
         region.bufferOffset = 0;
@@ -551,6 +577,7 @@ namespace Vectrix {
     }
 
     void Device::createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags memoryProperties, VkImage& image, VmaAllocation& allocation) {
+        VC_PROFILER_FUNCTION();
         VmaAllocationCreateInfo allocCreateInfo = {};
         allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
         if (memoryProperties & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) {
@@ -567,11 +594,13 @@ namespace Vectrix {
     }
 
     void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation) {
+        VC_PROFILER_FUNCTION();
         vkDeviceWaitIdle(m_device);
         vmaDestroyBuffer(m_allocator, buffer, allocation);
     }
 
     void Device::destroyImage(VkImage image, VmaAllocation allocation) {
+        VC_PROFILER_FUNCTION();
         vkDeviceWaitIdle(m_device);
         vmaDestroyImage(m_allocator, image, allocation);
     }

@@ -3,6 +3,7 @@
 
 #include "Vectrix/Utils/Memory.h"
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Core/Core.h"
 #include "ShaderUniformType.h"
 
 #include <string>
@@ -107,7 +108,7 @@ namespace Vectrix {
             uint32_t cursor = 0;
 
             for (auto& e : m_elements) {
-                uint32_t align = uniformAlignment(e.type);
+                const uint32_t align = uniformAlignment(e.type);
                 cursor = ALIGN_TO(cursor, align);
 
                 e.offset = cursor;

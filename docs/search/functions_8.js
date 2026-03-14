@@ -1,15 +1,4 @@
 var searchData=
 [
-  ['setclearcolor_0',['setClearColor',['../classVectrix_1_1RenderCommand.html#a4a7883c329e82a955808454bee544756',1,'Vectrix::RenderCommand']]],
-  ['settexture_1',['setTexture',['../classVectrix_1_1Shader.html#a050f9929c45f6dd17b9c64cbf541adf7',1,'Vectrix::Shader']]],
-  ['setuniform_2',['setUniform',['../classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472',1,'Vectrix::Shader']]],
-  ['setuniform1f_3',['setUniform1f',['../classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f',1,'Vectrix::Shader']]],
-  ['setuniform1i_4',['setUniform1i',['../classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756',1,'Vectrix::Shader']]],
-  ['setuniform1u_5',['setUniform1u',['../classVectrix_1_1Shader.html#a017abdd2eccc15c4c501a117c3ba3b3a',1,'Vectrix::Shader']]],
-  ['setuniform2f_6',['setUniform2f',['../classVectrix_1_1Shader.html#abdff206cba9d44deea50dd54cca15114',1,'Vectrix::Shader']]],
-  ['setuniform3f_7',['setUniform3f',['../classVectrix_1_1Shader.html#a5a36bed2c7814144d4d00c341118110c',1,'Vectrix::Shader']]],
-  ['setuniform4f_8',['setUniform4f',['../classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3',1,'Vectrix::Shader']]],
-  ['setuniformbool_9',['setUniformBool',['../classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54',1,'Vectrix::Shader']]],
-  ['setuniformmat4f_10',['setUniformMat4f',['../classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8',1,'Vectrix::Shader']]],
-  ['submit_11',['submit',['../classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]]
+  ['jsonvalue_0',['JsonValue',['../classVectrix_1_1JsonValue.html#a83bcdc08e38534ac0ca1d0629e9b81ca',1,'Vectrix::JsonValue::JsonValue()'],['../classVectrix_1_1JsonValue.html#ae0d0d904d3ad9105155c0d9cd0888b8f',1,'Vectrix::JsonValue::JsonValue(const std::string &amp;value)'],['../classVectrix_1_1JsonValue.html#ae2515ce3d19ef617b6c6704f2f908226',1,'Vectrix::JsonValue::JsonValue(double value)'],['../classVectrix_1_1JsonValue.html#af532368b2954ac8bfda7811f852c6f08',1,'Vectrix::JsonValue::JsonValue(bool value)'],['../classVectrix_1_1JsonValue.html#adf61cdeab21c34fc0ad72949e83f0385',1,'Vectrix::JsonValue::JsonValue(const JsonArray &amp;value)'],['../classVectrix_1_1JsonValue.html#a4f10c46d9b546f469584db84240270ed',1,'Vectrix::JsonValue::JsonValue(const JsonObject &amp;value)']]]
 ];

@@ -14,7 +14,7 @@
 namespace Vectrix {
 	VulkanImGuiManager* VulkanImGuiManager::m_instance = nullptr;
 
-    VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
+    VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window }, m_imGuiRenderPass(VK_NULL_HANDLE) {
 		VC_CORE_INFO("Initializing ImGuiManager");
     	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists!");
     	m_instance = this;
@@ -22,7 +22,7 @@ namespace Vectrix {
 	}
 
     void VulkanImGuiManager::attachDebugGraphicWidget() {
-    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
+    	m_debugWidget = createRef<VulkanDebugWidget>();
     	Application::instance().imguiLayer().addWidget(m_debugWidget);
     }
 
@@ -43,7 +43,7 @@ namespace Vectrix {
 			m_descriptorPool = VK_NULL_HANDLE;
 		}
 
-    	for (auto f : m_imGuiFramebuffers) {
+    	for (const auto f : m_imGuiFramebuffers) {
     		if (f!=VK_NULL_HANDLE)
     			vkDestroyFramebuffer(m_device.device(),f,nullptr);
     	}
@@ -54,11 +54,9 @@ namespace Vectrix {
 	void VulkanImGuiManager::createImGuiFramebuffers() {
     	m_imGuiFramebuffers.resize(m_renderer->getSwapChainImageCount());
 
-    	for (size_t i = 0; i < m_imGuiFramebuffers.size(); i++) {
+    	for (int i = 0; i < m_imGuiFramebuffers.size(); i++) {
     		VC_CORE_ASSERT(m_renderer->getSwapChainImageView(i) != VK_NULL_HANDLE,"Swapchain image view is null for index {}", i);
-    		VkImageView attachments[] = {
-    			m_renderer->getSwapChainImageView(i)
-			};
+    		const VkImageView attachments[] = { m_renderer->getSwapChainImageView(i) };
 
     		VkFramebufferCreateInfo framebufferInfo{};
     		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -69,13 +67,14 @@ namespace Vectrix {
     		framebufferInfo.height = m_renderer->getSwapChainExtent().height;
     		framebufferInfo.layers = 1;
 
-    		if (vkCreateFramebuffer(m_device.device(),&framebufferInfo,nullptr,&m_imGuiFramebuffers[i]) != VK_SUCCESS)
-    			throw std::runtime_error("failed to create ImGui framebuffer!");
+    		if (vkCreateFramebuffer(m_device.device(),&framebufferInfo,nullptr,&m_imGuiFramebuffers[i]) != VK_SUCCESS) {
+    			VC_CORE_ERROR("Failed to create ImGui framebuffer");
+    		}
     	}
     }
 
 	void VulkanImGuiManager::destroyImGuiFramebuffers() {
-    	for (auto fb : m_imGuiFramebuffers) {
+    	for (const auto fb : m_imGuiFramebuffers) {
     		if (fb != VK_NULL_HANDLE) {
     			vkDestroyFramebuffer(m_device.device(), fb, nullptr);
     		}
@@ -86,7 +85,7 @@ namespace Vectrix {
 
 
 	void VulkanImGuiManager::render() {
-    	VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+    	const VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
     	beginImGuiRenderPass(cmd,VulkanContext::instance().getRenderer().getCurrentImageIndex());
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -104,11 +103,7 @@ namespace Vectrix {
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 		VC_CORE_INFO("Initializing ImGui");
 
-#ifdef VC_PLATFORM_WINDOWS
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<WinWindow&>(m_window).getNativeWindow());
-#else
-		auto* w = static_cast<GLFWwindow*>(dynamic_cast<LinWindow&>(m_window).getNativeWindow());
-#endif
+		auto* w = static_cast<GLFWwindow*>(m_window.getNativeWindow());
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -213,9 +208,8 @@ namespace Vectrix {
     	VkRenderPass renderPass = VK_NULL_HANDLE;
     	VkResult res = vkCreateRenderPass(m_device.device(), &renderPassInfo, nullptr, &renderPass);
 
-    	if (res != VK_SUCCESS)
-    	{
-    		throw std::runtime_error("Failed to create ImGui render pass");
+    	if (res != VK_SUCCESS) {
+    		VC_CORE_ERROR("Failed to create ImGui render pass");
     	}
 
     	m_imGuiRenderPass = renderPass;
@@ -223,7 +217,7 @@ namespace Vectrix {
     	return renderPass;
     }
 
-	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) {
+	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) const {
     	VC_CORE_ASSERT(m_imGuiRenderPass != VK_NULL_HANDLE, "ImGui render pass not created");
     	VC_CORE_ASSERT(imageIndex < m_imGuiFramebuffers.size(), "Invalid ImGui framebuffer index");
 
@@ -258,12 +252,11 @@ namespace Vectrix {
 			}
 		}
 
-		throw std::runtime_error("No graphics queue family found!");
-		return 0;
+		VC_CORE_ERROR("No graphics queue family found");
 	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {
-		VkDescriptorPoolSize pool_sizes[] = {
+		const VkDescriptorPoolSize pool_sizes[] = {
 			{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
 			{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
@@ -281,7 +274,7 @@ namespace Vectrix {
 		pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 		pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
-		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+		pool_info.poolSizeCount = static_cast<uint32_t>(IM_ARRAYSIZE(pool_sizes));
 		pool_info.pPoolSizes = pool_sizes;
 
 		vkCreateDescriptorPool(m_device.device(), &pool_info, nullptr, &m_descriptorPool);

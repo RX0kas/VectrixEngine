@@ -1,0 +1,9 @@
+/**
+ * @page tools_overview Tools Guide
+ *
+ * ## Categories
+ * ### 1. @ref debugtools
+ * - @ref Profiler : Class that provides time analysis on how the application and the engine run
+ * ### 2. @ref utilities
+ * - @ref Json : Class that provides static methods for parsing JSON from strings or files
+ */

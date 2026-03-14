@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['perspectivecamera_0',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
-  ['perspectivecameracontroller_1',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]]
+  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
+  ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
+  ['log_2',['Log',['../classVectrix_1_1Log.html',1,'Vectrix']]]
 ];

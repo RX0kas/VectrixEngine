@@ -19,7 +19,7 @@ namespace Vectrix {
             return;
         }
 
-        ApplicationInfo info = Application::getAppInfo();
+        const ApplicationInfo info = Application::getAppInfo();
         if (ImGui::CollapsingHeader("Application Information")) {
             ImGui::Text("Application name: %s",info.getAppName());
             ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
@@ -28,8 +28,8 @@ namespace Vectrix {
             ImGui::Text("FPS: %f",1/Application::instance().getDeltaTime().getSeconds());
         }
         ImGui::Separator();
-        DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
-        std::vector<DebugMemoryHeapInfo> memory = collectMemoryInfo();
+        const DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
+        const std::vector<DebugMemoryHeapInfo> memory = collectMemoryInfo();
         ImGui::Text("Frame Index: %u", frame.frameIndex);
         ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
         ImGui::Separator();

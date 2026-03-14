@@ -21,6 +21,10 @@ namespace Vectrix {
         return static_cast<uint32_t>(VC_PLATFORM_ID)<< 31U | major << 24U | minor << 12U | patch;
     }
 
+    constexpr static std::uint32_t getOS(const Version version) {
+        return version >> 24 & 0xFF;
+    }
+
     constexpr static std::uint32_t getMajor(const Version version) {
         return (version & 0x7F000000) >> 24U;
     }
@@ -33,8 +37,8 @@ namespace Vectrix {
 
     static std::string toString(const Version version) {
         char r[32];
-        sprintf(r,"%s-%u.%u.%u",VC_PLATFORM_ID ? "Windows" : "Linux",getMajor(version),getMinor(version),getPatch(version));
-        return std::string(r);
+        sprintf(r,"%s-%u.%u.%u",getOS(version) ? "Windows" : "Linux",getMajor(version),getMinor(version),getPatch(version));
+        return {r};
     }
 
     class ApplicationInfo {
@@ -50,7 +54,7 @@ namespace Vectrix {
             return makeVersion(VC_VERSION_MAJOR,VC_VERSION_MINOR,VC_VERSION_PATCH);
         }
     private:
-        void init(const std::string &appName, const Version appVersion);
+        void init(const std::string &appName, Version appVersion);
         std::string m_appName;
         Version m_appVersion;
         static constexpr auto m_engineName = "Vectrix";

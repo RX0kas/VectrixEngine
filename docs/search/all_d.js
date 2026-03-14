@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
-  ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
-  ['list_2',['Deprecated List',['../deprecated.html',1,'']]],
-  ['log_3',['Log',['../classVectrix_1_1Log.html',1,'Vectrix']]]
+  ['keyevent_0',['KeyEvent',['../classVectrix_1_1KeyEvent.html',1,'Vectrix']]],
+  ['keypressedevent_1',['KeyPressedEvent',['../classVectrix_1_1KeyPressedEvent.html',1,'Vectrix']]],
+  ['keyreleasedevent_2',['KeyReleasedEvent',['../classVectrix_1_1KeyReleasedEvent.html',1,'Vectrix']]]
 ];
