@@ -328,7 +328,6 @@ namespace Vectrix {
 		///  @endcond
 	private:
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
-		virtual void setModelMatrix(const glm::mat4& model) const = 0;
 		friend class ShaderManager;
 		friend class Renderer;
 		static Shader* create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera);

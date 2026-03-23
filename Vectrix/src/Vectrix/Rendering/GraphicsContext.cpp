@@ -23,4 +23,12 @@ namespace Vectrix {
 
         VC_CORE_ERROR("Unknown RendererAPI!");
     }
+
+    void GraphicsContext::uploadAllMeshData() {
+        switch (RendererAPI::getAPI()) {
+            case RendererAPI::API::Vulkan: VulkanContext::uploadMeshData();
+            case RendererAPI::API::None:
+                break;
+        }
+    }
 }

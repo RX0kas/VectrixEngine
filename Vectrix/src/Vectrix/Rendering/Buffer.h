@@ -1,5 +1,5 @@
 #pragma once
-#include "Models/Vertex.h"
+#include "Mesh/Vertex.h"
 #include "Vectrix/Core/Log.h"
 
 #include <algorithm>
@@ -24,16 +24,16 @@ namespace Vectrix {
 	}
 
 	struct BufferElement {
-		std::string Name;
-		ShaderDataType Type;
-		uint32_t Size;
-		uint32_t Offset;
+		std::string name;
+		ShaderDataType type;
+		uint32_t size;
+		uint32_t offset;
 
 		BufferElement(ShaderDataType type, std::string name)
-			: Name(std::move(name)), Type(type), Size(ShaderDataTypeSize(type)), Offset(0) {}
+			: name(std::move(name)), type(type), size(ShaderDataTypeSize(type)), offset(0) {}
 
 		bool operator==(const BufferElement& e) const {
-			return e.Name==this->Name && e.Type==this->Type && e.Size==this->Size && e.Offset==this->Offset;
+			return e.name==this->name && e.type==this->type && e.size==this->size && e.offset==this->offset;
 		}
 	};
 
@@ -41,31 +41,31 @@ namespace Vectrix {
 	public:
 		BufferLayout() = default;
 
-		BufferLayout(std::initializer_list<BufferElement> elements)	: m_Elements(elements) {
+		BufferLayout(std::initializer_list<BufferElement> elements)	: m_elements(elements) {
 			CalculateOffsetsAndStride();
 		}
 
-		[[nodiscard]] uint32_t getStride() const { return m_Stride; }
-		[[nodiscard]] const std::vector<BufferElement>& getElements() const { return m_Elements; }
+		[[nodiscard]] uint32_t getStride() const { return m_stride; }
+		[[nodiscard]] const std::vector<BufferElement>& getElements() const { return m_elements; }
 		[[nodiscard]] bool has(const std::string& name) const {
-			const auto end = m_Elements.end();
-			return std::any_of(m_Elements.begin(), end, [name](const BufferElement& x) { return x.Name == name; });
+			const auto end = m_elements.end();
+			return std::any_of(m_elements.begin(), end, [name](const BufferElement& x) { return x.name == name; });
 		}
 	private:
 		void CalculateOffsetsAndStride() {
 			uint32_t offset = 0;
-			m_Stride = 0;
+			m_stride = 0;
 
-			for (auto& element : m_Elements) {
-				element.Offset = offset;
-				offset += element.Size;
-				m_Stride += element.Size;
+			for (auto& element : m_elements) {
+				element.offset = offset;
+				offset += element.size;
+				m_stride += element.size;
 			}
 		}
 
 	private:
-		std::vector<BufferElement> m_Elements;
-		uint32_t m_Stride = 0;
+		std::vector<BufferElement> m_elements;
+		uint32_t m_stride = 0;
 	};
 
 

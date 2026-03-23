@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-#include "Device.h"
+#include "Core/Device.h"
 #include "stb_image.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"

@@ -18,6 +18,7 @@ Current Working branch: [feature/batch_rendering](https://github.com/RX0kas/Vect
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
 - [Python 3](https://www.python.org/downloads/)
 - Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
+- A GPU compatible with Vulkan 1.3 and SPIRV 1.6
 
 ## Installation
 ```bash

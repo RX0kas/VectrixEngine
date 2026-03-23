@@ -44,6 +44,10 @@ namespace Vectrix {
 
             return vals;
         }
+
+        bool exist(K key) {
+            return this->find(key)!=this->end();
+        }
     };
 
     inline std::string readUTF8(const std::string& path) {

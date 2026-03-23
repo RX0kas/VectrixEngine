@@ -1,8 +1,10 @@
 #include "vcpch.h"
 #include "VulkanContext.h"
 #include "Vectrix/Application.h"
-#include "vk_mem_alloc.h"
+#include "Rendering/Mesh/MeshRegistry.h"
+#include "Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Rendering/Mesh/Model.h"
 
 namespace Vectrix {
 	VulkanContext* VulkanContext::s_instance = nullptr;
@@ -13,18 +15,17 @@ namespace Vectrix {
 		s_instance = this;
 		VC_CORE_ASSERT(windowHandle, "Window handle is null!");
 		m_compiler = createOwn<VulkanShaderCompiler>();
+		m_meshRegistry = createOwn<MeshRegistry>();
 	}
 
 	VulkanContext::~VulkanContext() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Graphic context");
-		const VulkanRenderer* r = m_renderer.release();
-		delete r;
-		const VulkanShaderCompiler* c = m_compiler.release();
-		delete c;
 
-		const Device* d = m_device.release();
-		delete d;
+		VC_DELETE_OWN(m_renderer);
+		VC_DELETE_OWN(m_compiler);
+		VC_DELETE_OWN(m_meshRegistry);
+		VC_DELETE_OWN(m_device);
 	}
 
 	void VulkanContext::init() {
@@ -38,5 +39,15 @@ namespace Vectrix {
 	void VulkanContext::swapBuffers() {
 		VC_PROFILER_FUNCTION();
 		glfwPollEvents();
+	}
+
+	void VulkanContext::registerMesh(const std::string &name, Ref<Model> model) {
+		VC_PROFILER_FUNCTION();
+		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->getVertexArray());
+		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->getVertices(),model->getIndices()));
+	}
+
+	void VulkanContext::uploadMeshData() {
+		s_instance->m_meshRegistry->uploadToGPU();
 	}
 }

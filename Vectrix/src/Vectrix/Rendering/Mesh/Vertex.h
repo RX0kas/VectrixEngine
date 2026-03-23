@@ -9,11 +9,8 @@ namespace Vectrix {
 		glm::vec3 normal;
 		glm::vec2 uv;
 
-		bool operator==(const Vertex& other) const
-		{
-			return position == other.position &&
-				   normal   == other.normal &&
-				   uv       == other.uv;
+		bool operator==(const Vertex& other) const {
+			return position == other.position && normal == other.normal && uv == other.uv;
 		}
 	};
 } // namespace Vectrix

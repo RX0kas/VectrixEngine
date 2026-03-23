@@ -1,16 +1,22 @@
 #include "vcpch.h"
 #include "VulkanRenderer.h"
 
-#include "Shaders/VulkanShader.h"
+#include "../Shaders/VulkanShader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "GraphicAPI/Vulkan/Rendering/Mesh/MeshRegistry.h"
+#include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Rendering/Shaders/Pipeline.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Rendering/RenderCommand.h"
 #include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
+#include "Vectrix/Rendering/Textures/TextureManager.h"
 
 namespace Vectrix {
+
+	Cache<std::string,BatchInfo> VulkanRenderer::m_batchCache{};
 
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
 		VC_PROFILER_FUNCTION();
@@ -90,9 +96,9 @@ namespace Vectrix {
 
 	VkCommandBuffer VulkanRenderer::beginFrame() {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(!isFrameStarted, "Frame already started");
+		VC_CORE_ASSERT(!m_isFrameStarted, "Frame already started");
 
-		VkResult result = m_swapChain->acquireNextImage(&currentImageIndex);
+		VkResult result = m_swapChain->acquireNextImage(&m_currentImageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			return VK_NULL_HANDLE;
@@ -102,7 +108,7 @@ namespace Vectrix {
 			VC_CORE_CRITICAL("failed to acquire swap chain image!");
 		}
 
-		isFrameStarted = true;
+		m_isFrameStarted = true;
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
 		vkResetCommandBuffer(commandBuffer, 0);
@@ -118,12 +124,12 @@ namespace Vectrix {
 
 	void VulkanRenderer::endFrame() {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(isFrameStarted, "Frame not started");
+		VC_CORE_ASSERT(m_isFrameStarted, "Frame not started");
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
 		vkEndCommandBuffer(commandBuffer);
 
-		VkResult result = m_swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
+		VkResult result = m_swapChain->submitCommandBuffers(&commandBuffer, &m_currentImageIndex);
 
 		bool needRecreate =
 			result == VK_ERROR_OUT_OF_DATE_KHR ||
@@ -132,7 +138,7 @@ namespace Vectrix {
 
 		if (needRecreate) {
 			m_window.resetWindowResizedFlag();
-			isFrameStarted = false;
+			m_isFrameStarted = false;
 			return;
 		}
 
@@ -140,19 +146,19 @@ namespace Vectrix {
 			VC_CORE_ERROR("Failed to present swap chain image");
 		}
 
-		isFrameStarted = false;
+		m_isFrameStarted = false;
 		m_swapChain->advanceFrame();
 	}
 
 	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
+		VC_CORE_ASSERT(m_isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
 
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = m_swapChain->getRenderPass();
-		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(currentImageIndex);
+		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(m_currentImageIndex);
 
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_swapChain->getSwapChainExtent();
@@ -179,23 +185,100 @@ namespace Vectrix {
 
 	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) const {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
+		VC_CORE_ASSERT(m_isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(),"Can't end render pass on command buffer from a different frame");
 		VC_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE,"Can't end render pass if commandBuffer is VK_NULL_HANDLE");
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	void VulkanRenderer::Submit(Shader& shader, const VertexArray &vertexArray, const Transform &transform) {
+	Own<VulkanBuffer> createIndirectBuffer() {
+		Own<VulkanBuffer> indirectBuffer = std::make_unique<VulkanBuffer>(
+			sizeof(VkDrawIndexedIndirectCommand), MAX_OBJECTS_BATCHING,
+			VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT , VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+		);
+
+		indirectBuffer->map();
+		return indirectBuffer;
+	}
+
+	// TODO: Rework this when a material system is created
+	void VulkanRenderer::submit(Shader& shader, Ref<VertexArray> vertexArray, Transform transform,std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
-		vertexArray.bind();
-		RenderCommand::drawIndexed(vertexArray);
+		auto& vkShader = dynamic_cast<VulkanShader&>(shader);
+		BatchInfo b;
+		if (m_batchCache.exist(vkShader.m_name)) {
+			b = std::move(m_batchCache[vkShader.m_name]);
+		} else {
+			b = {
+				.pipeline = vkShader.m_pipeline->getPipeline(),
+				.pipelineLayout = vkShader.m_pipelineLayout,
+				.descriptorSet = vkShader.m_ssbo->descriptorSet(),
+				.commands = {},
+				.indirectBuffer = createIndirectBuffer(),
+				.objectDataSSBO = createRef<DynamicSSBO>(vkShader.m_layout.get()),
+				.objectDatas = {},
+				.elementCount = 0
+			};
+		}
+
+		uint32_t index = b.elementCount++;
+
+		ObjectData currentObjectData = {
+			.modelMatrix = transform.mat4(),
+			.textureIndex = textureIndex
+		};
+		b.objectDataSSBO->write(VulkanContext::instance().getRenderer().getCurrentImageIndex(), index, &currentObjectData);
+
+		MeshHandle handle = std::dynamic_pointer_cast<VulkanVertexArray>(vertexArray)->getHandle();
+
+		VkDrawIndexedIndirectCommand command = {
+			.indexCount    = handle.indexCount,
+			.instanceCount = 1,
+			.firstIndex    = handle.firstIndex,
+			.vertexOffset  = handle.vertexOffset,
+			.firstInstance = index
+		};
+		b.commands.push_back(command);
+		b.indirectBuffer->writeToBuffer(&command,sizeof(VkDrawIndexedIndirectCommand),index * sizeof(VkDrawIndexedIndirectCommand));
+
+		m_batchCache[vkShader.m_name] = std::move(b);
+	}
+
+	void VulkanRenderer::flush() {
+		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+		auto &[camera] = Renderer::getSceneData();
+		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
+		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
+		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
+
+		VkDeviceSize offset = 0;
+		vkCmdBindVertexBuffers(cmd, 0, 1, &vertexBuf, &offset);
+		vkCmdBindIndexBuffer(cmd, meshRegistry.getIndexBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+		for (auto& [shaderName, batch] : m_batchCache) {
+			if (batch.elementCount == 0) continue;
+
+
+			Ref<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(ShaderManager::instance().get(shaderName));
+
+			if (shader->isAffectedByCamera())
+				shader->sendCameraUniform(camera->getTransformationMatrix());
+			shader->bind();
+
+			VkDescriptorSet objectSet = batch.objectDataSSBO->descriptorSet(frameIndex);
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS,
+				shader->m_pipelineLayout,batch.objectDataSSBO->getSetCountID(),1, &objectSet,0, nullptr);
+			batch.objectDataSSBO->flush(frameIndex);
+
+			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffer->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
+		}
 	}
 
 	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() const {
 		VC_PROFILER_FUNCTION();
 		DebugFrameInfo f{};
 		f.frameIndex = m_swapChain->getFrameIndex();
-		f.swapchainImageIndex = currentImageIndex;
+		f.swapchainImageIndex = m_currentImageIndex;
 
 		f.fences = std::vector<DebugFenceInfo>();
 		auto imageInFlightFences = m_swapChain->getImageInFlightFences();
@@ -226,7 +309,7 @@ namespace Vectrix {
 			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
-			DebugDescriptorSetInfo d{};
+			DebugDescriptorSetInfo d;
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}

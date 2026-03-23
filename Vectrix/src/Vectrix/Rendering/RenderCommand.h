@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
-#include "Models/VertexArray.h"
+#include "Mesh/VertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 
 /**

@@ -1,7 +1,6 @@
 #pragma once
-#include "vcpch.h"
-#include "Vectrix/Core/Window.h"
 #include "vk_mem_alloc.h"
+#include "vector"
 
 namespace Vectrix {
     struct DescriptorPoolConfig {
@@ -25,6 +24,8 @@ namespace Vectrix {
         bool presentFamilyHasValue = false;
         bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
+
+	class Window;
 
 	class Device
 	{

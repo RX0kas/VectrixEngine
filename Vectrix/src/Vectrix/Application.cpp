@@ -6,8 +6,11 @@
 
 #include "Core/DeltaTime.h"
 #include "Debug/Profiler.h"
+#include "Rendering/GraphicsContext.h"
 #include "Rendering/RenderCommand.h"
-#include "Rendering/Renderer.h"
+#include "Rendering/Mesh/MeshManager.h"
+#include "Rendering/Shaders/ShaderManager.h"
+#include "Rendering/Textures/TextureManager.h"
 
 
 namespace Vectrix {
@@ -28,6 +31,8 @@ namespace Vectrix {
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
 		const auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
+		const auto mm = new MeshManager();
+		m_meshManager = std::unique_ptr<MeshManager>(mm);
 		const auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
@@ -52,6 +57,7 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		GraphicsContext::uploadAllMeshData();
 		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {

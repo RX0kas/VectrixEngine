@@ -14,10 +14,11 @@ namespace Vectrix {
 
 
 
-    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
+    Ref<Shader> ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
         VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
         Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
-        instance().add(name,std::move(shader));
+        instance().add(name,shader);
+        return shader;
     }
 
     void ShaderManager::add(const std::string& name, Ref<Shader> shader) {

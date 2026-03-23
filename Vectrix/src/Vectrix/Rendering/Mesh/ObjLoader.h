@@ -16,7 +16,7 @@ namespace Vectrix {
     inline BufferLayout getTinyObjLayout() {
         return {
             {ShaderDataType::Float3, "a_Position" },
-            {ShaderDataType::Float3, "a_Normal"   },
+            {ShaderDataType::Float3, "a_Normal" },
             {ShaderDataType::Float2, "a_TexCoord" }
         };
     }

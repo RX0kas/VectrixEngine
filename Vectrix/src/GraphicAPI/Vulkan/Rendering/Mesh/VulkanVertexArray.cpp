@@ -1,4 +1,4 @@
-#include "GraphicAPI/Vulkan/Rendering/VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
 
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Debug/Profiler.h"

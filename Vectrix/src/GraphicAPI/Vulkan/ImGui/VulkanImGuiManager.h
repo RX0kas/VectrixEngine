@@ -1,7 +1,7 @@
 #pragma once
 #include "Vectrix/ImGui/ImGuiManager.h"
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
+#include "../Rendering/Core/Device.h"
+#include "../Rendering/Core/VulkanRenderer.h"
 
 
 namespace Vectrix {
