@@ -1,5 +1,5 @@
 #include "vcpch.h"
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "Device.h"
 
 #include "GraphicAPI/Vulkan/Enum_str.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
@@ -104,7 +104,7 @@ namespace Vectrix {
         appInfo.applicationVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getAppVersion());
         appInfo.pEngineName = ApplicationInfo::getEngineName();
         appInfo.engineVersion = VC_MAKE_VULKAN_COMPATIBLE_VERSION(i.getEngineVersion());
-        appInfo.apiVersion = VK_API_VERSION_1_2;
+        appInfo.apiVersion = VK_API_VERSION_1_3;
 
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
@@ -120,6 +120,7 @@ namespace Vectrix {
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = &debugCreateInfo;
+            VC_CORE_INFO("Vulkan Validation layers enable");
         } else {
             createInfo.enabledLayerCount = 0;
             createInfo.pNext = nullptr;

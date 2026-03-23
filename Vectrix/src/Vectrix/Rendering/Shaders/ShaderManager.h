@@ -59,7 +59,7 @@ namespace Vectrix {
          * @param layout Information on how the vertex are sent to the GPU
          * @param affectedByCamera Tell if we need to send the information of the camera to the GPU
          */
-        static void createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout,bool affectedByCamera);
+        static Ref<Shader> createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout,bool affectedByCamera);
     private:
         friend class Shader;
         friend class Application;

@@ -15,9 +15,10 @@ namespace Vectrix {
         m_notFoundTexture = Texture::createDefaultTexture();
     }
 
-    void TextureManager::createTexture(const std::string &name, const std::string &path) {
+    Ref<Texture> TextureManager::createTexture(const std::string &name, const std::string &path) {
         Ref<Texture> texture(Texture::create(path));
-        instance().add(name,std::move(texture));
+        instance().add(name,texture);
+        return texture;
     }
 
     void TextureManager::add(const std::string& name, Ref<Texture> texture) {

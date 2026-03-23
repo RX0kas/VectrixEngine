@@ -62,7 +62,7 @@ namespace Vectrix {
          * @param name Name given to the texture
          * @param path Path of the texture file
          */
-        static void createTexture(const std::string &name, const std::string &path);
+        static Ref<Texture> createTexture(const std::string &name, const std::string &path);
     private:
         friend class Texture;
         friend class Application;

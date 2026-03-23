@@ -1,12 +1,12 @@
 #ifndef VECTRIXWORKSPACE_DYNAMICSSBO_H
 #define VECTRIXWORKSPACE_DYNAMICSSBO_H
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
+#include "../Core/Device.h"
 #include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
 
 namespace Vectrix {
     class DynamicSSBO {
     public:
-        DynamicSSBO(Device& device, ShaderUniformLayout& layout, uint32_t initialCapacity = 256);
+        DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity = 256);
         ~DynamicSSBO();
 
         void write(uint32_t frameIndex, uint32_t elementIndex, const void* src);
@@ -14,17 +14,27 @@ namespace Vectrix {
         void reset(uint32_t frameIndex);
 
         [[nodiscard]] VkDescriptorSet descriptorSet(uint32_t frameIndex) const { return m_descriptorSets[frameIndex]; }
-        [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] uint32_t capacity() const { return m_capacity; }
 
+        [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
+        static VkDescriptorSetLayout getStaticDescriptorSetLayout() {
+            if (s_descriptorSetLayout==nullptr) {
+                VC_CORE_TRACE("Creating DynamicSSBO descriptorSetLayout");
+                createDescriptorSetLayout();
+            }
+            return s_descriptorSetLayout;
+        }
     private:
+        static VkDescriptorSetLayout s_descriptorSetLayout;
+        static void createDescriptorSetLayout();
+
+
         void allocateGPUBuffer();
-        void createDescriptorSetLayout();
         void updateDescriptorSets() const;
         void grow();
 
         Device& m_device;
-        ShaderUniformLayout& m_layout;
+        ShaderUniformLayout* m_layout;
 
         uint32_t m_elementStride{};
 
@@ -38,8 +48,8 @@ namespace Vectrix {
 
         std::vector<uint8_t> m_storage;
 
-        VkDescriptorSetLayout m_descriptorSetLayout{};
         std::vector<VkDescriptorSet> m_descriptorSets;
+        std::uint32_t m_setCountID;
     };
 } // Vectrix
 

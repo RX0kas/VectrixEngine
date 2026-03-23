@@ -29,6 +29,8 @@
 
 #include "memory"
 
+#define VC_DELETE_OWN(var) {const auto* v = var.release();delete v;}
+
 /**
  * @namespace Vectrix
  * @brief Vectrix Engine namespace

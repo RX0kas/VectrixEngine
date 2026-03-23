@@ -4,6 +4,7 @@
 #include "Vectrix/Events/KeyEvent.h"
 #include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	static uint8_t s_GLFWWindowCount = 0;
@@ -22,8 +23,7 @@ namespace Vectrix {
 			glfwTerminate();
 		}
 
-		GraphicsContext* g = m_context.release();
-		delete g;
+		VC_DELETE_OWN(m_context);
 	}
 
 	Window::Window() : m_window(nullptr), m_data() {
@@ -171,5 +171,18 @@ namespace Vectrix {
 
 	bool Window::isVSync() const {
 		return m_data.VSync;
+	}
+
+	GraphicsContext* Window::createGraphicContext(GLFWwindow* window) {
+		GraphicsContext* g = GraphicsContext::create(window);
+		g->init();
+		return g;
+	}
+	void Window::setClientAPI() {
+		GraphicsContext::setClientAPI();
+	}
+
+	float Window::getAspect() const {
+		return m_context->getAspect();
 	}
 }

@@ -5,7 +5,6 @@
 #include "vcpch.h"
 
 #include "Vectrix/Events/Event.h"
-#include "Vectrix/Rendering/GraphicsContext.h"
 
 namespace Vectrix {
 	struct WindowAttributes
@@ -17,6 +16,8 @@ namespace Vectrix {
 		WindowAttributes(const char* title = "Vectrix Engine", unsigned int width = 1280, unsigned int height = 720)
 			: title(std::move(title)), width(width), height(height) {}
 	};
+
+	class GraphicsContext;
 
 	// Interface representing a desktop system based Window
 	class Window {
@@ -31,9 +32,7 @@ namespace Vectrix {
 		[[nodiscard]] unsigned int getWidth() const { return m_data.Width; }
 		[[nodiscard]] unsigned int getHeight() const { return m_data.Height;}
 
-		[[nodiscard]] float getAspect() const {
-			return m_context->getAspect();
-		}
+		[[nodiscard]] float getAspect() const;
 
 		// Window attributes
 		[[nodiscard]] bool wasWindowResized() const { return m_data.windowResized; }
@@ -41,6 +40,7 @@ namespace Vectrix {
 		void resetWindowResizedFlag() { m_data.windowResized = false; }
 
 		[[nodiscard]] void* getNativeWindow() const { return m_window; }
+		[[nodiscard]] GraphicsContext& getGraphicContext() const { return *m_context;}
 
 		void setEventCallback(const EventCallbackFn& callback) { m_data.EventCallback = callback; }
 
@@ -82,12 +82,8 @@ namespace Vectrix {
 
 		WindowData m_data;
 		
-		static GraphicsContext* createGraphicContext(GLFWwindow* window) {
-			GraphicsContext* g = GraphicsContext::create(window);
-			g->init();
-			return g;
-		}
-		static void setClientAPI() {GraphicsContext::setClientAPI();}
+		static GraphicsContext* createGraphicContext(GLFWwindow* window);
+		static void setClientAPI();
 		friend class Application;
 		static Window* create();
 	};

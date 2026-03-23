@@ -1,8 +1,8 @@
 #pragma once
 
 #include "vulkan/vulkan.h"
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "Vectrix/Rendering/Models/Vertex.h"
+#include "../Core/Device.h"
+#include "Vectrix/Rendering/Mesh/Vertex.h"
 
 #include "Vectrix/Rendering/Buffer.h"
 
@@ -14,15 +14,15 @@
 
 
 namespace Vectrix {
-    class Buffer {
+    class VulkanBuffer {
     public:
-        Buffer(
+        VulkanBuffer(
             VkDeviceSize instanceSize,
             uint32_t instanceCount,
             VkBufferUsageFlags usageFlags,
             VkMemoryPropertyFlags memoryPropertyFlags,
             VkDeviceSize minOffsetAlignment = 1);
-        ~Buffer();
+        ~VulkanBuffer();
 
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         void unmap();
@@ -73,9 +73,10 @@ namespace Vectrix {
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(const BufferLayout& layout);
         [[nodiscard]] const BufferLayout& getLayout() const override { return m_layout; }
         void setLayout(const BufferLayout& layout) override { m_layout = layout; }
+        [[nodiscard]] uint32_t getVertexCount() const { return m_vertexCount; }
     private:
         uint32_t m_vertexCount{ 0 };
-        Ref<Buffer> m_buffer;
+        Ref<VulkanBuffer> m_buffer;
         bool m_enable = false;
         BufferLayout m_layout;
     };
@@ -92,7 +93,7 @@ namespace Vectrix {
 
         [[nodiscard]] uint32_t getCount() const override { return m_indexCount; }
     private:
-        Ref<Buffer> m_buffer;
+        Ref<VulkanBuffer> m_buffer;
         uint32_t m_indexCount;
         bool m_enable = false;
     };
@@ -129,7 +130,7 @@ struct fmt::formatter<Vectrix::BufferLayout> {
         ss << "BufferLayout (Stride=" << b.getStride() << ")\n";
         for (const auto& e : b.getElements())
         {
-            ss << "  - " << e.Name << " (" << e.Size << " bytes)\n";
+            ss << "  - " << e.name << " (" << e.size << " bytes)\n";
         }
         return fmt::format_to(
             ctx.out(),

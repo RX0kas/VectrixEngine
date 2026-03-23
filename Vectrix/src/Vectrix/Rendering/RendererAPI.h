@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Models/VertexArray.h"
+#include "Mesh/VertexArray.h"
 
 namespace Vectrix {
 
@@ -14,7 +14,6 @@ namespace Vectrix {
 		{
 			None = 0, Vulkan = 1
 		};
-	public:
 		virtual void setClearColor(const glm::vec4& color) = 0;
 		virtual bool prepareFrame() = 0;
 		virtual void endFrame() = 0;

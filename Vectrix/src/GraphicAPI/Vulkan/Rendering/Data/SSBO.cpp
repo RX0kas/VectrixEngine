@@ -6,9 +6,12 @@
 
 
 namespace Vectrix {
-    SSBO::SSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout) {
+    std::uint32_t SSBO::s_setNumber = 0;
+
+    SSBO::SSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout),m_setCountID(getGlobalSetCount()) {
         VC_PROFILER_FUNCTION();
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
+        increaseSetCount();
 
         // Alignement
         VkPhysicalDeviceProperties props{};

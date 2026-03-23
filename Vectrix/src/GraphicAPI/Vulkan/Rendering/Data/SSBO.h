@@ -1,10 +1,10 @@
 #ifndef VECTRIXWORKSPACE_SSBO_H
 #define VECTRIXWORKSPACE_SSBO_H
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "GraphicAPI/Vulkan/Rendering/SwapChain.h"
+#include "../Core/Device.h"
+#include "../Core/SwapChain.h"
 #include <vector>
 
-#include "VulkanTexture.h"
+#include "../VulkanTexture.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
 
@@ -37,7 +37,13 @@ namespace Vectrix {
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
         [[nodiscard]] std::array<Ref<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
+
+        [[nodiscard]] static std::uint32_t getGlobalSetCount() { return s_setNumber; }
+        [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
     private:
+        friend class DynamicSSBO;
+        static void increaseSetCount() { s_setNumber++; }
+        static std::uint32_t s_setNumber;
         void createDescriptorSetLayout();
         Device& m_device;
         VkBuffer m_buffer{};
@@ -52,7 +58,8 @@ namespace Vectrix {
 
         std::array<Ref<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
 
-        VmaAllocation m_allocation;
+        VmaAllocation m_allocation{};
+        std::uint32_t m_setCountID;
     };
 } // Vectrix
 

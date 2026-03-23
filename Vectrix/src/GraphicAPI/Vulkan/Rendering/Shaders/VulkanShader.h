@@ -3,11 +3,11 @@
 
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Pipeline.h"
-#include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
-#include "Vectrix/Rendering/Shaders/UniformTrait.h"
+#include "GraphicAPI/Vulkan/Rendering/Data/SSBO.h"
 
 namespace Vectrix {
+    class Pipeline;
+
     class VulkanShader final : public Shader {
     public:
         VulkanShader(std::string  name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera);
@@ -22,7 +22,6 @@ namespace Vectrix {
         void setUniform4f(const std::string &name, glm::vec4 value) const override;
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
-        void setModelMatrix(const glm::mat4& model) const override;
         void setTexture(uint32_t index, Ref<Texture> texture) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {

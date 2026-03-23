@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "Vectrix/Rendering/Models/Vertex.h"
+#include "../Core/Device.h"
+#include "Vectrix/Rendering/Mesh/Vertex.h"
 
 #include <vector>
 
@@ -54,8 +54,8 @@ namespace Vectrix {
         void createShaderModule(const std::vector<uint32_t>& code,VkShaderModule* shaderModule);
 
         Device& m_device;
-        VkPipeline m_graphicsPipeline;
-        VkShaderModule m_vertShaderModule;
-        VkShaderModule m_fragShaderModule;
+        VkPipeline m_graphicsPipeline{};
+        VkShaderModule m_vertShaderModule{};
+        VkShaderModule m_fragShaderModule{};
     };
 }

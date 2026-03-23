@@ -1,6 +1,6 @@
 #ifndef VECTRIXWORKSPACE_VULKANTEXTURE_H
 #define VECTRIXWORKSPACE_VULKANTEXTURE_H
-#include "Device.h"
+#include "Core/Device.h"
 #include "stb_image.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 

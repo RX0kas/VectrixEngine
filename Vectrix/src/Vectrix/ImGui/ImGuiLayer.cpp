@@ -15,9 +15,7 @@ namespace Vectrix {
 		VC_CORE_INFO("Destroying ImGuiLayer");
 		if (m_attached)
 			m_manager->cleanup();
-
-		const auto* m = m_manager.release();
-		delete m;
+		VC_DELETE_OWN(m_manager);
 	};
 
 	void ImGuiLayer::OnRender() {
