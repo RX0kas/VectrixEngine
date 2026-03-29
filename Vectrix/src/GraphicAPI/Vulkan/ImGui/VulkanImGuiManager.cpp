@@ -111,12 +111,17 @@ namespace Vectrix {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-#ifndef VC_PLATFORM_LINUX
-    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport
-#else
-    	VC_CORE_WARN("Multi-Viewport is disabled on Linux due to numerous compatibility issues.");
-#endif
+    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+		#ifndef VC_PLATFORM_LINUX
+		    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		    	io.ConfigDpiScaleFonts    = true;
+		    	io.ConfigDpiScaleViewports = true;
+		#else
+		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues.");
+		    	io.ConfigDpiScaleFonts    = false;
+		    	io.ConfigDpiScaleViewports = false;
+		#endif
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
@@ -132,6 +137,16 @@ namespace Vectrix {
 		}
 
 		ImGui_ImplGlfw_InitForVulkan(w, true);
+		#ifdef VC_PLATFORM_LINUX
+		    	static GLFWmonitorfun s_imguiMonitorCallback = glfwSetMonitorCallback(nullptr);
+
+		    	glfwSetMonitorCallback([](GLFWmonitor* monitor, int event) {
+					if (s_imguiMonitorCallback && ImGui::GetCurrentContext() != nullptr) {
+						s_imguiMonitorCallback(monitor, event);
+					}
+				});
+		#endif
+
 		ImGui_ImplVulkan_InitInfo init_info = {};
 		init_info.ApiVersion = VK_API_VERSION_1_2; // same as VkApplicationInfo::apiVersion
 		init_info.Instance = m_device.instance();

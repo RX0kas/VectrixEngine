@@ -19,7 +19,6 @@ namespace Vectrix {
         [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
         static VkDescriptorSetLayout getStaticDescriptorSetLayout() {
             if (s_descriptorSetLayout==nullptr) {
-                VC_CORE_TRACE("Creating DynamicSSBO descriptorSetLayout");
                 createDescriptorSetLayout();
             }
             return s_descriptorSetLayout;

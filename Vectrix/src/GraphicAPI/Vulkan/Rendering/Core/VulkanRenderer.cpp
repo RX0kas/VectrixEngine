@@ -158,7 +158,7 @@ namespace Vectrix {
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = m_swapChain->getRenderPass();
-		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(m_currentImageIndex);
+		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(static_cast<int>(m_currentImageIndex));
 
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_swapChain->getSwapChainExtent();
@@ -191,18 +191,25 @@ namespace Vectrix {
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	Own<VulkanBuffer> createIndirectBuffer() {
-		Own<VulkanBuffer> indirectBuffer = std::make_unique<VulkanBuffer>(
-			sizeof(VkDrawIndexedIndirectCommand), MAX_OBJECTS_BATCHING,
-			VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT , VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
-		);
+	std::vector<Own<VulkanBuffer>> createIndirectBuffers() {
+		uint32_t frameCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
+		std::vector<Own<VulkanBuffer>> buffers;
+		buffers.reserve(frameCount);
 
-		indirectBuffer->map();
-		return indirectBuffer;
+		for (uint32_t i = 0; i < frameCount; i++) {
+			auto buf = std::make_unique<VulkanBuffer>(
+				sizeof(VkDrawIndexedIndirectCommand), MAX_OBJECTS_BATCHING,
+				VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+			);
+			buf->map();
+			buffers.push_back(std::move(buf));
+		}
+		return buffers;
 	}
 
 	// TODO: Rework this when a material system is created
-	void VulkanRenderer::submit(Shader& shader, Ref<VertexArray> vertexArray, Transform transform,std::uint32_t textureIndex) {
+	void VulkanRenderer::submit(Shader& shader, const Ref<VertexArray>& vertexArray, Transform transform,std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
 		auto& vkShader = dynamic_cast<VulkanShader&>(shader);
 		BatchInfo b;
@@ -213,8 +220,8 @@ namespace Vectrix {
 				.pipeline = vkShader.m_pipeline->getPipeline(),
 				.pipelineLayout = vkShader.m_pipelineLayout,
 				.descriptorSet = vkShader.m_ssbo->descriptorSet(),
+				.indirectBuffers = createIndirectBuffers(),
 				.commands = {},
-				.indirectBuffer = createIndirectBuffer(),
 				.objectDataSSBO = createRef<DynamicSSBO>(vkShader.m_layout.get()),
 				.objectDatas = {},
 				.elementCount = 0
@@ -239,7 +246,8 @@ namespace Vectrix {
 			.firstInstance = index
 		};
 		b.commands.push_back(command);
-		b.indirectBuffer->writeToBuffer(&command,sizeof(VkDrawIndexedIndirectCommand),index * sizeof(VkDrawIndexedIndirectCommand));
+		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
+		b.indirectBuffers[frameIndex]->writeToBuffer(&command,sizeof(VkDrawIndexedIndirectCommand),index * sizeof(VkDrawIndexedIndirectCommand));
 
 		m_batchCache[vkShader.m_name] = std::move(b);
 	}
@@ -270,7 +278,7 @@ namespace Vectrix {
 				shader->m_pipelineLayout,batch.objectDataSSBO->getSetCountID(),1, &objectSet,0, nullptr);
 			batch.objectDataSSBO->flush(frameIndex);
 
-			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffer->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
+			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
 		}
 	}
 
@@ -309,7 +317,7 @@ namespace Vectrix {
 			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
-			DebugDescriptorSetInfo d;
+			DebugDescriptorSetInfo d{};
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}
