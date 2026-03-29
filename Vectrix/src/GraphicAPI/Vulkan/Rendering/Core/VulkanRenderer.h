@@ -27,8 +27,9 @@ namespace Vectrix {
         VkPipelineLayout pipelineLayout;
         std::vector<VkDescriptorSet> descriptorSet;
 
+        std::vector<Own<VulkanBuffer>> indirectBuffers; // The buffer that will send the commands, not visible in the shader
+
         std::vector<VkDrawIndexedIndirectCommand> commands;
-        Own<VulkanBuffer> indirectBuffer; // The buffer that will send the commands, not visible in the shader
         Ref<DynamicSSBO> objectDataSSBO; // The buffer that will send the objectDatas
 
         std::vector<ObjectData> objectDatas;
@@ -85,7 +86,7 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(Shader& shader,Ref<VertexArray> vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)},std::uint32_t textureIndex=0);
+        static void submit(Shader& shader,const Ref<VertexArray>& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)},std::uint32_t textureIndex=0);
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
@@ -106,7 +107,7 @@ namespace Vectrix {
         /**
          * Render all submitted data
          */
-        void flush();
+        static void flush();
 
         Window& m_window;
         Device& m_device;
