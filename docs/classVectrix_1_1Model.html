@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;1.0.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -96,7 +96,7 @@ $(function(){initNavTree('classVectrix_1_1Model.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a76eb2814c5f50cb959f9a95eeb22ae0a" id="r_a76eb2814c5f50cb959f9a95eeb22ae0a"><td class="memItemLeft"><a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a76eb2814c5f50cb959f9a95eeb22ae0a">getVertexArray</a> () const</td></tr>
+<tr class="memitem:a09cda1e73ac1d63729f77a20bffd1edc" id="r_a09cda1e73ac1d63729f77a20bffd1edc"><td class="memItemLeft">Ref&lt; <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a09cda1e73ac1d63729f77a20bffd1edc">getVertexArray</a> () const</td></tr>
 <tr class="memitem:a4982cd599a298d5708abd4f6cef8a695" id="r_a4982cd599a298d5708abd4f6cef8a695"><td class="memItemLeft"><a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4982cd599a298d5708abd4f6cef8a695">getLayout</a> () const</td></tr>
 <tr class="memitem:a46c92316458871e3ce5b071a454cb996" id="r_a46c92316458871e3ce5b071a454cb996"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a46c92316458871e3ce5b071a454cb996">setPosition</a> (glm::vec3 position)</td></tr>
 <tr class="memitem:af4a0014171f96c9d4a88d9fda5b183b3" id="r_af4a0014171f96c9d4a88d9fda5b183b3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#af4a0014171f96c9d4a88d9fda5b183b3">setRotation</a> (glm::vec3 rotation)</td></tr>
@@ -106,19 +106,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ade5cdcc3c9d6afdadd2ac08c20e91943" id="r_ade5cdcc3c9d6afdadd2ac08c20e91943"><td class="memItemLeft">glm::vec3&#160;</td><td class="memItemRight"><a class="el" href="#ade5cdcc3c9d6afdadd2ac08c20e91943">getScale</a> () const</td></tr>
 <tr class="memitem:a025cc2c4076ad2862f4ae4e93c622128" id="r_a025cc2c4076ad2862f4ae4e93c622128"><td class="memItemLeft">glm::mat4&#160;</td><td class="memItemRight"><a class="el" href="#a025cc2c4076ad2862f4ae4e93c622128">getModelMatrix</a> ()</td></tr>
 <tr class="memitem:ad779eba4d327a8f16f1a180ec9acd73f" id="r_ad779eba4d327a8f16f1a180ec9acd73f"><td class="memItemLeft"><a class="el" href="classVectrix_1_1Transform.html">Transform</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad779eba4d327a8f16f1a180ec9acd73f">getTransform</a> () const</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Public Static Functions</h2></td></tr>
-<tr class="memitem:a98778a2509fab909ac34f2499f0ae871" id="r_a98778a2509fab909ac34f2499f0ae871"><td class="memItemLeft">static Model&#160;</td><td class="memItemRight"><a class="el" href="#a98778a2509fab909ac34f2499f0ae871">create</a> (const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices, const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout)</td></tr>
-<tr class="memitem:a92e151530ef36c10c58eb1bd93d3332c" id="r_a92e151530ef36c10c58eb1bd93d3332c"><td class="memItemLeft">static Model&#160;</td><td class="memItemRight"><a class="el" href="#a92e151530ef36c10c58eb1bd93d3332c">create</a> (const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices, const std::vector&lt; uint32_t &gt; &amp;indices, const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout)</td></tr>
-<tr class="memitem:a4cb2b8153e4815c8eeb589343e79596f" id="r_a4cb2b8153e4815c8eeb589343e79596f"><td class="memItemLeft">static Model&#160;</td><td class="memItemRight"><a class="el" href="#a4cb2b8153e4815c8eeb589343e79596f">load</a> (const std::string &amp;pathObj)</td></tr>
+<tr class="memitem:a1f62ac8d1b0e9433b3ca86a07a252668" id="r_a1f62ac8d1b0e9433b3ca86a07a252668"><td class="memItemLeft">std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a1f62ac8d1b0e9433b3ca86a07a252668">getVertices</a> () const</td></tr>
+<tr class="memitem:a189b10399a07f02dfb222fbf30bec01b" id="r_a189b10399a07f02dfb222fbf30bec01b"><td class="memItemLeft">std::vector&lt; uint32_t &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a189b10399a07f02dfb222fbf30bec01b">getIndices</a> () const</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00007">7</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00013">13</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a98778a2509fab909ac34f2499f0ae871" name="a98778a2509fab909ac34f2499f0ae871"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98778a2509fab909ac34f2499f0ae871">&#9670;&#160;</a></span>create() <span class="overload">[1/2]</span></h2>
+<a id="a189b10399a07f02dfb222fbf30bec01b" name="a189b10399a07f02dfb222fbf30bec01b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a189b10399a07f02dfb222fbf30bec01b">&#9670;&#160;</a></span>getIndices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -127,60 +123,20 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Model Vectrix::Model::create </td>
+          <td class="memname">std::vector&lt; uint32_t &gt; Vectrix::Model::getIndices </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>layout</em></span>&#160;)</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8cpp_source.html#l00031">31</a> of file <a class="el" href="Model_8cpp_source.html">Model.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a92e151530ef36c10c58eb1bd93d3332c" name="a92e151530ef36c10c58eb1bd93d3332c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92e151530ef36c10c58eb1bd93d3332c">&#9670;&#160;</a></span>create() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Model Vectrix::Model::create </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; uint32_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>indices</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>layout</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Model_8cpp_source.html#l00035">35</a> of file <a class="el" href="Model_8cpp_source.html">Model.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00027">27</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -207,7 +163,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00015">15</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00016">16</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -234,7 +190,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00023">23</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00024">24</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -261,7 +217,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00020">20</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00021">21</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -288,7 +244,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00021">21</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00022">22</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -315,7 +271,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00022">22</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00023">23</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -342,12 +298,12 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00024">24</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00025">25</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
-<a id="a76eb2814c5f50cb959f9a95eeb22ae0a" name="a76eb2814c5f50cb959f9a95eeb22ae0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76eb2814c5f50cb959f9a95eeb22ae0a">&#9670;&#160;</a></span>getVertexArray()</h2>
+<a id="a09cda1e73ac1d63729f77a20bffd1edc" name="a09cda1e73ac1d63729f77a20bffd1edc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09cda1e73ac1d63729f77a20bffd1edc">&#9670;&#160;</a></span>getVertexArray()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,7 +312,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> * Vectrix::Model::getVertexArray </td>
+          <td class="memname">Ref&lt; <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &gt; Vectrix::Model::getVertexArray </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -369,12 +325,12 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00014">14</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00015">15</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
-<a id="a4cb2b8153e4815c8eeb589343e79596f" name="a4cb2b8153e4815c8eeb589343e79596f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4cb2b8153e4815c8eeb589343e79596f">&#9670;&#160;</a></span>load()</h2>
+<a id="a1f62ac8d1b0e9433b3ca86a07a252668" name="a1f62ac8d1b0e9433b3ca86a07a252668"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f62ac8d1b0e9433b3ca86a07a252668">&#9670;&#160;</a></span>getVertices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,20 +339,20 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Model Vectrix::Model::load </td>
+          <td class="memname">std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; Vectrix::Model::getVertices </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>pathObj</em></span></td><td>)</td>
-          <td></td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8cpp_source.html#l00039">39</a> of file <a class="el" href="Model_8cpp_source.html">Model.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00026">26</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -423,7 +379,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00017">17</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00018">18</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -450,7 +406,7 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00018">18</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00019">19</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
@@ -477,13 +433,13 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00019">19</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Model_8h_source.html#l00020">20</a> of file <a class="el" href="Model_8h_source.html">Model.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>Vectrix/src/Vectrix/Rendering/Models/<a class="el" href="Model_8h_source.html">Model.h</a></li>
-<li>Vectrix/src/Vectrix/Rendering/Models/<a class="el" href="Model_8cpp_source.html">Model.cpp</a></li>
+<li>Vectrix/src/Vectrix/Rendering/Mesh/<a class="el" href="Model_8h_source.html">Model.h</a></li>
+<li>Vectrix/src/Vectrix/Rendering/Mesh/<a class="el" href="Model_8cpp_source.html">Model.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

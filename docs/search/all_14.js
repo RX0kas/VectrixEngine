@@ -22,6 +22,6 @@ var searchData=
   ['shaderuniformlayout_2eh_19',['ShaderUniformLayout.h',['../ShaderUniformLayout_8h.html',1,'']]],
   ['shaderuniformtype_20',['ShaderUniformType',['../namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c',1,'Vectrix']]],
   ['shaderuniformtype_2eh_21',['ShaderUniformType.h',['../ShaderUniformType_8h.html',1,'']]],
-  ['submit_22',['submit',['../classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]],
+  ['submit_22',['submit',['../classVectrix_1_1Renderer.html#a68bf3404b49e8132702c25621a05a1fb',1,'Vectrix::Renderer::submit(Shader &amp;shader, Ref&lt; VertexArray &gt; vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]],
   ['system_20guide_23',['Rendering System Guide',['../rendering_overview.html',1,'index']]]
 ];
