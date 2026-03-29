@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;1.0.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -118,10 +118,18 @@ $(function(){initNavTree('GraphicsContext_8cpp_source.html','',''); });
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        VC_CORE_ERROR(<span class="stringliteral">&quot;Unknown RendererAPI!&quot;</span>);</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    }</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> GraphicsContext::uploadAllMeshData() {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keywordflow">switch</span> (RendererAPI::getAPI()) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            <span class="keywordflow">case</span> RendererAPI::API::Vulkan: VulkanContext::uploadMeshData();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keywordflow">case</span> RendererAPI::API::None:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
 <div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Main renderer class definition.</div></div>
 <div class="ttc" id="aclassVectrix_1_1Renderer_html_a4b8aa3aeb37890d0eb26359159c78f9e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Vectrix::Renderer::getAPI</a></div><div class="ttdeci">static RendererAPI::API getAPI()</div><div class="ttdoc">Get current graphics API.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8h_source.html#l00065">Renderer.h:65</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

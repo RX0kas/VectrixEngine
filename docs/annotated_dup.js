@@ -34,6 +34,8 @@ var annotated_dup =
       [ "IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
       [ "PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
       [ "PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],
+      [ "MeshManager", "classVectrix_1_1MeshManager.html", "classVectrix_1_1MeshManager" ],
+      [ "MeshHandle", "structVectrix_1_1MeshHandle.html", null ],
       [ "Model", "classVectrix_1_1Model.html", null ],
       [ "Transform", "classVectrix_1_1Transform.html", null ],
       [ "Vertex", "structVectrix_1_1Vertex.html", null ],

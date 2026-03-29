@@ -31,6 +31,8 @@ var hierarchy =
     ] ],
     [ "Vectrix::LayerStack", "classVectrix_1_1LayerStack.html", null ],
     [ "Vectrix::Log", "classVectrix_1_1Log.html", null ],
+    [ "Vectrix::MeshHandle", "structVectrix_1_1MeshHandle.html", null ],
+    [ "Vectrix::MeshManager", "classVectrix_1_1MeshManager.html", null ],
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],
     [ "Vectrix::PerspectiveCameraController", "classVectrix_1_1PerspectiveCameraController.html", null ],

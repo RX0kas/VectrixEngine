@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;1.0.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -94,7 +94,7 @@ $(function(){initNavTree('Buffer_8h_source.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;Models/Vertex.h&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;Mesh/Vertex.h&quot;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Vectrix/Core/Log.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
@@ -120,16 +120,16 @@ $(function(){initNavTree('Buffer_8h_source.html','',''); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="foldopen" id="foldopen00026" data-start="{" data-end="};">
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structVectrix_1_1BufferElement.html">   26</a></span>    <span class="keyword">struct </span>BufferElement {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        std::string Name;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        ShaderDataType Type;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        uint32_t Size;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        uint32_t Offset;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        std::string name;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        ShaderDataType type;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        uint32_t size;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        uint32_t offset;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        BufferElement(ShaderDataType type, std::string name)</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            : Name(std::move(name)), Type(type), Size(ShaderDataTypeSize(type)), Offset(0) {}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            : name(std::move(name)), type(type), size(ShaderDataTypeSize(type)), offset(0) {}</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> BufferElement&amp; e)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordflow">return</span> e.Name==this-&gt;Name &amp;&amp; e.Type==this-&gt;Type &amp;&amp; e.Size==this-&gt;Size &amp;&amp; e.Offset==this-&gt;Offset;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordflow">return</span> e.name==this-&gt;name &amp;&amp; e.type==this-&gt;type &amp;&amp; e.size==this-&gt;size &amp;&amp; e.offset==this-&gt;offset;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        }</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    };</div>
 </div>
@@ -139,31 +139,31 @@ $(function(){initNavTree('Buffer_8h_source.html','',''); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        BufferLayout() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        BufferLayout(std::initializer_list&lt;BufferElement&gt; elements) : m_Elements(elements) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        BufferLayout(std::initializer_list&lt;BufferElement&gt; elements) : m_elements(elements) {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            CalculateOffsetsAndStride();</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] uint32_t getStride()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Stride; }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [[nodiscard]] <span class="keyword">const</span> std::vector&lt;BufferElement&gt;&amp; getElements()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Elements; }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] uint32_t getStride()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_stride; }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        [[nodiscard]] <span class="keyword">const</span> std::vector&lt;BufferElement&gt;&amp; getElements()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_elements; }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        [[nodiscard]] <span class="keywordtype">bool</span> has(<span class="keyword">const</span> std::string&amp; name)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">const</span> <span class="keyword">auto</span> end = m_Elements.end();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordflow">return</span> std::any_of(m_Elements.begin(), end, [name](<span class="keyword">const</span> <a class="code hl_struct" href="structVectrix_1_1BufferElement.html">BufferElement</a>&amp; x) { return x.Name == name; });</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">const</span> <span class="keyword">auto</span> end = m_elements.end();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keywordflow">return</span> std::any_of(m_elements.begin(), end, [name](<span class="keyword">const</span> <a class="code hl_struct" href="structVectrix_1_1BufferElement.html">BufferElement</a>&amp; x) { return x.name == name; });</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordtype">void</span> CalculateOffsetsAndStride() {</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            uint32_t offset = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            m_Stride = 0;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            m_stride = 0;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; element : m_Elements) {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                element.Offset = offset;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                offset += element.Size;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                m_Stride += element.Size;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; element : m_elements) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                element.offset = offset;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                offset += element.size;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                m_stride += element.size;</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            }</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        }</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        std::vector&lt;BufferElement&gt; m_Elements;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        uint32_t m_Stride = 0;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        std::vector&lt;BufferElement&gt; m_elements;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        uint32_t m_stride = 0;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    };</div>
 </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
@@ -202,7 +202,7 @@ $(function(){initNavTree('Buffer_8h_source.html','',''); });
 <div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdef"><b>Definition</b> <a href="#l00040">Buffer.h:40</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1IndexBuffer_html"><div class="ttname"><a href="classVectrix_1_1IndexBuffer.html">Vectrix::IndexBuffer</a></div><div class="ttdef"><b>Definition</b> <a href="#l00085">Buffer.h:86</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1VertexBuffer_html"><div class="ttname"><a href="classVectrix_1_1VertexBuffer.html">Vectrix::VertexBuffer</a></div><div class="ttdef"><b>Definition</b> <a href="#l00072">Buffer.h:73</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 <div class="ttc" id="astructVectrix_1_1BufferElement_html"><div class="ttname"><a href="structVectrix_1_1BufferElement.html">Vectrix::BufferElement</a></div><div class="ttdef"><b>Definition</b> <a href="#l00026">Buffer.h:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -11,5 +11,5 @@ var searchData=
   ['setuniform4f_8',['setUniform4f',['../classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3',1,'Vectrix::Shader']]],
   ['setuniformbool_9',['setUniformBool',['../classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54',1,'Vectrix::Shader']]],
   ['setuniformmat4f_10',['setUniformMat4f',['../classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8',1,'Vectrix::Shader']]],
-  ['submit_11',['submit',['../classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693',1,'Vectrix::Renderer::submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]]
+  ['submit_11',['submit',['../classVectrix_1_1Renderer.html#a68bf3404b49e8132702c25621a05a1fb',1,'Vectrix::Renderer::submit(Shader &amp;shader, Ref&lt; VertexArray &gt; vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})'],['../classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676',1,'Vectrix::Renderer::submit(Shader &amp;shader, Model &amp;model)']]]
 ];

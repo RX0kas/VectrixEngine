@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['get_0',['get',['../classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee',1,'Vectrix::ShaderManager::get()'],['../classVectrix_1_1TextureManager.html#a0f4c1b39ffa0bb4dedf2360227576fca',1,'Vectrix::TextureManager::get()']]],
-  ['getall_1',['getAll',['../classVectrix_1_1ShaderManager.html#aadd98904e823f291f8dbc82683191526',1,'Vectrix::ShaderManager::getAll()'],['../classVectrix_1_1TextureManager.html#a694c59d166e27d59c8c0b269937fe32c',1,'Vectrix::TextureManager::getAll()']]],
-  ['getallwithname_2',['getAllWithName',['../classVectrix_1_1TextureManager.html#abbf96c43491eef9788accf1f3bb5e923',1,'Vectrix::TextureManager']]],
+  ['get_0',['get',['../classVectrix_1_1MeshManager.html#ad799a42b6c13fc45b9a95cef75f7407f',1,'Vectrix::MeshManager::get()'],['../classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee',1,'Vectrix::ShaderManager::get()'],['../classVectrix_1_1TextureManager.html#a0f4c1b39ffa0bb4dedf2360227576fca',1,'Vectrix::TextureManager::get()']]],
+  ['getall_1',['getAll',['../classVectrix_1_1MeshManager.html#a51a5815c5d54c8a388116be7869e5f3c',1,'Vectrix::MeshManager::getAll()'],['../classVectrix_1_1ShaderManager.html#aadd98904e823f291f8dbc82683191526',1,'Vectrix::ShaderManager::getAll()'],['../classVectrix_1_1TextureManager.html#a694c59d166e27d59c8c0b269937fe32c',1,'Vectrix::TextureManager::getAll()']]],
+  ['getallwithname_2',['getAllWithName',['../classVectrix_1_1MeshManager.html#a1bd9a1228f2c7c13ab8a8bef933de5b9',1,'Vectrix::MeshManager::getAllWithName()'],['../classVectrix_1_1TextureManager.html#abbf96c43491eef9788accf1f3bb5e923',1,'Vectrix::TextureManager::getAllWithName()']]],
   ['getapi_3',['getAPI',['../classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e',1,'Vectrix::Renderer']]],
   ['getbool_4',['getBool',['../classVectrix_1_1JsonValue.html#a99502bba7ceaf3eb85e3911764be0d35',1,'Vectrix::JsonValue']]],
   ['getdouble_5',['getDouble',['../classVectrix_1_1JsonValue.html#ac7f535cad72fc82b4907e1d21dd85942',1,'Vectrix::JsonValue']]],
