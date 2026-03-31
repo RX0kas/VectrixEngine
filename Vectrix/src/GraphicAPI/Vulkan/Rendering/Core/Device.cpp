@@ -50,7 +50,7 @@ namespace Vectrix {
     }
 
     // class member functions
-    Device::Device(Window& window,DescriptorPoolConfig cfg) : m_window{ window } {
+    Device::Device(Window& window, const DescriptorPoolConfig cfg) : m_window{ window } {
         VC_PROFILER_FUNCTION();
         createInstance();
         setupDebugMessenger();
@@ -113,6 +113,7 @@ namespace Vectrix {
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
+#ifdef VC_DEBUG
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
         if (enableValidationLayers) {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -121,10 +122,11 @@ namespace Vectrix {
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = &debugCreateInfo;
             VC_CORE_INFO("Vulkan Validation layers enable");
-        } else {
-            createInfo.enabledLayerCount = 0;
-            createInfo.pNext = nullptr;
         }
+#else
+        createInfo.enabledLayerCount = 0;
+        createInfo.pNext = nullptr;
+#endif
 
         if (vkCreateInstance(&createInfo, nullptr, &m_instance) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create Vulkan instance");
@@ -248,7 +250,7 @@ namespace Vectrix {
         vkCreateDescriptorPool(m_device, &info, nullptr, &m_descriptorPool);
     }
 
-    VkDescriptorSetLayout Device::createFrameSSBOLayout() {
+    VkDescriptorSetLayout Device::createFrameSSBOLayout() const {
         VC_PROFILER_FUNCTION();
         VkDescriptorSetLayoutBinding binding{};
         binding.binding = 0;
@@ -386,7 +388,7 @@ namespace Vectrix {
         }
     }
 
-    bool Device::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+    bool Device::checkDeviceExtensionSupport(const VkPhysicalDevice device) const {
         VC_PROFILER_FUNCTION();
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -403,7 +405,7 @@ namespace Vectrix {
         return requiredExtensions.empty();
     }
 
-    QueueFamilyIndices Device::findQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices Device::findQueueFamilies(const VkPhysicalDevice device) const {
         VC_PROFILER_FUNCTION();
         QueueFamilyIndices indices;
 
@@ -435,7 +437,7 @@ namespace Vectrix {
         return indices;
     }
 
-    SwapChainSupportDetails Device::querySwapChainSupport(VkPhysicalDevice device) {
+    SwapChainSupportDetails Device::querySwapChainSupport(VkPhysicalDevice device) const {
         VC_PROFILER_FUNCTION();
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_surface, &details.capabilities);
@@ -473,9 +475,10 @@ namespace Vectrix {
             }
         }
         VC_CORE_CRITICAL("Failed to find supported format");
+        return VK_FORMAT_UNDEFINED;
     }
 
-    uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memoryProperties) {
+    uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memoryProperties) const {
         VC_PROFILER_FUNCTION();
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memProperties);
@@ -487,10 +490,12 @@ namespace Vectrix {
         }
 
         VC_CORE_CRITICAL("Failed to find suitable memory type");
+        return 0;
     }
 
     void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation) {
         VC_PROFILER_FUNCTION();
+        VC_CORE_ASSERT(size > 0, "Cannot create buffer with size 0!");
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;

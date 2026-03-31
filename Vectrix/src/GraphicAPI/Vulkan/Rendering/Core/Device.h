@@ -22,40 +22,36 @@ namespace Vectrix {
         uint32_t presentFamily;
         bool graphicsFamilyHasValue = false;
         bool presentFamilyHasValue = false;
-        bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
+        bool isComplete() const { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
 	class Window;
 
-	class Device
-	{
+    class Device {
     public:
-	    static bool enableValidationLayers;
+        static bool enableValidationLayers;
 
         Device(Window& window,DescriptorPoolConfig cfg);
         ~Device();
 
-
-
-        VkCommandPool getCommandPool() { return m_commandPool; }
-        VkDevice device() { return m_device; }
-        VkPhysicalDevice physicalDevice() { return m_physicalDevice; }
-        VkInstance instance() { return m_instance; }
-        VkSurfaceKHR surface() { return m_surface; }
-        VkQueue graphicsQueue() { return m_graphicsQueue; }
-        VkQueue presentQueue() { return m_presentQueue; }
-        VkFormat imageFormat() { return m_imageFormat; }
-	    VkDescriptorPool descriptorPool() { return m_descriptorPool; }
-	    VkDescriptorSetLayout descriptorSetLayout() {return m_descriptorSetLayout;}
+        [[nodiscard]] VkCommandPool getCommandPool() const { return m_commandPool; }
+        [[nodiscard]] VkDevice device() const { return m_device; }
+        [[nodiscard]] VkPhysicalDevice physicalDevice() const { return m_physicalDevice; }
+        [[nodiscard]] VkInstance instance() const { return m_instance; }
+        [[nodiscard]] VkSurfaceKHR surface() const { return m_surface; }
+        [[nodiscard]] VkQueue graphicsQueue() const { return m_graphicsQueue; }
+        [[nodiscard]] VkQueue presentQueue() const { return m_presentQueue; }
+        [[nodiscard]] VkFormat imageFormat() const { return m_imageFormat; }
+        [[nodiscard]] VkDescriptorPool descriptorPool() const { return m_descriptorPool; }
+        [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const {return m_descriptorSetLayout;}
 
         SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_physicalDevice); }
-        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
         QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(m_physicalDevice); }
-        VkFormat findSupportedFormat(
-            const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
+        VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
         // Buffer Helper Functions
-	    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation);
+        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation);
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -69,12 +65,12 @@ namespace Vectrix {
             m_imageFormat = format;
         }
 
-	    VkDescriptorSetLayout createFrameSSBOLayout();
+        VkDescriptorSetLayout createFrameSSBOLayout() const;
 
-		void destroyBuffer(VkBuffer buffer, VmaAllocation allocation);
-		void destroyImage(VkImage image, VmaAllocation allocation);
+        void destroyBuffer(VkBuffer buffer, VmaAllocation allocation);
+        void destroyImage(VkImage image, VmaAllocation allocation);
 
-		[[nodiscard]] VmaAllocator getAllocator() const {return m_allocator;}
+        [[nodiscard]] VmaAllocator getAllocator() const {return m_allocator;}
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -87,11 +83,12 @@ namespace Vectrix {
         bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
         std::vector<const char*> getRequiredExtensions();
         bool checkValidationLayerSupport();
-        QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-        void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+        QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) const;
+
+        static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
         void hasGflwRequiredInstanceExtensions();
-        bool checkDeviceExtensionSupport(VkPhysicalDevice device);
-        SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+        bool checkDeviceExtensionSupport(VkPhysicalDevice device) const;
+        SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) const;
 
 
         VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -113,6 +110,4 @@ namespace Vectrix {
         const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
         const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 	};
-
-
 }

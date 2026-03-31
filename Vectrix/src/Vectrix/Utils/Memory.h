@@ -26,22 +26,16 @@ namespace Vectrix {
         std::vector<I> getAllItems() {
             std::vector<I> vals;
             vals.reserve(this->size());
-
-            for (auto it = this->begin(); it != this->end(); ++it) {
-                vals.push_back(it->second);
-            }
-
+            for (auto& [key, val] : *this)
+                vals.push_back(val);
             return vals;
         }
 
         std::vector<std::pair<K,I>> getAll() {
             std::vector<std::pair<K,I>> vals;
             vals.reserve(this->size());
-
-            for (auto it = this->begin(); it != this->end(); ++it) {
-                vals.emplace_back(it->first, it->second);
-            }
-
+            for (auto& [key, val] : *this)
+                vals.emplace_back(key, val);
             return vals;
         }
 
