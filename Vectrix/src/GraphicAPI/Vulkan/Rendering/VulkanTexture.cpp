@@ -68,9 +68,9 @@ namespace Vectrix {
         );
         // copy to staging buffer
         void* data;
-        vmaMapMemory(m_device.getAllocator(), stagingAllocation, &data);
+        vmaMapMemory(m_device.getTextureAllocator(), stagingAllocation, &data);
         memcpy(data, pixels, m_imageSize);
-        vmaUnmapMemory(m_device.getAllocator(), stagingAllocation);
+        vmaUnmapMemory(m_device.getTextureAllocator(), stagingAllocation);
         stbi_image_free(pixels);
 
         VkImageCreateInfo imageInfo{};
@@ -92,7 +92,7 @@ namespace Vectrix {
         VmaAllocationCreateInfo allocationCreateInfo{};
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
         allocationCreateInfo.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
-        vmaCreateImage(VulkanContext::instance().getAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr);
+        vmaCreateImage(VulkanContext::instance().getTextureAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr);
 
         // transition to TRANSFER_DST_OPTIMAL
         transitionImageLayout(m_image, f,VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);

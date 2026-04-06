@@ -1,4 +1,4 @@
-#include "SSBO.h"
+#include "ShaderSSBO.h"
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
@@ -6,9 +6,9 @@
 
 
 namespace Vectrix {
-    std::uint32_t SSBO::s_setNumber = 0;
+    std::uint32_t ShaderSSBO::s_setNumber = 0;
 
-    SSBO::SSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout),m_setCountID(getGlobalSetCount()) {
+    ShaderSSBO::ShaderSSBO(Device& device, ShaderUniformLayout& layout) : m_device(device), m_layout(layout),m_setCountID(getGlobalSetCount()) {
         VC_PROFILER_FUNCTION();
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
         increaseSetCount();
@@ -26,9 +26,9 @@ namespace Vectrix {
         m_bufferSize = static_cast<VkDeviceSize>(m_elementStride) * m_framesInFlight;
 
         // GPU Buffer
-        m_device.createBuffer(m_bufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_buffer, m_allocation);
+        m_device.createBuffer(m_bufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_buffer, m_allocation,VulkanContext::instance().getSSBOAllocator());
 
-        vmaMapMemory(VulkanContext::instance().getAllocator(), m_allocation, &m_mapped);
+        vmaMapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation, &m_mapped);
         memset(m_mapped, 0, m_bufferSize);
 
 
@@ -84,14 +84,16 @@ namespace Vectrix {
         }
     }
 
-    SSBO::~SSBO() {
+    ShaderSSBO::~ShaderSSBO() {
         VC_PROFILER_FUNCTION();
-        if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
-        m_device.destroyBuffer(m_buffer, m_allocation);
+        if (m_mapped) {
+            vmaUnmapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation);
+        }
+        m_device.destroyBuffer(m_buffer, m_allocation,VulkanContext::instance().getSSBOAllocator());
         vkDestroyDescriptorSetLayout(m_device.device(), m_descriptorSetLayout, nullptr);
     }
 
-    void SSBO::createDescriptorSetLayout() {
+    void ShaderSSBO::createDescriptorSetLayout() {
         VC_PROFILER_FUNCTION();
         std::array<VkDescriptorSetLayoutBinding,2> b = {};
 

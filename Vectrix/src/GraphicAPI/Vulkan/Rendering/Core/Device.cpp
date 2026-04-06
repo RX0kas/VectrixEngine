@@ -64,7 +64,9 @@ namespace Vectrix {
         allocatorCreateInfo.physicalDevice = physicalDevice();
         allocatorCreateInfo.device = device();
         allocatorCreateInfo.instance = instance();
-        vmaCreateAllocator(&allocatorCreateInfo,&m_allocator);
+        vmaCreateAllocator(&allocatorCreateInfo,&m_bufferAllocator);
+        vmaCreateAllocator(&allocatorCreateInfo,&m_textureAllocator);
+        vmaCreateAllocator(&allocatorCreateInfo,&m_SSBOAllocator);
 
         createCommandPool();
         createDescriptorPool(cfg);
@@ -75,7 +77,9 @@ namespace Vectrix {
         VC_PROFILER_FUNCTION();
         vkDestroyCommandPool(m_device, m_commandPool, nullptr);
         vkDestroyDescriptorPool(m_device,m_descriptorPool,nullptr);
-        vmaDestroyAllocator(m_allocator);
+        vmaDestroyAllocator(m_textureAllocator);
+        vmaDestroyAllocator(m_bufferAllocator);
+        vmaDestroyAllocator(m_SSBOAllocator);
 
         vkDestroyDevice(m_device, nullptr);
 
@@ -328,7 +332,7 @@ namespace Vectrix {
         }
     }
 
-    bool Device::checkValidationLayerSupport() {
+    bool Device::checkValidationLayerSupport() const {
         VC_PROFILER_FUNCTION();
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -493,9 +497,10 @@ namespace Vectrix {
         return 0;
     }
 
-    void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation) {
+    void Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation,VmaAllocator allocator) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(size > 0, "Cannot create buffer with size 0!");
+        if (!allocator) allocator = m_bufferAllocator;
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -509,7 +514,7 @@ namespace Vectrix {
             allocCreateInfo.flags |= VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
         }
 
-        if (vmaCreateBuffer(m_allocator, &bufferInfo, &allocCreateInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
+        if (vmaCreateBuffer(allocator, &bufferInfo, &allocCreateInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create buffer");
         }
     }
@@ -594,21 +599,22 @@ namespace Vectrix {
             allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
         }
 
-        if (vmaCreateImage(m_allocator, &imageInfo, &allocCreateInfo, &image, &allocation, nullptr) != VK_SUCCESS) {
+        if (vmaCreateImage(m_textureAllocator, &imageInfo, &allocCreateInfo, &image, &allocation, nullptr) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create image");
         }
     }
 
-    void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation) {
+    void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator) {
         VC_PROFILER_FUNCTION();
+        if (!allocator) allocator = m_bufferAllocator;
         vkDeviceWaitIdle(m_device);
-        vmaDestroyBuffer(m_allocator, buffer, allocation);
+        vmaDestroyBuffer(allocator, buffer, allocation);
     }
 
     void Device::destroyImage(VkImage image, VmaAllocation allocation) {
         VC_PROFILER_FUNCTION();
         vkDeviceWaitIdle(m_device);
-        vmaDestroyImage(m_allocator, image, allocation);
+        vmaDestroyImage(m_textureAllocator, image, allocation);
     }
 
 }

@@ -76,7 +76,7 @@ namespace Vectrix {
         [[nodiscard]] uint32_t getVertexCount() const { return m_vertexCount; }
     private:
         uint32_t m_vertexCount{ 0 };
-        Ref<VulkanBuffer> m_buffer;
+        std::shared_ptr<VulkanBuffer> m_buffer;
         bool m_enable = false;
         BufferLayout m_layout;
     };
@@ -93,7 +93,7 @@ namespace Vectrix {
 
         [[nodiscard]] uint32_t getCount() const override { return m_indexCount; }
     private:
-        Ref<VulkanBuffer> m_buffer;
+        std::shared_ptr<VulkanBuffer> m_buffer;
         uint32_t m_indexCount;
         bool m_enable = false;
     };

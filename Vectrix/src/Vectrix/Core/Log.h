@@ -10,12 +10,12 @@ namespace Vectrix {
 	public:
 		static void init();
 #ifdef VC_DEBUG
-		static Ref<spdlog::logger>& getCoreLogger() { return s_CoreLogger; }
-		static Ref<spdlog::logger>& getClientLogger() { return s_ClientLogger; }
+		static std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_CoreLogger; }
+		static std::shared_ptr<spdlog::logger>& getClientLogger() { return s_ClientLogger; }
 #endif
 	private:
-		static Ref<spdlog::logger> s_CoreLogger;
-		static Ref<spdlog::logger> s_ClientLogger;
+		static std::shared_ptr<spdlog::logger> s_CoreLogger;
+		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 	};
 }
 

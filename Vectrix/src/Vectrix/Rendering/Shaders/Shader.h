@@ -280,7 +280,7 @@ namespace Vectrix {
 		 *
 		 * @warning There is a limited number of texture allowed per shader Texture::getMaxTexturePerShader()
 		 */
-		virtual void setTexture(uint32_t index, Ref<Texture> texture)  = 0;
+		virtual void setTexture(uint32_t index, std::shared_ptr<Texture> texture)  = 0;
 
 		/**
 		 * @brief Define the value of a uniform in the shader, without needing to think about the type
@@ -330,6 +330,6 @@ namespace Vectrix {
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
 		friend class ShaderManager;
 		friend class Renderer;
-		static Shader* create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera);
+		static std::shared_ptr<Shader> create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera);
 	};
 }

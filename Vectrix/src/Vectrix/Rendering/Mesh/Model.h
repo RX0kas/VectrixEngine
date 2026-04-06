@@ -12,7 +12,7 @@ namespace Vectrix {
 
     class Model {
     public:
-        [[nodiscard]] Ref<VertexArray> getVertexArray() const { return m_vertexArray; }
+        [[nodiscard]] std::shared_ptr<VertexArray> getVertexArray() const { return m_vertexArray; }
         [[nodiscard]] BufferLayout getLayout() const { return m_layout; }
 
         void setPosition(glm::vec3 position) { m_transform.translation=position; }
@@ -32,7 +32,7 @@ namespace Vectrix {
         static Model load(const std::string& pathObj);
         Model(const std::vector<Vertex>& vertices, const BufferLayout& layout);
         Model(const std::vector<Vertex>& vertices,std::vector<uint32_t> indices, const BufferLayout& layout);
-        Ref<VertexArray> m_vertexArray;
+        std::shared_ptr<VertexArray> m_vertexArray;
         BufferLayout m_layout;
         Transform m_transform;
         std::vector<Vertex> m_vertices;

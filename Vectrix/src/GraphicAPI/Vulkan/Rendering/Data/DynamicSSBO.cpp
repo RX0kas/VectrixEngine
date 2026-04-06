@@ -1,16 +1,16 @@
 #include "DynamicSSBO.h"
 
-#include "SSBO.h"
+#include "ShaderSSBO.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
     VkDescriptorSetLayout DynamicSSBO::s_descriptorSetLayout = nullptr;
 
-    DynamicSSBO::DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_layout(layout), m_capacity(initialCapacity) {
+    DynamicSSBO::DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_layout(layout), m_capacity(initialCapacity), m_allocator(VulkanContext::instance().getSSBOAllocator()) {
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 
-        m_setCountID = SSBO::getGlobalSetCount();
-        SSBO::increaseSetCount();
+        m_setCountID = ShaderSSBO::getGlobalSetCount();
+        ShaderSSBO::increaseSetCount();
 
         VkPhysicalDeviceProperties props{};
         vkGetPhysicalDeviceProperties(m_device.physicalDevice(), &props);
@@ -36,10 +36,65 @@ namespace Vectrix {
         updateDescriptorSets();
     }
 
+    DynamicSSBO::DynamicSSBO(DynamicSSBO&& other) noexcept
+    : m_device(other.m_device), m_layout(other.m_layout), m_elementStride(other.m_elementStride), m_capacity(other.m_capacity),
+        m_framesInFlight(other.m_framesInFlight), m_buffer(other.m_buffer), m_allocation(other.m_allocation), m_allocator(other.m_allocator),
+        m_mapped(other.m_mapped), m_storage(std::move(other.m_storage)), m_descriptorSets(std::move(other.m_descriptorSets)), m_setCountID(other.m_setCountID) {
+        other.m_layout = nullptr;
+        other.m_buffer = VK_NULL_HANDLE;
+        other.m_allocation = VK_NULL_HANDLE;
+        other.m_mapped = nullptr;
+        other.m_elementStride = 0;
+        other.m_capacity = 0;
+        other.m_framesInFlight = 0;
+        other.m_setCountID = 0;
+    }
+
     DynamicSSBO::~DynamicSSBO() {
-        if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
-        m_device.destroyBuffer(m_buffer, m_allocation);
-        vkDestroyDescriptorSetLayout(m_device.device(), getStaticDescriptorSetLayout(), nullptr);
+        if (m_allocation == VK_NULL_HANDLE) return;
+
+        if (m_mapped) {
+            vmaUnmapMemory(m_allocator, m_allocation);
+            m_mapped = nullptr;
+        }
+
+        if (m_buffer != VK_NULL_HANDLE) {
+            m_device.destroyBuffer(m_buffer, m_allocation, m_allocator);
+            m_buffer = VK_NULL_HANDLE;
+            m_allocation = VK_NULL_HANDLE;
+        }
+    }
+
+    DynamicSSBO& DynamicSSBO::operator=(DynamicSSBO&& other) noexcept {
+        if (this == &other) return *this;
+
+        if (m_allocation != VK_NULL_HANDLE) {
+            if (m_mapped) vmaUnmapMemory(m_allocator, m_allocation);
+            m_device.destroyBuffer(m_buffer, m_allocation,m_allocator);
+        }
+
+        m_layout = other.m_layout;
+        m_elementStride = other.m_elementStride;
+        m_capacity = other.m_capacity;
+        m_framesInFlight = other.m_framesInFlight;
+        m_buffer = other.m_buffer;
+        m_allocation = other.m_allocation;
+        m_allocator = other.m_allocator;
+        m_mapped = other.m_mapped;
+        m_storage = std::move(other.m_storage);
+        m_descriptorSets = std::move(other.m_descriptorSets);
+        m_setCountID = other.m_setCountID;
+
+        other.m_layout = nullptr;
+        other.m_buffer = VK_NULL_HANDLE;
+        other.m_allocation = VK_NULL_HANDLE;
+        other.m_mapped = nullptr;
+        other.m_elementStride = 0;
+        other.m_capacity = 0;
+        other.m_framesInFlight = 0;
+        other.m_setCountID = 0;
+
+        return *this;
     }
 
     void DynamicSSBO::write(uint32_t frameIndex, uint32_t elementIndex, const void* src) {
@@ -67,10 +122,11 @@ namespace Vectrix {
     }
 
     void DynamicSSBO::grow() {
-        m_capacity *= 2;
+        vkDeviceWaitIdle(m_device.device());
+        m_capacity *= 4;
 
-        if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getAllocator(), m_allocation);
-        m_device.destroyBuffer(m_buffer, m_allocation);
+        if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation);
+        m_device.destroyBuffer(m_buffer, m_allocation,m_allocator);
         m_mapped = nullptr;
 
         m_storage.resize(static_cast<size_t>(m_elementStride) * m_capacity * m_framesInFlight, 0);
@@ -81,17 +137,19 @@ namespace Vectrix {
     }
 
     void DynamicSSBO::allocateGPUBuffer() {
+        VC_CORE_ASSERT(m_layout != nullptr, "Layout is null in DynamicSSBO::allocateGPUBuffer!");
         VkDeviceSize bufferSize = static_cast<VkDeviceSize>(m_elementStride) * m_capacity * m_framesInFlight;
-
+        VC_CORE_ASSERT(bufferSize > 0, "Buffer size is 0 in DynamicSSBO::allocateGPUBuffer!");
         m_device.createBuffer(
             bufferSize,
             VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             m_buffer,
-            m_allocation
+            m_allocation,
+            m_allocator
         );
 
-        vmaMapMemory(VulkanContext::instance().getAllocator(), m_allocation, &m_mapped);
+        vmaMapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation, &m_mapped);
         memset(m_mapped, 0, bufferSize);
     }
 

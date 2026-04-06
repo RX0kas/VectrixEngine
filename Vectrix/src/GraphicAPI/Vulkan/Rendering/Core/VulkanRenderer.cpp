@@ -1,7 +1,7 @@
 #include "vcpch.h"
 #include "VulkanRenderer.h"
 
-#include "../Shaders/VulkanShader.h"
+#include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
@@ -15,8 +15,6 @@
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 
 namespace Vectrix {
-
-	Cache<std::string,BatchInfo> VulkanRenderer::m_batchCache{};
 
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
 		VC_PROFILER_FUNCTION();
@@ -47,13 +45,13 @@ namespace Vectrix {
 		vkDeviceWaitIdle(m_device.device());
 
 		if (m_swapChain == nullptr) {
-			m_swapChain = createOwn<SwapChain>(m_device, extent);
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent);
 		}
 		else {
 			vkDeviceWaitIdle(m_device.device());
 			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
-			Ref<SwapChain> oldSwapChain = std::move(m_swapChain);
-			m_swapChain = createOwn<SwapChain>(m_device, extent, oldSwapChain);
+			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_swapChain);
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain);
 			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
 			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {
@@ -83,7 +81,7 @@ namespace Vectrix {
 		allocInfo.commandBufferCount = static_cast<uint32_t>(m_commandBuffers.size());
 
 		if (vkAllocateCommandBuffers(m_device.device(), &allocInfo, m_commandBuffers.data()) != VK_SUCCESS) {
-			VC_CORE_TRACE("Failed to allocate command buffers");
+			VC_CORE_CRITICAL("Failed to allocate command buffers");
 		}
 	}
 
@@ -101,17 +99,22 @@ namespace Vectrix {
 		VkResult result = m_swapChain->acquireNextImage(&m_currentImageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+			recreateSwapChain();
 			return VK_NULL_HANDLE;
 		}
-
 		if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			VC_CORE_CRITICAL("failed to acquire swap chain image!");
+		}
+
+		VkFence fence = m_swapChain->getImageInFlightFences()[m_currentImageIndex];
+		if (fence != VK_NULL_HANDLE) {
+			vkWaitForFences(m_device.device(), 1, &fence, VK_TRUE, UINT64_MAX);
 		}
 
 		m_isFrameStarted = true;
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
-		vkResetCommandBuffer(commandBuffer, 0);
+		vkResetCommandBuffer(commandBuffer, 0); // ✅ maintenant sûr
 
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -191,9 +194,9 @@ namespace Vectrix {
 		vkCmdEndRenderPass(commandBuffer);
 	}
 
-	std::vector<Own<VulkanBuffer>> createIndirectBuffers() {
+	std::vector<std::unique_ptr<VulkanBuffer>> createIndirectBuffers() {
 		uint32_t frameCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
-		std::vector<Own<VulkanBuffer>> buffers;
+		std::vector<std::unique_ptr<VulkanBuffer>> buffers;
 		buffers.reserve(frameCount);
 
 		for (uint32_t i = 0; i < frameCount; i++) {
@@ -209,32 +212,32 @@ namespace Vectrix {
 	}
 
 	// TODO: Rework this when a material system is created
-	void VulkanRenderer::submit(Shader& shader, const Ref<VertexArray>& vertexArray, Transform transform,std::uint32_t textureIndex) {
+	void VulkanRenderer::submit(Shader& shader, const std::shared_ptr<VertexArray>& vertexArray, Transform transform,std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
+		Cache<std::string, BatchInfo>& cache = VulkanContext::instance().getRenderer().m_batchCache;
 		auto& vkShader = dynamic_cast<VulkanShader&>(shader);
-		BatchInfo b;
-		if (m_batchCache.exist(vkShader.m_name)) {
-			b = std::move(m_batchCache[vkShader.m_name]);
-		} else {
-			b = {
-				.pipeline = vkShader.m_pipeline->getPipeline(),
-				.pipelineLayout = vkShader.m_pipelineLayout,
-				.descriptorSet = vkShader.m_ssbo->descriptorSet(),
-				.indirectBuffers = createIndirectBuffers(),
-				.commands = {},
-				.objectDataSSBO = createRef<DynamicSSBO>(vkShader.m_layout.get()),
-				.objectDatas = {},
-				.elementCount = 0
-			};
+		if (!cache.exist(vkShader.m_name)) {
+			cache.emplace(
+					vkShader.m_name,
+					BatchInfo{
+						.pipeline = vkShader.m_pipeline->getPipeline(),
+						.pipelineLayout = vkShader.m_pipelineLayout,
+						.descriptorSet = vkShader.m_ssbo->descriptorSet(),
+						.indirectBuffers = createIndirectBuffers(),
+						.commands = {},
+						.objectDataSSBO = DynamicSSBO(vkShader.m_layout.get(),MAX_OBJECTS_BATCHING),
+						.elementCount = 0
+					});
 		}
-
+		BatchInfo& b = cache.find(vkShader.m_name)->second;
 		uint32_t index = b.elementCount++;
 
 		ObjectData currentObjectData = {
 			.modelMatrix = transform.mat4(),
 			.textureIndex = textureIndex
 		};
-		b.objectDataSSBO->write(VulkanContext::instance().getRenderer().getCurrentImageIndex(), index, &currentObjectData);
+		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
+		b.objectDataSSBO.write(frameIndex, index, &currentObjectData);
 
 		MeshHandle handle = std::dynamic_pointer_cast<VulkanVertexArray>(vertexArray)->getHandle();
 
@@ -246,17 +249,17 @@ namespace Vectrix {
 			.firstInstance = index
 		};
 		b.commands.push_back(command);
-		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
 		b.indirectBuffers[frameIndex]->writeToBuffer(&command,sizeof(VkDrawIndexedIndirectCommand),index * sizeof(VkDrawIndexedIndirectCommand));
-
-		m_batchCache[vkShader.m_name] = std::move(b);
 	}
 
 	void VulkanRenderer::flush() {
+		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
+		VC_CORE_ASSERT(meshRegistry.isUploaded(), "MeshRegistry not uploaded! Call uploadToGPU() before rendering.");
+		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
+		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
 		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
 		auto &[camera] = Renderer::getSceneData();
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
-		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
 		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
 
 		VkDeviceSize offset = 0;
@@ -267,16 +270,22 @@ namespace Vectrix {
 			if (batch.elementCount == 0) continue;
 
 
-			Ref<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(ShaderManager::instance().get(shaderName));
+			std::shared_ptr<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(ShaderManager::instance().get(shaderName));
+
+			VC_CORE_ASSERT(shader != nullptr, "Shader '{}' not found in ShaderManager", shaderName);
+			VC_CORE_ASSERT(shader->m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shaderName);
+
+
+			VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
+			VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shaderName);
 
 			if (shader->isAffectedByCamera())
 				shader->sendCameraUniform(camera->getTransformationMatrix());
 			shader->bind();
 
-			VkDescriptorSet objectSet = batch.objectDataSSBO->descriptorSet(frameIndex);
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS,
-				shader->m_pipelineLayout,batch.objectDataSSBO->getSetCountID(),1, &objectSet,0, nullptr);
-			batch.objectDataSSBO->flush(frameIndex);
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
+			batch.objectDataSSBO.flush(frameIndex);
+			batch.objectDataSSBO.reset(frameIndex);
 
 			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
 		}

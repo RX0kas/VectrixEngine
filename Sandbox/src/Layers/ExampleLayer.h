@@ -16,7 +16,7 @@ public:
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
-		defaultShader = Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
+		defaultShader = Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout);
 		customTexture = Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
 	}
 
@@ -37,12 +37,12 @@ public:
 	}
 
 private:
-	Vectrix::Ref<CameraWidget> m_cameraWidget;
+	std::shared_ptr<CameraWidget> m_cameraWidget;
 	Vectrix::PerspectiveCameraController m_cameraController;
 
-	Vectrix::Ref<Vectrix::Shader> defaultShader;
-	Vectrix::Ref<Vectrix::Texture> customTexture;
-	Vectrix::Ref<Vectrix::Model> m_model;
+	std::shared_ptr<Vectrix::Shader> defaultShader;
+	std::shared_ptr<Vectrix::Texture> customTexture;
+	std::shared_ptr<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";
 };
 

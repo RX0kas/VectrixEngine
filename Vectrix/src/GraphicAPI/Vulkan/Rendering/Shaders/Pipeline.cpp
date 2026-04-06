@@ -84,6 +84,8 @@ namespace Vectrix {
 
     void Pipeline::bind(VkCommandBuffer commandBuffer) const {
         VC_PROFILER_FUNCTION();
+        VC_CORE_ASSERT(m_graphicsPipeline != VK_NULL_HANDLE, "Pipeline is null!");
+        VC_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE, "CommandBuffer is null!");
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
     }
 

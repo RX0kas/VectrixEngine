@@ -10,7 +10,7 @@ namespace Vectrix {
         init();
     }
 
-    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, Ref<SwapChain> previous)
+    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous)
         : m_device{ deviceRef }, m_windowExtent{ extent }, m_oldSwapChain{ std::move(previous) } {
         init();
 
@@ -63,8 +63,11 @@ namespace Vectrix {
             m_renderPass = VK_NULL_HANDLE;
         }
 
-        for (const auto semaphore : m_renderFinishedSemaphores) {
-            vkDestroySemaphore(m_device.device(), semaphore, nullptr);
+        for (auto& sem : m_renderFinishedSemaphores) {
+            if (sem != VK_NULL_HANDLE) {
+                vkDestroySemaphore(m_device.device(), sem, nullptr);
+                sem = VK_NULL_HANDLE;
+            }
         }
         m_renderFinishedSemaphores.clear();
 
@@ -85,24 +88,27 @@ namespace Vectrix {
 
         const VkResult result = vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
 
-        // The caller should handle VK_ERROR_OUT_OF_DATE_KHR or VK_SUBOPTIMAL_KHR
         return result;
     }
 
 
     VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex) {
+        VC_CORE_ASSERT(buffers != nullptr, "buffers is null");
         VC_CORE_ASSERT(imageIndex != nullptr, "imageIndex is null");
-        VC_CORE_ASSERT(*imageIndex < m_imagesInFlight.size(), "imageIndex out of bounds");
-
-        if (m_imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-            vkWaitForFences(m_device.device(), 1, &m_imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
-        }
-
+        VC_CORE_ASSERT(*imageIndex < m_swapChainImages.size(), "imageIndex {} out of bounds (max {})", *imageIndex, m_swapChainImages.size());
+        VC_CORE_ASSERT(m_currentFrame < MAX_FRAMES_IN_FLIGHT, "currentFrame {} out of bounds", m_currentFrame);
+        VC_CORE_ASSERT(m_imageAvailableSemaphores[m_currentFrame] != VK_NULL_HANDLE, "imageAvailableSemaphore is null");
+        VC_CORE_ASSERT(m_renderFinishedSemaphores[*imageIndex] != VK_NULL_HANDLE, "renderFinishedSemaphore is null for imageIndex {}", *imageIndex);
+        VC_CORE_ASSERT(m_inFlightFences[m_currentFrame] != VK_NULL_HANDLE, "inFlightFence is null");
+        VC_CORE_ASSERT(m_swapChain != VK_NULL_HANDLE, "swapchain handle is null");
         vkResetFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame]);
 
+        // update tracking after the reset
+        m_imagesInFlight[*imageIndex] = m_inFlightFences[m_currentFrame];
+
         const VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
-        constexpr VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
         const VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[*imageIndex] };
+        constexpr VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
         VkSubmitInfo submitInfo{ VK_STRUCTURE_TYPE_SUBMIT_INFO };
         submitInfo.waitSemaphoreCount = 1;
@@ -113,12 +119,9 @@ namespace Vectrix {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        VkResult submitRes = vkQueueSubmit(m_device.graphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]);
-        if (submitRes != VK_SUCCESS) {
-            VC_CORE_CRITICAL("vkQueueSubmit failed: {}", string_VkResult(submitRes));
+        if (vkQueueSubmit(m_device.graphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]) != VK_SUCCESS) {
+            VC_CORE_CRITICAL("vkQueueSubmit failed");
         }
-
-        m_imagesInFlight[*imageIndex] = m_inFlightFences[m_currentFrame];
 
         VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
         presentInfo.waitSemaphoreCount = 1;
@@ -126,7 +129,6 @@ namespace Vectrix {
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = &m_swapChain;
         presentInfo.pImageIndices = imageIndex;
-        presentInfo.pResults = nullptr;
 
         return vkQueuePresentKHR(m_device.presentQueue(), &presentInfo);
     }
@@ -353,7 +355,7 @@ namespace Vectrix {
     void SwapChain::createSyncObjects() {
         m_imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         m_inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-        m_renderFinishedSemaphores.resize(imageCount());
+        m_renderFinishedSemaphores.resize(m_swapChainImages.size());
         m_imagesInFlight.resize(imageCount(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};

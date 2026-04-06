@@ -23,6 +23,7 @@ namespace Vectrix {
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
+        return shaderc_anyhit_shader;
     }
 
     inline const char* toString(ShaderType t) {
@@ -32,7 +33,9 @@ namespace Vectrix {
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
+        return "not_found";
     }
+
     class VulkanShaderCompiler {
     public:
         VulkanShaderCompiler();

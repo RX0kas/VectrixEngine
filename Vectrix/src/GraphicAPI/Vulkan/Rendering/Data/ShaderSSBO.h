@@ -10,11 +10,10 @@
 
 namespace Vectrix {
 
-    class SSBO {
+    class ShaderSSBO {
     public:
-        SSBO(Device& device, ShaderUniformLayout& layout);
-
-        ~SSBO();
+        ShaderSSBO(Device& device, ShaderUniformLayout& layout);
+        ~ShaderSSBO();
 
         void uploadFrame(uint32_t frameIndex, const void* src) {
             uint8_t* dst = static_cast<uint8_t*>(m_mapped) + static_cast<size_t>(frameIndex) * m_elementStride;
@@ -36,7 +35,7 @@ namespace Vectrix {
         [[nodiscard]] std::vector<VkDescriptorSet> descriptorSet() const { return m_descriptorSets; }
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const { return m_descriptorSetLayout; }
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
-        [[nodiscard]] std::array<Ref<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
+        [[nodiscard]] std::array<std::shared_ptr<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
 
         [[nodiscard]] static std::uint32_t getGlobalSetCount() { return s_setNumber; }
         [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
@@ -56,7 +55,7 @@ namespace Vectrix {
         std::vector<uint8_t> m_storage;
         ShaderUniformLayout& m_layout;
 
-        std::array<Ref<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
+        std::array<std::shared_ptr<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
 
         VmaAllocation m_allocation{};
         std::uint32_t m_setCountID;

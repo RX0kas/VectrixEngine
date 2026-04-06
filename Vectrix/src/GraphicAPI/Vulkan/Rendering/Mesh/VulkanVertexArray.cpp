@@ -16,14 +16,14 @@ namespace Vectrix {
             m_indexBuffer->bind();
     }
 
-    void VulkanVertexArray::addVertexBuffer(const Ref<VertexBuffer> &vertexBuffer) {
+    void VulkanVertexArray::addVertexBuffer(const std::shared_ptr<VertexBuffer> &vertexBuffer) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(!vertexBuffer->getLayout().getElements().empty(),"Vertex Buffer has no layout!");
 
         m_vertexBuffers.push_back(vertexBuffer);
     }
 
-    void VulkanVertexArray::setIndexBuffer(const Ref<IndexBuffer> &indexBuffer) {
+    void VulkanVertexArray::setIndexBuffer(const std::shared_ptr<IndexBuffer> &indexBuffer) {
         VC_PROFILER_FUNCTION();
         m_indexBuffer.reset();
         m_indexBuffer = indexBuffer;

@@ -12,6 +12,7 @@ namespace Vectrix {
         }
 
         VC_CORE_ERROR("Unknown RendererAPI!");
+        return nullptr;
     }
 
     void GraphicsContext::setClientAPI() {

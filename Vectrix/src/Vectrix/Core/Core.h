@@ -29,29 +29,10 @@
 
 #include "memory"
 
-#define VC_DELETE_OWN(var) {const auto* v = var.release();delete v;}
-
 /**
  * @namespace Vectrix
  * @brief Vectrix Engine namespace
  */
-namespace Vectrix {
-
-	template<typename T>
-	using Own = std::unique_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Own<T> createOwn(Args&& ... args)
-	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Ref<T> createRef(Args&& ... args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
-}
+namespace Vectrix {}
 
 #endif

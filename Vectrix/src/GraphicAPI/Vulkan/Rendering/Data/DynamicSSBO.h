@@ -6,8 +6,11 @@
 namespace Vectrix {
     class DynamicSSBO {
     public:
-        DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity = 256);
+        explicit DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity = 256);
         ~DynamicSSBO();
+
+        DynamicSSBO(DynamicSSBO&& other) noexcept;
+        DynamicSSBO& operator=(DynamicSSBO&&) noexcept;
 
         void write(uint32_t frameIndex, uint32_t elementIndex, const void* src);
         void flush(uint32_t frameIndex) const;
@@ -33,7 +36,7 @@ namespace Vectrix {
         void grow();
 
         Device& m_device;
-        ShaderUniformLayout* m_layout;
+        ShaderUniformLayout* m_layout{};
 
         uint32_t m_elementStride{};
 
@@ -43,12 +46,13 @@ namespace Vectrix {
 
         VkBuffer m_buffer{};
         VmaAllocation m_allocation{};
+        VmaAllocator m_allocator;
         void* m_mapped{};
 
         std::vector<uint8_t> m_storage;
 
         std::vector<VkDescriptorSet> m_descriptorSets;
-        std::uint32_t m_setCountID;
+        std::uint32_t m_setCountID{};
     };
 } // Vectrix
 

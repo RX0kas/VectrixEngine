@@ -22,7 +22,7 @@ namespace Vectrix {
 	}
 
     void VulkanImGuiManager::attachDebugGraphicWidget() {
-    	m_debugWidget = createRef<VulkanDebugWidget>();
+    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
     	Application::instance().imguiLayer().addWidget(m_debugWidget);
     }
 
@@ -32,6 +32,7 @@ namespace Vectrix {
 
 		ImGui_ImplVulkan_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 
 		if (m_imGuiRenderPass != VK_NULL_HANDLE) {
 			vkDestroyRenderPass(m_device.device(), m_imGuiRenderPass, nullptr);
@@ -48,7 +49,6 @@ namespace Vectrix {
     			vkDestroyFramebuffer(m_device.device(),f,nullptr);
     	}
 
-		ImGui::DestroyContext();
 	}
 
 	void VulkanImGuiManager::createImGuiFramebuffers() {
@@ -268,6 +268,7 @@ namespace Vectrix {
 		}
 
 		VC_CORE_ERROR("No graphics queue family found");
+		return 0;
 	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {

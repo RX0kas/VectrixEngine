@@ -3,7 +3,7 @@
 
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Data/SSBO.h"
+#include "GraphicAPI/Vulkan/Rendering/Data/ShaderSSBO.h"
 
 namespace Vectrix {
     class Pipeline;
@@ -22,7 +22,7 @@ namespace Vectrix {
         void setUniform4f(const std::string &name, glm::vec4 value) const override;
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
-        void setTexture(uint32_t index, Ref<Texture> texture) override;
+        void setTexture(uint32_t index, std::shared_ptr<Texture> texture) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
             VC_VERIFY_UNIFORM_NAME(name);
@@ -48,10 +48,10 @@ namespace Vectrix {
     private:
         Device& m_device;
         VulkanRenderer& m_renderer;
-        Ref<Pipeline> m_pipeline;
+        std::shared_ptr<Pipeline> m_pipeline;
         VkPipelineLayout m_pipelineLayout{};
-        Own<SSBO> m_ssbo;
-        Own<ShaderUniformLayout> m_layout;
+        std::unique_ptr<ShaderSSBO> m_ssbo;
+        std::unique_ptr<ShaderUniformLayout> m_layout;
 
         std::string m_fragSRC;
         std::string m_vertSRC;

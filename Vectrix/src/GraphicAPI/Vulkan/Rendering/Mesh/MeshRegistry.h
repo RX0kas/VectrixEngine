@@ -13,8 +13,9 @@ namespace Vectrix {
 
         void uploadToGPU();
 
-        VulkanBuffer& getVertexBuffer() const { return *m_globalVertexBuffer; }
-        VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer;  }
+        [[nodiscard]] VulkanBuffer& getVertexBuffer() const { return *m_globalVertexBuffer; }
+        [[nodiscard]] VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer;  }
+        bool isUploaded() const { return m_uploaded; }
     private:
         void uploadBuffer(const void* data, VkDeviceSize size, VkBufferUsageFlags usage, std::unique_ptr<VulkanBuffer>& outBuffer);
 
@@ -22,8 +23,8 @@ namespace Vectrix {
         std::vector<Vertex>   m_pendingVertices;
         std::vector<uint32_t> m_pendingIndices;
 
-        Own<VulkanBuffer> m_globalVertexBuffer;
-        Own<VulkanBuffer> m_globalIndexBuffer;
+        std::unique_ptr<VulkanBuffer> m_globalVertexBuffer;
+        std::unique_ptr<VulkanBuffer> m_globalIndexBuffer;
         bool m_uploaded;
     };
 } // Vectrix
