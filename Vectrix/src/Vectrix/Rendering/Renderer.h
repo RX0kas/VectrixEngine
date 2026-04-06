@@ -49,14 +49,16 @@ namespace Vectrix {
 		 * @param transform Transform to apply (position, scale, rotation)
 		 * @deprecated Will be removed when the material system will be created, please use @ref Model and @ref Vectrix::Renderer::submit(Shader& shader, Model& model) instead
 		 */
-		static void submit(Shader& shader, Ref<VertexArray> vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});
+		static void submit(Shader &shader, const std::shared_ptr<VertexArray> &vertexArray, const Transform &transform = Transform{
+			                   glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)
+		                   });
 
 		/**
 		 * @brief Submit a complete model
 		 * @param shader Shader to use
 		 * @param model Model to render
 		 */
-		static void submit(Shader& shader, Model& model);
+		static void submit(Shader& shader, const Model& model);
 
 		/**
 		 * @brief Get current graphics API
@@ -69,6 +71,6 @@ namespace Vectrix {
 		 */
 		static SceneData& getSceneData() {return *m_SceneData;}
 	private:
-		static Own<SceneData> m_SceneData;
+		static std::unique_ptr<SceneData> m_SceneData;
 	};
 }

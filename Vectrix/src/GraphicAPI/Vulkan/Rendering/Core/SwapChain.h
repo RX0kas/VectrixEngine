@@ -11,7 +11,7 @@ namespace Vectrix {
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
         SwapChain(Device& deviceRef, VkExtent2D windowExtent);
-        SwapChain(Device& deviceRef, VkExtent2D windowExtent, Ref<SwapChain> previous);
+        SwapChain(Device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous);
 
         ~SwapChain();
 
@@ -176,7 +176,7 @@ namespace Vectrix {
         VkExtent2D m_windowExtent;
 
         VkSwapchainKHR m_swapChain;
-		Ref<SwapChain> m_oldSwapChain;
+		std::shared_ptr<SwapChain> m_oldSwapChain;
 
         std::vector<VkSemaphore> m_imageAvailableSemaphores; // par frame
         std::vector<VkSemaphore> m_renderFinishedSemaphores; // par image

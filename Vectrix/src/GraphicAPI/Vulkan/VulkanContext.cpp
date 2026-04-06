@@ -5,6 +5,7 @@
 #include "Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Mesh/Model.h"
+#include "Vectrix/Rendering/Textures/TextureManager.h"
 
 namespace Vectrix {
 	VulkanContext* VulkanContext::s_instance = nullptr;
@@ -14,26 +15,33 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "VulkanContext already exists!");
 		s_instance = this;
 		VC_CORE_ASSERT(windowHandle, "Window handle is null!");
-		m_compiler = createOwn<VulkanShaderCompiler>();
-		m_meshRegistry = createOwn<MeshRegistry>();
+		m_compiler = std::make_unique<VulkanShaderCompiler>();
+		m_meshRegistry = std::make_unique<MeshRegistry>();
 	}
 
 	VulkanContext::~VulkanContext() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Graphic context");
+		vkDeviceWaitIdle(m_device->device());
+		m_renderer->m_batchCache.clear();
 
-		VC_DELETE_OWN(m_renderer);
-		VC_DELETE_OWN(m_compiler);
-		VC_DELETE_OWN(m_meshRegistry);
-		VC_DELETE_OWN(m_device);
+		VkDescriptorSetLayout dsl = DynamicSSBO::getStaticDescriptorSetLayout();
+		if (dsl!=VK_NULL_HANDLE)
+			vkDestroyDescriptorSetLayout(m_device->device(), dsl, nullptr);
+
+		m_renderer.reset();
+		m_compiler.reset();
+		m_meshRegistry.reset();
+
+		m_device.reset();
 	}
 
 	void VulkanContext::init() {
 		VC_PROFILER_FUNCTION();
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		DescriptorPoolConfig cfg {64,64,64,64};
-		m_device = createOwn<Device>(Application::instance().window(),cfg);
-		m_renderer = createOwn<VulkanRenderer>(Application::instance().window(),*m_device);
+		m_device = std::make_unique<Device>(Application::instance().window(),cfg);
+		m_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*m_device);
 	}
 
 	void VulkanContext::swapBuffers() {
@@ -41,7 +49,7 @@ namespace Vectrix {
 		glfwPollEvents();
 	}
 
-	void VulkanContext::registerMesh(const std::string &name, Ref<Model> model) {
+	void VulkanContext::registerMesh(const std::string &name, std::shared_ptr<Model> model) {
 		VC_PROFILER_FUNCTION();
 		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->getVertexArray());
 		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->getVertices(),model->getIndices()));

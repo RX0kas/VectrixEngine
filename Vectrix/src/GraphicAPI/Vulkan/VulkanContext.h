@@ -18,7 +18,7 @@ namespace Vectrix {
 		~VulkanContext() override;
 		void init() override;
 		void swapBuffers() override;
-		void registerMesh(const std::string& name,Ref<Model> model) override;
+		void registerMesh(const std::string& name,std::shared_ptr<Model> model) override;
 		static void uploadMeshData();
 
 
@@ -26,7 +26,9 @@ namespace Vectrix {
 		[[nodiscard]] VulkanRenderer& getRenderer() const { return *m_renderer; }
 		[[nodiscard]] MeshRegistry& getMeshRegistry() const { return *m_meshRegistry; }
 		[[nodiscard]] VulkanShaderCompiler& getCompiler() const { return *m_compiler;}
-		[[nodiscard]] VmaAllocator getAllocator() const { return getDevice().getAllocator();}
+		[[nodiscard]] VmaAllocator getBufferAllocator() const { return getDevice().getBufferAllocator();}
+		[[nodiscard]] VmaAllocator getSSBOAllocator() const { return getDevice().getSSBOAllocator();}
+		[[nodiscard]] VmaAllocator getTextureAllocator() const { return getDevice().getTextureAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
 		static void check_vk_result(VkResult err) {
 			if (err == VK_SUCCESS)
@@ -36,10 +38,10 @@ namespace Vectrix {
 		}
 	private:
 		GLFWwindow* m_WindowHandle;
-		Own<Device> m_device;
-		Own<VulkanRenderer> m_renderer;
-		Own<VulkanShaderCompiler> m_compiler;
-		Own<MeshRegistry> m_meshRegistry;
+		std::unique_ptr<Device> m_device;
+		std::unique_ptr<VulkanRenderer> m_renderer;
+		std::unique_ptr<VulkanShaderCompiler> m_compiler;
+		std::unique_ptr<MeshRegistry> m_meshRegistry;
 
 		float getAspect() override {
 			return m_renderer->getAspectRatio();

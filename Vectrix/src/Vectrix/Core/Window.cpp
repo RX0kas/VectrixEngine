@@ -23,7 +23,7 @@ namespace Vectrix {
 			glfwTerminate();
 		}
 
-		VC_DELETE_OWN(m_context);
+		m_context.reset();
 	}
 
 	Window::Window() : m_window(nullptr), m_data() {

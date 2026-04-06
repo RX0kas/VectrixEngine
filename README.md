@@ -12,6 +12,7 @@ Current Working branch: [feature/batch_rendering](https://github.com/RX0kas/Vect
  - Vulkan powered rendering
  - OBJ Model Loading
  - Runtime shader compilation
+ - Batch Rendering
 
 ## Prerequisites
 - [CMake 3.20](https://cmake.org/download/)
@@ -67,17 +68,15 @@ class CustomLayer : public Vectrix::Layer
 {
 public:
     CustomLayer() : Layer("Example") {
-        // Load a model and texture
-        m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
-        Vectrix::TextureManager::instance().createTexture("mainT","./mytexture.png");
+        // Load a model
+        m_model = Vectrix::MeshManager::loadModel("mymodel","./mymodel.obj");
         // Create a layout for the main shader
         Vectrix::ShaderUniformLayout layout;
         layout.add("time",Vectrix::ShaderUniformType::Float);
-        // Create the shader and tell it how to load Obj Files
-        Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout, Vectrix::getTinyObjLayout(),true);
-        // Save the shader in a variable
-        m_main = Vectrix::ShaderManager::instance().get("main");
-        m_texture = Vectrix::TextureManager::instance().get("mainT");
+        // Create the shader
+        m_main = Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout);
+        // Create the texture
+        m_texture = Vectrix::TextureManager::instance().createTexture("mainT","./mytexture.png");;
     }
 
     // Do something each frame
@@ -118,7 +117,7 @@ public:
     ~TestApp() override = default;
 
 private:
-    Vectrix::Ref<CustomLayer> m_exampleLayer;
+    Vectrix::shared_ptr<CustomLayer> m_exampleLayer;
 };
 Vectrix::Application* Vectrix::createApplication()
 {
@@ -145,6 +144,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ## Known Issues
 
 - Multi-Viewport is disabled on Linux due to numerous compatibility issues
+- Synchronization bug
 
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration

@@ -29,7 +29,7 @@ namespace Vectrix {
         void* data = vertices.data();
         stagingBuffer.writeToBuffer(data);
 
-        m_buffer = createOwn<VulkanBuffer>(vertexSize, m_vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        m_buffer = std::make_unique<VulkanBuffer>(vertexSize, m_vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), m_buffer->getBuffer(), bufferSize);
     }
@@ -91,7 +91,7 @@ namespace Vectrix {
         stagingBuffer.writeToBuffer(data);
         stagingBuffer.unmap();
 
-        m_buffer = createOwn<VulkanBuffer>(
+        m_buffer = std::make_unique<VulkanBuffer>(
             sizeof(indices[0]),
             m_indexCount,
             VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
@@ -211,7 +211,7 @@ namespace Vectrix {
     VkResult VulkanBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(m_buffer != VK_NULL_HANDLE && m_allocation != VK_NULL_HANDLE, "Called map on buffer before create");
-        return vmaMapMemory(m_device.getAllocator(), m_allocation, &m_mapped);
+        return vmaMapMemory(m_device.getBufferAllocator(), m_allocation, &m_mapped);
     }
 
     /**
@@ -222,7 +222,7 @@ namespace Vectrix {
     void VulkanBuffer::unmap() {
         VC_PROFILER_FUNCTION();
         if (m_mapped) {
-            vmaUnmapMemory(m_device.getAllocator(), m_allocation);
+            vmaUnmapMemory(m_device.getBufferAllocator(), m_allocation);
             m_mapped = nullptr;
         }
     }
@@ -265,7 +265,7 @@ namespace Vectrix {
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 
         VmaAllocationInfo pAllocationInfo;
-        vmaGetAllocationInfo(m_device.getAllocator(), m_allocation,&pAllocationInfo);
+        vmaGetAllocationInfo(m_device.getBufferAllocator(), m_allocation,&pAllocationInfo);
 
         mappedRange.memory = pAllocationInfo.deviceMemory;
         mappedRange.offset = offset;
@@ -290,7 +290,7 @@ namespace Vectrix {
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
 
         VmaAllocationInfo pAllocationInfo;
-        vmaGetAllocationInfo(m_device.getAllocator(), m_allocation,&pAllocationInfo);
+        vmaGetAllocationInfo(m_device.getBufferAllocator(), m_allocation,&pAllocationInfo);
 
         mappedRange.memory = pAllocationInfo.deviceMemory;
         mappedRange.offset = offset;

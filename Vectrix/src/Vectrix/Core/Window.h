@@ -78,7 +78,7 @@ namespace Vectrix {
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
 		GLFWwindow* m_window;
-		Own<GraphicsContext> m_context;
+		std::unique_ptr<GraphicsContext> m_context;
 
 		WindowData m_data;
 		

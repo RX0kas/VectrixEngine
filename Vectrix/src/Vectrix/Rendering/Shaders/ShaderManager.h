@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_SHADERMANAGER_H
 #include "Vectrix/Core/Core.h"
 #include "Vectrix/Rendering/Buffer.h"
+#include "Vectrix/Rendering/Mesh/ObjLoader.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 
 
@@ -24,7 +25,7 @@ namespace Vectrix {
          * @param name Name of the shader you wanna get
          * @return The shader program with the name you entered
          */
-        Ref<Shader> get(const std::string& name);
+        std::shared_ptr<Shader> get(const std::string& name);
 
         /**
          * @brief This function is used to know if a shader with the name given exist
@@ -39,7 +40,7 @@ namespace Vectrix {
          * @brief This function is used to get all the shader previously created
          * @return The shader programs created
          */
-        std::vector<Ref<Shader>> getAll() {
+        std::vector<std::shared_ptr<Shader>> getAll() {
             return m_cache.getAllItems();
         }
 
@@ -59,15 +60,15 @@ namespace Vectrix {
          * @param layout Information on how the vertex are sent to the GPU
          * @param affectedByCamera Tell if we need to send the information of the camera to the GPU
          */
-        static Ref<Shader> createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout,bool affectedByCamera);
+        static std::shared_ptr<Shader> createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout=getTinyObjLayout(), const bool affectedByCamera=true);
+        ~ShaderManager();
     private:
         friend class Shader;
         friend class Application;
         ShaderManager();
         bool remove(const std::string& name);
-        void add(const std::string& name,Ref<Shader> shader);
-        Cache<std::string,Ref<Shader>> m_cache;
-
+        void add(const std::string& name,std::shared_ptr<Shader> shader);
+        Cache<std::string,std::shared_ptr<Shader>> m_cache;
     private:
         static ShaderManager* s_instance;
     };

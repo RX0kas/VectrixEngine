@@ -10,7 +10,7 @@ public:
 	}
 	~Sandbox() override = default;
 private:
-	Vectrix::Ref<ExampleLayer> m_exampleLayer;
+	std::shared_ptr<ExampleLayer> m_exampleLayer;
 };
 
 Vectrix::Application* Vectrix::createApplication()

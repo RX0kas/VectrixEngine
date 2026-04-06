@@ -11,7 +11,7 @@ namespace Vectrix {
 	{
 	public:
 		virtual ~GraphicsContext() = default;
-		virtual void registerMesh(const std::string& name,Ref<Model> model) = 0;
+		virtual void registerMesh(const std::string& name,std::shared_ptr<Model> model) = 0;
 	private:
 		friend class Application;
 		static void uploadAllMeshData();

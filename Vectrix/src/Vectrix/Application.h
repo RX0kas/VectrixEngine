@@ -22,8 +22,7 @@ namespace Vectrix {
 	class ShaderManager;
 	class TextureManager;
 
-	class Application
-	{
+	class Application {
 	public:
 		Application();
 		virtual ~Application();
@@ -31,8 +30,8 @@ namespace Vectrix {
 		void onEvent(Event& e);
 		bool onWindowClose(WindowCloseEvent& e);
 
-		void PushLayer(const Ref<Layer>&  layer);
-		void PushOverlay(const Ref<Layer>&  layer);
+		void PushLayer(const std::shared_ptr<Layer>&  layer);
+		void PushOverlay(const std::shared_ptr<Layer>&  layer);
 
 		[[nodiscard]] Window &window() const { return *m_window; }
 		[[nodiscard]] ImGuiLayer &imguiLayer() const { return *m_imGuiLayer; }
@@ -44,18 +43,19 @@ namespace Vectrix {
 				return g_getAppInfo();
 			}
 			VC_CORE_ERROR("No information has been set for the application");
+			return {"not_found",0};
 		}
 
 		void renderImGui();
 	private:
 		friend int ::main(int argc, char** argv);
 		void run();
-		Ref<Window> m_window;
-		Own<ShaderManager> m_shaderManager;
-		Own<TextureManager> m_textureManager;
-		Own<MeshManager> m_meshManager;
-		Own<ImGuiLayer> m_imGuiLayer;
-		Own<ApplicationInfo> m_appInfo;
+		std::unique_ptr<Window> m_window;
+		std::unique_ptr<ShaderManager> m_shaderManager;
+		std::unique_ptr<TextureManager> m_textureManager;
+		std::unique_ptr<MeshManager> m_meshManager;
+		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
+		std::unique_ptr<ApplicationInfo> m_appInfo;
 		bool m_running = true;
 
 		LayerStack m_layerStack;

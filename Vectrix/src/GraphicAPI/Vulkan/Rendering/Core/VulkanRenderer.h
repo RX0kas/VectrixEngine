@@ -23,17 +23,22 @@ namespace Vectrix {
     };
 
     struct BatchInfo {
-        VkPipeline pipeline;
-        VkPipelineLayout pipelineLayout;
-        std::vector<VkDescriptorSet> descriptorSet;
+        VkPipeline pipeline = VK_NULL_HANDLE;
+        VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
+        std::vector<VkDescriptorSet> descriptorSet{};
 
-        std::vector<Own<VulkanBuffer>> indirectBuffers; // The buffer that will send the commands, not visible in the shader
+        std::vector<std::unique_ptr<VulkanBuffer>> indirectBuffers{}; // The buffer that will send the commands, not visible in the shader
 
-        std::vector<VkDrawIndexedIndirectCommand> commands;
-        Ref<DynamicSSBO> objectDataSSBO; // The buffer that will send the objectDatas
+        std::vector<VkDrawIndexedIndirectCommand> commands{};
+        DynamicSSBO objectDataSSBO; // The buffer that will send the objectDatas
 
-        std::vector<ObjectData> objectDatas;
-        std::uint32_t elementCount;
+        std::uint32_t elementCount = 0;
+
+        BatchInfo() = delete;
+        BatchInfo(BatchInfo&&) = default;
+        BatchInfo& operator=(BatchInfo&&) = delete;
+        BatchInfo(const BatchInfo&) = delete;
+        BatchInfo& operator=(const BatchInfo&) = delete;
     };
 
     constexpr uint32_t MAX_OBJECTS_BATCHING = 10'000;
@@ -86,20 +91,21 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(Shader& shader,const Ref<VertexArray>& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)},std::uint32_t textureIndex=0);
+        static void submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)},std::uint32_t textureIndex=0);
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
         friend class Renderer;
+        friend class VulkanContext;
         [[nodiscard]] DebugFrameInfo getCurrentFrameInfo() const;
         void createCommandBuffers();
         void freeCommandBuffers();
         void recreateSwapChain();
         void cleanupSwapChain();
 
-        static void resetCache() {
+        void resetCache() {
             for (auto& [name, batch] : m_batchCache) {
-                batch.elementCount      = 0;
+                batch.elementCount = 0;
                 batch.commands.clear();
             }
         }
@@ -107,11 +113,11 @@ namespace Vectrix {
         /**
          * Render all submitted data
          */
-        static void flush();
+        void flush();
 
         Window& m_window;
         Device& m_device;
-        Ref<SwapChain> m_swapChain;
+        std::shared_ptr<SwapChain> m_swapChain;
         std::vector<VkCommandBuffer> m_commandBuffers;
 
         uint32_t m_currentImageIndex{ 0 };
@@ -119,6 +125,6 @@ namespace Vectrix {
 
         VkClearValue m_clearValue = { 0.05f, 0.05f, 0.05f, 1.0f };
 
-        static Cache<std::string,BatchInfo> m_batchCache;
+        Cache<std::string,BatchInfo> m_batchCache;
     };
 }

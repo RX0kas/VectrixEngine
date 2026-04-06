@@ -8,52 +8,59 @@
 #include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
-    MeshManager* MeshManager::p_instance = nullptr;
+    MeshManager* MeshManager::s_instance = nullptr;
 
 
     MeshManager::MeshManager() {
+        VC_CORE_ASSERT(!s_instance, "MeshManager already exists!");
         VC_CORE_INFO("Initializing MeshManager");
-        VC_CORE_ASSERT(!p_instance, "MeshManager already exists!");
-        p_instance = this;
+        s_instance = this;
     }
 
-    Ref<Model> MeshManager::loadModel(const std::string &name, const std::string &path) {
+    MeshManager::~MeshManager() {
         VC_PROFILER_FUNCTION();
-        Ref<Model> model = createRef<Model>(Model::load(path));
+        VC_CORE_INFO("Destroying MeshManager");
+        m_notFoundMesh.reset();
+        m_cache.clear();
+    }
+
+    std::shared_ptr<Model> MeshManager::loadModel(const std::string &name, const std::string &path) {
+        VC_PROFILER_FUNCTION();
+        std::shared_ptr<Model> model = std::make_unique<Model>(Model::load(path));
         instance().add(name,model);
         Application::instance().window().getGraphicContext().registerMesh(name,model);
         return model;
     }
 
-    Ref<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const BufferLayout &layout) {
+    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const BufferLayout &layout) {
         VC_PROFILER_FUNCTION();
-        Ref<Model> model = createRef<Model>(Model::create(vertices,indices,layout));
+        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,indices,layout));
         instance().add(name,model);
         Application::instance().window().getGraphicContext().registerMesh(name,model);
         return model;
     }
-    Ref<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const BufferLayout &layout) {
+    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const BufferLayout &layout) {
         VC_PROFILER_FUNCTION();
-        Ref<Model> model = createRef<Model>(Model::create(vertices,layout));
+        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,layout));
         instance().add(name,model);
         Application::instance().window().getGraphicContext().registerMesh(name,model);
         return model;
     }
 
-    void MeshManager::add(const std::string& name, Ref<Model> model) {
-        p_cache.emplace(name, model);
+    void MeshManager::add(const std::string& name, std::shared_ptr<Model> model) {
+        m_cache.emplace(name, model);
         VC_CORE_INFO("Model \"{}\" registered",name);
     }
 
-    Ref<Model> MeshManager::get(const std::string& name) {
-        const auto it = p_cache.find(name);
-        if (it == p_cache.end()) {
+    std::shared_ptr<Model> MeshManager::get(const std::string& name) {
+        const auto it = m_cache.find(name);
+        if (it == m_cache.end()) {
             VC_CORE_ERROR("Model with the name \"{}\" doesn't exist", name);
         }
         return it->second;
     }
 
     bool MeshManager::remove(const std::string& name) {
-        return p_cache.erase(name);
+        return m_cache.erase(name);
     }
 } // Vectrix

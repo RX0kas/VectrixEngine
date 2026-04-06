@@ -9,15 +9,17 @@ namespace Vectrix {
 		LayerStack();
 		~LayerStack();
 
-		void PushLayer(Ref<Layer> layer);
-		void PushOverlay(Ref<Layer> overlay);
-		void PopLayer(Ref<Layer> layer);
-		void PopOverlay(Ref<Layer> overlay);
+		void PushLayer(std::shared_ptr<Layer> layer);
+		void PushOverlay(std::shared_ptr<Layer> overlay);
+		void PopLayer(std::shared_ptr<Layer> layer);
+		void PopOverlay(std::shared_ptr<Layer> overlay);
 
-		std::vector<Ref<Layer>>::iterator begin() { return m_Layers.begin(); }
-		std::vector<Ref<Layer>>::iterator end() { return m_Layers.end(); }
+		std::vector<std::shared_ptr<Layer>>::iterator begin() { return m_layers.begin(); }
+		std::vector<std::shared_ptr<Layer>>::iterator end() { return m_layers.end(); }
+
+		void destroy();
 	private:
-		std::vector<Ref<Layer>> m_Layers;
-		unsigned int m_LayerInsertIndex = 0;
+		std::vector<std::shared_ptr<Layer>> m_layers;
+		unsigned int m_layerInsertIndex = 0;
 	};
 }

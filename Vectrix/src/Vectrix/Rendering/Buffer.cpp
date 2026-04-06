@@ -18,6 +18,7 @@ namespace Vectrix {
 		}
 
 		VC_CORE_ERROR("Unknown RendererAPI!");
+		return nullptr;
 	}
 
 	IndexBuffer* IndexBuffer::create(uint32_t* indices, uint32_t size)
@@ -29,5 +30,6 @@ namespace Vectrix {
 		}
 
 		VC_CORE_ERROR("Unknown RendererAPI!");
+		return nullptr;
 	}
 }

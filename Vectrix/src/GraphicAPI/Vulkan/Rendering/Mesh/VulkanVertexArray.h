@@ -12,11 +12,11 @@ namespace Vectrix {
 
         void bind() const override;
 
-        void addVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
-        void setIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
+        void addVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
+        void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-        [[nodiscard]] std::vector<Ref<VertexBuffer>> getVertexBuffers() const override { return m_vertexBuffers; }
-        [[nodiscard]] const Ref<IndexBuffer>& getIndexBuffer() const override { return m_indexBuffer; }
+        [[nodiscard]] std::vector<std::shared_ptr<VertexBuffer>> getVertexBuffers() const override { return m_vertexBuffers; }
+        [[nodiscard]] const std::shared_ptr<IndexBuffer>& getIndexBuffer() const override { return m_indexBuffer; }
         [[nodiscard]] MeshHandle getHandle() const { return m_handle; }
         void setHandle(MeshHandle handle) {
             if (hasHandle) {
@@ -28,8 +28,8 @@ namespace Vectrix {
     private:
         bool hasHandle = false;
         MeshHandle m_handle{};
-        std::vector<Ref<VertexBuffer>> m_vertexBuffers;
-        Ref<IndexBuffer> m_indexBuffer;
+        std::vector<std::shared_ptr<VertexBuffer>> m_vertexBuffers;
+        std::shared_ptr<IndexBuffer> m_indexBuffer;
     };
 } // Vectrix
 

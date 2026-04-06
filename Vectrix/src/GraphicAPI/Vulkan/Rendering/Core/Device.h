@@ -18,11 +18,11 @@ namespace Vectrix {
     };
 
     struct QueueFamilyIndices {
-        uint32_t graphicsFamily;
-        uint32_t presentFamily;
+        uint32_t graphicsFamily{};
+        uint32_t presentFamily{};
         bool graphicsFamilyHasValue = false;
         bool presentFamilyHasValue = false;
-        bool isComplete() const { return graphicsFamilyHasValue && presentFamilyHasValue; }
+        [[nodiscard]] bool isComplete() const { return graphicsFamilyHasValue && presentFamilyHasValue; }
     };
 
 	class Window;
@@ -51,7 +51,7 @@ namespace Vectrix {
         VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
         // Buffer Helper Functions
-        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation);
+        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation,VmaAllocator allocator=nullptr);
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -67,10 +67,12 @@ namespace Vectrix {
 
         VkDescriptorSetLayout createFrameSSBOLayout() const;
 
-        void destroyBuffer(VkBuffer buffer, VmaAllocation allocation);
+        void destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator=nullptr);
         void destroyImage(VkImage image, VmaAllocation allocation);
 
-        [[nodiscard]] VmaAllocator getAllocator() const {return m_allocator;}
+        [[nodiscard]] VmaAllocator getBufferAllocator() const {return m_bufferAllocator;}
+        [[nodiscard]] VmaAllocator getTextureAllocator() const {return m_textureAllocator;}
+        [[nodiscard]] VmaAllocator getSSBOAllocator() const {return m_SSBOAllocator;}
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -81,12 +83,12 @@ namespace Vectrix {
 	    void createDescriptorPool(const DescriptorPoolConfig& cfg);
         // helper functions
         bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
-        std::vector<const char*> getRequiredExtensions();
-        bool checkValidationLayerSupport();
+        static std::vector<const char*> getRequiredExtensions();
+        bool checkValidationLayerSupport() const;
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) const;
 
         static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-        void hasGflwRequiredInstanceExtensions();
+        static void hasGflwRequiredInstanceExtensions();
         bool checkDeviceExtensionSupport(VkPhysicalDevice device) const;
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) const;
 
@@ -95,7 +97,9 @@ namespace Vectrix {
         Window& m_window;
         VkCommandPool m_commandPool;
 
-	    VmaAllocator m_allocator;
+	    VmaAllocator m_bufferAllocator;
+	    VmaAllocator m_textureAllocator;
+	    VmaAllocator m_SSBOAllocator;
 
         VkDevice m_device;
         VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
