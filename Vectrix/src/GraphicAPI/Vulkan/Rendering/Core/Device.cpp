@@ -57,6 +57,10 @@ namespace Vectrix {
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
+        #ifdef VC_DEBUG
+        VkDeviceDiagnosticsConfigCreateInfoNV diagnosticsConfig{};
+        #endif
+
 
         VmaAllocatorCreateInfo allocatorCreateInfo = {};
         allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
@@ -214,7 +218,13 @@ namespace Vectrix {
         }
 
         vkGetDeviceQueue(m_device, indices.graphicsFamily, 0, &m_graphicsQueue);
-        vkGetDeviceQueue(m_device, indices.presentFamily, 0, &m_presentQueue);
+
+        if (indices.graphicsFamily == indices.presentFamily) {
+            m_presentQueue = m_graphicsQueue;
+        } else {
+            vkGetDeviceQueue(m_device, indices.presentFamily, 0, &m_presentQueue);
+        }
+        VC_CORE_INFO("Graphics family: {}, Present family: {}, Same: {}", indices.graphicsFamily, indices.presentFamily, indices.graphicsFamily == indices.presentFamily ? "YES" : "NO");
     }
 
     void Device::createCommandPool() {

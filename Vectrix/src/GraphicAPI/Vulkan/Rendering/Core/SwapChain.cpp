@@ -84,7 +84,7 @@ namespace Vectrix {
 
     VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) const {
         // Wait for the current frame's fence to ensure the CPU isn't overlapping frame usage
-        vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+        //vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
 
         const VkResult result = vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
 
@@ -101,6 +101,14 @@ namespace Vectrix {
         VC_CORE_ASSERT(m_renderFinishedSemaphores[*imageIndex] != VK_NULL_HANDLE, "renderFinishedSemaphore is null for imageIndex {}", *imageIndex);
         VC_CORE_ASSERT(m_inFlightFences[m_currentFrame] != VK_NULL_HANDLE, "inFlightFence is null");
         VC_CORE_ASSERT(m_swapChain != VK_NULL_HANDLE, "swapchain handle is null");
+
+        if (m_imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
+            VkResult waitResult = vkWaitForFences(m_device.device(), 1, &m_imagesInFlight[*imageIndex], VK_TRUE, VC_TIMEOUT_SYNC);
+            if (waitResult == VK_TIMEOUT) {
+                VC_CORE_CRITICAL("GPU HANG DETECTED - fence never signaled - submitCommandBuffers(buffers,{})",*imageIndex);
+            }
+        }
+
         vkResetFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame]);
 
         // update tracking after the reset
@@ -122,6 +130,13 @@ namespace Vectrix {
         if (vkQueueSubmit(m_device.graphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]) != VK_SUCCESS) {
             VC_CORE_CRITICAL("vkQueueSubmit failed");
         }
+
+        #ifdef VC_DEBUG
+                VkResult fenceResult = vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, 5'000'000'000ULL);
+                if (fenceResult == VK_TIMEOUT) {
+                    VC_CORE_CRITICAL("GPU HANG - command buffer never finished executing");
+                }
+        #endif
 
         VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
         presentInfo.waitSemaphoreCount = 1;

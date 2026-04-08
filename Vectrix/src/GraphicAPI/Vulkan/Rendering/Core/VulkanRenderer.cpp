@@ -106,15 +106,10 @@ namespace Vectrix {
 			VC_CORE_CRITICAL("failed to acquire swap chain image!");
 		}
 
-		VkFence fence = m_swapChain->getImageInFlightFences()[m_currentImageIndex];
-		if (fence != VK_NULL_HANDLE) {
-			vkWaitForFences(m_device.device(), 1, &fence, VK_TRUE, UINT64_MAX);
-		}
-
 		m_isFrameStarted = true;
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
-		vkResetCommandBuffer(commandBuffer, 0); // ✅ maintenant sûr
+		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;

@@ -20,9 +20,11 @@
 	#ifndef VC_PROFILER_ENABLE
 		#define VC_PROFILER_ENABLE 1
 	#endif
+	#define VC_TIMEOUT_SYNC 5'000'000'000ULL
 #else
 	#define VC_ASSERT(x, ...)
 	#define VC_CORE_ASSERT(x, ...)
+	#define VC_TIMEOUT_SYNC UINT64_MAX
 #endif
 
 #define BIT(x) (1 << x)
