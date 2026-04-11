@@ -1,6 +1,7 @@
-# Vectrix
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Version](https://img.shields.io/badge/version-0.3.1-green.svg)
+# Vectrix 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.3.1-green.svg)
+
+![VectrixLogo](/docs/images/vectrix_square_no_background_256.png)
 
 An engine made to run all of my little graphics project
 
@@ -128,7 +129,8 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ```
 ## Documentation
 
-- [API Documentation (TODO)]()
+- [API Documentation (In progress)](https://rx0kas.github.io/)
+- [Examples (will be published when the editor is done)]()
 
 
 ## Roadmap
@@ -136,10 +138,10 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
 - [x] Make a profiler
-- [ ] Make a profiler viewer tool
+- [ ] Add an editor
 - [ ] Create the API documentation (In progress)
 - [ ] Add a material system
-- [ ] Add an editor
+- [ ] Make a profiler viewer tool
 
 ## Known Issues
 
@@ -149,6 +151,8 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration
 
+## Use of AI
+AI has only been used as a review tool and each modification is analyzed
 
 ## Third-party libraries
 - [GLFW](https://github.com/glfw/glfw): to create the window

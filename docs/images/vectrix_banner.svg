@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1600"
+   height="500"
+   viewBox="0 0 423.33332 132.29167"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e94, 2025-05-08)"
+   sodipodi:docname="vectrix_banner.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#696969"
+     bordercolor="#000000"
+     borderopacity="0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#3c3c3c"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.7198092"
+     inkscape:cx="790.48725"
+     inkscape:cy="308.41506"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#5e001f;fill-opacity:1;stroke:#5e001f;stroke-width:1.84719;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       d="M 52.158917,125.71536 18.918567,24.626029 7.8683967,28.61589 18.664307,6.1132138 42.220787,17.285028 31.227177,20.585179 64.848067,125.70454 Z"
+       id="path116"
+       sodipodi:nodetypes="cccccccc" />
+    <path
+       style="fill:#00e1d9;fill-opacity:1;stroke:#00e1d9;stroke-width:1.84719;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       d="M 65.437347,125.6991 98.678227,24.500655 109.72839,28.490515 98.932487,5.9878398 75.376007,17.159654 86.369617,20.459805 52.748727,125.61958 Z"
+       id="path4"
+       sodipodi:nodetypes="cccccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:61.7958px;line-height:4.35;font-family:'Exo 2';-inkscape-font-specification:'Exo 2 Bold';text-align:start;letter-spacing:7.72447px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke-width:3.08979;stroke-linejoin:round;fill-opacity:1"
+       x="121.07968"
+       y="59.844288"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Exo 2';-inkscape-font-specification:'Exo 2 Bold';stroke-width:3.08979;fill:#000000;fill-opacity:1"
+         x="121.07968"
+         y="59.844288">VECTRIX</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:58.5119px;line-height:4.35;font-family:'Exo 2';-inkscape-font-specification:'Exo 2 Medium';text-align:start;letter-spacing:7.69893px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;stroke-width:3.07957;stroke-linejoin:round;fill-opacity:1"
+       x="145.70584"
+       y="116.08327"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:58.5119px;font-family:'Exo 2';-inkscape-font-specification:'Exo 2 Medium';stroke-width:3.07957;fill:#000000;fill-opacity:1"
+         x="145.70584"
+         y="116.08327">ENGINE</tspan></text>
+  </g>
+</svg>
