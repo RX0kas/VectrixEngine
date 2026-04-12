@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::PerspectiveCamera Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,31 +95,53 @@ $(function(){initNavTree('classVectrix_1_1PerspectiveCamera.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::PerspectiveCamera Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class is the camera class.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a938388e3a7226ddc4e6afb1bb54ac003" id="r_a938388e3a7226ddc4e6afb1bb54ac003"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a938388e3a7226ddc4e6afb1bb54ac003">PerspectiveCamera</a> (float fov=50.0f, float camNear.1f, float camFar=10.0f)</td></tr>
+<tr class="memdesc:a938388e3a7226ddc4e6afb1bb54ac003"><td class="mdescLeft">&#160;</td><td class="mdescRight">This creates a new camera with a perspective projection.  <br /></td></tr>
 <tr class="memitem:a1440ad7004efdb44edc8df726401bdac" id="r_a1440ad7004efdb44edc8df726401bdac"><td class="memItemLeft">const glm::vec3 &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a1440ad7004efdb44edc8df726401bdac">getPosition</a> () const</td></tr>
+<tr class="memdesc:a1440ad7004efdb44edc8df726401bdac"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current world position of the camera.  <br /></td></tr>
 <tr class="memitem:a1ba6f1ad5a930562b71482ca7a467e09" id="r_a1ba6f1ad5a930562b71482ca7a467e09"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1ba6f1ad5a930562b71482ca7a467e09">setPosition</a> (const glm::vec3 &amp;position)</td></tr>
+<tr class="memdesc:a1ba6f1ad5a930562b71482ca7a467e09"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sets the new world position of the camera.  <br /></td></tr>
 <tr class="memitem:a657df1be0d0b62de1d6cea3826a09e35" id="r_a657df1be0d0b62de1d6cea3826a09e35"><td class="memItemLeft">glm::vec3&#160;</td><td class="memItemRight"><a class="el" href="#a657df1be0d0b62de1d6cea3826a09e35">getRotation</a> () const</td></tr>
+<tr class="memdesc:a657df1be0d0b62de1d6cea3826a09e35"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current rotation of the camera.  <br /></td></tr>
 <tr class="memitem:a92fa72fca13066405ea53ae63ecc4ec5" id="r_a92fa72fca13066405ea53ae63ecc4ec5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a92fa72fca13066405ea53ae63ecc4ec5">setRotation</a> (glm::vec3 rotation)</td></tr>
+<tr class="memdesc:a92fa72fca13066405ea53ae63ecc4ec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sets the new rotation of the camera.  <br /></td></tr>
 <tr class="memitem:a175141fe4f190effab2c5c991027e60b" id="r_a175141fe4f190effab2c5c991027e60b"><td class="memItemLeft">const glm::mat4 &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a175141fe4f190effab2c5c991027e60b">getProjectionMatrix</a> () const</td></tr>
+<tr class="memdesc:a175141fe4f190effab2c5c991027e60b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the projection matrix.  <br /></td></tr>
 <tr class="memitem:a3199b45017cf6453a7d34661d0cf3136" id="r_a3199b45017cf6453a7d34661d0cf3136"><td class="memItemLeft">const glm::mat4 &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a3199b45017cf6453a7d34661d0cf3136">getViewMatrix</a> () const</td></tr>
+<tr class="memdesc:a3199b45017cf6453a7d34661d0cf3136"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the view matrix.  <br /></td></tr>
 <tr class="memitem:ac5f942d783fcec766245dc5f6e72f4f4" id="r_ac5f942d783fcec766245dc5f6e72f4f4"><td class="memItemLeft">const glm::mat4 &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ac5f942d783fcec766245dc5f6e72f4f4">getTransformationMatrix</a> () const</td></tr>
-<tr class="memitem:ab6ab358731ef16138b6f337b3a153acc" id="r_ab6ab358731ef16138b6f337b3a153acc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab6ab358731ef16138b6f337b3a153acc">setViewDirection</a> (glm::vec3 position, glm::vec3 direction)</td></tr>
-<tr class="memitem:aa3cbfac28ab354489f5c6f0ddba35057" id="r_aa3cbfac28ab354489f5c6f0ddba35057"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa3cbfac28ab354489f5c6f0ddba35057">setViewTarget</a> (glm::vec3 position, glm::vec3 target)</td></tr>
-<tr class="memitem:a880c532e9847452219d6ffe1829cda50" id="r_a880c532e9847452219d6ffe1829cda50"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a880c532e9847452219d6ffe1829cda50">setViewYXZ</a> (glm::vec3 position, glm::vec3 rotation)</td></tr>
-<tr class="memitem:acb6a5f5d15c84f6e33667243cf619ad9" id="r_acb6a5f5d15c84f6e33667243cf619ad9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a> ()</td></tr>
+<tr class="memdesc:ac5f942d783fcec766245dc5f6e72f4f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the projection matrix * the view matrix.  <br /></td></tr>
+<tr class="memitem:a13085099f9636666ffbb6c4cc5c2745f" id="r_a13085099f9636666ffbb6c4cc5c2745f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a13085099f9636666ffbb6c4cc5c2745f">setViewDirection</a> (glm::vec3 direction)</td></tr>
+<tr class="memdesc:a13085099f9636666ffbb6c4cc5c2745f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the direction of the camera to look at something from the direction of the object.  <br /></td></tr>
+<tr class="memitem:aeef3246fd9cf5d90f30f87753b8272de" id="r_aeef3246fd9cf5d90f30f87753b8272de"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aeef3246fd9cf5d90f30f87753b8272de">setViewTarget</a> (glm::vec3 target)</td></tr>
+<tr class="memdesc:aeef3246fd9cf5d90f30f87753b8272de"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the direction of the camera to look at something from the position of the object.  <br /></td></tr>
 <tr class="memitem:a0703906f45ae8f73664e10b225f18b4d" id="r_a0703906f45ae8f73664e10b225f18b4d"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a0703906f45ae8f73664e10b225f18b4d">getFOV</a> () const</td></tr>
+<tr class="memdesc:a0703906f45ae8f73664e10b225f18b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the camera FOV.  <br /></td></tr>
 <tr class="memitem:a0ff6cf240da55bdcd9fb4dc0cd63aaea" id="r_a0ff6cf240da55bdcd9fb4dc0cd63aaea"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0ff6cf240da55bdcd9fb4dc0cd63aaea">setFOV</a> (float fov)</td></tr>
+<tr class="memdesc:a0ff6cf240da55bdcd9fb4dc0cd63aaea"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the camera FOV.  <br /></td></tr>
 <tr class="memitem:aad0b3a447ebc2e3effc1e7de7b3304cb" id="r_aad0b3a447ebc2e3effc1e7de7b3304cb"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#aad0b3a447ebc2e3effc1e7de7b3304cb">getCamNear</a> () const</td></tr>
+<tr class="memdesc:aad0b3a447ebc2e3effc1e7de7b3304cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the camera near.  <br /></td></tr>
 <tr class="memitem:a926a58ec5a753bace29ef5e5c909e7f1" id="r_a926a58ec5a753bace29ef5e5c909e7f1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a926a58ec5a753bace29ef5e5c909e7f1">setCamNear</a> (float camNear)</td></tr>
+<tr class="memdesc:a926a58ec5a753bace29ef5e5c909e7f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the camera near.  <br /></td></tr>
 <tr class="memitem:acd68b3928a6e26586fb632a77f760b39" id="r_acd68b3928a6e26586fb632a77f760b39"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#acd68b3928a6e26586fb632a77f760b39">getCamFar</a> () const</td></tr>
+<tr class="memdesc:acd68b3928a6e26586fb632a77f760b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the camera Far.  <br /></td></tr>
 <tr class="memitem:aa715ce191754777321c4104c1dc27d67" id="r_aa715ce191754777321c4104c1dc27d67"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa715ce191754777321c4104c1dc27d67">setCamFar</a> (float camFar)</td></tr>
+<tr class="memdesc:aa715ce191754777321c4104c1dc27d67"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the camera far.  <br /></td></tr>
+<tr class="memitem:acb6a5f5d15c84f6e33667243cf619ad9" id="r_acb6a5f5d15c84f6e33667243cf619ad9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a> ()</td></tr>
+<tr class="memdesc:acb6a5f5d15c84f6e33667243cf619ad9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function recalculate all the matrices.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00006">6</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<div class="textblock"><p>This class is the camera class. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00015">15</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a938388e3a7226ddc4e6afb1bb54ac003" name="a938388e3a7226ddc4e6afb1bb54ac003"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a938388e3a7226ddc4e6afb1bb54ac003">&#9670;&#160;</a></span>PerspectiveCamera()</h2>
@@ -143,7 +167,19 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>This creates a new camera with a perspective projection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fov</td><td>The camera FOV </td></tr>
+    <tr><td class="paramname">camNear</td><td>The camera near </td></tr>
+    <tr><td class="paramname">camFar</td><td>The camera far </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8cpp_source.html#l00014">14</a> of file <a class="el" href="PerspectiveCamera_8cpp_source.html">PerspectiveCamera.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
@@ -171,7 +207,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00041">41</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the camera Far. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00106">106</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -198,7 +236,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00033">33</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the camera near. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00090">90</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -225,7 +265,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00025">25</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the camera FOV. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00074">74</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -252,7 +294,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00011">11</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the current world position of the camera. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00028">28</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -279,7 +323,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00017">17</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the projection matrix. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00049">49</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -306,7 +352,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00014">14</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the current rotation of the camera. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00039">39</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +381,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00019">19</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the projection matrix * the view matrix. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00057">57</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -360,7 +410,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00018">18</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function return the view matrix. </p>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00053">53</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
 
 </div>
 </div>
@@ -379,7 +431,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>This function recalculate all the matrices. </p>
+
 <p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">18</a> of file <a class="el" href="PerspectiveCamera_8cpp_source.html">PerspectiveCamera.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="PerspectiveCamera_8cpp_source.html#l00014">PerspectiveCamera()</a>, <a class="el" href="PerspectiveCamera_8h_source.html#l00114">setCamFar()</a>, <a class="el" href="PerspectiveCamera_8h_source.html#l00098">setCamNear()</a>, <a class="el" href="PerspectiveCamera_8h_source.html#l00082">setFOV()</a>, <a class="el" href="PerspectiveCamera_8h_source.html#l00034">setPosition()</a>, and <a class="el" href="PerspectiveCamera_8h_source.html#l00044">setRotation()</a>.</p>
 
 </div>
 </div>
@@ -406,7 +464,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00045">45</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function change the camera far. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">camFar</td><td>The new cameraFar </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00114">114</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
@@ -433,7 +501,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00037">37</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function change the camera near. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">camNear</td><td>The new cameraFar </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00098">98</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
@@ -460,7 +538,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00029">29</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function change the camera FOV. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fov</td><td>The new FOV </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00082">82</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
@@ -487,7 +575,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00012">12</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function sets the new world position of the camera. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">position</td><td>The new position </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00034">34</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
@@ -514,12 +612,22 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00015">15</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+<p>This function sets the new rotation of the camera. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rotation</td><td>The new rotation (Radians) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8h_source.html#l00044">44</a> of file <a class="el" href="PerspectiveCamera_8h_source.html">PerspectiveCamera.h</a>.</p>
+
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00018">recalculateMatrices()</a>.</p>
 
 </div>
 </div>
-<a id="ab6ab358731ef16138b6f337b3a153acc" name="ab6ab358731ef16138b6f337b3a153acc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6ab358731ef16138b6f337b3a153acc">&#9670;&#160;</a></span>setViewDirection()</h2>
+<a id="a13085099f9636666ffbb6c4cc5c2745f" name="a13085099f9636666ffbb6c4cc5c2745f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13085099f9636666ffbb6c4cc5c2745f">&#9670;&#160;</a></span>setViewDirection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -527,22 +635,30 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::PerspectiveCamera::setViewDirection </td>
           <td>(</td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>position</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>direction</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>direction</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>This function change the direction of the camera to look at something from the direction of the object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">direction</td><td>The new direction </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8cpp_source.html#l00088">88</a> of file <a class="el" href="PerspectiveCamera_8cpp_source.html">PerspectiveCamera.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="PerspectiveCamera_8cpp_source.html#l00112">setViewTarget()</a>.</p>
 
 </div>
 </div>
-<a id="aa3cbfac28ab354489f5c6f0ddba35057" name="aa3cbfac28ab354489f5c6f0ddba35057"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3cbfac28ab354489f5c6f0ddba35057">&#9670;&#160;</a></span>setViewTarget()</h2>
+<a id="aeef3246fd9cf5d90f30f87753b8272de" name="aeef3246fd9cf5d90f30f87753b8272de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeef3246fd9cf5d90f30f87753b8272de">&#9670;&#160;</a></span>setViewTarget()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -550,40 +666,23 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::PerspectiveCamera::setViewTarget </td>
           <td>(</td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>position</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>target</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>target</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>This function change the direction of the camera to look at something from the position of the object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>The target </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8cpp_source.html#l00112">112</a> of file <a class="el" href="PerspectiveCamera_8cpp_source.html">PerspectiveCamera.cpp</a>.</p>
 
-</div>
-</div>
-<a id="a880c532e9847452219d6ffe1829cda50" name="a880c532e9847452219d6ffe1829cda50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a880c532e9847452219d6ffe1829cda50">&#9670;&#160;</a></span>setViewYXZ()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::PerspectiveCamera::setViewYXZ </td>
-          <td>(</td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>position</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>rotation</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="PerspectiveCamera_8cpp_source.html#l00117">117</a> of file <a class="el" href="PerspectiveCamera_8cpp_source.html">PerspectiveCamera.cpp</a>.</p>
+<p class="reference">References <a class="el" href="PerspectiveCamera_8cpp_source.html#l00088">setViewDirection()</a>, and <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
 
 </div>
 </div>

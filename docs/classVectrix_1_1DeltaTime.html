@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::DeltaTime Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,17 +95,25 @@ $(function(){initNavTree('classVectrix_1_1DeltaTime.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::DeltaTime Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This class represent how many times have past since the last frame.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aeb5cef0b540e3bb9eaf0ec5506c0639d" id="r_aeb5cef0b540e3bb9eaf0ec5506c0639d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aeb5cef0b540e3bb9eaf0ec5506c0639d">DeltaTime</a> (float time.0f)</td></tr>
 <tr class="memitem:a11361c19d4ea87bc99850b60b8614e8c" id="r_a11361c19d4ea87bc99850b60b8614e8c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a11361c19d4ea87bc99850b60b8614e8c">operator float</a> () const</td></tr>
 <tr class="memitem:a2c965e78f30f6a2061a453f45bf47cf0" id="r_a2c965e78f30f6a2061a453f45bf47cf0"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a2c965e78f30f6a2061a453f45bf47cf0">getSeconds</a> () const</td></tr>
+<tr class="memdesc:a2c965e78f30f6a2061a453f45bf47cf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return how much time as past in seconds.  <br /></td></tr>
 <tr class="memitem:a7616f18437ca8dd2a4c30887a4d86028" id="r_a7616f18437ca8dd2a4c30887a4d86028"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a7616f18437ca8dd2a4c30887a4d86028">getMilliseconds</a> () const</td></tr>
+<tr class="memdesc:a7616f18437ca8dd2a4c30887a4d86028"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return how much time as past in milliseconds.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00004">4</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
+<div class="textblock"><p>This class represent how many times have past since the last frame. </p>
+
+<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00015">15</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="aeb5cef0b540e3bb9eaf0ec5506c0639d" name="aeb5cef0b540e3bb9eaf0ec5506c0639d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb5cef0b540e3bb9eaf0ec5506c0639d">&#9670;&#160;</a></span>DeltaTime()</h2>
@@ -128,7 +138,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00007">7</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00017">17</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
 
 </div>
 </div>
@@ -156,7 +166,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00012">12</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
+<p>This function return how much time as past in milliseconds. </p>
+
+<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00028">28</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
 
 </div>
 </div>
@@ -183,7 +195,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00011">11</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
+<p>This function return how much time as past in seconds. </p>
+
+<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00024">24</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
 
 </div>
 </div>
@@ -210,7 +224,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00009">9</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="DeltaTime_8h_source.html#l00019">19</a> of file <a class="el" href="DeltaTime_8h_source.html">DeltaTime.h</a>.</p>
 
 </div>
 </div>

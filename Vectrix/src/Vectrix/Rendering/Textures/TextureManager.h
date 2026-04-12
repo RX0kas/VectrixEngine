@@ -1,6 +1,5 @@
 #ifndef VECTRIXWORKSPACE_TEXTURE_MANAGER_H
 #define VECTRIXWORKSPACE_TEXTURE_MANAGER_H
-#include "Vectrix/Core/Core.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
 #include "Vectrix/Utils/Hashing.h"
@@ -26,29 +25,29 @@ namespace Vectrix {
          * @param name Name of the texture you wanna get
          * @return The texture program with the name you entered
          */
-        Ref<Texture> get(const std::string& name);
+        std::shared_ptr<Texture> get(const std::string& name);
 
         /**
          * @brief Use when a texture can't be found or is not compatible
          * This function return a Ref to a texture that is used by the engine when it cannot found a texture
          * @return The default texture
          */
-        static Ref<Texture> getNotFoundTexture();
+        static std::shared_ptr<Texture> getNotFoundTexture();
 
         /**
          * @brief This function is used to get all the texture previously created
          * @return The texture programs created
          */
-        std::vector<Ref<Texture>> getAll() {
-            return p_cache.getAllItems();
+        std::vector<std::shared_ptr<Texture>> getAll() {
+            return m_cache.getAllItems();
         }
 
         /**
          * @brief This function is used to get all the texture previously created with their names
          * @return The texture programs created
          */
-        std::vector<std::pair<std::string,Ref<Texture>>> getAllWithName() {
-            return p_cache.getAll();
+        std::vector<std::pair<std::string,std::shared_ptr<Texture>>> getAllWithName() {
+            return m_cache.getAll();
         }
 
         /**
@@ -62,15 +61,16 @@ namespace Vectrix {
          * @param name Name given to the texture
          * @param path Path of the texture file
          */
-        static void createTexture(const std::string &name, const std::string &path);
+        static std::shared_ptr<Texture> createTexture(const std::string &name, const std::string &path);
+        ~TextureManager();
     private:
         friend class Texture;
         friend class Application;
         TextureManager();
         bool remove(const std::string& name);
-        void add(const std::string& name,Ref<Texture> texture);
-        Cache<std::string,Ref<Texture>> p_cache;
-        Ref<Texture> m_notFoundTexture;
+        void add(const std::string& name,std::shared_ptr<Texture> texture);
+        Cache<std::string,std::shared_ptr<Texture>> m_cache;
+        std::shared_ptr<Texture> m_notFoundTexture;
 
     private:
         static TextureManager* p_instance;

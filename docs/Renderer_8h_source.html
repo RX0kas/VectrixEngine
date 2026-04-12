@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Renderer.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -95,12 +97,12 @@ $(function(){initNavTree('Renderer_8h_source.html','',''); });
 <div class="contents">
 <a href="Renderer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Vectrix/Rendering/RendererAPI.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="RendererAPI_8h.html">Vectrix/Rendering/RendererAPI.h</a>&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Camera/PerspectiveCamera.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;Models/Model.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="PerspectiveCamera_8h.html">Camera/PerspectiveCamera.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="Model_8h.html">Mesh/Model.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="Shader_8h.html">Shaders/Shader.h</a>&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;Models/VertexArray.h&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="VertexArray_8h.html">Mesh/VertexArray.h</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"></span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">/**</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * @file Renderer.h</span></div>
@@ -125,66 +127,76 @@ $(function(){initNavTree('Renderer_8h_source.html','',''); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">         * @brief Per-scene rendering data</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">         */</span></div>
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structVectrix_1_1Renderer_1_1SceneData.html">   31</a></span>        <span class="keyword">struct </span><a class="code hl_struct" href="structVectrix_1_1Renderer_1_1SceneData.html">SceneData</a></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>* camera;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        };<span class="comment"></span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structVectrix_1_1Renderer_1_1SceneData.html">   31</a></span>        <span class="keyword">struct </span><a class="code hl_struct" href="structVectrix_1_1Renderer_1_1SceneData.html">SceneData</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">            /**</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">             * @brief The scene camera</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">             */</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structVectrix_1_1Renderer_1_1SceneData.html#ab30beee236bdc928a5d98ca574772c58">   35</a></span>            <a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>* <a class="code hl_variable" href="structVectrix_1_1Renderer_1_1SceneData.html#ab30beee236bdc928a5d98ca574772c58">camera</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        };<span class="comment"></span></div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">         * @brief Start rendering a scene with the given camera</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">         * @param camera Camera to use for view/projection matrices</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">beginScene</a>(<a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>&amp; camera);<span class="comment"></span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">         * @brief End the current rendering scene</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">endScene</a>();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment"></span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">         * @brief Submit geometry with transform</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">         * @param shader Shader to use</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">         * @param vertexArray Geometry to render</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">         * @param transform Transform to apply (position, scale, rotation)</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">         * @deprecated Will be removed when the material system will be created, please use @ref Model and @ref Vectrix::Renderer::submit(Shader&amp; shader, Model&amp; model) instead</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1VertexArray.html">VertexArray</a>&amp; vertexArray,<a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> transform=<a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a>{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"></span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">         * @brief Submit a complete model</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">         * @param shader Shader to use</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">         * @param model Model to render</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader, <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>&amp; model);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"></span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">         * @brief Get current graphics API</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">         * @return The active rendering API</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">   65</a></span>        <span class="keyword">static</span> RendererAPI::API <a class="code hl_function" href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">getAPI</a>() { <span class="keywordflow">return</span> RendererAPI::getAPI(); }<span class="comment"></span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">         * @brief Get current scene data</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">         * @return Reference to active scene data</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">   70</a></span>        <span class="keyword">static</span> <a class="code hl_struct" href="structVectrix_1_1Renderer_1_1SceneData.html">SceneData</a>&amp; <a class="code hl_function" href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">getSceneData</a>() {<span class="keywordflow">return</span> *m_SceneData;}</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keyword">static</span> Own&lt;SceneData&gt; m_SceneData;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    };</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">         * @brief Start rendering a scene with the given camera</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">         * @param camera Camera to use for view/projection matrices</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">beginScene</a>(<a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>&amp; camera);<span class="comment"></span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">         * @brief End the current rendering scene</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">endScene</a>();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment"></span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">         * @brief Submit geometry with transform</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">         * @param shader Shader to use</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">         * @param vertexArray Geometry to render</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">         * @param transform Transform to apply (position, scale, rotation)</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">         * @deprecated Will be removed when the material system will be created</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a> &amp;shader, <span class="keyword">const</span> std::shared_ptr&lt;VertexArray&gt; &amp;vertexArray, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> &amp;transform = <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a>{</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                               glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                           });</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment"></span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">         * @brief Submit a complete model</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">         * @param shader Shader to use</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">         * @param model Model to render</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>&amp; model);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"></span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">         * @brief Get current graphics API</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">         * @return The active rendering API</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">   69</a></span>        <span class="keyword">static</span> <a class="code hl_enumeration" href="classVectrix_1_1RendererAPI.html#a76b5cc6b7ab90105563ed03ad666d314">RendererAPI::API</a> <a class="code hl_function" href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">getAPI</a>() { <span class="keywordflow">return</span> <a class="code hl_function" href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">RendererAPI::getAPI</a>(); }<span class="comment"></span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">         * @brief Get current scene data</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">         * @return Reference to active scene data</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">   74</a></span>        <span class="keyword">static</span> <a class="code hl_struct" href="structVectrix_1_1Renderer_1_1SceneData.html">SceneData</a>&amp; <a class="code hl_function" href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">getSceneData</a>() {<span class="keywordflow">return</span> *m_SceneData;}</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">static</span> std::unique_ptr&lt;SceneData&gt; m_SceneData;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    };</div>
 </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>}</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
+<div class="ttc" id="aModel_8h_html"><div class="ttname"><a href="Model_8h.html">Model.h</a></div><div class="ttdoc">Definition of the Model class and internal struct.</div></div>
+<div class="ttc" id="aPerspectiveCamera_8h_html"><div class="ttname"><a href="PerspectiveCamera_8h.html">PerspectiveCamera.h</a></div><div class="ttdoc">Definition of the camera class.</div></div>
+<div class="ttc" id="aRendererAPI_8h_html"><div class="ttname"><a href="RendererAPI_8h.html">RendererAPI.h</a></div><div class="ttdoc">Internal renderer class.</div></div>
 <div class="ttc" id="aShader_8h_html"><div class="ttname"><a href="Shader_8h.html">Shader.h</a></div><div class="ttdoc">Definition of the shader class.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00007">Model.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html">Vectrix::PerspectiveCamera</a></div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00006">PerspectiveCamera.h:7</a></div></div>
+<div class="ttc" id="aVertexArray_8h_html"><div class="ttname"><a href="VertexArray_8h.html">VertexArray.h</a></div><div class="ttdoc">Definition of the VertexArray class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdoc">Represents a 3D model with its geometry, layout, and transform.</div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00030">Model.h:30</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html">Vectrix::PerspectiveCamera</a></div><div class="ttdoc">This class is the camera class.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00015">PerspectiveCamera.h:15</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1RendererAPI_html_a14022aa6735cd7e84eaf0ea840160391"><div class="ttname"><a href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">Vectrix::RendererAPI::getAPI</a></div><div class="ttdeci">static API getAPI()</div><div class="ttdoc">This function return the current graphics API used.</div><div class="ttdef"><b>Definition</b> <a href="RendererAPI_8h_source.html#l00039">RendererAPI.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1RendererAPI_html_a76b5cc6b7ab90105563ed03ad666d314"><div class="ttname"><a href="classVectrix_1_1RendererAPI.html#a76b5cc6b7ab90105563ed03ad666d314">Vectrix::RendererAPI::API</a></div><div class="ttdeci">API</div><div class="ttdoc">The different graphics API.</div><div class="ttdef"><b>Definition</b> <a href="RendererAPI_8h_source.html#l00023">RendererAPI.h:24</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Renderer_html"><div class="ttname"><a href="classVectrix_1_1Renderer.html">Vectrix::Renderer</a></div><div class="ttdoc">Central rendering manager for 3D scenes.</div><div class="ttdef"><b>Definition</b> <a href="#l00024">Renderer.h:25</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_a4b8aa3aeb37890d0eb26359159c78f9e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Vectrix::Renderer::getAPI</a></div><div class="ttdeci">static RendererAPI::API getAPI()</div><div class="ttdoc">Get current graphics API.</div><div class="ttdef"><b>Definition</b> <a href="#l00065">Renderer.h:65</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_a98deb2af2903de6d61b2738bace652fb"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">Vectrix::Renderer::getSceneData</a></div><div class="ttdeci">static SceneData &amp; getSceneData()</div><div class="ttdoc">Get current scene data.</div><div class="ttdef"><b>Definition</b> <a href="#l00070">Renderer.h:70</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae62ac1bd1413ba9db62165ec8df9b99"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Vectrix::Renderer::endScene</a></div><div class="ttdeci">static void endScene()</div><div class="ttdoc">End the current rendering scene.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00014">Renderer.cpp:14</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_a4b8aa3aeb37890d0eb26359159c78f9e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Vectrix::Renderer::getAPI</a></div><div class="ttdeci">static RendererAPI::API getAPI()</div><div class="ttdoc">Get current graphics API.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">Renderer.h:69</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_a98deb2af2903de6d61b2738bace652fb"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb">Vectrix::Renderer::getSceneData</a></div><div class="ttdeci">static SceneData &amp; getSceneData()</div><div class="ttdoc">Get current scene data.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">Renderer.h:74</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae301ebbcbb902ae1c0bc7581de557f8"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">Vectrix::Renderer::submit</a></div><div class="ttdeci">static void submit(Shader &amp;shader, const std::shared_ptr&lt; VertexArray &gt; &amp;vertexArray, const Transform &amp;transform=Transform{ glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f) })</div><div class="ttdoc">Submit geometry with transform.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00028">Renderer.cpp:28</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae62ac1bd1413ba9db62165ec8df9b99"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Vectrix::Renderer::endScene</a></div><div class="ttdeci">static void endScene()</div><div class="ttdoc">End the current rendering scene.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00019">Renderer.cpp:19</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Renderer_html_ae3fb1998571670bd8e2cee70de4fa5c3"><div class="ttname"><a href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">Vectrix::Renderer::beginScene</a></div><div class="ttdeci">static void beginScene(PerspectiveCamera &amp;camera)</div><div class="ttdoc">Start rendering a scene with the given camera.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00009">Renderer.cpp:9</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_ae6c9044a00415bf5d488059951765693"><div class="ttname"><a href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">Vectrix::Renderer::submit</a></div><div class="ttdeci">static void submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})</div><div class="ttdoc">Submit geometry with transform.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00018">Renderer.cpp:18</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Shader_html"><div class="ttname"><a href="classVectrix_1_1Shader.html">Vectrix::Shader</a></div><div class="ttdoc">This class represent a shader.</div><div class="ttdef"><b>Definition</b> <a href="Shader_8h_source.html#l00028">Shader.h:28</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00007">Transform.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1VertexArray_html"><div class="ttname"><a href="classVectrix_1_1VertexArray.html">Vectrix::VertexArray</a></div><div class="ttdef"><b>Definition</b> <a href="VertexArray_8h_source.html#l00008">VertexArray.h:8</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
-<div class="ttc" id="astructVectrix_1_1Renderer_1_1SceneData_html"><div class="ttname"><a href="structVectrix_1_1Renderer_1_1SceneData.html">Vectrix::Renderer::SceneData</a></div><div class="ttdoc">Per-scene rendering data.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">Renderer.h:32</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdoc">This class represent the 3D information about an object.</div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00016">Transform.h:16</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Renderer_1_1SceneData_html"><div class="ttname"><a href="structVectrix_1_1Renderer_1_1SceneData.html">Vectrix::Renderer::SceneData</a></div><div class="ttdoc">Per-scene rendering data.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">Renderer.h:31</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Renderer_1_1SceneData_html_ab30beee236bdc928a5d98ca574772c58"><div class="ttname"><a href="structVectrix_1_1Renderer_1_1SceneData.html#ab30beee236bdc928a5d98ca574772c58">Vectrix::Renderer::SceneData::camera</a></div><div class="ttdeci">PerspectiveCamera * camera</div><div class="ttdoc">The scene camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00035">Renderer.h:35</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

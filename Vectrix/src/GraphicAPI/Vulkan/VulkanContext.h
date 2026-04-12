@@ -1,30 +1,34 @@
 #pragma once
 
 #include "Enum_str.h"
-#include "vk_mem_alloc.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/Device.h"
+#include "Rendering/Core/VulkanRenderer.h"
 #include "Rendering/Shaders/VulkanShaderCompiler.h"
 
 #define VC_VK_CHECK(x,...) if (x!=VK_SUCCESS) {VC_CORE_ERROR(__VA_ARGS__);}
 #define VC_MAKE_VULKAN_COMPATIBLE_VERSION(version) VK_MAKE_API_VERSION(VC_PLATFORM_ID,std::min(getMajor(version),8U), std::min(getMinor(version),12U), std::min(getPatch(version),12U))
 
 namespace Vectrix {
+	class MeshRegistry;
 
-	class VulkanContext : public GraphicsContext
-	{
+	class VulkanContext : public GraphicsContext {
 	public:
 		VulkanContext(GLFWwindow* windowHandle);
 		~VulkanContext() override;
 		void init() override;
 		void swapBuffers() override;
+		void registerMesh(const std::string& name,std::shared_ptr<Model> model) override;
+		static void uploadMeshData();
 
 
 		[[nodiscard]] Device& getDevice() const { return *m_device; }
 		[[nodiscard]] VulkanRenderer& getRenderer() const { return *m_renderer; }
+		[[nodiscard]] MeshRegistry& getMeshRegistry() const { return *m_meshRegistry; }
 		[[nodiscard]] VulkanShaderCompiler& getCompiler() const { return *m_compiler;}
-		[[nodiscard]] VmaAllocator getAllocator() const { return getDevice().getAllocator();}
+		[[nodiscard]] VmaAllocator getBufferAllocator() const { return getDevice().getBufferAllocator();}
+		[[nodiscard]] VmaAllocator getSSBOAllocator() const { return getDevice().getSSBOAllocator();}
+		[[nodiscard]] VmaAllocator getTextureAllocator() const { return getDevice().getTextureAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
 		static void check_vk_result(VkResult err) {
 			if (err == VK_SUCCESS)
@@ -34,9 +38,10 @@ namespace Vectrix {
 		}
 	private:
 		GLFWwindow* m_WindowHandle;
-		Own<Device> m_device;
-		Own<VulkanRenderer> m_renderer;
-		Own<VulkanShaderCompiler> m_compiler;
+		std::unique_ptr<Device> m_device;
+		std::unique_ptr<VulkanRenderer> m_renderer;
+		std::unique_ptr<VulkanShaderCompiler> m_compiler;
+		std::unique_ptr<MeshRegistry> m_meshRegistry;
 
 		float getAspect() override {
 			return m_renderer->getAspectRatio();

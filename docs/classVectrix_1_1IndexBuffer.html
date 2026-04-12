@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::IndexBuffer Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,24 +95,33 @@ $(function(){initNavTree('classVectrix_1_1IndexBuffer.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::IndexBuffer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Abstract interface for a GPU index buffer.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Buffer_8h_source.html">Buffer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a430180debaf271da6499078e9773c245" id="r_a430180debaf271da6499078e9773c245"><td class="memItemLeft"><a id="a430180debaf271da6499078e9773c245" name="a430180debaf271da6499078e9773c245"></a>
 void&#160;</td><td class="memItemRight"><b>bind</b> ()</td></tr>
+<tr class="memdesc:a430180debaf271da6499078e9773c245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the index buffer for use in the current draw call. <br /></td></tr>
 <tr class="memitem:aeca54b9e84418a5f648ca7f08566b052" id="r_aeca54b9e84418a5f648ca7f08566b052"><td class="memItemLeft"><a id="aeca54b9e84418a5f648ca7f08566b052" name="aeca54b9e84418a5f648ca7f08566b052"></a>
 uint32_t&#160;</td><td class="memItemRight"><b>getCount</b> () const</td></tr>
+<tr class="memdesc:aeca54b9e84418a5f648ca7f08566b052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of indices stored in this buffer. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
-<tr class="memitem:a2a9602a5989b5336477526a4b3a302f7" id="r_a2a9602a5989b5336477526a4b3a302f7"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a2a9602a5989b5336477526a4b3a302f7">create</a> (uint32_t *indices, uint32_t size)</td></tr>
+<tr class="memitem:a4631b7a76ef1532230b3f86235276b35" id="r_a4631b7a76ef1532230b3f86235276b35"><td class="memItemLeft">static std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4631b7a76ef1532230b3f86235276b35">create</a> (uint32_t *indices, uint32_t size)</td></tr>
+<tr class="memdesc:a4631b7a76ef1532230b3f86235276b35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a>.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00085">85</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<div class="textblock"><p>Abstract interface for a GPU index buffer. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00150">150</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a2a9602a5989b5336477526a4b3a302f7" name="a2a9602a5989b5336477526a4b3a302f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a9602a5989b5336477526a4b3a302f7">&#9670;&#160;</a></span>create()</h2>
+<a id="a4631b7a76ef1532230b3f86235276b35" name="a4631b7a76ef1532230b3f86235276b35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4631b7a76ef1532230b3f86235276b35">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -119,7 +130,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> * Vectrix::IndexBuffer::create </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; Vectrix::IndexBuffer::create </td>
           <td>(</td>
           <td class="paramtype">uint32_t *</td>          <td class="paramname"><span class="paramname"><em>indices</em></span>, </td>
         </tr>
@@ -136,7 +147,19 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8cpp_source.html#l00023">23</a> of file <a class="el" href="Buffer_8cpp_source.html">Buffer.cpp</a>.</p>
+<p>Function to create a new <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">indices</td><td>Pointer to the array of indices </td></tr>
+    <tr><td class="paramname">size</td><td>Number of indices in the array </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A shared pointer to the created index buffer </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8cpp_source.html#l00024">24</a> of file <a class="el" href="Buffer_8cpp_source.html">Buffer.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Renderer_8h_source.html#l00069">Vectrix::Renderer::getAPI()</a>.</p>
 
 </div>
 </div>

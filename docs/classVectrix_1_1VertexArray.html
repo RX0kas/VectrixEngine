@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::VertexArray Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,58 +95,63 @@ $(function(){initNavTree('classVectrix_1_1VertexArray.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::VertexArray Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The combination of an <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> (optional) and a <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a>.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="VertexArray_8h_source.html">VertexArray.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad4f4f5c90f42ac1e03b11b3a05e9a952" id="r_ad4f4f5c90f42ac1e03b11b3a05e9a952"><td class="memItemLeft"><a id="ad4f4f5c90f42ac1e03b11b3a05e9a952" name="ad4f4f5c90f42ac1e03b11b3a05e9a952"></a>
 void&#160;</td><td class="memItemRight"><b>bind</b> () const</td></tr>
-<tr class="memitem:a5edc60963291be0d372b74b2cb8da9a5" id="r_a5edc60963291be0d372b74b2cb8da9a5"><td class="memItemLeft"><a id="a5edc60963291be0d372b74b2cb8da9a5" name="a5edc60963291be0d372b74b2cb8da9a5"></a>
-void&#160;</td><td class="memItemRight"><b>addVertexBuffer</b> (const Ref&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &amp;vertexBuffer)</td></tr>
-<tr class="memitem:a337163c3108f0ab6c82f6cc165bc787b" id="r_a337163c3108f0ab6c82f6cc165bc787b"><td class="memItemLeft"><a id="a337163c3108f0ab6c82f6cc165bc787b" name="a337163c3108f0ab6c82f6cc165bc787b"></a>
-void&#160;</td><td class="memItemRight"><b>setIndexBuffer</b> (const Ref&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp;indexBuffer)</td></tr>
-<tr class="memitem:ad919a0e0c8932f5e60e0c56f74c2de10" id="r_ad919a0e0c8932f5e60e0c56f74c2de10"><td class="memItemLeft"><a id="ad919a0e0c8932f5e60e0c56f74c2de10" name="ad919a0e0c8932f5e60e0c56f74c2de10"></a>
-std::vector&lt; Ref&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &gt;&#160;</td><td class="memItemRight"><b>getVertexBuffers</b> () const</td></tr>
-<tr class="memitem:ac6b659549dc3bc15518e0c2b4b56c18d" id="r_ac6b659549dc3bc15518e0c2b4b56c18d"><td class="memItemLeft"><a id="ac6b659549dc3bc15518e0c2b4b56c18d" name="ac6b659549dc3bc15518e0c2b4b56c18d"></a>
-const Ref&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp;&#160;</td><td class="memItemRight"><b>getIndexBuffer</b> () const</td></tr>
+<tr class="memdesc:ad4f4f5c90f42ac1e03b11b3a05e9a952"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function permit to use the vertex array. <br /></td></tr>
+<tr class="memitem:a9c1a891a53a28c1f59f18b2e52bfc5b6" id="r_a9c1a891a53a28c1f59f18b2e52bfc5b6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a9c1a891a53a28c1f59f18b2e52bfc5b6">addVertexBuffer</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &amp;vertexBuffer)</td></tr>
+<tr class="memdesc:a9c1a891a53a28c1f59f18b2e52bfc5b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> to the <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a>.  <br /></td></tr>
+<tr class="memitem:a74f279a8fe4d938f2ab81462143bde56" id="r_a74f279a8fe4d938f2ab81462143bde56"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a74f279a8fe4d938f2ab81462143bde56">setIndexBuffer</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp;indexBuffer)</td></tr>
+<tr class="memdesc:a74f279a8fe4d938f2ab81462143bde56"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> to the <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a>.  <br /></td></tr>
+<tr class="memitem:ab37cb91109c2a8b64b258f8e9c5528b0" id="r_ab37cb91109c2a8b64b258f8e9c5528b0"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab37cb91109c2a8b64b258f8e9c5528b0">getVertexBuffers</a> () const</td></tr>
+<tr class="memdesc:ab37cb91109c2a8b64b258f8e9c5528b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return all the <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has.  <br /></td></tr>
+<tr class="memitem:a716d8a0caa84166bf7f121053de0aaa4" id="r_a716d8a0caa84166bf7f121053de0aaa4"><td class="memItemLeft">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a716d8a0caa84166bf7f121053de0aaa4">getIndexBuffer</a> () const</td></tr>
+<tr class="memdesc:a716d8a0caa84166bf7f121053de0aaa4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
-<tr class="memitem:a10327474a195788c2c567928d84e797f" id="r_a10327474a195788c2c567928d84e797f"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a10327474a195788c2c567928d84e797f">create</a> ()</td></tr>
+<tr class="memitem:aae04bf148f8cc35fd73f6551d389c0df" id="r_aae04bf148f8cc35fd73f6551d389c0df"><td class="memItemLeft">static std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aae04bf148f8cc35fd73f6551d389c0df">create</a> ()</td></tr>
+<tr class="memdesc:aae04bf148f8cc35fd73f6551d389c0df"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function create a new <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> instance.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="VertexArray_8h_source.html#l00008">8</a> of file <a class="el" href="VertexArray_8h_source.html">VertexArray.h</a>.</p>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
-<a id="a0a5683f4a34e6aece544228851b5abde" name="a0a5683f4a34e6aece544228851b5abde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a5683f4a34e6aece544228851b5abde">&#9670;&#160;</a></span>~VertexArray()</h2>
+<div class="textblock"><p>The combination of an <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> (optional) and a <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="VertexArray_8h_source.html#l00016">16</a> of file <a class="el" href="VertexArray_8h_source.html">VertexArray.h</a>.</p>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="a9c1a891a53a28c1f59f18b2e52bfc5b6" name="a9c1a891a53a28c1f59f18b2e52bfc5b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c1a891a53a28c1f59f18b2e52bfc5b6">&#9670;&#160;</a></span>addVertexBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Vectrix::VertexArray::~VertexArray </td>
+          <td class="memname">void Vectrix::VertexArray::addVertexBuffer </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertexBuffer</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VertexArray_8h_source.html#l00010">10</a> of file <a class="el" href="VertexArray_8h_source.html">VertexArray.h</a>.</p>
+<p>This function add a <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> to the <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vertexBuffer</td><td>A shared_ptr to the <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> class you wanna add </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a10327474a195788c2c567928d84e797f" name="a10327474a195788c2c567928d84e797f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10327474a195788c2c567928d84e797f">&#9670;&#160;</a></span>create()</h2>
+<a id="aae04bf148f8cc35fd73f6551d389c0df" name="aae04bf148f8cc35fd73f6551d389c0df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae04bf148f8cc35fd73f6551d389c0df">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -153,7 +160,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> * Vectrix::VertexArray::create </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &gt; Vectrix::VertexArray::create </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -166,13 +173,99 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>This function create a new <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> instance. </p>
+<dl class="section return"><dt>Returns</dt><dd>A shared_ptr to the newly created <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="VertexArray_8cpp_source.html#l00007">7</a> of file <a class="el" href="VertexArray_8cpp_source.html">VertexArray.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Renderer_8h_source.html#l00069">Vectrix::Renderer::getAPI()</a>.</p>
+
+</div>
+</div>
+<a id="a716d8a0caa84166bf7f121053de0aaa4" name="a716d8a0caa84166bf7f121053de0aaa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a716d8a0caa84166bf7f121053de0aaa4">&#9670;&#160;</a></span>getIndexBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp; Vectrix::VertexArray::getIndexBuffer </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function return the <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has. </p>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has </dd></dl>
+
+</div>
+</div>
+<a id="ab37cb91109c2a8b64b258f8e9c5528b0" name="ab37cb91109c2a8b64b258f8e9c5528b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab37cb91109c2a8b64b258f8e9c5528b0">&#9670;&#160;</a></span>getVertexBuffers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; &gt; Vectrix::VertexArray::getVertexBuffers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function return all the <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has. </p>
+<dl class="section return"><dt>Returns</dt><dd>All the <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a> that this <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a> has </dd></dl>
+
+</div>
+</div>
+<a id="a74f279a8fe4d938f2ab81462143bde56" name="a74f279a8fe4d938f2ab81462143bde56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74f279a8fe4d938f2ab81462143bde56">&#9670;&#160;</a></span>setIndexBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::VertexArray::setIndexBuffer </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1IndexBuffer.html">IndexBuffer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>indexBuffer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function add a <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> to the <a class="el" href="classVectrix_1_1VertexArray.html" title="The combination of an IndexBuffer (optional) and a VertexBuffer.">VertexArray</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">indexBuffer</td><td>A shared_ptr to the <a class="el" href="classVectrix_1_1IndexBuffer.html" title="Abstract interface for a GPU index buffer.">IndexBuffer</a> class you wanna add </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>Vectrix/src/Vectrix/Rendering/Models/<a class="el" href="VertexArray_8h_source.html">VertexArray.h</a></li>
-<li>Vectrix/src/Vectrix/Rendering/Models/<a class="el" href="VertexArray_8cpp_source.html">VertexArray.cpp</a></li>
+<li>Vectrix/src/Vectrix/Rendering/Mesh/<a class="el" href="VertexArray_8h_source.html">VertexArray.h</a></li>
+<li>Vectrix/src/Vectrix/Rendering/Mesh/<a class="el" href="VertexArray_8cpp_source.html">VertexArray.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

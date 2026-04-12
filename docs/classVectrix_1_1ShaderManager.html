@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::ShaderManager Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -101,10 +103,10 @@ $(function(){initNavTree('classVectrix_1_1ShaderManager.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad02a588f010cd217ca3fd51289ad0ee" id="r_aad02a588f010cd217ca3fd51289ad0ee"><td class="memItemLeft">Ref&lt; Shader &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aad02a588f010cd217ca3fd51289ad0ee">get</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:aad02a588f010cd217ca3fd51289ad0ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get a shader previously created.  <br /></td></tr>
-<tr class="memitem:aadd98904e823f291f8dbc82683191526" id="r_aadd98904e823f291f8dbc82683191526"><td class="memItemLeft">std::vector&lt; Ref&lt; Shader &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aadd98904e823f291f8dbc82683191526">getAll</a> ()</td></tr>
-<tr class="memdesc:aadd98904e823f291f8dbc82683191526"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the shader previously created.  <br /></td></tr>
+<tr class="memitem:a6efb97078fafae406b8dbd4d6c130a0a" id="r_a6efb97078fafae406b8dbd4d6c130a0a"><td class="memItemLeft">std::shared_ptr&lt; Shader &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6efb97078fafae406b8dbd4d6c130a0a">get</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a6efb97078fafae406b8dbd4d6c130a0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get a shader previously created.  <br /></td></tr>
+<tr class="memitem:aa7d9063c8694df9722b20a3e97a68b2a" id="r_aa7d9063c8694df9722b20a3e97a68b2a"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; Shader &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aa7d9063c8694df9722b20a3e97a68b2a">getAll</a> ()</td></tr>
+<tr class="memdesc:aa7d9063c8694df9722b20a3e97a68b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the shader previously created.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
@@ -112,16 +114,36 @@ Public Static Functions</h2></td></tr>
 <tr class="memdesc:a4cb047816cd6a5a5e7a58f23964d0889"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to know if a shader with the name given exist.  <br /></td></tr>
 <tr class="memitem:ae3f69ad2d50bbaea23ba8d939c91ff17" id="r_ae3f69ad2d50bbaea23ba8d939c91ff17"><td class="memItemLeft">static ShaderManager &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ae3f69ad2d50bbaea23ba8d939c91ff17">instance</a> ()</td></tr>
 <tr class="memdesc:ae3f69ad2d50bbaea23ba8d939c91ff17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference to the instance of this class.  <br /></td></tr>
-<tr class="memitem:a5a823240094e95e1a6897cae0cb06c90" id="r_a5a823240094e95e1a6897cae0cb06c90"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a5a823240094e95e1a6897cae0cb06c90">createShader</a> (const std::string &amp;name, const std::string &amp;vertexPath, const std::string &amp;fragmentPath, <a class="el" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> uniformLayout, const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout, bool affectedByCamera)</td></tr>
-<tr class="memdesc:a5a823240094e95e1a6897cae0cb06c90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new shader.  <br /></td></tr>
+<tr class="memitem:a54d6b7858b33a9b702d4b81b8e0e6819" id="r_a54d6b7858b33a9b702d4b81b8e0e6819"><td class="memItemLeft">static std::shared_ptr&lt; Shader &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a54d6b7858b33a9b702d4b81b8e0e6819">createShader</a> (const std::string &amp;name, const std::string &amp;vertexPath, const std::string &amp;fragmentPath, <a class="el" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> uniformLayout, const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout=getTinyObjLayout(), const bool affectedByCamera=true)</td></tr>
+<tr class="memdesc:a54d6b7858b33a9b702d4b81b8e0e6819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new shader.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manages shaders. </p>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00018">18</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a5a823240094e95e1a6897cae0cb06c90" name="a5a823240094e95e1a6897cae0cb06c90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a823240094e95e1a6897cae0cb06c90">&#9670;&#160;</a></span>createShader()</h2>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00019">19</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
+<a id="abe5be6b0e9b8d3ae006eb2a6d9b1731e" name="abe5be6b0e9b8d3ae006eb2a6d9b1731e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe5be6b0e9b8d3ae006eb2a6d9b1731e">&#9670;&#160;</a></span>~ShaderManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::ShaderManager::~ShaderManager </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8cpp_source.html#l00026">26</a> of file <a class="el" href="ShaderManager_8cpp_source.html">ShaderManager.cpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="a54d6b7858b33a9b702d4b81b8e0e6819" name="a54d6b7858b33a9b702d4b81b8e0e6819"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54d6b7858b33a9b702d4b81b8e0e6819">&#9670;&#160;</a></span>createShader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -130,7 +152,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Vectrix::ShaderManager::createShader </td>
+          <td class="memname">std::shared_ptr&lt; Shader &gt; Vectrix::ShaderManager::createShader </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
@@ -152,12 +174,12 @@ Public Static Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>layout</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>layout</em></span><span class="paramdefsep"> = </span><span class="paramdefval">getTinyObjLayout()</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>affectedByCamera</em></span>&#160;)</td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>affectedByCamera</em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -181,9 +203,9 @@ Public Static Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8cpp_source.html#l00017">17</a> of file <a class="el" href="ShaderManager_8cpp_source.html">ShaderManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8cpp_source.html#l00019">19</a> of file <a class="el" href="ShaderManager_8cpp_source.html">ShaderManager.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ShaderManager_8h_source.html#l00034">exist()</a>, and <a class="el" href="ShaderManager_8h_source.html#l00050">instance()</a>.</p>
+<p class="reference">References <a class="el" href="ShaderManager_8h_source.html#l00035">exist()</a>, and <a class="el" href="ShaderManager_8h_source.html#l00051">instance()</a>.</p>
 
 </div>
 </div>
@@ -219,22 +241,22 @@ Public Static Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>If the shader exist in the cache </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00034">34</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00035">35</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
 
-<p class="reference">References <a class="el" href="ShaderManager_8h_source.html#l00050">instance()</a>.</p>
+<p class="reference">References <a class="el" href="ShaderManager_8h_source.html#l00051">instance()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ShaderManager_8cpp_source.html#l00017">createShader()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ShaderManager_8cpp_source.html#l00019">createShader()</a>.</p>
 
 </div>
 </div>
-<a id="aad02a588f010cd217ca3fd51289ad0ee" name="aad02a588f010cd217ca3fd51289ad0ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad02a588f010cd217ca3fd51289ad0ee">&#9670;&#160;</a></span>get()</h2>
+<a id="a6efb97078fafae406b8dbd4d6c130a0a" name="a6efb97078fafae406b8dbd4d6c130a0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6efb97078fafae406b8dbd4d6c130a0a">&#9670;&#160;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Ref&lt; Shader &gt; Vectrix::ShaderManager::get </td>
+          <td class="memname">std::shared_ptr&lt; Shader &gt; Vectrix::ShaderManager::get </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
@@ -252,12 +274,12 @@ Public Static Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The shader program with the name you entered </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8cpp_source.html#l00028">28</a> of file <a class="el" href="ShaderManager_8cpp_source.html">ShaderManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8cpp_source.html#l00036">36</a> of file <a class="el" href="ShaderManager_8cpp_source.html">ShaderManager.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aadd98904e823f291f8dbc82683191526" name="aadd98904e823f291f8dbc82683191526"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadd98904e823f291f8dbc82683191526">&#9670;&#160;</a></span>getAll()</h2>
+<a id="aa7d9063c8694df9722b20a3e97a68b2a" name="aa7d9063c8694df9722b20a3e97a68b2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7d9063c8694df9722b20a3e97a68b2a">&#9670;&#160;</a></span>getAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -266,7 +288,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; Ref&lt; Shader &gt; &gt; Vectrix::ShaderManager::getAll </td>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; Shader &gt; &gt; Vectrix::ShaderManager::getAll </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -282,7 +304,7 @@ Public Static Functions</h2></td></tr>
 <p>This function is used to get all the shader previously created. </p>
 <dl class="section return"><dt>Returns</dt><dd>The shader programs created </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00042">42</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00043">43</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
 
 </div>
 </div>
@@ -312,9 +334,9 @@ Public Static Functions</h2></td></tr>
 <p>Return a reference to the instance of this class. </p>
 <dl class="section return"><dt>Returns</dt><dd>The instance of the class <a class="el" href="classVectrix_1_1ShaderManager.html" title="Manages shaders.">ShaderManager</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00050">50</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ShaderManager_8h_source.html#l00051">51</a> of file <a class="el" href="ShaderManager_8h_source.html">ShaderManager.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="ShaderManager_8cpp_source.html#l00017">createShader()</a>, and <a class="el" href="ShaderManager_8h_source.html#l00034">exist()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="ShaderManager_8cpp_source.html#l00019">createShader()</a>, and <a class="el" href="ShaderManager_8h_source.html#l00035">exist()</a>.</p>
 
 </div>
 </div>

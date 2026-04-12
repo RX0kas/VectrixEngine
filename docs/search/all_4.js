@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['add_0',['add',['../classVectrix_1_1ShaderUniformLayout.html#ac2ab0483896a0bf3d1762dcfb0679f71',1,'Vectrix::ShaderUniformLayout']]],
-  ['application_1',['Application',['../classVectrix_1_1Application.html',1,'Vectrix']]],
-  ['applicationinfo_2',['ApplicationInfo',['../classVectrix_1_1ApplicationInfo.html',1,'Vectrix']]],
-  ['architecture_3',['Architecture',['../rendering_overview.html#autotoc_md3',1,'']]]
+  ['4_200_20—_2012_2004_202026_0',['v0.4.0 — (12-04-2026)',['../changelog.html#v0_4_0',1,'']]],
+  ['4_20textures_1',['4. &lt;a class=&quot;el&quot; href=&quot;group__textures.html&quot; title=&quot;Textures&quot;&gt;Textures&lt;/a&gt;',['../rendering_overview.html#autotoc_md13',1,'']]]
 ];

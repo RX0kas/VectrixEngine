@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Debug/Profiler.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -95,7 +97,7 @@ $(function(){initNavTree('Profiler_8cpp_source.html','',''); });
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="Profiler_8h.html">Profiler.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Vectrix/Rendering/RendererAPI.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="RendererAPI_8h.html">Vectrix/Rendering/RendererAPI.h</a>&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <span class="keywordtype">void</span> Profiler::registerTimer(Timer* timer) {</div>
@@ -136,13 +138,13 @@ $(function(){initNavTree('Profiler_8cpp_source.html','',''); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> Profiler::writeData() {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keyword">const</span> ApplicationInfo appInfo = Application::getAppInfo();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keyword">const</span> ApplicationInfo appInfo = <a class="code hl_function" href="classVectrix_1_1Application.html#ae45c757a101d698f82b647a0130d5972">Application::getAppInfo</a>();</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;profiler_version&quot;: &quot;)&quot; &lt;&lt; VC_PROFILER_VERSION &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;engine_name&quot;: &quot;)&quot; &lt;&lt; ApplicationInfo::getEngineName() &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;engine_build&quot;: &quot;)&quot; &lt;&lt; <a class="code hl_function" href="namespaceVectrix.html#aa23057e1c3704a4c3eaec6949a58e6a1">toString</a>(ApplicationInfo::getEngineVersion()) &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;engine_name&quot;: &quot;)&quot; &lt;&lt; <a class="code hl_function" href="classVectrix_1_1ApplicationInfo.html#aa28cb92091b054135c856af742376a75">ApplicationInfo::getEngineName</a>() &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;engine_build&quot;: &quot;)&quot; &lt;&lt; <a class="code hl_function" href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">toString</a>(<a class="code hl_function" href="classVectrix_1_1ApplicationInfo.html#af3e04f1aaf3f7d10c8aa512a4059153e">ApplicationInfo::getEngineVersion</a>()) &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;app_name&quot;: &quot;)&quot; &lt;&lt; appInfo.getAppName() &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;app_build&quot;: &quot;)&quot; &lt;&lt; <a class="code hl_function" href="namespaceVectrix.html#aa23057e1c3704a4c3eaec6949a58e6a1">toString</a>(appInfo.getAppVersion()) &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">const</span> <span class="keywordtype">char</span>* rendererAPI = RendererAPI::getAPI()==RendererAPI::API::Vulkan ? <span class="stringliteral">&quot;Vulkan&quot;</span> : <span class="stringliteral">&quot;None&quot;</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;app_build&quot;: &quot;)&quot; &lt;&lt; <a class="code hl_function" href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">toString</a>(appInfo.getAppVersion()) &lt;&lt; </span><span class="stringliteral">&quot;\&quot;,&quot;</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">const</span> <span class="keywordtype">char</span>* rendererAPI = <a class="code hl_function" href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">RendererAPI::getAPI</a>()==RendererAPI::API::Vulkan ? <span class="stringliteral">&quot;Vulkan&quot;</span> : <span class="stringliteral">&quot;None&quot;</span>;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        m_outputStream &lt;&lt; R<span class="stringliteral">&quot;(&quot;graphic_api&quot;: &quot;)&quot; &lt;&lt; rendererAPI &lt;&lt; </span><span class="charliteral">&#39;&quot;&#39;</span>;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
@@ -177,8 +179,13 @@ $(function(){initNavTree('Profiler_8cpp_source.html','',''); });
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>}</div>
 <div class="ttc" id="aProfiler_8h_html"><div class="ttname"><a href="Profiler_8h.html">Profiler.h</a></div><div class="ttdoc">Class that provides time analysis on how the application and the engine run.</div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html_aa23057e1c3704a4c3eaec6949a58e6a1"><div class="ttname"><a href="namespaceVectrix.html#aa23057e1c3704a4c3eaec6949a58e6a1">Vectrix::toString</a></div><div class="ttdeci">constexpr const char * toString(ShaderUniformType t)</div><div class="ttdoc">This function returns the name of the ShaderUniformType given so it can be logged or for other purpos...</div><div class="ttdef"><b>Definition</b> <a href="ShaderUniformType_8h_source.html#l00067">ShaderUniformType.h:67</a></div></div>
+<div class="ttc" id="aRendererAPI_8h_html"><div class="ttname"><a href="RendererAPI_8h.html">RendererAPI.h</a></div><div class="ttdoc">Internal renderer class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1ApplicationInfo_html_aa28cb92091b054135c856af742376a75"><div class="ttname"><a href="classVectrix_1_1ApplicationInfo.html#aa28cb92091b054135c856af742376a75">Vectrix::ApplicationInfo::getEngineName</a></div><div class="ttdeci">static constexpr auto getEngineName()</div><div class="ttdoc">This function return the engine name.</div><div class="ttdef"><b>Definition</b> <a href="AppInfo_8h_source.html#l00097">AppInfo.h:97</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ApplicationInfo_html_af3e04f1aaf3f7d10c8aa512a4059153e"><div class="ttname"><a href="classVectrix_1_1ApplicationInfo.html#af3e04f1aaf3f7d10c8aa512a4059153e">Vectrix::ApplicationInfo::getEngineVersion</a></div><div class="ttdeci">static Version getEngineVersion()</div><div class="ttdoc">This function return the engine version.</div><div class="ttdef"><b>Definition</b> <a href="AppInfo_8h_source.html#l00103">AppInfo.h:103</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html_ae45c757a101d698f82b647a0130d5972"><div class="ttname"><a href="classVectrix_1_1Application.html#ae45c757a101d698f82b647a0130d5972">Vectrix::Application::getAppInfo</a></div><div class="ttdeci">static ApplicationInfo getAppInfo()</div><div class="ttdoc">This function return the information about the current application.</div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00076">Application.h:76</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1RendererAPI_html_a14022aa6735cd7e84eaf0ea840160391"><div class="ttname"><a href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">Vectrix::RendererAPI::getAPI</a></div><div class="ttdeci">static API getAPI()</div><div class="ttdoc">This function return the current graphics API used.</div><div class="ttdef"><b>Definition</b> <a href="RendererAPI_8h_source.html#l00039">RendererAPI.h:39</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html_ae70f210e8290ec11f81695b01761853a"><div class="ttname"><a href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">Vectrix::toString</a></div><div class="ttdeci">static std::string toString(const Version version)</div><div class="ttdoc">This function return in text the version.</div><div class="ttdef"><b>Definition</b> <a href="AppInfo_8h_source.html#l00072">AppInfo.h:72</a></div></div>
 <div class="ttc" id="astructVectrix_1_1ProfilerResult_html"><div class="ttname"><a href="structVectrix_1_1ProfilerResult.html">Vectrix::ProfilerResult</a></div><div class="ttdoc">Data obtained on the execution of a function.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00027">Profiler.h:28</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

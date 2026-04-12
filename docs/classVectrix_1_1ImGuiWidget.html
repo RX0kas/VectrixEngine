@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::ImGuiWidget Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,17 +95,26 @@ $(function(){initNavTree('classVectrix_1_1ImGuiWidget.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::ImGuiWidget Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This function represent an ImGui widget.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7f2519248dd4ce2341656c39e27fc326" id="r_a7f2519248dd4ce2341656c39e27fc326"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a7f2519248dd4ce2341656c39e27fc326">ImGuiWidget</a> (std::string name=&quot;Widget&quot;)</td></tr>
+<tr class="memdesc:a7f2519248dd4ce2341656c39e27fc326"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function create a new widget.  <br /></td></tr>
 <tr class="memitem:ae1834f7bb24ead341a913a450bbaee79" id="r_ae1834f7bb24ead341a913a450bbaee79"><td class="memItemLeft"><a id="ae1834f7bb24ead341a913a450bbaee79" name="ae1834f7bb24ead341a913a450bbaee79"></a>
 void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
+<tr class="memdesc:ae1834f7bb24ead341a913a450bbaee79"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is what will be called every frame. <br /></td></tr>
 <tr class="memitem:a08f53f06614490799659e26c5152d8d5" id="r_a08f53f06614490799659e26c5152d8d5"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a08f53f06614490799659e26c5152d8d5">getName</a> () const</td></tr>
+<tr class="memdesc:a08f53f06614490799659e26c5152d8d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the name of the widget.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00007">7</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<div class="textblock"><p>This function represent an ImGui widget. </p>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00016">16</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a7f2519248dd4ce2341656c39e27fc326" name="a7f2519248dd4ce2341656c39e27fc326"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f2519248dd4ce2341656c39e27fc326">&#9670;&#160;</a></span>ImGuiWidget()</h2>
@@ -119,6 +130,14 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>This function create a new widget. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the widget </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="ImGuiWidget_8cpp_source.html#l00006">6</a> of file <a class="el" href="ImGuiWidget_8cpp_source.html">ImGuiWidget.cpp</a>.</p>
 
@@ -148,7 +167,9 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00013">13</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<p>This function return the name of the widget. </p>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00033">33</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
 
 </div>
 </div>
@@ -173,7 +194,7 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00015">15</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00035">35</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
 
 </div>
 </div>

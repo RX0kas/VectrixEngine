@@ -5,4 +5,13 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
+template<typename T>
+constexpr T rad(T deg) {
+    return deg*0.01745329252; // PI/180
+}
+template<typename T>
+constexpr T deg(T rad) {
+    return rad*57.2957795131; // 180/PI
+}
 #endif //VECTRIXWORKSPACE_MATH_H

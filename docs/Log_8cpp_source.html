@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Core/Log.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -97,21 +99,23 @@ $(function(){initNavTree('Log_8cpp_source.html','',''); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;Log.h&quot;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    Ref&lt;spdlog::logger&gt; Log::s_CoreLogger;</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    Ref&lt;spdlog::logger&gt; Log::s_ClientLogger;</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    std::shared_ptr&lt;spdlog::logger&gt; Log::s_CoreLogger;</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    std::shared_ptr&lt;spdlog::logger&gt; Log::s_ClientLogger;</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keywordtype">void</span> Log::init() {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        spdlog::set_pattern(<span class="stringliteral">&quot;%^[%T] %n: %v%$&quot;</span>);</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        s_CoreLogger = spdlog::stdout_color_mt(<span class="stringliteral">&quot;Vectrix&quot;</span>);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        s_CoreLogger-&gt;set_level(spdlog::level::trace);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        s_ClientLogger = spdlog::stdout_color_mt(<span class="stringliteral">&quot;APP&quot;</span>);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        s_ClientLogger-&gt;set_level(spdlog::level::trace);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#ifdef VC_DEBUG</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        spdlog::set_pattern(<span class="stringliteral">&quot;%^[%T] %n: %v%$&quot;</span>);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        s_CoreLogger = spdlog::stdout_color_mt(<span class="stringliteral">&quot;Vectrix&quot;</span>);</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        s_CoreLogger-&gt;set_level(spdlog::level::trace);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        s_ClientLogger = spdlog::stdout_color_mt(<span class="stringliteral">&quot;APP&quot;</span>);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        s_ClientLogger-&gt;set_level(spdlog::level::trace);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        s_CoreLogger-&gt;info(<span class="stringliteral">&quot;Logger has been initialized&quot;</span>);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    }</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

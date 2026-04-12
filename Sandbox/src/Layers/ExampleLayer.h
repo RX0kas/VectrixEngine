@@ -12,20 +12,12 @@ public:
 		m_cameraWidget = std::make_shared<CameraWidget>(m_cameraController.getCamera());
 		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
-		m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./models/fox.obj"));
+		m_model = Vectrix::MeshManager::loadModel("fox","./models/fox.obj");
 
 		Vectrix::ShaderUniformLayout layout;
 		layout.add("time",Vectrix::ShaderUniformType::Float);
-#ifdef VC_PLATFORM_WINDOWS
-		Vectrix::ShaderManager::createShader(p_defaultName, ".\\shaders\\v.vert", ".\\shaders\\f.frag",layout, Vectrix::getTinyObjLayout(),true);
-		Vectrix::TextureManager::createTexture(p_defaultName, ".\\textures\\fox.png");
-#elif defined(VC_PLATFORM_LINUX)
-		Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout, Vectrix::getTinyObjLayout(),true);
-		Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
-#endif
-
-		defaultShader = Vectrix::ShaderManager::instance().get(p_defaultName);
-		customTexture = Vectrix::TextureManager::instance().get(p_defaultName);
+		defaultShader = Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout);
+		customTexture = Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override {
@@ -45,12 +37,12 @@ public:
 	}
 
 private:
-	Vectrix::Ref<CameraWidget> m_cameraWidget;
+	std::shared_ptr<CameraWidget> m_cameraWidget;
 	Vectrix::PerspectiveCameraController m_cameraController;
 
-	Vectrix::Ref<Vectrix::Shader> defaultShader;
-	Vectrix::Ref<Vectrix::Texture> customTexture;
-	Vectrix::Own<Vectrix::Model> m_model;
+	std::shared_ptr<Vectrix::Shader> defaultShader;
+	std::shared_ptr<Vectrix::Texture> customTexture;
+	std::shared_ptr<Vectrix::Model> m_model;
 	const char* p_defaultName = "default";
 };
 

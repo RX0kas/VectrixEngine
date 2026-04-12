@@ -13,8 +13,8 @@
  * - @ref Shader : Base class
  * - @ref ShaderManager : Class that help create and maintain shaders
  *
- * ### 3. @ref buffers
- * - @ref Models : Class that simplifies the use of buffers
+ * ### 3. @ref mesh
+ * - @ref Models : Class that represents a 3D model with its geometry, layout, and transform
  * - @ref VertexBuffer : Summit data
  * - @ref IndexBuffer : Indexes for indexing
  *

@@ -6,8 +6,11 @@
 
 #include "Core/DeltaTime.h"
 #include "Debug/Profiler.h"
+#include "Rendering/GraphicsContext.h"
 #include "Rendering/RenderCommand.h"
-#include "Rendering/Renderer.h"
+#include "Rendering/Mesh/MeshManager.h"
+#include "Rendering/Shaders/ShaderManager.h"
+#include "Rendering/Textures/TextureManager.h"
 
 
 namespace Vectrix {
@@ -21,21 +24,28 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
 
-		m_window = Ref<Window>(Window::create());
+		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		const auto tm = new TextureManager();
+		auto tm = new TextureManager();
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
-		const auto sm = new ShaderManager();
+		auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
-		const auto i = new ImGuiLayer();
+		auto mm = new MeshManager();
+		m_meshManager = std::unique_ptr<MeshManager>(mm);
+		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 	}
 
 	Application::~Application() {
 		VC_PROFILER_FUNCTION();
+		m_layerStack.destroy();
 		m_imGuiLayer.reset();
+		m_shaderManager.reset();
+		m_textureManager.reset();
+		m_meshManager.reset();
+		m_window.reset();
 	}
 
 	void Application::onEvent(Event& e) {
@@ -52,6 +62,7 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
+		GraphicsContext::uploadAllMeshData();
 		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {
@@ -59,7 +70,7 @@ namespace Vectrix {
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 			if (RenderCommand::setupFrame()) {
-				for (const Ref<Layer>& layer : m_layerStack) {
+				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
 					layer->OnRender();
 					layer->OnUpdate(m_deltaTime);
 				}
@@ -79,13 +90,13 @@ namespace Vectrix {
 		return true;
 	}
 
-	void Application::PushLayer(const Ref<Layer>& layer) {
+	void Application::PushLayer(const std::shared_ptr<Layer>& layer) {
 		VC_PROFILER_FUNCTION();
 		m_layerStack.PushLayer(layer);
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(const Ref<Layer>& layer) {
+	void Application::PushOverlay(const std::shared_ptr<Layer>& layer) {
 		VC_PROFILER_FUNCTION();
 		m_layerStack.PushOverlay(layer);
 		layer->OnAttach();
@@ -94,7 +105,7 @@ namespace Vectrix {
 
 	void Application::renderImGui() {
 		VC_PROFILER_FUNCTION();
-		for (const Ref<Layer>& layer : m_layerStack)
+		for (const std::shared_ptr<Layer>& layer : m_layerStack)
 			layer->OnImGuiRender();
 		m_imGuiLayer->OnImGuiRender();
 	}

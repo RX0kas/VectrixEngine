@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "Vectrix/Rendering/Mesh/ObjLoader.h"
+
 namespace Vectrix {
     ShaderManager* ShaderManager::s_instance = nullptr;
 
@@ -14,18 +16,24 @@ namespace Vectrix {
 
 
 
-    void ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
+    std::shared_ptr<Shader> ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
         VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
-        Ref<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
-        instance().add(name,std::move(shader));
+        std::shared_ptr<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
+        instance().add(name,shader);
+        return shader;
     }
 
-    void ShaderManager::add(const std::string& name, Ref<Shader> shader) {
+    ShaderManager::~ShaderManager() {
+        VC_CORE_INFO("Destroying ShaderManager");
+        m_cache.clear();
+    }
+
+    void ShaderManager::add(const std::string& name, std::shared_ptr<Shader> shader) {
         m_cache.emplace(name, std::move(shader));
         VC_CORE_INFO("Shader \"{}\" registered",name);
     }
 
-    Ref<Shader> ShaderManager::get(const std::string& name) {
+    std::shared_ptr<Shader> ShaderManager::get(const std::string& name) {
         const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Shader with the name \"{}\" doesn't exist", name);

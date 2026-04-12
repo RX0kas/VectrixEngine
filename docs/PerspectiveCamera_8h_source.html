@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Camera/PerspectiveCamera.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,82 +95,186 @@ $(function(){initNavTree('PerspectiveCamera_8h_source.html','',''); });
   <div class="headertitle"><div class="title">PerspectiveCamera.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<a href="PerspectiveCamera_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="foldopen" id="foldopen00006" data-start="{" data-end="};">
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html">    6</a></span>    <span class="keyword">class </span>PerspectiveCamera</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        PerspectiveCamera(<span class="keywordtype">float</span> fov = 50.0f,<span class="keywordtype">float</span> camNear = 0.1f,<span class="keywordtype">float</span> camFar = 10.0f);</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"></span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * @file PerspectiveCamera.h</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * @brief Definition of the camera class</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * @ingroup rendering</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        [[nodiscard]] <span class="keyword">const</span> glm::vec3&amp; getPosition()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Position; }</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordtype">void</span> setPosition(<span class="keyword">const</span> glm::vec3&amp; position) { m_Position = position; recalculateMatrices(); }</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        [[nodiscard]] glm::vec3 getRotation()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Rotation; }</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keywordtype">void</span> setRotation(glm::vec3 rotation) { m_Rotation = rotation; recalculateMatrices(); }</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; getProjectionMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_ProjectionMatrix; }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; getViewMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_ViewMatrix; }</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; getTransformationMatrix()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transformationMatrix; }</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordtype">void</span> setViewDirection(glm::vec3 position, glm::vec3 direction);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> setViewTarget(glm::vec3 position, glm::vec3 target);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">void</span> setViewYXZ(glm::vec3 position, glm::vec3 rotation);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">void</span> recalculateMatrices();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        [[nodiscard]] <span class="keywordtype">float</span> getFOV()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <span class="keywordflow">return</span> m_fov;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        }</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keywordtype">void</span> setFOV(<span class="keywordtype">float</span> fov) {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            this-&gt;m_fov = fov;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        }</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        [[nodiscard]] <span class="keywordtype">float</span> getCamNear()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordflow">return</span> m_camNear;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        }</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordtype">void</span> setCamNear(<span class="keywordtype">float</span> camNear) {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            this-&gt;m_camNear = camNear;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        [[nodiscard]] <span class="keywordtype">float</span> getCamFar()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordflow">return</span> m_camFar;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordtype">void</span> setCamFar(<span class="keywordtype">float</span> camFar) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            this-&gt;m_camFar = camFar;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordtype">void</span> recalculateViewMatrix();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordtype">void</span> recalculateProjectionMatrix();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keywordtype">void</span> recalculateTransformationMatrix();</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">friend</span> <span class="keyword">class </span>Renderer;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordtype">float</span> m_fov,m_camNear,m_camFar;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        glm::mat4 m_ProjectionMatrix{};</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        glm::mat4 m_ViewMatrix;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        glm::mat4 m_transformationMatrix{};</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    };</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">     * @brief This class is the camera class</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html">   15</a></span>    <span class="keyword">class </span><a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a938388e3a7226ddc4e6afb1bb54ac003">PerspectiveCamera</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">         * @brief This creates a new camera with a perspective projection</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">         * @param fov The camera FOV</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">         * @param camNear The camera near</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">         * @param camFar The camera far</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a938388e3a7226ddc4e6afb1bb54ac003">PerspectiveCamera</a>(<span class="keywordtype">float</span> fov = 50.0f,<span class="keywordtype">float</span> camNear = 0.1f,<span class="keywordtype">float</span> camFar = 10.0f);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"></span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">         * @brief This function return the current world position of the camera</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a1440ad7004efdb44edc8df726401bdac">   28</a></span>        [[nodiscard]] <span class="keyword">const</span> glm::vec3&amp; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a1440ad7004efdb44edc8df726401bdac">getPosition</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_position; }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"></span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">         * @brief This function sets the new world position of the camera</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">         * @param position The new position</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09">   34</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09">setPosition</a>(<span class="keyword">const</span> glm::vec3&amp; position) { m_position = position; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>(); }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"></span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">         * @brief This function return the current rotation of the camera</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a657df1be0d0b62de1d6cea3826a09e35">   39</a></span>        [[nodiscard]] glm::vec3 <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a657df1be0d0b62de1d6cea3826a09e35">getRotation</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_rotation; }<span class="comment"></span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">         * @brief This function sets the new rotation of the camera</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">         * @param rotation The new rotation (Radians)</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5">   44</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5">setRotation</a>(glm::vec3 rotation) { m_rotation = rotation; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>(); }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"></span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">         * @brief This function return the projection matrix</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a175141fe4f190effab2c5c991027e60b">   49</a></span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a175141fe4f190effab2c5c991027e60b">getProjectionMatrix</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_projectionMatrix; }<span class="comment"></span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">         * @brief This function return the view matrix</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a3199b45017cf6453a7d34661d0cf3136">   53</a></span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a3199b45017cf6453a7d34661d0cf3136">getViewMatrix</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_viewMatrix; }<span class="comment"></span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">         * @brief This function return the projection matrix * the view matrix</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#ac5f942d783fcec766245dc5f6e72f4f4">   57</a></span>        [[nodiscard]] <span class="keyword">const</span> glm::mat4&amp; <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#ac5f942d783fcec766245dc5f6e72f4f4">getTransformationMatrix</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transformationMatrix; }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment"></span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">         * @brief This function change the direction of the camera to look at something from the direction of the object</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">         * @param direction The new direction</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a13085099f9636666ffbb6c4cc5c2745f">setViewDirection</a>(glm::vec3 direction);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment"></span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">         * @brief This function change the direction of the camera to look at something from the position of the object</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">         * @param target The target</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#aeef3246fd9cf5d90f30f87753b8272de">setViewTarget</a>(glm::vec3 target);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment"></span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">         * @brief This function return the camera FOV</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a0703906f45ae8f73664e10b225f18b4d">   74</a></span>        [[nodiscard]] <span class="keywordtype">float</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a0703906f45ae8f73664e10b225f18b4d">getFOV</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keywordflow">return</span> m_fov;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        }</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment"></span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="comment">         * @brief This function change the camera FOV</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="comment">         * @param fov The new FOV</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00082" data-start="{" data-end="}">
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a0ff6cf240da55bdcd9fb4dc0cd63aaea">   82</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a0ff6cf240da55bdcd9fb4dc0cd63aaea">setFOV</a>(<span class="keywordtype">float</span> fov) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            this-&gt;m_fov = fov;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>();</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        }</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment"></span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment">         * @brief This function return the camera near</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00090" data-start="{" data-end="}">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#aad0b3a447ebc2e3effc1e7de7b3304cb">   90</a></span>        [[nodiscard]] <span class="keywordtype">float</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#aad0b3a447ebc2e3effc1e7de7b3304cb">getCamNear</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">return</span> m_camNear;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        }</div>
+</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment"></span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">         * @brief This function change the camera near</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">         * @param camNear The new cameraFar</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#a926a58ec5a753bace29ef5e5c909e7f1">   98</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a926a58ec5a753bace29ef5e5c909e7f1">setCamNear</a>(<span class="keywordtype">float</span> camNear) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            this-&gt;m_camNear = camNear;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>();</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        }</div>
+</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"></span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">         * @brief This function return the camera Far</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#acd68b3928a6e26586fb632a77f760b39">  106</a></span>        [[nodiscard]] <span class="keywordtype">float</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acd68b3928a6e26586fb632a77f760b39">getCamFar</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">return</span> m_camFar;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
+</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="comment"></span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">         * @brief This function change the camera far</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="comment">         * @param camFar The new cameraFar</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00114" data-start="{" data-end="}">
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCamera.html#aa715ce191754777321c4104c1dc27d67">  114</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#aa715ce191754777321c4104c1dc27d67">setCamFar</a>(<span class="keywordtype">float</span> camFar) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            this-&gt;m_camFar = camFar;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>();</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        }</div>
+</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="comment"></span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="comment">         * @brief This function recalculate all the matrices</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">recalculateMatrices</a>();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordtype">void</span> recalculateViewMatrix();</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        <span class="keywordtype">void</span> recalculateProjectionMatrix();</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordtype">void</span> recalculateTransformationMatrix();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Renderer.html">Renderer</a>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordtype">float</span> m_fov,m_camNear,m_camFar;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        glm::mat4 m_projectionMatrix{};</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        glm::mat4 m_viewMatrix;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        glm::mat4 m_transformationMatrix{};</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        glm::vec3 m_rotation = { 0.0f, 0.0f, 0.0f };</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    };</div>
+</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>}</div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a0703906f45ae8f73664e10b225f18b4d"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a0703906f45ae8f73664e10b225f18b4d">Vectrix::PerspectiveCamera::getFOV</a></div><div class="ttdeci">float getFOV() const</div><div class="ttdoc">This function return the camera FOV.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">PerspectiveCamera.h:74</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a0ff6cf240da55bdcd9fb4dc0cd63aaea"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a0ff6cf240da55bdcd9fb4dc0cd63aaea">Vectrix::PerspectiveCamera::setFOV</a></div><div class="ttdeci">void setFOV(float fov)</div><div class="ttdoc">This function change the camera FOV.</div><div class="ttdef"><b>Definition</b> <a href="#l00082">PerspectiveCamera.h:82</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a13085099f9636666ffbb6c4cc5c2745f"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a13085099f9636666ffbb6c4cc5c2745f">Vectrix::PerspectiveCamera::setViewDirection</a></div><div class="ttdeci">void setViewDirection(glm::vec3 direction)</div><div class="ttdoc">This function change the direction of the camera to look at something from the direction of the objec...</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8cpp_source.html#l00088">PerspectiveCamera.cpp:88</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a1440ad7004efdb44edc8df726401bdac"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a1440ad7004efdb44edc8df726401bdac">Vectrix::PerspectiveCamera::getPosition</a></div><div class="ttdeci">const glm::vec3 &amp; getPosition() const</div><div class="ttdoc">This function return the current world position of the camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">PerspectiveCamera.h:28</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a175141fe4f190effab2c5c991027e60b"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a175141fe4f190effab2c5c991027e60b">Vectrix::PerspectiveCamera::getProjectionMatrix</a></div><div class="ttdeci">const glm::mat4 &amp; getProjectionMatrix() const</div><div class="ttdoc">This function return the projection matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00049">PerspectiveCamera.h:49</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a1ba6f1ad5a930562b71482ca7a467e09"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09">Vectrix::PerspectiveCamera::setPosition</a></div><div class="ttdeci">void setPosition(const glm::vec3 &amp;position)</div><div class="ttdoc">This function sets the new world position of the camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00034">PerspectiveCamera.h:34</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a3199b45017cf6453a7d34661d0cf3136"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a3199b45017cf6453a7d34661d0cf3136">Vectrix::PerspectiveCamera::getViewMatrix</a></div><div class="ttdeci">const glm::mat4 &amp; getViewMatrix() const</div><div class="ttdoc">This function return the view matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00053">PerspectiveCamera.h:53</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a657df1be0d0b62de1d6cea3826a09e35"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a657df1be0d0b62de1d6cea3826a09e35">Vectrix::PerspectiveCamera::getRotation</a></div><div class="ttdeci">glm::vec3 getRotation() const</div><div class="ttdoc">This function return the current rotation of the camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00039">PerspectiveCamera.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a926a58ec5a753bace29ef5e5c909e7f1"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a926a58ec5a753bace29ef5e5c909e7f1">Vectrix::PerspectiveCamera::setCamNear</a></div><div class="ttdeci">void setCamNear(float camNear)</div><div class="ttdoc">This function change the camera near.</div><div class="ttdef"><b>Definition</b> <a href="#l00098">PerspectiveCamera.h:98</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a92fa72fca13066405ea53ae63ecc4ec5"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5">Vectrix::PerspectiveCamera::setRotation</a></div><div class="ttdeci">void setRotation(glm::vec3 rotation)</div><div class="ttdoc">This function sets the new rotation of the camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">PerspectiveCamera.h:44</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a938388e3a7226ddc4e6afb1bb54ac003"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a938388e3a7226ddc4e6afb1bb54ac003">Vectrix::PerspectiveCamera::PerspectiveCamera</a></div><div class="ttdeci">PerspectiveCamera(float fov=50.0f, float camNear.1f, float camFar=10.0f)</div><div class="ttdoc">This creates a new camera with a perspective projection.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8cpp_source.html#l00014">PerspectiveCamera.cpp:14</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_aa715ce191754777321c4104c1dc27d67"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#aa715ce191754777321c4104c1dc27d67">Vectrix::PerspectiveCamera::setCamFar</a></div><div class="ttdeci">void setCamFar(float camFar)</div><div class="ttdoc">This function change the camera far.</div><div class="ttdef"><b>Definition</b> <a href="#l00114">PerspectiveCamera.h:114</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_aad0b3a447ebc2e3effc1e7de7b3304cb"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#aad0b3a447ebc2e3effc1e7de7b3304cb">Vectrix::PerspectiveCamera::getCamNear</a></div><div class="ttdeci">float getCamNear() const</div><div class="ttdoc">This function return the camera near.</div><div class="ttdef"><b>Definition</b> <a href="#l00090">PerspectiveCamera.h:90</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_ac5f942d783fcec766245dc5f6e72f4f4"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#ac5f942d783fcec766245dc5f6e72f4f4">Vectrix::PerspectiveCamera::getTransformationMatrix</a></div><div class="ttdeci">const glm::mat4 &amp; getTransformationMatrix() const</div><div class="ttdoc">This function return the projection matrix * the view matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00057">PerspectiveCamera.h:57</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_acb6a5f5d15c84f6e33667243cf619ad9"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9">Vectrix::PerspectiveCamera::recalculateMatrices</a></div><div class="ttdeci">void recalculateMatrices()</div><div class="ttdoc">This function recalculate all the matrices.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8cpp_source.html#l00018">PerspectiveCamera.cpp:18</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_acd68b3928a6e26586fb632a77f760b39"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#acd68b3928a6e26586fb632a77f760b39">Vectrix::PerspectiveCamera::getCamFar</a></div><div class="ttdeci">float getCamFar() const</div><div class="ttdoc">This function return the camera Far.</div><div class="ttdef"><b>Definition</b> <a href="#l00106">PerspectiveCamera.h:106</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_aeef3246fd9cf5d90f30f87753b8272de"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#aeef3246fd9cf5d90f30f87753b8272de">Vectrix::PerspectiveCamera::setViewTarget</a></div><div class="ttdeci">void setViewTarget(glm::vec3 target)</div><div class="ttdoc">This function change the direction of the camera to look at something from the position of the object...</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8cpp_source.html#l00112">PerspectiveCamera.cpp:112</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html"><div class="ttname"><a href="classVectrix_1_1Renderer.html">Vectrix::Renderer</a></div><div class="ttdoc">Central rendering manager for 3D scenes.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8h_source.html#l00024">Renderer.h:25</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Camera</b></li><li class="navelem"><b>PerspectiveCamera.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Camera</b></li><li class="navelem"><a href="PerspectiveCamera_8h.html">PerspectiveCamera.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

@@ -20,9 +20,11 @@
 	#ifndef VC_PROFILER_ENABLE
 		#define VC_PROFILER_ENABLE 1
 	#endif
+	#define VC_TIMEOUT_SYNC 5'000'000'000ULL
 #else
 	#define VC_ASSERT(x, ...)
 	#define VC_CORE_ASSERT(x, ...)
+	#define VC_TIMEOUT_SYNC UINT64_MAX
 #endif
 
 #define BIT(x) (1 << x)
@@ -33,23 +35,6 @@
  * @namespace Vectrix
  * @brief Vectrix Engine namespace
  */
-namespace Vectrix {
-
-	template<typename T>
-	using Own = std::unique_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Own<T> createOwn(Args&& ... args)
-	{
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Ref<T> createRef(Args&& ... args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
-}
+namespace Vectrix {}
 
 #endif

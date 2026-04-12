@@ -15,29 +15,36 @@ namespace Vectrix {
         m_notFoundTexture = Texture::createDefaultTexture();
     }
 
-    void TextureManager::createTexture(const std::string &name, const std::string &path) {
-        Ref<Texture> texture(Texture::create(path));
-        instance().add(name,std::move(texture));
+    std::shared_ptr<Texture> TextureManager::createTexture(const std::string &name, const std::string &path) {
+        std::shared_ptr<Texture> texture(Texture::create(path));
+        instance().add(name,texture);
+        return texture;
     }
 
-    void TextureManager::add(const std::string& name, Ref<Texture> texture) {
-        p_cache.emplace(name, std::move(texture));
+    TextureManager::~TextureManager() {
+        VC_CORE_INFO("Destroying TextureManager");
+        m_notFoundTexture.reset();
+        m_cache.clear();
+    }
+
+    void TextureManager::add(const std::string& name, std::shared_ptr<Texture> texture) {
+        m_cache.emplace(name, std::move(texture));
         VC_CORE_INFO("Texture \"{}\" registered",name);
     }
 
-    Ref<Texture> TextureManager::get(const std::string& name) {
-        const auto it = p_cache.find(name);
-        if (it == p_cache.end()) {
+    std::shared_ptr<Texture> TextureManager::get(const std::string& name) {
+        const auto it = m_cache.find(name);
+        if (it == m_cache.end()) {
             VC_CORE_ERROR("Texture with the name \"{}\" doesn't exist", name);
         }
         return it->second;
     }
 
-    Ref<Texture> TextureManager::getNotFoundTexture() {
+    std::shared_ptr<Texture> TextureManager::getNotFoundTexture() {
         return instance().m_notFoundTexture;
     }
 
     bool TextureManager::remove(const std::string& name) {
-        return p_cache.erase(name);
+        return m_cache.erase(name);
     }
 } // Vectrix

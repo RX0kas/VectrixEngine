@@ -1,7 +1,7 @@
 #pragma once
 #include "Vectrix/ImGui/ImGuiManager.h"
-#include "GraphicAPI/Vulkan/Rendering/Device.h"
-#include "GraphicAPI/Vulkan/Rendering/VulkanRenderer.h"
+#include "../Rendering/Core/Device.h"
+#include "../Rendering/Core/VulkanRenderer.h"
 
 
 namespace Vectrix {
@@ -29,7 +29,7 @@ private:
         static void endImGuiRenderPass(VkCommandBuffer commandBuffer);
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
 	private:
-		Ref<VulkanDebugWidget> m_debugWidget;
+		std::shared_ptr<VulkanDebugWidget> m_debugWidget;
         Device& m_device;
         Window& m_window;
         VulkanRenderer* m_renderer;

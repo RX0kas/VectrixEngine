@@ -23,11 +23,10 @@ namespace Vectrix {
         p_macros.reserve(256);
         p_macros.max_load_factor(0.7f);
         // Options
-        m_options.SetTargetEnvironment(shaderc_target_env_vulkan,shaderc_env_version_vulkan_1_2);
+        m_options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
         m_options.SetSourceLanguage(shaderc_source_language_glsl);
+        m_options.SetTargetSpirv(shaderc_spirv_version_1_6);
         m_options.SetOptimizationLevel(shaderc_optimization_level_zero);
-        m_options.SetTargetSpirv(shaderc_spirv_version_1_2);
-        m_options.SetForcedVersionProfile(450, shaderc_profile_none);
         m_options.SetInvertY(false);
     }
 

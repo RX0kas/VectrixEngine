@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['load_0',['load',['../classVectrix_1_1Json.html#a3f6d3f2a37624b93bf4afa036814fe85',1,'Vectrix::Json']]]
+  ['jsonvalue_0',['JsonValue',['../classVectrix_1_1JsonValue.html#a83bcdc08e38534ac0ca1d0629e9b81ca',1,'Vectrix::JsonValue::JsonValue()'],['../classVectrix_1_1JsonValue.html#ae0d0d904d3ad9105155c0d9cd0888b8f',1,'Vectrix::JsonValue::JsonValue(const std::string &amp;value)'],['../classVectrix_1_1JsonValue.html#ae2515ce3d19ef617b6c6704f2f908226',1,'Vectrix::JsonValue::JsonValue(double value)'],['../classVectrix_1_1JsonValue.html#af532368b2954ac8bfda7811f852c6f08',1,'Vectrix::JsonValue::JsonValue(bool value)'],['../classVectrix_1_1JsonValue.html#adf61cdeab21c34fc0ad72949e83f0385',1,'Vectrix::JsonValue::JsonValue(const JsonArray &amp;value)'],['../classVectrix_1_1JsonValue.html#a4f10c46d9b546f469584db84240270ed',1,'Vectrix::JsonValue::JsonValue(const JsonObject &amp;value)']]]
 ];

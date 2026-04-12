@@ -3,6 +3,7 @@
 #include <fstream>
 #include <utility>
 
+#include "Pipeline.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Debug/Profiler.h"
 
@@ -10,11 +11,11 @@
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
-		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(createOwn<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
+		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
 	{
 		VC_PROFILER_FUNCTION();
 		finalize(m_layout.get());
-		m_ssbo = createOwn<SSBO>(m_device,*m_layout);
+		m_ssbo = std::make_unique<ShaderSSBO>(m_device,*m_layout);
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
 		vkDeviceWaitIdle(m_device.device());
@@ -23,6 +24,9 @@ namespace Vectrix {
 
     VulkanShader::~VulkanShader() {
 		VC_PROFILER_FUNCTION();
+		m_ssbo.reset();
+		m_pipeline.reset();
+		m_layout.reset();
 		vkDestroyPipelineLayout(m_device.device(), m_pipelineLayout, nullptr);
 	}
 
@@ -32,7 +36,7 @@ namespace Vectrix {
 		int currentFrame = m_renderer.getFrameIndex();
 		m_ssbo->uploadFrame(currentFrame, m_ssbo->framePtr(currentFrame));
 		VkDescriptorSet ds = m_ssbo->descriptorSet(currentFrame);
-		vkCmdBindDescriptorSets(m_renderer.getCurrentCommandBuffer(),VK_PIPELINE_BIND_POINT_GRAPHICS,m_pipelineLayout, 0, 1, &ds, 0, nullptr);
+		vkCmdBindDescriptorSets(m_renderer.getCurrentCommandBuffer(),VK_PIPELINE_BIND_POINT_GRAPHICS,m_pipelineLayout, m_ssbo->getSetCountID(), 1, &ds, 0, nullptr);
 	}
 
 	void VulkanShader::setUniformBool(const std::string &name, bool value) const {
@@ -147,17 +151,11 @@ namespace Vectrix {
 		}
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
-	void VulkanShader::setModelMatrix(const glm::mat4& model) const {
-		VC_PROFILER_FUNCTION();
-		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::mat4), &model);
-	}
 
-	void VulkanShader::setTexture(uint32_t index, Ref<Texture> texture) {
+	void VulkanShader::setTexture(uint32_t index, std::shared_ptr<Texture> texture) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(index < Texture::getMaxTexturePerShader(), "Index out of range");
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
-		auto textures = m_ssbo->textures();
-		textures[index] = vkTex;
 
 		VkDescriptorImageInfo imageInfo = vkTex->getDescriptorInfo();
 		VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
@@ -168,8 +166,6 @@ namespace Vectrix {
 		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		write.pImageInfo = &imageInfo;
 		vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
-
-		vkCmdPushConstants(m_renderer.getCurrentCommandBuffer(), m_pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(glm::mat4), sizeof(unsigned int) , &index);
 	}
 
 	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {
@@ -192,7 +188,7 @@ namespace Vectrix {
 		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);
 
-		m_pipeline = createOwn<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
+		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
 	}
 
 	void VulkanShader::createPipelineLayout() {
@@ -203,6 +199,8 @@ namespace Vectrix {
 			VC_CORE_ERROR("Descriptor set layout is null!");
 		}
 
+		std::array<VkDescriptorSetLayout, 2> layouts = { dsl, DynamicSSBO::getStaticDescriptorSetLayout() };
+
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 		pushConstantRange.offset = 0;
@@ -210,10 +208,10 @@ namespace Vectrix {
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 1;
-		pipelineLayoutInfo.pSetLayouts = &dsl;
-		pipelineLayoutInfo.pushConstantRangeCount = 1;
-		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
+		pipelineLayoutInfo.setLayoutCount = layouts.size();
+		pipelineLayoutInfo.pSetLayouts = layouts.data();
+		pipelineLayoutInfo.pushConstantRangeCount = 0;
+		pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
 		VkResult result = vkCreatePipelineLayout(m_device.device(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
 		if (result != VK_SUCCESS) {

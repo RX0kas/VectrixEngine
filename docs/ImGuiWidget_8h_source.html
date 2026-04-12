@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/ImGui/ImGuiWidget.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,34 +95,57 @@ $(function(){initNavTree('ImGuiWidget_8h_source.html','',''); });
   <div class="headertitle"><div class="title">ImGuiWidget.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_IMGUIWIDGET_H</span></div>
+<a href="ImGuiWidget_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_IMGUIWIDGET_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_IMGUIWIDGET_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;vcpch.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiWidget.html">    7</a></span>    <span class="keyword">class </span>ImGuiWidget {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        ImGuiWidget(std::string name = <span class="stringliteral">&quot;Widget&quot;</span>);</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        <span class="keyword">virtual</span> ~ImGuiWidget() = 0;</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"></span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * @file ImGuiWidget.h</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * @brief Definition of the ImGuiWidget</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * @ingroup imgui</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> render() = 0;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        [[nodiscard]] <span class="keyword">const</span> std::string&amp; getName()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_DebugName; }</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        std::string m_DebugName;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    };</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">     * @brief This function represent an ImGui widget</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiWidget.html">   16</a></span>    <span class="keyword">class </span><a class="code hl_function" href="classVectrix_1_1ImGuiWidget.html#a7f2519248dd4ce2341656c39e27fc326">ImGuiWidget</a> {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">         * @brief This function create a new widget</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">         * @param name The name of the widget</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <a class="code hl_function" href="classVectrix_1_1ImGuiWidget.html#a7f2519248dd4ce2341656c39e27fc326">ImGuiWidget</a>(std::string name = <span class="stringliteral">&quot;Widget&quot;</span>);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">virtual</span> <a class="code hl_function" href="classVectrix_1_1ImGuiWidget.html#a7f2519248dd4ce2341656c39e27fc326">~ImGuiWidget</a>() = 0;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"></span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">         * @brief This function is what will be called every frame</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79">   28</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79">render</a>() = 0;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"></span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">         * @brief This function return the name of the widget</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiWidget.html#a08f53f06614490799659e26c5152d8d5">   33</a></span>        [[nodiscard]] <span class="keyword">const</span> std::string&amp; <a class="code hl_function" href="classVectrix_1_1ImGuiWidget.html#a08f53f06614490799659e26c5152d8d5">getName</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_DebugName; }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        std::string m_DebugName;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    };</div>
 </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>}</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_IMGUIWIDGET_H</span></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_IMGUIWIDGET_H</span></div>
+<div class="ttc" id="aclassVectrix_1_1ImGuiWidget_html_a08f53f06614490799659e26c5152d8d5"><div class="ttname"><a href="classVectrix_1_1ImGuiWidget.html#a08f53f06614490799659e26c5152d8d5">Vectrix::ImGuiWidget::getName</a></div><div class="ttdeci">const std::string &amp; getName() const</div><div class="ttdoc">This function return the name of the widget.</div><div class="ttdef"><b>Definition</b> <a href="#l00033">ImGuiWidget.h:33</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ImGuiWidget_html_a7f2519248dd4ce2341656c39e27fc326"><div class="ttname"><a href="classVectrix_1_1ImGuiWidget.html#a7f2519248dd4ce2341656c39e27fc326">Vectrix::ImGuiWidget::ImGuiWidget</a></div><div class="ttdeci">ImGuiWidget(std::string name=&quot;Widget&quot;)</div><div class="ttdoc">This function create a new widget.</div><div class="ttdef"><b>Definition</b> <a href="ImGuiWidget_8cpp_source.html#l00006">ImGuiWidget.cpp:6</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ImGuiWidget_html_ae1834f7bb24ead341a913a450bbaee79"><div class="ttname"><a href="classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79">Vectrix::ImGuiWidget::render</a></div><div class="ttdeci">void render()</div><div class="ttdoc">This function is what will be called every frame.</div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>ImGui</b></li><li class="navelem"><b>ImGuiWidget.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>ImGui</b></li><li class="navelem"><a href="ImGuiWidget_8h.html">ImGuiWidget.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

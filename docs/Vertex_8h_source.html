@@ -5,7 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Models/Vertex.h Source File</title>
+<title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Mesh/Vertex.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,36 +95,60 @@ $(function(){initNavTree('Vertex_8h_source.html','',''); });
   <div class="headertitle"><div class="title">Vertex.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<a href="Vertex_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;glm/glm.hpp&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="foldopen" id="foldopen00006" data-start="{" data-end="};">
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html">    6</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structVectrix_1_1Vertex.html">Vertex</a></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>        glm::vec3 position;</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        glm::vec3 normal;</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        glm::vec2 uv;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_struct" href="structVectrix_1_1Vertex.html">Vertex</a>&amp; other)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            <span class="keywordflow">return</span> position == other.position &amp;&amp;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>                   normal   == other.normal &amp;&amp;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>                   uv       == other.uv;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    };</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"></span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * @file Vertex.h</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * @brief Definition of the vertex struct</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * @ingroup mesh</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">     * @brief Describe how a vertex is stored</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html">   15</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structVectrix_1_1Vertex.html">Vertex</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">         * @brief This is the model position</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce">   19</a></span>        glm::vec3 <a class="code hl_variable" href="structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce">position</a>;<span class="comment"></span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">         * @brief This is the normal vector</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41">   23</a></span>        glm::vec3 <a class="code hl_variable" href="structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41">normal</a>;<span class="comment"></span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">         * @brief This is the texture coordinates</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62">   27</a></span>        glm::vec2 <a class="code hl_variable" href="structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62">uv</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"></span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">         * @brief Verify if two Vertex are the same</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">         * @param other The other vertex</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structVectrix_1_1Vertex.html#a03403da3e8f0b26972b08465e2a850fe">   33</a></span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="structVectrix_1_1Vertex.html#a03403da3e8f0b26972b08465e2a850fe">operator==</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structVectrix_1_1Vertex.html">Vertex</a>&amp; other)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce">position</a> == other.<a class="code hl_variable" href="structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce">position</a> &amp;&amp; <a class="code hl_variable" href="structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41">normal</a> == other.<a class="code hl_variable" href="structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41">normal</a> &amp;&amp; <a class="code hl_variable" href="structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62">uv</a> == other.<a class="code hl_variable" href="structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62">uv</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        }</div>
 </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>} <span class="comment">// namespace Vectrix</span></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
-<div class="ttc" id="astructVectrix_1_1Vertex_html"><div class="ttname"><a href="structVectrix_1_1Vertex.html">Vectrix::Vertex</a></div><div class="ttdef"><b>Definition</b> <a href="#l00006">Vertex.h:7</a></div></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    };</div>
+</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>} <span class="comment">// namespace Vectrix</span></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Vertex_html"><div class="ttname"><a href="structVectrix_1_1Vertex.html">Vectrix::Vertex</a></div><div class="ttdoc">Describe how a vertex is stored.</div><div class="ttdef"><b>Definition</b> <a href="#l00015">Vertex.h:15</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Vertex_html_a03403da3e8f0b26972b08465e2a850fe"><div class="ttname"><a href="structVectrix_1_1Vertex.html#a03403da3e8f0b26972b08465e2a850fe">Vectrix::Vertex::operator==</a></div><div class="ttdeci">bool operator==(const Vertex &amp;other) const</div><div class="ttdoc">Verify if two Vertex are the same.</div><div class="ttdef"><b>Definition</b> <a href="#l00033">Vertex.h:33</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Vertex_html_a2393c8ee21775d5e8be58a7802f5ab41"><div class="ttname"><a href="structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41">Vectrix::Vertex::normal</a></div><div class="ttdeci">glm::vec3 normal</div><div class="ttdoc">This is the normal vector.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">Vertex.h:23</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Vertex_html_ab79a77553abc13b8e5b02ff8d0f145ce"><div class="ttname"><a href="structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce">Vectrix::Vertex::position</a></div><div class="ttdeci">glm::vec3 position</div><div class="ttdoc">This is the model position.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">Vertex.h:19</a></div></div>
+<div class="ttc" id="astructVectrix_1_1Vertex_html_abedfb6582f9d476c2ae02998b73a5c62"><div class="ttname"><a href="structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62">Vectrix::Vertex::uv</a></div><div class="ttdeci">glm::vec2 uv</div><div class="ttdoc">This is the texture coordinates.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">Vertex.h:27</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Models</b></li><li class="navelem"><b>Vertex.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Mesh</b></li><li class="navelem"><a href="Vertex_8h.html">Vertex.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

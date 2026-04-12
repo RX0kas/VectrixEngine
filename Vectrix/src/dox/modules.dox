@@ -6,9 +6,17 @@
  * @ingroup core
  * @brief Complete rendering system
  *
+ * @defgroup imgui ImGui
+ * @ingroup rendering
+ * @brief The class to interact with Dear ImGui
+ *
  * @defgroup renderer Renderer
  * @ingroup rendering
  * @brief
+ *
+ * @defgroup mesh Mesh
+ * @ingroup rendering
+ * @brief Mesh management
  *
  * @defgroup shaders Shaders
  * @ingroup rendering
@@ -32,4 +40,8 @@
  * @defgroup utilities Utility Tools
  * @brief Tools used to simplify the creation process
  * @ingroup tools
+ *
+ * @defgroup utils Utility
+ * @brief Helper
+ * @ingroup core
  */

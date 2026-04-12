@@ -15,9 +15,8 @@ namespace Vectrix {
 		VC_CORE_INFO("Destroying ImGuiLayer");
 		if (m_attached)
 			m_manager->cleanup();
-
-		const auto* m = m_manager.release();
-		delete m;
+		m_manager.reset();
+		VC_CORE_INFO("ImGui destroyed");
 	};
 
 	void ImGuiLayer::OnRender() {
@@ -40,7 +39,9 @@ namespace Vectrix {
 	void ImGuiLayer::OnAttach() {
 		VC_PROFILER_FUNCTION();
 		m_manager->initImGui();
+#ifdef VC_DEBUG
 		m_manager->attachDebugGraphicWidget();
+#endif
 		m_attached = true;
 	}
 

@@ -66,7 +66,7 @@ namespace Vectrix {
 
         void render() override;
     private:
-        static std::vector<DebugMemoryHeapInfo> collectMemoryInfo();
+        static std::vector<DebugMemoryHeapInfo> collectMemoryInfo(VmaAllocator allocator);
     };
 }
 

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['guide_0',['Guide',['../rendering_overview.html',1,'Rendering System Guide'],['../tools_overview.html',1,'Tools Guide']]]
+  ['fixed_0',['Fixed',['../changelog.html#v0_4_0_fixed',1,'Fixed'],['../changelog.html#v0_3_0_fixed',1,'Fixed'],['../changelog.html#v0_2_0_fixed',1,'Fixed']]]
 ];

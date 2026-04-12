@@ -29,12 +29,14 @@ namespace Vectrix {
         }
         ImGui::Separator();
         const DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
-        const std::vector<DebugMemoryHeapInfo> memory = collectMemoryInfo();
+        const std::vector<DebugMemoryHeapInfo> memorySSBO = collectMemoryInfo(VulkanContext::instance().getSSBOAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryBuffer = collectMemoryInfo(VulkanContext::instance().getBufferAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryTexture = collectMemoryInfo(VulkanContext::instance().getTextureAllocator());
         ImGui::Text("Frame Index: %u", frame.frameIndex);
         ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
         ImGui::Separator();
 
-        if (ImGui::CollapsingHeader("Frame Stats", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (ImGui::CollapsingHeader("Frame Stats")) {
             ImGui::Text("Draw Calls: %u", frame.drawCalls);
             ImGui::Text("Dispatch Calls: %u", frame.dispatchCalls);
         }
@@ -50,7 +52,9 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Pipeline")) {
             for (const auto& pipeline : frame.pipelines) {
-                if (ImGui::TreeNode(pipeline.name)) {
+                char name[256] = "Pipeline - ";
+                strcat(name,pipeline.name);
+                if (ImGui::TreeNode(name)) {
                     // TODO: add a hot shader edition
                     // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
                     // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
@@ -61,31 +65,90 @@ namespace Vectrix {
             }
         }
 
-        if (ImGui::CollapsingHeader("GPU Memory", ImGuiTreeNodeFlags_DefaultOpen)) {
-            for (const auto& heap : memory) {
-                float fraction = 0.0f;
-                if (heap.budgetBytes > 0) {
-                    fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+        if (ImGui::CollapsingHeader("GPU Memory")) {
+            if (ImGui::TreeNode("SSBOMem")) {
+                for (const auto& heap : memorySSBO) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
+
+                    ImGui::Text("%s", heap.name);
+
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
+
+
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+                    ImGui::Separator();
                 }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("ImagesMem")) {
+                for (const auto& heap : memoryTexture) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
 
-                ImGui::Text("%s", heap.name);
+                    ImGui::Text("%s", heap.name);
 
-                ImVec4 color;
-                if (fraction < 0.6f)
-                    color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
-                else if (fraction < 0.85f)
-                    color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
-                else
-                    color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
 
-                ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
-                ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
-                ImGui::PopStyleColor();
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
 
 
-                ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
 
-                ImGui::Separator();
+                    ImGui::Separator();
+                }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("BuffersMem")) {
+                for (const auto& heap : memoryBuffer) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
+
+                    ImGui::Text("%s", heap.name);
+
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
+
+
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+                    ImGui::Separator();
+                }
+                ImGui::TreePop();
             }
         }
 
@@ -103,7 +166,9 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) {
             for (const auto& img : frame.images) {
-                if (ImGui::TreeNode(img.name.c_str())) {
+                char name[256] = "Images - ";
+                strcat(name,img.name.c_str());
+                if (ImGui::TreeNode(name)) {
                     ImGui::Text("Format: %s", string_VkFormat(img.format));
                     ImGui::Text("Layout: %d", img.layout);
                     ImGui::Text(
@@ -117,24 +182,16 @@ namespace Vectrix {
             }
         }
 
-        //if (ImGui::CollapsingHeader("Buffers")) {
-        //    for (const auto& buf : frame.buffers) {
-        //        ImGui::BulletText(
-        //            "%s | Size: %llu | Offset: %llu",
-        //            buf.name,
-        //            static_cast<unsigned long long>(buf.size),
-        //            static_cast<unsigned long long>(buf.offset)
-        //        );
-        //    }
-        //}
-
         ImGui::End();
     }
 
-    std::vector<DebugMemoryHeapInfo> VulkanDebugWidget::collectMemoryInfo() {
+
+
+    std::vector<DebugMemoryHeapInfo> VulkanDebugWidget::collectMemoryInfo(VmaAllocator allocator) {
         std::vector<DebugMemoryHeapInfo> heap_infos;
         VmaBudget budgets[VK_MAX_MEMORY_HEAPS];
-        vmaGetHeapBudgets(VulkanContext::instance().getAllocator(), budgets);
+
+        vmaGetHeapBudgets(allocator, budgets);
 
         uint32_t heapCount = 0;
         VkPhysicalDeviceMemoryProperties props;
@@ -145,7 +202,7 @@ namespace Vectrix {
             DebugMemoryHeapInfo info{};
             info.name = (props.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) ? "DEVICE_LOCAL" : "HOST_VISIBLE";
 
-            info.usedBytes   = budgets[i].usage;
+            info.usedBytes = budgets[i].usage;
             info.budgetBytes = budgets[i].budget;
             heap_infos.push_back(info);
         }

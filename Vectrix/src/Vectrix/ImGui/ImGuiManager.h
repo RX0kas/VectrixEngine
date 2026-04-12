@@ -1,8 +1,6 @@
 #ifndef VECTRIXWORKSPACE_IMGUIMANAGER_H
 #define VECTRIXWORKSPACE_IMGUIMANAGER_H
-
-#include "Vectrix/Core/Window.h"
-
+/// @cond INTERNAL
 namespace Vectrix {
     class Window;
     class ImGuiManager {
@@ -17,5 +15,5 @@ namespace Vectrix {
         static ImGuiManager* create(Window& window);
     };
 } // Vectrix
-
+///@endcond
 #endif //VECTRIXWORKSPACE_IMGUIMANAGER_H

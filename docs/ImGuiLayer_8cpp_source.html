@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/ImGui/ImGuiLayer.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -94,14 +96,14 @@ $(function(){initNavTree('ImGuiLayer_8cpp_source.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;vcpch.h&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;ImGuiLayer.h&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="ImGuiLayer_8h.html">ImGuiLayer.h</a>&quot;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;backends/imgui_impl_glfw.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Application.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="Application_8h.html">Vectrix/Application.h</a>&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="Profiler_8h.html">Vectrix/Debug/Profiler.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    ImGuiLayer::ImGuiLayer() : <a class="code hl_class" href="classVectrix_1_1Layer.html">Layer</a>(<span class="stringliteral">&quot;ImGuiLayer&quot;</span>), m_manager(<a class="code hl_class" href="classVectrix_1_1ImGuiManager.html">ImGuiManager</a>::create(<a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>::instance().window())), m_attached(false) {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    ImGuiLayer::ImGuiLayer() : <a class="code hl_class" href="classVectrix_1_1Layer.html">Layer</a>(<span class="stringliteral">&quot;ImGuiLayer&quot;</span>), m_manager(ImGuiManager::create(<a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>::instance().window())), m_attached(false) {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    }</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
@@ -110,54 +112,56 @@ $(function(){initNavTree('ImGuiLayer_8cpp_source.html','',''); });
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Destroying ImGuiLayer&quot;</span>);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordflow">if</span> (m_attached)</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>            m_manager-&gt;cleanup();</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">const</span> <span class="keyword">auto</span>* m = m_manager.release();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">delete</span> m;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    };</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordtype">void</span> ImGuiLayer::OnRender() {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        m_manager-&gt;render();</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    }</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> ImGuiLayer::OnUpdate(<span class="keyword">const</span> DeltaTime&amp; deltaTime) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        m_manager-&gt;update();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">const</span> ImGuiIO&amp; io = ImGui::GetIO(); (void)io;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">// Update and Render additional Platform Windows</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">if</span> (io.ConfigFlags &amp; ImGuiConfigFlags_ViewportsEnable) {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            ImGui::UpdatePlatformWindows();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            ImGui::RenderPlatformWindowsDefault();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        }</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> ImGuiLayer::OnAttach() {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        m_manager-&gt;initImGui();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        m_manager.reset();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        VC_CORE_INFO(<span class="stringliteral">&quot;ImGui destroyed&quot;</span>);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    };</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordtype">void</span> ImGuiLayer::OnRender() {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        m_manager-&gt;render();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> ImGuiLayer::OnUpdate(<span class="keyword">const</span> DeltaTime&amp; deltaTime) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        m_manager-&gt;update();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keyword">const</span> ImGuiIO&amp; io = ImGui::GetIO(); (void)io;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="comment">// Update and Render additional Platform Windows</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordflow">if</span> (io.ConfigFlags &amp; ImGuiConfigFlags_ViewportsEnable) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            ImGui::UpdatePlatformWindows();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            ImGui::RenderPlatformWindowsDefault();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keywordtype">void</span> ImGuiLayer::OnAttach() {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        m_manager-&gt;initImGui();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#ifdef VC_DEBUG</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        m_manager-&gt;attachDebugGraphicWidget();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        m_attached = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    }</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordtype">void</span> ImGuiLayer::OnDetach() {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        m_manager-&gt;cleanup();</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        m_attached = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    }</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">void</span> ImGuiLayer::OnImGuiRender() {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; w : m_widgets) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            w-&gt;render();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        }</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    }</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        m_attached = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">void</span> ImGuiLayer::OnDetach() {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        m_manager-&gt;cleanup();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        m_attached = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> ImGuiLayer::OnImGuiRender() {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; w : m_widgets) {</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            w-&gt;render();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        }</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+<div class="ttc" id="aApplication_8h_html"><div class="ttname"><a href="Application_8h.html">Application.h</a></div><div class="ttdoc">Definition of the main Application class.</div></div>
+<div class="ttc" id="aImGuiLayer_8h_html"><div class="ttname"><a href="ImGuiLayer_8h.html">ImGuiLayer.h</a></div><div class="ttdoc">Definition of the ImGuiLayer.</div></div>
 <div class="ttc" id="aProfiler_8h_html"><div class="ttname"><a href="Profiler_8h.html">Profiler.h</a></div><div class="ttdoc">Class that provides time analysis on how the application and the engine run.</div></div>
 <div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00217">Profiler.h:217</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00024">Application.h:25</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ImGuiManager_html"><div class="ttname"><a href="classVectrix_1_1ImGuiManager.html">Vectrix::ImGuiManager</a></div><div class="ttdef"><b>Definition</b> <a href="ImGuiManager_8h_source.html#l00008">ImGuiManager.h:8</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00034">Application.h:34</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Layer_html"><div class="ttname"><a href="classVectrix_1_1Layer.html">Vectrix::Layer</a></div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00007">Layer.h:8</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

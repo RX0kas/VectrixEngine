@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::BufferLayout Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,17 +95,28 @@ $(function(){initNavTree('classVectrix_1_1BufferLayout.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::BufferLayout Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represent how the vertex data are sent to the shader.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Buffer_8h_source.html">Buffer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5d723158a4131f4fe2a3a8c310733134" id="r_a5d723158a4131f4fe2a3a8c310733134"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5d723158a4131f4fe2a3a8c310733134">BufferLayout</a> (std::initializer_list&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt; elements)</td></tr>
 <tr class="memitem:a99d8ade7f7e4c3cb483ab4fa7e66991d" id="r_a99d8ade7f7e4c3cb483ab4fa7e66991d"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a99d8ade7f7e4c3cb483ab4fa7e66991d">getStride</a> () const</td></tr>
+<tr class="memdesc:a99d8ade7f7e4c3cb483ab4fa7e66991d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The distance between each vertex.  <br /></td></tr>
 <tr class="memitem:a2b8e639521b4e51df9b47374081a9012" id="r_a2b8e639521b4e51df9b47374081a9012"><td class="memItemLeft">const std::vector&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a2b8e639521b4e51df9b47374081a9012">getElements</a> () const</td></tr>
+<tr class="memdesc:a2b8e639521b4e51df9b47374081a9012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all the elements in the layout.  <br /></td></tr>
 <tr class="memitem:a1603f2bc590dc78584b20f2d89f65133" id="r_a1603f2bc590dc78584b20f2d89f65133"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a1603f2bc590dc78584b20f2d89f65133">has</a> (const std::string &amp;name) const</td></tr>
+<tr class="memdesc:a1603f2bc590dc78584b20f2d89f65133"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if an element is in the layout.  <br /></td></tr>
+<tr class="memitem:a3efb4f1d907f5cbb2ff42a1d79b0509e" id="r_a3efb4f1d907f5cbb2ff42a1d79b0509e"><td class="memItemLeft">std::vector&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt;::iterator&#160;</td><td class="memItemRight"><a class="el" href="#a3efb4f1d907f5cbb2ff42a1d79b0509e">begin</a> ()</td></tr>
+<tr class="memitem:a60d0cd76180517b02b35ede408c6f5bc" id="r_a60d0cd76180517b02b35ede408c6f5bc"><td class="memItemLeft">std::vector&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt;::iterator&#160;</td><td class="memItemRight"><a class="el" href="#a60d0cd76180517b02b35ede408c6f5bc">end</a> ()</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00040">40</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<div class="textblock"><p>Represent how the vertex data are sent to the shader. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00067">67</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a5d723158a4131f4fe2a3a8c310733134" name="a5d723158a4131f4fe2a3a8c310733134"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5d723158a4131f4fe2a3a8c310733134">&#9670;&#160;</a></span>BufferLayout()</h2>
@@ -128,11 +141,65 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00044">44</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00071">71</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="a3efb4f1d907f5cbb2ff42a1d79b0509e" name="a3efb4f1d907f5cbb2ff42a1d79b0509e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3efb4f1d907f5cbb2ff42a1d79b0509e">&#9670;&#160;</a></span>begin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt;::iterator Vectrix::BufferLayout::begin </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00093">93</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+
+</div>
+</div>
+<a id="a60d0cd76180517b02b35ede408c6f5bc" name="a60d0cd76180517b02b35ede408c6f5bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60d0cd76180517b02b35ede408c6f5bc">&#9670;&#160;</a></span>end()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structVectrix_1_1BufferElement.html">BufferElement</a> &gt;::iterator Vectrix::BufferLayout::end </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00094">94</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+
+</div>
+</div>
 <a id="a2b8e639521b4e51df9b47374081a9012" name="a2b8e639521b4e51df9b47374081a9012"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b8e639521b4e51df9b47374081a9012">&#9670;&#160;</a></span>getElements()</h2>
 
@@ -156,7 +223,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00049">49</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p>Return all the elements in the layout. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00083">83</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -183,7 +252,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00048">48</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p>The distance between each vertex. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00078">78</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>
@@ -210,7 +281,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00050">50</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<p>Tell if an element is in the layout. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00088">88</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 
 </div>
 </div>

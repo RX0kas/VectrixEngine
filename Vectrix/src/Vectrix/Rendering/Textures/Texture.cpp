@@ -11,7 +11,7 @@
 namespace Vectrix {
     unsigned int Texture::m_count = 0;
 
-    Ref<Texture> Texture::create(const std::string &path) {
+    std::shared_ptr<Texture> Texture::create(const std::string &path) {
         if (m_count==getMaxTexturePerShader()) {
             VC_CORE_ERROR("The maximum number of texture allowed is {}",getMaxTexturePerShader());
         }
@@ -24,13 +24,14 @@ namespace Vectrix {
         switch (Renderer::getAPI())
         {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported");
-            case RendererAPI::API::Vulkan:  return createRef<VulkanTexture>(path);
+            case RendererAPI::API::Vulkan:  return std::make_unique<VulkanTexture>(path);
         }
 
         VC_CORE_ERROR("Unknown RendererAPI");
+        return nullptr;
     }
 
-    Ref<Texture> Texture::createDefaultTexture() {
+    std::shared_ptr<Texture> Texture::createDefaultTexture() {
         switch (Renderer::getAPI())
         {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported");
@@ -38,5 +39,6 @@ namespace Vectrix {
         }
 
         VC_CORE_ERROR("Unknown RendererAPI");
+        return nullptr;
     }
 } // Vectrix

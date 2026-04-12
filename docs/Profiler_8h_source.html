@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Debug/Profiler.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -103,16 +105,16 @@ $(function(){initNavTree('Profiler_8h_source.html','',''); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;thread&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;unordered_set&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;Vectrix/Application.h&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Application_8h.html">Vectrix/Application.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="Json_8h.html">Vectrix/Utils/Json.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#define VC_PROFILER_VERSION &quot;1.1&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"></span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> * @file Profiler.h</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * @brief Class that provides time analysis on how the application and the engine run</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * @ingroup debugtools</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">* @file Profiler.h</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">* @brief Class that provides time analysis on how the application and the engine run</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">* @ingroup debugtools</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">using </span>FloatingPointMicroseconds = std::chrono::duration&lt;double, std::micro&gt;;<span class="comment"></span></div>
@@ -321,13 +323,14 @@ $(function(){initNavTree('Profiler_8h_source.html','',''); });
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_PROFILER_H</span></div>
+<div class="ttc" id="aApplication_8h_html"><div class="ttname"><a href="Application_8h.html">Application.h</a></div><div class="ttdoc">Definition of the main Application class.</div></div>
 <div class="ttc" id="aJson_8h_html"><div class="ttname"><a href="Json_8h.html">Json.h</a></div><div class="ttdoc">JSON parsing and value representation classes.</div></div>
 <div class="ttc" id="aclassVectrix_1_1JsonValue_html"><div class="ttname"><a href="classVectrix_1_1JsonValue.html">Vectrix::JsonValue</a></div><div class="ttdoc">Represents any JSON value (null, boolean, number, string, array, object).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00040">Json.h:40</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1JsonValue_html_a5fb96025c28f2b38dab8ebee44e49df7"><div class="ttname"><a href="classVectrix_1_1JsonValue.html#a5fb96025c28f2b38dab8ebee44e49df7">Vectrix::JsonValue::getString</a></div><div class="ttdeci">std::string getString() const</div><div class="ttdoc">Retrieves the value as a string.</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00083">Json.h:83</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1JsonValue_html_a705aacc6ef8b27ccbcb1ba6e27642508"><div class="ttname"><a href="classVectrix_1_1JsonValue.html#a705aacc6ef8b27ccbcb1ba6e27642508">Vectrix::JsonValue::contains</a></div><div class="ttdeci">bool contains(const std::string &amp;name) const</div><div class="ttdoc">Checks if a JSON object contains a specific key.</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00160">Json.h:160</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Json_html_a3f6d3f2a37624b93bf4afa036814fe85"><div class="ttname"><a href="classVectrix_1_1Json.html#a3f6d3f2a37624b93bf4afa036814fe85">Vectrix::Json::load</a></div><div class="ttdeci">static JsonValue load(const std::string &amp;filePath)</div><div class="ttdoc">Loads a JSON file from disk and parses its contents.</div><div class="ttdef"><b>Definition</b> <a href="Json_8cpp_source.html#l00009">Json.cpp:9</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Profiler_html_a06e52b7beb083c13971da84b91be674b"><div class="ttname"><a href="classVectrix_1_1Profiler.html#a06e52b7beb083c13971da84b91be674b">Vectrix::Profiler::isCompatible</a></div><div class="ttdeci">static bool isCompatible(const std::string &amp;filePath)</div><div class="ttdoc">This function return true if the file given is compatible with the current version of the profiler.</div><div class="ttdef"><b>Definition</b> <a href="#l00105">Profiler.h:105</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html_a4e5b9b27dd883839ee885ab04d027079"><div class="ttname"><a href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">Vectrix::JsonObject</a></div><div class="ttdeci">std::map&lt; std::string, JsonValue &gt; JsonObject</div><div class="ttdoc">Type alias for a JSON object (map of string to JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00034">Json.h:34</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html_a52db7e1d6e93e028ead29b1c5b3865b9"><div class="ttname"><a href="namespaceVectrix.html#a52db7e1d6e93e028ead29b1c5b3865b9">Vectrix::JsonArray</a></div><div class="ttdeci">std::vector&lt; JsonValue &gt; JsonArray</div><div class="ttdoc">Type alias for a JSON array (vector of JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00029">Json.h:29</a></div></div>
 <div class="ttc" id="astructVectrix_1_1ProfilerResult_html"><div class="ttname"><a href="structVectrix_1_1ProfilerResult.html">Vectrix::ProfilerResult</a></div><div class="ttdoc">Data obtained on the execution of a function.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">Profiler.h:28</a></div></div>

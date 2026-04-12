@@ -39,8 +39,8 @@ namespace Vectrix {
         static constexpr uint32_t getMaxTexturePerShader() { return 8; }
     private:
         friend class TextureManager;
-        static Ref<Texture> create(const std::string& path);
-        static Ref<Texture> createDefaultTexture();
+        static std::shared_ptr<Texture> create(const std::string& path);
+        static std::shared_ptr<Texture> createDefaultTexture();
         static unsigned int m_count;
     };
 } // Vectrix

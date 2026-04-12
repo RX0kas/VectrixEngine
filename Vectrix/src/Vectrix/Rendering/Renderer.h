@@ -3,9 +3,9 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 #include "Camera/PerspectiveCamera.h"
-#include "Models/Model.h"
+#include "Mesh/Model.h"
 #include "Shaders/Shader.h"
-#include "Models/VertexArray.h"
+#include "Mesh/VertexArray.h"
 
 /**
  * @file Renderer.h
@@ -28,8 +28,10 @@ namespace Vectrix {
 		 * @struct SceneData
 		 * @brief Per-scene rendering data
 		 */
-		struct SceneData
-		{
+		struct SceneData {
+			/**
+			 * @brief The scene camera
+			 */
 			PerspectiveCamera* camera;
 		};
 		/**
@@ -47,16 +49,18 @@ namespace Vectrix {
 		 * @param shader Shader to use
 		 * @param vertexArray Geometry to render
 		 * @param transform Transform to apply (position, scale, rotation)
-		 * @deprecated Will be removed when the material system will be created, please use @ref Model and @ref Vectrix::Renderer::submit(Shader& shader, Model& model) instead
+		 * @deprecated Will be removed when the material system will be created
 		 */
-		static void submit(Shader& shader, const VertexArray& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)});
+		static void submit(Shader &shader, const std::shared_ptr<VertexArray> &vertexArray, const Transform &transform = Transform{
+			                   glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)
+		                   });
 
 		/**
 		 * @brief Submit a complete model
 		 * @param shader Shader to use
 		 * @param model Model to render
 		 */
-		static void submit(Shader& shader, Model& model);
+		static void submit(Shader& shader, const Model& model);
 
 		/**
 		 * @brief Get current graphics API
@@ -69,6 +73,6 @@ namespace Vectrix {
 		 */
 		static SceneData& getSceneData() {return *m_SceneData;}
 	private:
-		static Own<SceneData> m_SceneData;
+		static std::unique_ptr<SceneData> m_SceneData;
 	};
 }

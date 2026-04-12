@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Shaders/ShaderManager.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -97,55 +99,63 @@ $(function(){initNavTree('ShaderManager_8cpp_source.html','',''); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <a class="code hl_class" href="classVectrix_1_1ShaderManager.html">ShaderManager</a>* ShaderManager::s_instance = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    ShaderManager::ShaderManager() {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Initializing ShaderManager&quot;</span>);</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        VC_CORE_ASSERT(!s_instance, <span class="stringliteral">&quot;ShaderManager already exists!&quot;</span>);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        s_instance = <span class="keyword">this</span>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    }</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Rendering/Mesh/ObjLoader.h&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <a class="code hl_class" href="classVectrix_1_1ShaderManager.html">ShaderManager</a>* ShaderManager::s_instance = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    ShaderManager::ShaderManager() {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Initializing ShaderManager&quot;</span>);</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        VC_CORE_ASSERT(!s_instance, <span class="stringliteral">&quot;ShaderManager already exists!&quot;</span>);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        s_instance = <span class="keyword">this</span>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    }</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classVectrix_1_1ShaderManager.html#a5a823240094e95e1a6897cae0cb06c90">   17</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#a5a823240094e95e1a6897cae0cb06c90">ShaderManager::createShader</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::string &amp;vertexPath, <span class="keyword">const</span> std::string &amp;fragmentPath,<a class="code hl_class" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> uniformLayout, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout, <span class="keyword">const</span> <span class="keywordtype">bool</span> affectedByCamera) {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        VC_CORE_ASSERT(!<a class="code hl_function" href="classVectrix_1_1ShaderManager.html#a4cb047816cd6a5a5e7a58f23964d0889">exist</a>(name),<span class="stringliteral">&quot;A shader with the name {} already exist&quot;</span>,name);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        Ref&lt;Shader&gt; shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#ae3f69ad2d50bbaea23ba8d939c91ff17">instance</a>().add(name,std::move(shader));</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    }</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classVectrix_1_1ShaderManager.html#a54d6b7858b33a9b702d4b81b8e0e6819">   19</a></span>    std::shared_ptr&lt;Shader&gt; <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#a54d6b7858b33a9b702d4b81b8e0e6819">ShaderManager::createShader</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::string &amp;vertexPath, <span class="keyword">const</span> std::string &amp;fragmentPath,<a class="code hl_class" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> uniformLayout, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout, <span class="keyword">const</span> <span class="keywordtype">bool</span> affectedByCamera) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        VC_CORE_ASSERT(!<a class="code hl_function" href="classVectrix_1_1ShaderManager.html#a4cb047816cd6a5a5e7a58f23964d0889">exist</a>(name),<span class="stringliteral">&quot;A shader with the name {} already exist&quot;</span>,name);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        std::shared_ptr&lt;Shader&gt; shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#ae3f69ad2d50bbaea23ba8d939c91ff17">instance</a>().add(name,shader);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordflow">return</span> shader;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    }</div>
 </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordtype">void</span> ShaderManager::add(<span class="keyword">const</span> std::string&amp; name, Ref&lt;Shader&gt; shader) {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        m_cache.emplace(name, std::move(shader));</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Shader \&quot;{}\&quot; registered&quot;</span>,name);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    }</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee">   28</a></span>    Ref&lt;Shader&gt; <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee">ShaderManager::get</a>(<span class="keyword">const</span> std::string&amp; name) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">const</span> <span class="keyword">auto</span> it = m_cache.find(name);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">if</span> (it == m_cache.end()) {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Shader with the name \&quot;{}\&quot; doesn&#39;t exist&quot;</span>, name);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordflow">return</span> it-&gt;second;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    ShaderManager::~ShaderManager() {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Destroying ShaderManager&quot;</span>);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        m_cache.clear();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> ShaderManager::add(<span class="keyword">const</span> std::string&amp; name, std::shared_ptr&lt;Shader&gt; shader) {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        m_cache.emplace(name, std::move(shader));</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        VC_CORE_INFO(<span class="stringliteral">&quot;Shader \&quot;{}\&quot; registered&quot;</span>,name);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classVectrix_1_1ShaderManager.html#a6efb97078fafae406b8dbd4d6c130a0a">   36</a></span>    std::shared_ptr&lt;Shader&gt; <a class="code hl_function" href="classVectrix_1_1ShaderManager.html#a6efb97078fafae406b8dbd4d6c130a0a">ShaderManager::get</a>(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">const</span> <span class="keyword">auto</span> it = m_cache.find(name);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">if</span> (it == m_cache.end()) {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Shader with the name \&quot;{}\&quot; doesn&#39;t exist&quot;</span>, name);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> it-&gt;second;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    }</div>
 </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">bool</span> ShaderManager::remove(<span class="keyword">const</span> std::string&amp; name) {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">return</span> m_cache.erase(name);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <span class="comment">// Vectrix</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> ShaderManager::remove(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">return</span> m_cache.erase(name);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>} <span class="comment">// Vectrix</span></div>
 <div class="ttc" id="aShaderManager_8h_html"><div class="ttname"><a href="ShaderManager_8h.html">ShaderManager.h</a></div><div class="ttdoc">Definition of the class that manage the life of shaders.</div></div>
-<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00040">Buffer.h:40</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html">Vectrix::ShaderManager</a></div><div class="ttdoc">Manages shaders.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00018">ShaderManager.h:18</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a4cb047816cd6a5a5e7a58f23964d0889"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a4cb047816cd6a5a5e7a58f23964d0889">Vectrix::ShaderManager::exist</a></div><div class="ttdeci">static bool exist(const std::string &amp;name)</div><div class="ttdoc">This function is used to know if a shader with the name given exist.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00034">ShaderManager.h:34</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a5a823240094e95e1a6897cae0cb06c90"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a5a823240094e95e1a6897cae0cb06c90">Vectrix::ShaderManager::createShader</a></div><div class="ttdeci">static void createShader(const std::string &amp;name, const std::string &amp;vertexPath, const std::string &amp;fragmentPath, ShaderUniformLayout uniformLayout, const BufferLayout &amp;layout, bool affectedByCamera)</div><div class="ttdoc">Function to create a new shader.</div><div class="ttdef"><b>Definition</b> <a href="#l00017">ShaderManager.cpp:17</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_aad02a588f010cd217ca3fd51289ad0ee"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#aad02a588f010cd217ca3fd51289ad0ee">Vectrix::ShaderManager::get</a></div><div class="ttdeci">Ref&lt; Shader &gt; get(const std::string &amp;name)</div><div class="ttdoc">This function is used to get a shader previously created.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">ShaderManager.cpp:28</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_ae3f69ad2d50bbaea23ba8d939c91ff17"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#ae3f69ad2d50bbaea23ba8d939c91ff17">Vectrix::ShaderManager::instance</a></div><div class="ttdeci">static ShaderManager &amp; instance()</div><div class="ttdoc">Return a reference to the instance of this class.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00050">ShaderManager.h:50</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdoc">Represent how the vertex data are sent to the shader.</div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00067">Buffer.h:67</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ShaderManager_html"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html">Vectrix::ShaderManager</a></div><div class="ttdoc">Manages shaders.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00019">ShaderManager.h:19</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a4cb047816cd6a5a5e7a58f23964d0889"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a4cb047816cd6a5a5e7a58f23964d0889">Vectrix::ShaderManager::exist</a></div><div class="ttdeci">static bool exist(const std::string &amp;name)</div><div class="ttdoc">This function is used to know if a shader with the name given exist.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00035">ShaderManager.h:35</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a54d6b7858b33a9b702d4b81b8e0e6819"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a54d6b7858b33a9b702d4b81b8e0e6819">Vectrix::ShaderManager::createShader</a></div><div class="ttdeci">static std::shared_ptr&lt; Shader &gt; createShader(const std::string &amp;name, const std::string &amp;vertexPath, const std::string &amp;fragmentPath, ShaderUniformLayout uniformLayout, const BufferLayout &amp;layout=getTinyObjLayout(), const bool affectedByCamera=true)</div><div class="ttdoc">Function to create a new shader.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">ShaderManager.cpp:19</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_a6efb97078fafae406b8dbd4d6c130a0a"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#a6efb97078fafae406b8dbd4d6c130a0a">Vectrix::ShaderManager::get</a></div><div class="ttdeci">std::shared_ptr&lt; Shader &gt; get(const std::string &amp;name)</div><div class="ttdoc">This function is used to get a shader previously created.</div><div class="ttdef"><b>Definition</b> <a href="#l00036">ShaderManager.cpp:36</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ShaderManager_html_ae3f69ad2d50bbaea23ba8d939c91ff17"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html#ae3f69ad2d50bbaea23ba8d939c91ff17">Vectrix::ShaderManager::instance</a></div><div class="ttdeci">static ShaderManager &amp; instance()</div><div class="ttdoc">Return a reference to the instance of this class.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00051">ShaderManager.h:51</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderUniformLayout_html"><div class="ttname"><a href="classVectrix_1_1ShaderUniformLayout.html">Vectrix::ShaderUniformLayout</a></div><div class="ttdef"><b>Definition</b> <a href="ShaderUniformLayout_8h_source.html#l00041">ShaderUniformLayout.h:41</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

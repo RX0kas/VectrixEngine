@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::Application Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -96,23 +98,27 @@ $(function(){initNavTree('classVectrix_1_1Application.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aee9e069e5ff3639b292ae5f726a81349" id="r_aee9e069e5ff3639b292ae5f726a81349"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aee9e069e5ff3639b292ae5f726a81349">onEvent</a> (<a class="el" href="classVectrix_1_1Event.html">Event</a> &amp;e)</td></tr>
-<tr class="memitem:aa76787ac09eb12b633c6ebf35984f6c7" id="r_aa76787ac09eb12b633c6ebf35984f6c7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#aa76787ac09eb12b633c6ebf35984f6c7">onWindowClose</a> (<a class="el" href="classVectrix_1_1WindowCloseEvent.html">WindowCloseEvent</a> &amp;e)</td></tr>
-<tr class="memitem:a0766d76461d0297dcb5cc331936bb72f" id="r_a0766d76461d0297dcb5cc331936bb72f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0766d76461d0297dcb5cc331936bb72f">PushLayer</a> (const Ref&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;layer)</td></tr>
-<tr class="memitem:a12adbdceee5d7953205afa9d65104a60" id="r_a12adbdceee5d7953205afa9d65104a60"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a12adbdceee5d7953205afa9d65104a60">PushOverlay</a> (const Ref&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;layer)</td></tr>
+<tr class="memitem:a7431583a5d096ca9394c8c3927cbfc94" id="r_a7431583a5d096ca9394c8c3927cbfc94"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7431583a5d096ca9394c8c3927cbfc94">PushLayer</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;layer)</td></tr>
+<tr class="memdesc:a7431583a5d096ca9394c8c3927cbfc94"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a layer that will be rendered.  <br /></td></tr>
+<tr class="memitem:ae947fe33b54dda02b9d6b65df0f89d3f" id="r_ae947fe33b54dda02b9d6b65df0f89d3f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae947fe33b54dda02b9d6b65df0f89d3f">PushOverlay</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;layer)</td></tr>
+<tr class="memdesc:ae947fe33b54dda02b9d6b65df0f89d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a layer that will be rendered, it will render on top of the other layer.  <br /></td></tr>
 <tr class="memitem:a9539d0f3266ac7335e95a1b9a7fc9511" id="r_a9539d0f3266ac7335e95a1b9a7fc9511"><td class="memItemLeft"><a class="el" href="classVectrix_1_1Window.html">Window</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a9539d0f3266ac7335e95a1b9a7fc9511">window</a> () const</td></tr>
+<tr class="memdesc:a9539d0f3266ac7335e95a1b9a7fc9511"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current <a class="el" href="classVectrix_1_1Window.html">Window</a> instance.  <br /></td></tr>
 <tr class="memitem:aa04aa8c2448af21f423b16d910f3ecba" id="r_aa04aa8c2448af21f423b16d910f3ecba"><td class="memItemLeft"><a class="el" href="classVectrix_1_1ImGuiLayer.html">ImGuiLayer</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aa04aa8c2448af21f423b16d910f3ecba">imguiLayer</a> () const</td></tr>
+<tr class="memdesc:aa04aa8c2448af21f423b16d910f3ecba"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current <a class="el" href="classVectrix_1_1ImGuiLayer.html" title="This function is the layer responsible for drawing Dear ImGui.">ImGuiLayer</a> instance.  <br /></td></tr>
 <tr class="memitem:a8be2aea764612ecf5adb8d82193246f3" id="r_a8be2aea764612ecf5adb8d82193246f3"><td class="memItemLeft"><a class="el" href="classVectrix_1_1DeltaTime.html">DeltaTime</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8be2aea764612ecf5adb8d82193246f3">getDeltaTime</a> () const</td></tr>
-<tr class="memitem:ab591881e99c5361f7a9787ed3574f133" id="r_ab591881e99c5361f7a9787ed3574f133"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab591881e99c5361f7a9787ed3574f133">renderImGui</a> ()</td></tr>
+<tr class="memdesc:a8be2aea764612ecf5adb8d82193246f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current <a class="el" href="classVectrix_1_1DeltaTime.html" title="This class represent how many times have past since the last frame.">DeltaTime</a>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:a0b46883fdc5504d20fa29af2083e60c9" id="r_a0b46883fdc5504d20fa29af2083e60c9"><td class="memItemLeft">static Application &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a0b46883fdc5504d20fa29af2083e60c9">instance</a> ()</td></tr>
+<tr class="memdesc:a0b46883fdc5504d20fa29af2083e60c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the instance of the application.  <br /></td></tr>
 <tr class="memitem:ae45c757a101d698f82b647a0130d5972" id="r_ae45c757a101d698f82b647a0130d5972"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1ApplicationInfo.html">ApplicationInfo</a>&#160;</td><td class="memItemRight"><a class="el" href="#ae45c757a101d698f82b647a0130d5972">getAppInfo</a> ()</td></tr>
+<tr class="memdesc:ae45c757a101d698f82b647a0130d5972"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the information about the current application.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00024">24</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00034">34</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a5c0613b12a2a7c47fdf12f6fb6099035" name="a5c0613b12a2a7c47fdf12f6fb6099035"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5c0613b12a2a7c47fdf12f6fb6099035">&#9670;&#160;</a></span>Application()</h2>
@@ -129,7 +135,7 @@ Public Static Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00019">19</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00022">22</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
 
 </div>
 </div>
@@ -148,7 +154,7 @@ Public Static Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00036">36</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00041">41</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
 
 </div>
 </div>
@@ -176,7 +182,9 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00041">41</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p>This function return the information about the current application. </p>
+
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00076">76</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
 
 </div>
 </div>
@@ -203,7 +211,9 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00038">38</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p>This function return the current <a class="el" href="classVectrix_1_1DeltaTime.html" title="This class represent how many times have past since the last frame.">DeltaTime</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00066">66</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
 
 </div>
 </div>
@@ -230,7 +240,9 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00037">37</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p>This function return the current <a class="el" href="classVectrix_1_1ImGuiLayer.html" title="This function is the layer responsible for drawing Dear ImGui.">ImGuiLayer</a> instance. </p>
+
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00062">62</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
 
 </div>
 </div>
@@ -257,50 +269,16 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00040">40</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p>This function return the instance of the application. </p>
+
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00071">71</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MeshManager_8cpp_source.html#l00042">Vectrix::MeshManager::createModel()</a>, <a class="el" href="MeshManager_8cpp_source.html#l00035">Vectrix::MeshManager::createModel()</a>, and <a class="el" href="MeshManager_8cpp_source.html#l00027">Vectrix::MeshManager::loadModel()</a>.</p>
 
 </div>
 </div>
-<a id="aee9e069e5ff3639b292ae5f726a81349" name="aee9e069e5ff3639b292ae5f726a81349"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee9e069e5ff3639b292ae5f726a81349">&#9670;&#160;</a></span>onEvent()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::Application::onEvent </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classVectrix_1_1Event.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>e</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00041">41</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
-
-</div>
-</div>
-<a id="aa76787ac09eb12b633c6ebf35984f6c7" name="aa76787ac09eb12b633c6ebf35984f6c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa76787ac09eb12b633c6ebf35984f6c7">&#9670;&#160;</a></span>onWindowClose()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Vectrix::Application::onWindowClose </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classVectrix_1_1WindowCloseEvent.html">WindowCloseEvent</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>e</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00076">76</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a0766d76461d0297dcb5cc331936bb72f" name="a0766d76461d0297dcb5cc331936bb72f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0766d76461d0297dcb5cc331936bb72f">&#9670;&#160;</a></span>PushLayer()</h2>
+<a id="a7431583a5d096ca9394c8c3927cbfc94" name="a7431583a5d096ca9394c8c3927cbfc94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7431583a5d096ca9394c8c3927cbfc94">&#9670;&#160;</a></span>PushLayer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,18 +286,28 @@ Public Static Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::Application::PushLayer </td>
           <td>(</td>
-          <td class="paramtype">const Ref&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>layer</em></span></td><td>)</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>layer</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00082">82</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+<p>This function add a layer that will be rendered. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">layer</td><td>The custom layer you wanna add </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00093">93</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
 
 </div>
 </div>
-<a id="a12adbdceee5d7953205afa9d65104a60" name="a12adbdceee5d7953205afa9d65104a60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12adbdceee5d7953205afa9d65104a60">&#9670;&#160;</a></span>PushOverlay()</h2>
+<a id="ae947fe33b54dda02b9d6b65df0f89d3f" name="ae947fe33b54dda02b9d6b65df0f89d3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae947fe33b54dda02b9d6b65df0f89d3f">&#9670;&#160;</a></span>PushOverlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -327,32 +315,23 @@ Public Static Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::Application::PushOverlay </td>
           <td>(</td>
-          <td class="paramtype">const Ref&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>layer</em></span></td><td>)</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Layer.html">Layer</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>layer</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00088">88</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+<p>This function add a layer that will be rendered, it will render on top of the other layer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">layer</td><td>The custom layer you wanna add </td></tr>
+  </table>
+  </dd>
+</dl>
 
-</div>
-</div>
-<a id="ab591881e99c5361f7a9787ed3574f133" name="ab591881e99c5361f7a9787ed3574f133"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab591881e99c5361f7a9787ed3574f133">&#9670;&#160;</a></span>renderImGui()</h2>
+<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00099">99</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
 
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::Application::renderImGui </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="Application_8cpp_source.html#l00095">95</a> of file <a class="el" href="Application_8cpp_source.html">Application.cpp</a>.</p>
+<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
 
 </div>
 </div>
@@ -379,7 +358,11 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00036">36</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+<p>This function return the current <a class="el" href="classVectrix_1_1Window.html">Window</a> instance. </p>
+
+<p class="definition">Definition at line <a class="el" href="Application_8h_source.html#l00058">58</a> of file <a class="el" href="Application_8h_source.html">Application.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MeshManager_8cpp_source.html#l00042">Vectrix::MeshManager::createModel()</a>, <a class="el" href="MeshManager_8cpp_source.html#l00035">Vectrix::MeshManager::createModel()</a>, and <a class="el" href="MeshManager_8cpp_source.html#l00027">Vectrix::MeshManager::loadModel()</a>.</p>
 
 </div>
 </div>

@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::ImGuiLayer Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,6 +95,11 @@ $(function(){initNavTree('classVectrix_1_1ImGuiLayer.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::ImGuiLayer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>This function is the layer responsible for drawing Dear ImGui.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Vectrix::ImGuiLayer:</div>
 <div class="dyncontent">
@@ -105,12 +112,8 @@ Inheritance diagram for Vectrix::ImGuiLayer:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acfcac0ceb68c07716add26f152445b05" id="r_acfcac0ceb68c07716add26f152445b05"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acfcac0ceb68c07716add26f152445b05">OnRender</a> () override</td></tr>
-<tr class="memitem:a017a98192217b58de3ddf4d4452e2f8c" id="r_a017a98192217b58de3ddf4d4452e2f8c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a017a98192217b58de3ddf4d4452e2f8c">OnAttach</a> () override</td></tr>
-<tr class="memitem:a483d17265ce1dd07d4fd5905344b6705" id="r_a483d17265ce1dd07d4fd5905344b6705"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a483d17265ce1dd07d4fd5905344b6705">OnDetach</a> () override</td></tr>
-<tr class="memitem:a20c2994fbc1f0daac83f6272d39e0a95" id="r_a20c2994fbc1f0daac83f6272d39e0a95"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a20c2994fbc1f0daac83f6272d39e0a95">OnImGuiRender</a> () override</td></tr>
-<tr class="memitem:a775dec7f15a7fb880a97fc6aac089054" id="r_a775dec7f15a7fb880a97fc6aac089054"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a775dec7f15a7fb880a97fc6aac089054">OnUpdate</a> (const <a class="el" href="classVectrix_1_1DeltaTime.html">DeltaTime</a> &amp;deltaTime) override</td></tr>
-<tr class="memitem:ab4a24f08827234257acb2053a992a0d4" id="r_ab4a24f08827234257acb2053a992a0d4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab4a24f08827234257acb2053a992a0d4">addWidget</a> (const Ref&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;widget)</td></tr>
+<tr class="memitem:a1b32306732027d3cab8925f11485313b" id="r_a1b32306732027d3cab8925f11485313b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1b32306732027d3cab8925f11485313b">addWidget</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;widget)</td></tr>
+<tr class="memdesc:a1b32306732027d3cab8925f11485313b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a new <a class="el" href="classVectrix_1_1ImGuiWidget.html" title="This function represent an ImGui widget.">ImGuiWidget</a>.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classVectrix_1_1Layer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1Layer')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1Layer.html">Vectrix::Layer</a></td></tr>
 <tr class="memitem:aa574de23b396df49ed5657c60fd2e385 inherit pub_methods_classVectrix_1_1Layer" id="r_aa574de23b396df49ed5657c60fd2e385"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#aa574de23b396df49ed5657c60fd2e385">Layer</a> (const std::string &amp;name=&quot;Layer&quot;)</td></tr>
 <tr class="memitem:a93c0b71eb7f61b131c53969c8ad0acac inherit pub_methods_classVectrix_1_1Layer" id="r_a93c0b71eb7f61b131c53969c8ad0acac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a93c0b71eb7f61b131c53969c8ad0acac">OnAttach</a> ()</td></tr>
@@ -122,8 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abea43c0560660e64c8b1cdc7ff8a1666 inherit pub_methods_classVectrix_1_1Layer" id="r_abea43c0560660e64c8b1cdc7ff8a1666"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#abea43c0560660e64c8b1cdc7ff8a1666">getName</a> () const</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00007">7</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<div class="textblock"><p>This function is the layer responsible for drawing Dear ImGui. </p>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00016">16</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="aa5630d2b85939cfe52878b4c8771fc88" name="aa5630d2b85939cfe52878b4c8771fc88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5630d2b85939cfe52878b4c8771fc88">&#9670;&#160;</a></span>~ImGuiLayer()</h2>
@@ -153,8 +157,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="ab4a24f08827234257acb2053a992a0d4" name="ab4a24f08827234257acb2053a992a0d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4a24f08827234257acb2053a992a0d4">&#9670;&#160;</a></span>addWidget()</h2>
+<a id="a1b32306732027d3cab8925f11485313b" name="a1b32306732027d3cab8925f11485313b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b32306732027d3cab8925f11485313b">&#9670;&#160;</a></span>addWidget()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,7 +169,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::ImGuiLayer::addWidget </td>
           <td>(</td>
-          <td class="paramtype">const Ref&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -176,142 +180,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00016">16</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<p>This function add a new <a class="el" href="classVectrix_1_1ImGuiWidget.html" title="This function represent an ImGui widget.">ImGuiWidget</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">widget</td><td>A shared_ptr to the widget </td></tr>
+  </table>
+  </dd>
+</dl>
 
-</div>
-</div>
-<a id="a017a98192217b58de3ddf4d4452e2f8c" name="a017a98192217b58de3ddf4d4452e2f8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a017a98192217b58de3ddf4d4452e2f8c">&#9670;&#160;</a></span>OnAttach()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::ImGuiLayer::OnAttach </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00040">40</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a483d17265ce1dd07d4fd5905344b6705" name="a483d17265ce1dd07d4fd5905344b6705"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a483d17265ce1dd07d4fd5905344b6705">&#9670;&#160;</a></span>OnDetach()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::ImGuiLayer::OnDetach </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00047">47</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a20c2994fbc1f0daac83f6272d39e0a95" name="a20c2994fbc1f0daac83f6272d39e0a95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20c2994fbc1f0daac83f6272d39e0a95">&#9670;&#160;</a></span>OnImGuiRender()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::ImGuiLayer::OnImGuiRender </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00053">53</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
-
-</div>
-</div>
-<a id="acfcac0ceb68c07716add26f152445b05" name="acfcac0ceb68c07716add26f152445b05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfcac0ceb68c07716add26f152445b05">&#9670;&#160;</a></span>OnRender()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::ImGuiLayer::OnRender </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00023">23</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
-
-</div>
-</div>
-<a id="a775dec7f15a7fb880a97fc6aac089054" name="a775dec7f15a7fb880a97fc6aac089054"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a775dec7f15a7fb880a97fc6aac089054">&#9670;&#160;</a></span>OnUpdate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::ImGuiLayer::OnUpdate </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classVectrix_1_1DeltaTime.html">DeltaTime</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>deltaTime</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00028">28</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00031">31</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
 
 </div>
 </div>

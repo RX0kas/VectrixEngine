@@ -5,7 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Models/Model.h Source File</title>
+<title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Mesh/Model.h Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,53 +95,162 @@ $(function(){initNavTree('Model_8h_source.html','',''); });
   <div class="headertitle"><div class="title">Model.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_MODEL_H</span></div>
+<a href="Model_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_MODEL_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_MODEL_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;Transform.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;VertexArray.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html">    7</a></span>    <span class="keyword">class </span>Model {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>        <span class="keyword">static</span> Model create(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        <span class="keyword">static</span> Model create(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> std::vector&lt;uint32_t&gt;&amp; indices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keyword">static</span> Model load(<span class="keyword">const</span> std::string&amp; pathObj);</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="Transform_8h.html">Transform.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="VertexArray_8h.html">VertexArray.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Utils/Math.h&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"></span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">* @file Model.h</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">* @brief Definition of the Model class and internal struct</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">* @ingroup mesh</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">*/</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        [[nodiscard]] <a class="code hl_class" href="classVectrix_1_1VertexArray.html">VertexArray</a>* getVertexArray()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_vertexArray.get();}</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        [[nodiscard]] <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> getLayout()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_layout;}</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordtype">void</span> setPosition(glm::vec3 position) {m_transform.translation=position;}</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keywordtype">void</span> setRotation(glm::vec3 rotation) {m_transform.rotation=rotation;}</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordtype">void</span> setScale(glm::vec3 scale) {m_transform.scale=scale;}</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        [[nodiscard]] glm::vec3 getPosition()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_transform.translation;}</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        [[nodiscard]] glm::vec3 getRotation()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_transform.rotation;}</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        [[nodiscard]] glm::vec3 getScale()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_transform.scale;}</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        [[nodiscard]] glm::mat4 getModelMatrix() {<span class="keywordflow">return</span> m_transform.mat4();}</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        [[nodiscard]] <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> getTransform()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_transform;}</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        Model(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        Model(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices,std::vector&lt;uint32_t&gt; indices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        Ref&lt;VertexArray&gt; m_vertexArray;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> m_layout;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> m_transform;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    };</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">    /// @cond INTERNAL</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">     * @brief Used for batch rendering</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">     **/</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">struct </span>MeshHandle {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        uint32_t firstIndex;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        uint32_t indexCount;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        int32_t  vertexOffset;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    };<span class="comment"></span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">    /// @endcond</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"></span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">     * @brief Represents a 3D model with its geometry, layout, and transform</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">     * @note Models cannot be constructed directly, use MeshManager::createModel or MeshManager::loadModel to create them</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="};">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html">   30</a></span>    <span class="keyword">class </span>Model {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">         * @brief Returns the vertex array containing the GPU buffers of this model</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a920114681dcfe1ac5efddea9ea79a168">   35</a></span>        [[nodiscard]] std::shared_ptr&lt;VertexArray&gt; <a class="code hl_function" href="classVectrix_1_1Model.html#a920114681dcfe1ac5efddea9ea79a168">getVertexArray</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_vertexArray; }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment"></span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">         * @brief Returns the buffer layout describing the vertex attributes</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a4982cd599a298d5708abd4f6cef8a695">   40</a></span>        [[nodiscard]] <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> <a class="code hl_function" href="classVectrix_1_1Model.html#a4982cd599a298d5708abd4f6cef8a695">getLayout</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_layout; }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment"></span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">         * @brief Sets the world position of the model</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">         * @param position Position in world space</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a46c92316458871e3ce5b071a454cb996">   46</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Model.html#a46c92316458871e3ce5b071a454cb996">setPosition</a>(glm::vec3 position) { m_transform.translation=position; }<span class="comment"></span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">         * @brief Sets the rotation of the model in radians</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">         * @param rotation Euler angles in radians</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#af4a0014171f96c9d4a88d9fda5b183b3">   51</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Model.html#af4a0014171f96c9d4a88d9fda5b183b3">setRotation</a>(glm::vec3 rotation) { m_transform.rotation=rotation; }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment"></span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">         * @brief Sets the rotation of the model in degrees</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">         * @param rotation Euler angles in degrees</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#aa0029c8e9ee5cb75e5f0d8d84a5f26ba">   57</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Model.html#aa0029c8e9ee5cb75e5f0d8d84a5f26ba">setRotationDeg</a>(<span class="keyword">const</span> glm::vec3 rotation) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            m_transform.rotation.x=rad(rotation.x);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            m_transform.rotation.y=rad(rotation.y);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            m_transform.rotation.z=rad(rotation.z);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        }<span class="comment"></span></div>
 </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>} <span class="comment">// Vectrix</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_MODEL_H</span></div>
-<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00040">Buffer.h:40</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00007">Transform.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1VertexArray_html"><div class="ttname"><a href="classVectrix_1_1VertexArray.html">Vectrix::VertexArray</a></div><div class="ttdef"><b>Definition</b> <a href="VertexArray_8h_source.html#l00008">VertexArray.h:8</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">         * @brief Sets the scale of the model</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">         * @param scale Scale factors on each axis</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a8eb5854f8a0fb5390898ba0a5d35f180">   66</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Model.html#a8eb5854f8a0fb5390898ba0a5d35f180">setScale</a>(<span class="keyword">const</span> glm::vec3 scale) { m_transform.scale=scale; }</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment"></span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">        /** @brief Returns the world position of the model */</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#ad95306330ebec69534c04648bd31e2aa">   69</a></span>        [[nodiscard]] glm::vec3 <a class="code hl_function" href="classVectrix_1_1Model.html#ad95306330ebec69534c04648bd31e2aa">getPosition</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transform.translation; }</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment"></span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">         * @brief Returns the rotation of the model in radians</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#ad288a15ceab193ae1bbde8b2f44f80ad">   74</a></span>        [[nodiscard]] glm::vec3 <a class="code hl_function" href="classVectrix_1_1Model.html#ad288a15ceab193ae1bbde8b2f44f80ad">getRotation</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transform.rotation; }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment"></span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="comment">         * @brief Returns the rotation of the model in degrees</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">         **/</span></div>
+<div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a5f8359052fe08d2e6379bf380075e00a">   79</a></span>        [[nodiscard]] glm::vec3 <a class="code hl_function" href="classVectrix_1_1Model.html#a5f8359052fe08d2e6379bf380075e00a">getRotationDeg</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">return</span> {deg(m_transform.rotation.x),deg(m_transform.rotation.y),deg(m_transform.rotation.z)};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        }</div>
+</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment"></span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="comment">         * @brief Returns the scale of the model</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#ade5cdcc3c9d6afdadd2ac08c20e91943">   86</a></span>        [[nodiscard]] glm::vec3 <a class="code hl_function" href="classVectrix_1_1Model.html#ade5cdcc3c9d6afdadd2ac08c20e91943">getScale</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transform.scale; }</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment"></span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">         * @brief Returns the model matrix</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#af5b2db9dc74ecfe6b2eb9a100e0eec80">   91</a></span>        [[nodiscard]] glm::mat4 <a class="code hl_function" href="classVectrix_1_1Model.html#af5b2db9dc74ecfe6b2eb9a100e0eec80">getModelMatrix</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_transform.modelMatrix(); }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment"></span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">         * @brief Returns the full transform struct of the model</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#ad779eba4d327a8f16f1a180ec9acd73f">   96</a></span>        [[nodiscard]] <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> <a class="code hl_function" href="classVectrix_1_1Model.html#ad779eba4d327a8f16f1a180ec9acd73f">getTransform</a>()<span class="keyword"> const </span>{<span class="keywordflow">return</span> m_transform; }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment"></span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">         * @brief Returns a copy of the CPU-side vertex data</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="comment">         **/</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a1f62ac8d1b0e9433b3ca86a07a252668">  101</a></span>        [[nodiscard]] std::vector&lt;Vertex&gt; <a class="code hl_function" href="classVectrix_1_1Model.html#a1f62ac8d1b0e9433b3ca86a07a252668">getVertices</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_vertices; }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"></span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">        * @brief Returns a copy of the CPU-side index data</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">        **/</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classVectrix_1_1Model.html#a189b10399a07f02dfb222fbf30bec01b">  106</a></span>        [[nodiscard]] std::vector&lt;uint32_t&gt; <a class="code hl_function" href="classVectrix_1_1Model.html#a189b10399a07f02dfb222fbf30bec01b">getIndices</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_indices; }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1MeshManager.html">MeshManager</a>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keyword">static</span> <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a> create(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">static</span> <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a> create(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> std::vector&lt;uint32_t&gt;&amp; indices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keyword">static</span> <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a> load(<span class="keyword">const</span> std::string&amp; pathObj);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>(<span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices,std::vector&lt;uint32_t&gt; indices, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; layout);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        std::shared_ptr&lt;VertexArray&gt; m_vertexArray;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> m_layout;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> m_transform;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        std::vector&lt;Vertex&gt; m_vertices;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        std::vector&lt;uint32_t&gt; m_indices;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    };</div>
+</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>} <span class="comment">// Vectrix</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_MODEL_H</span></div>
+<div class="ttc" id="aTransform_8h_html"><div class="ttname"><a href="Transform_8h.html">Transform.h</a></div><div class="ttdoc">Definition of the Transform class.</div></div>
+<div class="ttc" id="aVertexArray_8h_html"><div class="ttname"><a href="VertexArray_8h.html">VertexArray.h</a></div><div class="ttdoc">Definition of the VertexArray class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdoc">Represent how the vertex data are sent to the shader.</div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00067">Buffer.h:67</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html"><div class="ttname"><a href="classVectrix_1_1MeshManager.html">Vectrix::MeshManager</a></div><div class="ttdoc">Manages Mesh.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8h_source.html#l00020">MeshManager.h:20</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdoc">Represents a 3D model with its geometry, layout, and transform.</div><div class="ttdef"><b>Definition</b> <a href="#l00030">Model.h:30</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a189b10399a07f02dfb222fbf30bec01b"><div class="ttname"><a href="classVectrix_1_1Model.html#a189b10399a07f02dfb222fbf30bec01b">Vectrix::Model::getIndices</a></div><div class="ttdeci">std::vector&lt; uint32_t &gt; getIndices() const</div><div class="ttdoc">Returns a copy of the CPU-side index data.</div><div class="ttdef"><b>Definition</b> <a href="#l00106">Model.h:106</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a1f62ac8d1b0e9433b3ca86a07a252668"><div class="ttname"><a href="classVectrix_1_1Model.html#a1f62ac8d1b0e9433b3ca86a07a252668">Vectrix::Model::getVertices</a></div><div class="ttdeci">std::vector&lt; Vertex &gt; getVertices() const</div><div class="ttdoc">Returns a copy of the CPU-side vertex data.</div><div class="ttdef"><b>Definition</b> <a href="#l00101">Model.h:101</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a46c92316458871e3ce5b071a454cb996"><div class="ttname"><a href="classVectrix_1_1Model.html#a46c92316458871e3ce5b071a454cb996">Vectrix::Model::setPosition</a></div><div class="ttdeci">void setPosition(glm::vec3 position)</div><div class="ttdoc">Sets the world position of the model.</div><div class="ttdef"><b>Definition</b> <a href="#l00046">Model.h:46</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a4982cd599a298d5708abd4f6cef8a695"><div class="ttname"><a href="classVectrix_1_1Model.html#a4982cd599a298d5708abd4f6cef8a695">Vectrix::Model::getLayout</a></div><div class="ttdeci">BufferLayout getLayout() const</div><div class="ttdoc">Returns the buffer layout describing the vertex attributes.</div><div class="ttdef"><b>Definition</b> <a href="#l00040">Model.h:40</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a5f8359052fe08d2e6379bf380075e00a"><div class="ttname"><a href="classVectrix_1_1Model.html#a5f8359052fe08d2e6379bf380075e00a">Vectrix::Model::getRotationDeg</a></div><div class="ttdeci">glm::vec3 getRotationDeg() const</div><div class="ttdoc">Returns the rotation of the model in degrees.</div><div class="ttdef"><b>Definition</b> <a href="#l00079">Model.h:79</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a8eb5854f8a0fb5390898ba0a5d35f180"><div class="ttname"><a href="classVectrix_1_1Model.html#a8eb5854f8a0fb5390898ba0a5d35f180">Vectrix::Model::setScale</a></div><div class="ttdeci">void setScale(const glm::vec3 scale)</div><div class="ttdoc">Sets the scale of the model.</div><div class="ttdef"><b>Definition</b> <a href="#l00066">Model.h:66</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a920114681dcfe1ac5efddea9ea79a168"><div class="ttname"><a href="classVectrix_1_1Model.html#a920114681dcfe1ac5efddea9ea79a168">Vectrix::Model::getVertexArray</a></div><div class="ttdeci">std::shared_ptr&lt; VertexArray &gt; getVertexArray() const</div><div class="ttdoc">Returns the vertex array containing the GPU buffers of this model.</div><div class="ttdef"><b>Definition</b> <a href="#l00035">Model.h:35</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_aa0029c8e9ee5cb75e5f0d8d84a5f26ba"><div class="ttname"><a href="classVectrix_1_1Model.html#aa0029c8e9ee5cb75e5f0d8d84a5f26ba">Vectrix::Model::setRotationDeg</a></div><div class="ttdeci">void setRotationDeg(const glm::vec3 rotation)</div><div class="ttdoc">Sets the rotation of the model in degrees.</div><div class="ttdef"><b>Definition</b> <a href="#l00057">Model.h:57</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_ad288a15ceab193ae1bbde8b2f44f80ad"><div class="ttname"><a href="classVectrix_1_1Model.html#ad288a15ceab193ae1bbde8b2f44f80ad">Vectrix::Model::getRotation</a></div><div class="ttdeci">glm::vec3 getRotation() const</div><div class="ttdoc">Returns the rotation of the model in radians.</div><div class="ttdef"><b>Definition</b> <a href="#l00074">Model.h:74</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_ad779eba4d327a8f16f1a180ec9acd73f"><div class="ttname"><a href="classVectrix_1_1Model.html#ad779eba4d327a8f16f1a180ec9acd73f">Vectrix::Model::getTransform</a></div><div class="ttdeci">Transform getTransform() const</div><div class="ttdoc">Returns the full transform struct of the model.</div><div class="ttdef"><b>Definition</b> <a href="#l00096">Model.h:96</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_ad95306330ebec69534c04648bd31e2aa"><div class="ttname"><a href="classVectrix_1_1Model.html#ad95306330ebec69534c04648bd31e2aa">Vectrix::Model::getPosition</a></div><div class="ttdeci">glm::vec3 getPosition() const</div><div class="ttdoc">Returns the world position of the model.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">Model.h:69</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_ade5cdcc3c9d6afdadd2ac08c20e91943"><div class="ttname"><a href="classVectrix_1_1Model.html#ade5cdcc3c9d6afdadd2ac08c20e91943">Vectrix::Model::getScale</a></div><div class="ttdeci">glm::vec3 getScale() const</div><div class="ttdoc">Returns the scale of the model.</div><div class="ttdef"><b>Definition</b> <a href="#l00086">Model.h:86</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_af4a0014171f96c9d4a88d9fda5b183b3"><div class="ttname"><a href="classVectrix_1_1Model.html#af4a0014171f96c9d4a88d9fda5b183b3">Vectrix::Model::setRotation</a></div><div class="ttdeci">void setRotation(glm::vec3 rotation)</div><div class="ttdoc">Sets the rotation of the model in radians.</div><div class="ttdef"><b>Definition</b> <a href="#l00051">Model.h:51</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_af5b2db9dc74ecfe6b2eb9a100e0eec80"><div class="ttname"><a href="classVectrix_1_1Model.html#af5b2db9dc74ecfe6b2eb9a100e0eec80">Vectrix::Model::getModelMatrix</a></div><div class="ttdeci">glm::mat4 getModelMatrix() const</div><div class="ttdoc">Returns the model matrix.</div><div class="ttdef"><b>Definition</b> <a href="#l00091">Model.h:91</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdoc">This class represent the 3D information about an object.</div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00016">Transform.h:16</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Models</b></li><li class="navelem"><b>Model.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Rendering</b></li><li class="navelem"><b>Mesh</b></li><li class="navelem"><a href="Model_8h.html">Model.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

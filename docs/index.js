@@ -1,15 +1,31 @@
 var index =
 [
-    [ "Main modules", "index.html#autotoc_md0", null ],
-    [ "Rendering System Guide", "rendering_overview.html", [
-      [ "Overview", "rendering_overview.html#autotoc_md2", [
-        [ "Architecture", "rendering_overview.html#autotoc_md3", [
-          [ "1. <a class=\"el\" href=\"group__rendering.html\" title=\"Graphic rendering\">Graphic rendering</a>", "rendering_overview.html#autotoc_md4", null ],
-          [ "2. <a class=\"el\" href=\"group__shaders.html\" title=\"Shaders\">Shaders</a>", "rendering_overview.html#autotoc_md5", null ],
-          [ "3. <a class=\"el\" href=\"group__buffers.html\" title=\"Buffers\">Buffers</a>", "rendering_overview.html#autotoc_md6", null ],
-          [ "4. <a class=\"el\" href=\"group__textures.html\" title=\"Textures\">Textures</a>", "rendering_overview.html#autotoc_md7", null ]
-        ] ]
+    [ "Modules", "index.html#autotoc_md6", null ],
+    [ "Different modules available", "docs_home.html", "docs_home" ],
+    [ "Tools Guide", "tools_overview.html", null ],
+    [ "Changelog", "changelog.html", [
+      [ "v0.4.0 — (12-04-2026)", "changelog.html#v0_4_0", [
+        [ "autotoc_md1", "changelog.html#autotoc_md1", null ],
+        [ "Added", "changelog.html#v0_4_0_added", null ],
+        [ "Changed", "changelog.html#v0_4_0_changed", null ],
+        [ "Fixed", "changelog.html#v0_4_0_fixed", null ],
+        [ "Removed", "changelog.html#v0_4_0_removed", null ]
+      ] ],
+      [ "v0.3.0 — (14-03-2026)", "changelog.html#v0_3_0", [
+        [ "Added", "changelog.html#v0_3_0_added", null ],
+        [ "Changed", "changelog.html#v0_3_0_changed", null ],
+        [ "Fixed", "changelog.html#v0_3_0_fixed", null ],
+        [ "Removed", "changelog.html#v0_3_0_removed", null ]
+      ] ],
+      [ "v0.2.0 — (04-03-2026)", "changelog.html#v0_2_0", [
+        [ "Added", "changelog.html#v0_2_0_added", null ],
+        [ "Changed", "changelog.html#v0_2_0_changed", null ],
+        [ "Fixed", "changelog.html#v0_2_0_fixed", null ]
+      ] ],
+      [ "v0.1.0 — (19-02-2026)", "changelog.html#v0_1_0", [
+        [ "Added", "changelog.html#v0_1_0_added", null ],
+        [ "Changed", "changelog.html#v0_1_0_changed", null ],
+        [ "Removed", "changelog.html#v0_1_0_removed", null ]
       ] ]
-    ] ],
-    [ "Tools Guide", "tools_overview.html", null ]
+    ] ]
 ];

@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::Window Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -108,6 +110,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a71a839af145a3422f319feca8e07b943" id="r_a71a839af145a3422f319feca8e07b943"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a71a839af145a3422f319feca8e07b943">wasWindowResized</a> () const</td></tr>
 <tr class="memitem:ae8088e36c2984e3a728938b47a6f2f18" id="r_ae8088e36c2984e3a728938b47a6f2f18"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae8088e36c2984e3a728938b47a6f2f18">resetWindowResizedFlag</a> ()</td></tr>
 <tr class="memitem:ad8fd77b3740c967e67ce8b5c9fe95bbc" id="r_ad8fd77b3740c967e67ce8b5c9fe95bbc"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><a class="el" href="#ad8fd77b3740c967e67ce8b5c9fe95bbc">getNativeWindow</a> () const</td></tr>
+<tr class="memitem:a126bfb5905fbf84af0907f17591aa5a6" id="r_a126bfb5905fbf84af0907f17591aa5a6"><td class="memItemLeft">GraphicsContext &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a126bfb5905fbf84af0907f17591aa5a6">getGraphicContext</a> () const</td></tr>
 <tr class="memitem:a73e606734424fb72d0d2c70d5490abdf" id="r_a73e606734424fb72d0d2c70d5490abdf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a73e606734424fb72d0d2c70d5490abdf">setEventCallback</a> (const EventCallbackFn &amp;callback)</td></tr>
 <tr class="memitem:a48bc13a4334e9bd4d135e16278a16ed7" id="r_a48bc13a4334e9bd4d135e16278a16ed7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a48bc13a4334e9bd4d135e16278a16ed7">setVSync</a> (bool enabled)</td></tr>
 <tr class="memitem:acbf0b822c120343fb58394d6ce46423e" id="r_acbf0b822c120343fb58394d6ce46423e"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#acbf0b822c120343fb58394d6ce46423e">isVSync</a> () const</td></tr>
@@ -117,7 +120,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00022">22</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00023">23</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="a407bf5b87a019196037994f43ba1b440" name="a407bf5b87a019196037994f43ba1b440"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a407bf5b87a019196037994f43ba1b440">&#9670;&#160;</a></span>EventCallbackFn</h2>
@@ -131,7 +134,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00024">24</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00025">25</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -174,12 +177,39 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Window_8cpp_source.html#l00185">185</a> of file <a class="el" href="Window_8cpp_source.html">Window.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a126bfb5905fbf84af0907f17591aa5a6" name="a126bfb5905fbf84af0907f17591aa5a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a126bfb5905fbf84af0907f17591aa5a6">&#9670;&#160;</a></span>getGraphicContext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GraphicsContext &amp; Vectrix::Window::getGraphicContext </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00034">34</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00043">43</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -206,7 +236,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00032">32</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00033">33</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -233,7 +263,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00043">43</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00042">42</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -260,7 +290,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00031">31</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00032">32</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -406,7 +436,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00041">41</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00040">40</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +536,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00039">39</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Window_8h_source.html#l00038">38</a> of file <a class="el" href="Window_8h_source.html">Window.h</a>.</p>
 
 </div>
 </div>

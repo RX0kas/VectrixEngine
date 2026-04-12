@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['profiler_2eh_0',['Profiler.h',['../Profiler_8h.html',1,'']]]
+  ['buffer_2eh_0',['Buffer.h',['../Buffer_8h.html',1,'']]]
 ];

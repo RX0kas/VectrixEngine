@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Camera/PerspectiveCameraController.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,26 +95,28 @@ $(function(){initNavTree('PerspectiveCameraController_8cpp_source.html','',''); 
   <div class="headertitle"><div class="title">PerspectiveCameraController.cpp</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;PerspectiveCameraController.h&quot;</span></div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="PerspectiveCameraController_8h.html">PerspectiveCameraController.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="Profiler_8h.html">Vectrix/Debug/Profiler.h</a>&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Vectrix/Input/Input.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Input/KeyCodes.h&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    PerspectiveCameraController::PerspectiveCameraController(<span class="keywordtype">float</span> cameraTranslationSpeed,<span class="keywordtype">float</span> cameraRotationSpeed) : m_cameraRotationSpeed(cameraRotationSpeed),m_cameraMoveSpeed(cameraTranslationSpeed) {</div>
+<div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="classVectrix_1_1PerspectiveCameraController.html#af3afadba024e59e819f1032b18288a45">    8</a></span>    <a class="code hl_function" href="classVectrix_1_1PerspectiveCameraController.html#af3afadba024e59e819f1032b18288a45">PerspectiveCameraController::PerspectiveCameraController</a>(<span class="keywordtype">float</span> cameraTranslationSpeed,<span class="keywordtype">float</span> cameraRotationSpeed) : m_cameraRotationSpeed(cameraRotationSpeed),m_cameraMoveSpeed(cameraTranslationSpeed) {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    }</div>
+</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keywordtype">void</span> PerspectiveCameraController::onEvent(Event &amp;e) {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keywordtype">void</span> PerspectiveCameraController::onEvent(<a class="code hl_class" href="classVectrix_1_1Event.html">Event</a> &amp;e) {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        EventDispatcher dispatcher(e);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        dispatcher.Dispatch&lt;WindowResizeEvent&gt;(VC_BIND_EVENT_FN_RETURN(onWindowResized));</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <a class="code hl_class" href="classVectrix_1_1EventDispatcher.html">EventDispatcher</a> dispatcher(e);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        dispatcher.Dispatch&lt;<a class="code hl_class" href="classVectrix_1_1WindowResizeEvent.html">WindowResizeEvent</a>&gt;(VC_BIND_EVENT_FN_RETURN(onWindowResized));</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    }</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">void</span> PerspectiveCameraController::onUpdate(DeltaTime dt) {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        glm::vec3 cameraRot = m_camera.getRotation();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        glm::vec3 cameraRot = m_camera.<a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a657df1be0d0b62de1d6cea3826a09e35">getRotation</a>();</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordflow">if</span> (Input::isKeyPressed(VC_KEY_LEFT))</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            cameraRot.y -= m_cameraRotationSpeed * dt;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordflow">if</span> (Input::isKeyPressed(VC_KEY_RIGHT))</div>
@@ -121,7 +125,7 @@ $(function(){initNavTree('PerspectiveCameraController_8cpp_source.html','',''); 
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            cameraRot.x += m_cameraRotationSpeed * dt;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">if</span> (Input::isKeyPressed(VC_KEY_DOWN))</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            cameraRot.x -= m_cameraRotationSpeed * dt;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        m_camera.setRotation(cameraRot);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        m_camera.<a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5">setRotation</a>(cameraRot);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keywordtype">float</span> yaw = cameraRot.y;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordtype">float</span> pitch = cameraRot.x;</div>
@@ -162,18 +166,27 @@ $(function(){initNavTree('PerspectiveCameraController_8cpp_source.html','',''); 
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            m_camera.setPosition(m_camera.getPosition() + delta);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            m_camera.<a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09">setPosition</a>(m_camera.<a class="code hl_function" href="classVectrix_1_1PerspectiveCamera.html#a1440ad7004efdb44edc8df726401bdac">getPosition</a>() + delta);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        }</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">bool</span> PerspectiveCameraController::onWindowResized(WindowResizeEvent &amp;e) {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordtype">bool</span> PerspectiveCameraController::onWindowResized(<a class="code hl_class" href="classVectrix_1_1WindowResizeEvent.html">WindowResizeEvent</a> &amp;e) {</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        m_camera.recalculateMatrices();</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    }</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>} <span class="comment">// Vectrix</span></div>
+<div class="ttc" id="aPerspectiveCameraController_8h_html"><div class="ttname"><a href="PerspectiveCameraController_8h.html">PerspectiveCameraController.h</a></div><div class="ttdoc">Definition of the default camera controller.</div></div>
 <div class="ttc" id="aProfiler_8h_html"><div class="ttname"><a href="Profiler_8h.html">Profiler.h</a></div><div class="ttdoc">Class that provides time analysis on how the application and the engine run.</div></div>
 <div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00217">Profiler.h:217</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1EventDispatcher_html"><div class="ttname"><a href="classVectrix_1_1EventDispatcher.html">Vectrix::EventDispatcher</a></div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00058">Event.h:59</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Event_html"><div class="ttname"><a href="classVectrix_1_1Event.html">Vectrix::Event</a></div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00043">Event.h:43</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCameraController_html_af3afadba024e59e819f1032b18288a45"><div class="ttname"><a href="classVectrix_1_1PerspectiveCameraController.html#af3afadba024e59e819f1032b18288a45">Vectrix::PerspectiveCameraController::PerspectiveCameraController</a></div><div class="ttdeci">PerspectiveCameraController(float cameraTranslationSpeed=5.0f, float cameraRotationSpeed=5.0f)</div><div class="ttdoc">This creates a new Camera controller with a perspective projection.</div><div class="ttdef"><b>Definition</b> <a href="#l00008">PerspectiveCameraController.cpp:8</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a1440ad7004efdb44edc8df726401bdac"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a1440ad7004efdb44edc8df726401bdac">Vectrix::PerspectiveCamera::getPosition</a></div><div class="ttdeci">const glm::vec3 &amp; getPosition() const</div><div class="ttdoc">This function return the current world position of the camera.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00028">PerspectiveCamera.h:28</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a1ba6f1ad5a930562b71482ca7a467e09"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09">Vectrix::PerspectiveCamera::setPosition</a></div><div class="ttdeci">void setPosition(const glm::vec3 &amp;position)</div><div class="ttdoc">This function sets the new world position of the camera.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00034">PerspectiveCamera.h:34</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a657df1be0d0b62de1d6cea3826a09e35"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a657df1be0d0b62de1d6cea3826a09e35">Vectrix::PerspectiveCamera::getRotation</a></div><div class="ttdeci">glm::vec3 getRotation() const</div><div class="ttdoc">This function return the current rotation of the camera.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00039">PerspectiveCamera.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html_a92fa72fca13066405ea53ae63ecc4ec5"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5">Vectrix::PerspectiveCamera::setRotation</a></div><div class="ttdeci">void setRotation(glm::vec3 rotation)</div><div class="ttdoc">This function sets the new rotation of the camera.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00044">PerspectiveCamera.h:44</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1WindowResizeEvent_html"><div class="ttname"><a href="classVectrix_1_1WindowResizeEvent.html">Vectrix::WindowResizeEvent</a></div><div class="ttdef"><b>Definition</b> <a href="WindowEvent_8h_source.html#l00017">WindowEvent.h:17</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Deprecated List</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -94,8 +96,10 @@ $(function(){initNavTree('deprecated.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt>Member <a class="el" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">Vectrix::Renderer::submit</a>  (<a class="el" href="classVectrix_1_1Shader.html" title="This class represent a shader.">Shader</a> &amp;shader, const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;vertexArray, <a class="el" href="classVectrix_1_1Transform.html">Transform</a> transform=<a class="el" href="classVectrix_1_1Transform.html">Transform</a>{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})</dt>
-<dd><a class="anchor" id="_deprecated000001"></a>Will be removed when the material system will be created, please use <a class="el" href="classVectrix_1_1Model.html" title="Model">Model</a> and <a class="el" href="classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676" title="Vectrix::Renderer::submit(Shader&amp; shader, Model&amp; model)">Vectrix::Renderer::submit(Shader&amp; shader, Model&amp; model)</a> instead </dd>
+<dt>Member <a class="el" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">Vectrix::Renderer::submit</a>  (<a class="el" href="classVectrix_1_1Shader.html" title="This class represent a shader.">Shader</a> &amp;shader, const std::shared_ptr&lt; VertexArray &gt; &amp;vertexArray, const <a class="el" href="classVectrix_1_1Transform.html" title="This class represent the 3D information about an object.">Transform</a> &amp;transform=<a class="el" href="classVectrix_1_1Transform.html" title="This class represent the 3D information about an object.">Transform</a>{ glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f) })</dt>
+<dd><a class="anchor" id="_deprecated000004"></a>Will be removed when the material system will be created  </dd>
+<dt>Member <a class="el" href="classVectrix_1_1Transform.html#aed1ff4126e16337e83911db9181702e6">Vectrix::Transform::mat4</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000003"></a>Please use <a class="el" href="classVectrix_1_1Transform.html#ab3e027f3b612308ff171e2527985ec6f" title="This function return the model matrix.">Transform::modelMatrix()</a> instead </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

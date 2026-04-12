@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['setcameramovespeed_0',['setCameraMoveSpeed',['../classVectrix_1_1PerspectiveCameraController.html#a6e27d1529c53e5a445311cd5f714cf30',1,'Vectrix::PerspectiveCameraController']]],
+  ['setcamerarotationspeed_1',['setCameraRotationSpeed',['../classVectrix_1_1PerspectiveCameraController.html#a0760a357132aa052d170f64104c7c12d',1,'Vectrix::PerspectiveCameraController']]],
+  ['setcamfar_2',['setCamFar',['../classVectrix_1_1PerspectiveCamera.html#aa715ce191754777321c4104c1dc27d67',1,'Vectrix::PerspectiveCamera']]],
+  ['setcamnear_3',['setCamNear',['../classVectrix_1_1PerspectiveCamera.html#a926a58ec5a753bace29ef5e5c909e7f1',1,'Vectrix::PerspectiveCamera']]],
+  ['setclearcolor_4',['setClearColor',['../classVectrix_1_1RenderCommand.html#a4a7883c329e82a955808454bee544756',1,'Vectrix::RenderCommand']]],
+  ['setfov_5',['setFOV',['../classVectrix_1_1PerspectiveCamera.html#a0ff6cf240da55bdcd9fb4dc0cd63aaea',1,'Vectrix::PerspectiveCamera']]],
+  ['setindexbuffer_6',['setIndexBuffer',['../classVectrix_1_1VertexArray.html#a74f279a8fe4d938f2ab81462143bde56',1,'Vectrix::VertexArray']]],
+  ['setlayout_7',['setLayout',['../classVectrix_1_1VertexBuffer.html#a6b05500f43342588f4c1a700fd7ae5c1',1,'Vectrix::VertexBuffer']]],
+  ['setposition_8',['setPosition',['../classVectrix_1_1PerspectiveCamera.html#a1ba6f1ad5a930562b71482ca7a467e09',1,'Vectrix::PerspectiveCamera::setPosition()'],['../classVectrix_1_1Model.html#a46c92316458871e3ce5b071a454cb996',1,'Vectrix::Model::setPosition()']]],
+  ['setrotation_9',['setRotation',['../classVectrix_1_1PerspectiveCamera.html#a92fa72fca13066405ea53ae63ecc4ec5',1,'Vectrix::PerspectiveCamera::setRotation()'],['../classVectrix_1_1Model.html#af4a0014171f96c9d4a88d9fda5b183b3',1,'Vectrix::Model::setRotation(glm::vec3 rotation)']]],
+  ['setrotationdeg_10',['setRotationDeg',['../classVectrix_1_1Model.html#aa0029c8e9ee5cb75e5f0d8d84a5f26ba',1,'Vectrix::Model']]],
+  ['setscale_11',['setScale',['../classVectrix_1_1Model.html#a8eb5854f8a0fb5390898ba0a5d35f180',1,'Vectrix::Model']]],
+  ['settexture_12',['setTexture',['../classVectrix_1_1Shader.html#a46a0fa9071c38022bb3634202c687344',1,'Vectrix::Shader']]],
+  ['setuniform_13',['setUniform',['../classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472',1,'Vectrix::Shader']]],
+  ['setuniform1f_14',['setUniform1f',['../classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f',1,'Vectrix::Shader']]],
+  ['setuniform1i_15',['setUniform1i',['../classVectrix_1_1Shader.html#a775b39ed0f88819cca241610b8696756',1,'Vectrix::Shader']]],
+  ['setuniform1u_16',['setUniform1u',['../classVectrix_1_1Shader.html#a017abdd2eccc15c4c501a117c3ba3b3a',1,'Vectrix::Shader']]],
+  ['setuniform2f_17',['setUniform2f',['../classVectrix_1_1Shader.html#abdff206cba9d44deea50dd54cca15114',1,'Vectrix::Shader']]],
+  ['setuniform3f_18',['setUniform3f',['../classVectrix_1_1Shader.html#a5a36bed2c7814144d4d00c341118110c',1,'Vectrix::Shader']]],
+  ['setuniform4f_19',['setUniform4f',['../classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3',1,'Vectrix::Shader']]],
+  ['setuniformbool_20',['setUniformBool',['../classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54',1,'Vectrix::Shader']]],
+  ['setuniformmat4f_21',['setUniformMat4f',['../classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8',1,'Vectrix::Shader']]],
+  ['setviewdirection_22',['setViewDirection',['../classVectrix_1_1PerspectiveCamera.html#a13085099f9636666ffbb6c4cc5c2745f',1,'Vectrix::PerspectiveCamera']]],
+  ['setviewtarget_23',['setViewTarget',['../classVectrix_1_1PerspectiveCamera.html#aeef3246fd9cf5d90f30f87753b8272de',1,'Vectrix::PerspectiveCamera']]],
+  ['submit_24',['submit',['../classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8',1,'Vectrix::Renderer::submit(Shader &amp;shader, const std::shared_ptr&lt; VertexArray &gt; &amp;vertexArray, const Transform &amp;transform=Transform{ glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f) })'],['../classVectrix_1_1Renderer.html#aea094a5dcb5e76baddd104ac8d23a079',1,'Vectrix::Renderer::submit(Shader &amp;shader, const Model &amp;model)']]]
+];

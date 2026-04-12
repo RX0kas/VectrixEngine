@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix::VertexBuffer Class Reference</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -93,26 +95,35 @@ $(function(){initNavTree('classVectrix_1_1VertexBuffer.html','',''); });
   <div class="headertitle"><div class="title">Vectrix::VertexBuffer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Abstract interface for a GPU vertex buffer.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Buffer_8h_source.html">Buffer.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a183f2e11a96cef299859a6263ba7dc4c" id="r_a183f2e11a96cef299859a6263ba7dc4c"><td class="memItemLeft"><a id="a183f2e11a96cef299859a6263ba7dc4c" name="a183f2e11a96cef299859a6263ba7dc4c"></a>
 void&#160;</td><td class="memItemRight"><b>bind</b> ()</td></tr>
+<tr class="memdesc:a183f2e11a96cef299859a6263ba7dc4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binds the vertex buffer for use in the current draw call. <br /></td></tr>
 <tr class="memitem:afa55aa0c939a1ac410e990cbc9dc3ecf" id="r_afa55aa0c939a1ac410e990cbc9dc3ecf"><td class="memItemLeft"><a id="afa55aa0c939a1ac410e990cbc9dc3ecf" name="afa55aa0c939a1ac410e990cbc9dc3ecf"></a>
 const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;&#160;</td><td class="memItemRight"><b>getLayout</b> () const</td></tr>
-<tr class="memitem:a6b05500f43342588f4c1a700fd7ae5c1" id="r_a6b05500f43342588f4c1a700fd7ae5c1"><td class="memItemLeft"><a id="a6b05500f43342588f4c1a700fd7ae5c1" name="a6b05500f43342588f4c1a700fd7ae5c1"></a>
-void&#160;</td><td class="memItemRight"><b>setLayout</b> (const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout)</td></tr>
+<tr class="memdesc:afa55aa0c939a1ac410e990cbc9dc3ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the buffer layout describing the vertex attributes. <br /></td></tr>
+<tr class="memitem:a6b05500f43342588f4c1a700fd7ae5c1" id="r_a6b05500f43342588f4c1a700fd7ae5c1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a6b05500f43342588f4c1a700fd7ae5c1">setLayout</a> (const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;layout)</td></tr>
+<tr class="memdesc:a6b05500f43342588f4c1a700fd7ae5c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the buffer layout describing the vertex attributes.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
-<tr class="memitem:a8ea1d3165202f9e93495fe2f69ac3bd9" id="r_a8ea1d3165202f9e93495fe2f69ac3bd9"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a8ea1d3165202f9e93495fe2f69ac3bd9">create</a> (const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices, uint32_t size)</td></tr>
+<tr class="memitem:aab659f27219728233cdd75b5fced39df" id="r_aab659f27219728233cdd75b5fced39df"><td class="memItemLeft">static std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aab659f27219728233cdd75b5fced39df">create</a> (const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices, uint32_t size)</td></tr>
+<tr class="memdesc:aab659f27219728233cdd75b5fced39df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a>.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00072">72</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+<div class="textblock"><p>Abstract interface for a GPU vertex buffer. </p>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00116">116</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a8ea1d3165202f9e93495fe2f69ac3bd9" name="a8ea1d3165202f9e93495fe2f69ac3bd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ea1d3165202f9e93495fe2f69ac3bd9">&#9670;&#160;</a></span>create()</h2>
+<a id="aab659f27219728233cdd75b5fced39df" name="aab659f27219728233cdd75b5fced39df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab659f27219728233cdd75b5fced39df">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -121,7 +132,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> * Vectrix::VertexBuffer::create </td>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1VertexBuffer.html">VertexBuffer</a> &gt; Vectrix::VertexBuffer::create </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>, </td>
         </tr>
@@ -138,7 +149,44 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Function to create a new <a class="el" href="classVectrix_1_1VertexBuffer.html" title="Abstract interface for a GPU vertex buffer.">VertexBuffer</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vertices</td><td>List of vertices to upload to the GPU </td></tr>
+    <tr><td class="paramname">size</td><td>Total size in bytes of the vertex data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A shared pointer to the created vertex buffer </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="Buffer_8cpp_source.html#l00012">12</a> of file <a class="el" href="Buffer_8cpp_source.html">Buffer.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Renderer_8h_source.html#l00069">Vectrix::Renderer::getAPI()</a>.</p>
+
+</div>
+</div>
+<a id="a6b05500f43342588f4c1a700fd7ae5c1" name="a6b05500f43342588f4c1a700fd7ae5c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b05500f43342588f4c1a700fd7ae5c1">&#9670;&#160;</a></span>setLayout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::VertexBuffer::setLayout </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>layout</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the buffer layout describing the vertex attributes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">layout</td><td>The layout to assign to this buffer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

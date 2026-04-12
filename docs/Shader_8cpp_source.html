@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Shaders/Shader.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -99,7 +101,7 @@ $(function(){initNavTree('Shader_8cpp_source.html','',''); });
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>* Shader::create(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> std::string&amp; vertexPath, <span class="keyword">const</span> std::string&amp; fragmentPath,<a class="code hl_class" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> layout,<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; buffer_layout,<span class="keywordtype">bool</span> affectedByCamera) {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    std::shared_ptr&lt;Shader&gt; Shader::create(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> std::string&amp; vertexPath, <span class="keyword">const</span> std::string&amp; fragmentPath,<a class="code hl_class" href="classVectrix_1_1ShaderUniformLayout.html">ShaderUniformLayout</a> layout,<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&amp; buffer_layout,<span class="keywordtype">bool</span> affectedByCamera) {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>        <span class="keywordflow">if</span> (affectedByCamera) {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>            layout.add(<span class="stringliteral">&quot;vc_cameraTransform&quot;</span>,ShaderUniformType::Mat4);</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        }</div>
@@ -107,19 +109,19 @@ $(function(){initNavTree('Shader_8cpp_source.html','',''); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordflow">switch</span> (<a class="code hl_function" href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Renderer::getAPI</a>())</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>            <span class="keywordflow">case</span> RendererAPI::API::None:    VC_CORE_ERROR(<span class="stringliteral">&quot;RendererAPI::None is currently not supported!&quot;</span>);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            <span class="keywordflow">case</span> RendererAPI::API::Vulkan:  <span class="keywordflow">return</span> <span class="keyword">new</span> VulkanShader(name, vertexPath, fragmentPath,layout,buffer_layout,affectedByCamera);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            <span class="keywordflow">case</span> RendererAPI::API::Vulkan:  <span class="keywordflow">return</span> std::make_unique&lt;VulkanShader&gt;(name, vertexPath, fragmentPath,layout,buffer_layout,affectedByCamera);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        }</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        VC_CORE_ERROR(<span class="stringliteral">&quot;Unknown RendererAPI!&quot;</span>);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    }</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    }</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
 <div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Main renderer class definition.</div></div>
 <div class="ttc" id="aShader_8h_html"><div class="ttname"><a href="Shader_8h.html">Shader.h</a></div><div class="ttdoc">Definition of the shader class.</div></div>
-<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00040">Buffer.h:40</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_a4b8aa3aeb37890d0eb26359159c78f9e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Vectrix::Renderer::getAPI</a></div><div class="ttdeci">static RendererAPI::API getAPI()</div><div class="ttdoc">Get current graphics API.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8h_source.html#l00065">Renderer.h:65</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1BufferLayout_html"><div class="ttname"><a href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></div><div class="ttdoc">Represent how the vertex data are sent to the shader.</div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00067">Buffer.h:67</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_a4b8aa3aeb37890d0eb26359159c78f9e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e">Vectrix::Renderer::getAPI</a></div><div class="ttdeci">static RendererAPI::API getAPI()</div><div class="ttdoc">Get current graphics API.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8h_source.html#l00069">Renderer.h:69</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1ShaderUniformLayout_html"><div class="ttname"><a href="classVectrix_1_1ShaderUniformLayout.html">Vectrix::ShaderUniformLayout</a></div><div class="ttdef"><b>Definition</b> <a href="ShaderUniformLayout_8h_source.html#l00041">ShaderUniformLayout.h:41</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Shader_html"><div class="ttname"><a href="classVectrix_1_1Shader.html">Vectrix::Shader</a></div><div class="ttdoc">This class represent a shader.</div><div class="ttdef"><b>Definition</b> <a href="Shader_8h_source.html#l00028">Shader.h:28</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

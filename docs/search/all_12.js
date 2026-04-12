@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['parse_0',['parse',['../classVectrix_1_1Json.html#a08cf986f79a59623f4c06d7d7e369aec',1,'Vectrix::Json']]],
-  ['perspectivecamera_1',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
-  ['perspectivecameracontroller_2',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]],
-  ['profiler_3',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
-  ['profiler_2eh_4',['Profiler.h',['../Profiler_8h.html',1,'']]],
-  ['profilerresult_5',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
-  ['profilersession_6',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]]
+  ['name_0',['name',['../structVectrix_1_1BufferElement.html#ac6560e190ad0406c8be8950b4d57e85a',1,'Vectrix::BufferElement::name'],['../structVectrix_1_1UniformElement.html#a1ea8def54794a12ccf9e7416b61144be',1,'Vectrix::UniformElement::name']]],
+  ['normal_1',['normal',['../structVectrix_1_1Vertex.html#a2393c8ee21775d5e8be58a7802f5ab41',1,'Vectrix::Vertex']]],
+  ['normalmatrix_2',['normalMatrix',['../classVectrix_1_1Transform.html#a4028a0f086fa2c08d1b0c8d196d00b1f',1,'Vectrix::Transform']]]
 ];

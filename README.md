@@ -1,6 +1,6 @@
-# Vectrix
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Version](https://img.shields.io/badge/version-0.3.1-green.svg)
+![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.4.1-green.svg)
 
 An engine made to run all of my little graphics project
 
@@ -12,12 +12,14 @@ Current Working branch: [feature/batch_rendering](https://github.com/RX0kas/Vect
  - Vulkan powered rendering
  - OBJ Model Loading
  - Runtime shader compilation
+ - Batch Rendering
 
 ## Prerequisites
 - [CMake 3.20](https://cmake.org/download/)
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
 - [Python 3](https://www.python.org/downloads/)
 - Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
+- A GPU compatible with Vulkan 1.3 and SPIRV 1.6
 
 ## Installation
 ```bash
@@ -66,17 +68,15 @@ class CustomLayer : public Vectrix::Layer
 {
 public:
     CustomLayer() : Layer("Example") {
-        // Load a model and texture
-        m_model = std::make_unique<Vectrix::Model>(Vectrix::Model::load("./mymodel.obj"));
-        Vectrix::TextureManager::instance().createTexture("mainT","./mytexture.png");
+        // Load a model
+        m_model = Vectrix::MeshManager::loadModel("mymodel","./mymodel.obj");
         // Create a layout for the main shader
         Vectrix::ShaderUniformLayout layout;
         layout.add("time",Vectrix::ShaderUniformType::Float);
-        // Create the shader and tell it how to load Obj Files
-        Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout, Vectrix::getTinyObjLayout(),true);
-        // Save the shader in a variable
-        m_main = Vectrix::ShaderManager::instance().get("main");
-        m_texture = Vectrix::TextureManager::instance().get("mainT");
+        // Create the shader
+        m_main = Vectrix::ShaderManager::createShader("main", "./main.vert", "./main.frag",layout);
+        // Create the texture
+        m_texture = Vectrix::TextureManager::instance().createTexture("mainT","./mytexture.png");;
     }
 
     // Do something each frame
@@ -117,7 +117,7 @@ public:
     ~TestApp() override = default;
 
 private:
-    Vectrix::Ref<CustomLayer> m_exampleLayer;
+    Vectrix::shared_ptr<CustomLayer> m_exampleLayer;
 };
 Vectrix::Application* Vectrix::createApplication()
 {
@@ -128,7 +128,8 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ```
 ## Documentation
 
-- [API Documentation (TODO)]()
+- [API Documentation (In progress)](https://rx0kas.github.io/)
+- [Examples (will be published when the editor is done)]()
 
 
 ## Roadmap
@@ -136,18 +137,21 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
 - [x] Make a profiler
-- [ ] Make a profiler viewer tool
+- [ ] Add an editor
 - [ ] Create the API documentation (In progress)
 - [ ] Add a material system
-- [ ] Add an editor
+- [ ] Make a profiler viewer tool
 
 ## Known Issues
 
 - Multi-Viewport is disabled on Linux due to numerous compatibility issues
+- Synchronization bug
 
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration
 
+## Use of AI
+AI has only been used as a review tool and each modification is analyzed
 
 ## Third-party libraries
 - [GLFW](https://github.com/glfw/glfw): to create the window

@@ -9,6 +9,6 @@ var dir_fe41a5a62e18da5e7e5fdfc654351d7c =
     [ "Rendering", "dir_4aa01486a295e7b0b42bebe6d16d0719.html", "dir_4aa01486a295e7b0b42bebe6d16d0719" ],
     [ "Utils", "dir_55dc9bd985ae3920f4b5f7d9fececaec.html", "dir_55dc9bd985ae3920f4b5f7d9fececaec" ],
     [ "Application.cpp", "Application_8cpp_source.html", null ],
-    [ "Application.h", "Application_8h_source.html", null ],
+    [ "Application.h", "Application_8h.html", "Application_8h" ],
     [ "EntryPoint.h", "EntryPoint_8h_source.html", null ]
 ];

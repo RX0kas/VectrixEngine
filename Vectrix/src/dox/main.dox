@@ -1,16 +1,9 @@
 /**
  * @mainpage Documentation of the Vectrix Engine
  *
- * # Main modules
- *
- * @li @subpage rendering_overview "Graphic rendering"
+ * # Modules
+ * @li @subpage docs_home "API Documentation"
  * @li @subpage tools_overview "Tools"
- * @li @subpage input_overview "Input (Later)"
- * @li @subpage event_overview "Events (Later)"
- *
- * ---
- *
- * @see @ref rendering
- * @see @ref input
- * @see @ref event
+ * @li @subpage changelog "What's new"
+ * @li @subpage get_started "Get started (WIP)"
  */

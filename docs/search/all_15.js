@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['texture_0',['Texture',['../classVectrix_1_1Texture.html',1,'Vectrix']]],
-  ['texture_2eh_1',['Texture.h',['../Texture_8h.html',1,'']]],
-  ['texturemanager_2',['TextureManager',['../classVectrix_1_1TextureManager.html',1,'Vectrix']]],
-  ['texturemanager_2eh_3',['TextureManager.h',['../TextureManager_8h.html',1,'']]],
-  ['textures_4',['Textures',['../group__textures.html',1,'']]],
-  ['textures_5',['4. &lt;a class=&quot;el&quot; href=&quot;group__textures.html&quot; title=&quot;Textures&quot;&gt;Textures&lt;/a&gt;',['../rendering_overview.html#autotoc_md7',1,'']]],
-  ['the_20vectrix_20engine_6',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
-  ['tools_7',['Tools',['../group__debugtools.html',1,'Debugging Tools'],['../group__tools.html',1,'Tools'],['../group__utilities.html',1,'Utility Tools']]],
-  ['tools_20guide_8',['Tools Guide',['../tools_overview.html',1,'index']]],
-  ['tostring_9',['toString',['../namespaceVectrix.html#aa23057e1c3704a4c3eaec6949a58e6a1',1,'Vectrix']]],
-  ['transform_10',['Transform',['../classVectrix_1_1Transform.html',1,'Vectrix']]],
-  ['type_11',['type',['../structVectrix_1_1UniformElement.html#a472167c52a9aea18e1723f0ef4aa9272',1,'Vectrix::UniformElement']]]
+  ['recalculatematrices_0',['recalculateMatrices',['../classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9',1,'Vectrix::PerspectiveCamera']]],
+  ['removed_1',['Removed',['../changelog.html#v0_4_0_removed',1,'Removed'],['../changelog.html#v0_3_0_removed',1,'Removed'],['../changelog.html#v0_1_0_removed',1,'Removed']]],
+  ['render_2',['render',['../classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79',1,'Vectrix::ImGuiWidget']]],
+  ['rendercommand_3',['RenderCommand',['../classVectrix_1_1RenderCommand.html',1,'Vectrix']]],
+  ['rendercommand_2eh_4',['RenderCommand.h',['../RenderCommand_8h.html',1,'']]],
+  ['renderer_5',['Renderer',['../classVectrix_1_1Renderer.html',1,'Vectrix::Renderer'],['../group__renderer.html',1,'Renderer']]],
+  ['renderer_2eh_6',['Renderer.h',['../Renderer_8h.html',1,'']]],
+  ['rendererapi_7',['RendererAPI',['../classVectrix_1_1RendererAPI.html',1,'Vectrix']]],
+  ['rendererapi_2eh_8',['RendererAPI.h',['../RendererAPI_8h.html',1,'']]],
+  ['rendering_9',['rendering',['../rendering_overview.html#autotoc_md10',1,'1. &lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;'],['../group__rendering.html',1,'Graphic rendering']]],
+  ['rendering_20system_20guide_10',['Rendering System Guide',['../rendering_overview.html',1,'docs_home']]],
+  ['rotation_11',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
 ];

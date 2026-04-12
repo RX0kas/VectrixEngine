@@ -1,0 +1,9 @@
+/**
+ * @page docs_home Different modules available
+ *
+ * # Main modules
+ *
+ * @li @subpage rendering_overview "Graphic rendering"
+ * @li @subpage input_overview "Input (Later)"
+ * @li @subpage event_overview "Events (Later)"
+ */

@@ -3,7 +3,7 @@
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "ImGui/VulkanImGuiManager.h"
-#include "Rendering/VulkanBuffer.h"
+#include "Rendering/Data/VulkanBuffer.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Debug/Profiler.h"
 

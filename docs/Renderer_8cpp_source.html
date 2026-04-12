@@ -6,6 +6,7 @@
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Vectrix Engine: Vectrix/src/Vectrix/Rendering/Renderer.cpp Source File</title>
+<link rel="icon" href="vectrix_square_no_background.svg" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,8 +27,9 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.3.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -99,57 +101,64 @@ $(function(){initNavTree('Renderer_8cpp_source.html','',''); });
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/VulkanContext.h&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    Own&lt;Renderer::SceneData&gt; Renderer::m_SceneData = createOwn&lt;SceneData&gt;();</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    std::unique_ptr&lt;Renderer::SceneData&gt; Renderer::m_SceneData = std::make_unique&lt;SceneData&gt;();</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">    9</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">Renderer::beginScene</a>(<a class="code hl_class" href="classVectrix_1_1PerspectiveCamera.html">PerspectiveCamera</a>&amp; camera) {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        m_SceneData-&gt;camera = &amp;camera;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    }</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">RendererAPI::getAPI</a>()==RendererAPI::API::Vulkan) {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>            VulkanContext::instance().getRenderer().resetCache();</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Can&#39;t begin a scene because the renderer API is set to an unsupported value&quot;</span>);</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        }</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    }</div>
 </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">   14</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Renderer::endScene</a>() {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    }</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">   19</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Renderer::endScene</a>() {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">RendererAPI::getAPI</a>()==RendererAPI::API::Vulkan) {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            VulkanContext::instance().getRenderer().flush();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Can&#39;t end a scene because the renderer API is set to an unsupported value&quot;</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        }</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    }</div>
 </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">   18</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">Renderer::submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader,<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1VertexArray.html">VertexArray</a>&amp; vertexArray,<a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> transform) {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        shader.setModelMatrix(transform.mat4());</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordflow">if</span> (shader.<a class="code hl_function" href="classVectrix_1_1Shader.html#af7c6d680a5472ae797ee35630f9908f4">isAffectedByCamera</a>())</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            shader.sendCameraUniform(m_SceneData-&gt;camera-&gt;getTransformationMatrix());</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        shader.<a class="code hl_function" href="classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728">bind</a>();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordflow">if</span> (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            VulkanRenderer::Submit(shader,vertexArray,transform);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Can&#39;t submit a vertex array because the renderer API is set to an unsuported value&quot;</span>);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">   28</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">Renderer::submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader,<span class="keyword">const</span> std::shared_ptr&lt;VertexArray&gt;&amp; vertexArray, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Transform.html">Transform</a> &amp;transform) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">RendererAPI::getAPI</a>()==RendererAPI::API::Vulkan) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            VulkanRenderer::submit(shader,vertexArray,transform);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            VC_CORE_ERROR(<span class="stringliteral">&quot;Can&#39;t submit a vertex array because the renderer API is set to an unsupported value&quot;</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
 </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#a7d217ee42aac2d537522b49bd15e6676">   31</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">Renderer::submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader, <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>&amp; model) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_function" href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">submit</a>(shader,*model.getVertexArray(),model.getTransform());</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classVectrix_1_1Renderer.html#aea094a5dcb5e76baddd104ac8d23a079">   37</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">Renderer::submit</a>(<a class="code hl_class" href="classVectrix_1_1Shader.html">Shader</a>&amp; shader, <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>&amp; model) {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_function" href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">submit</a>(shader,model.<a class="code hl_function" href="classVectrix_1_1Model.html#a920114681dcfe1ac5efddea9ea79a168">getVertexArray</a>(),model.<a class="code hl_function" href="classVectrix_1_1Model.html#ad779eba4d327a8f16f1a180ec9acd73f">getTransform</a>());</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
 <div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00217">Profiler.h:217</a></div></div>
 <div class="ttc" id="aRenderCommand_8h_html"><div class="ttname"><a href="RenderCommand_8h.html">RenderCommand.h</a></div><div class="ttdoc">Defines the RenderCommand class for issuing rendering commands.</div></div>
 <div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Main renderer class definition.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00007">Model.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html">Vectrix::PerspectiveCamera</a></div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00006">PerspectiveCamera.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae62ac1bd1413ba9db62165ec8df9b99"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Vectrix::Renderer::endScene</a></div><div class="ttdeci">static void endScene()</div><div class="ttdoc">End the current rendering scene.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">Renderer.cpp:14</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdoc">Represents a 3D model with its geometry, layout, and transform.</div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00030">Model.h:30</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_a920114681dcfe1ac5efddea9ea79a168"><div class="ttname"><a href="classVectrix_1_1Model.html#a920114681dcfe1ac5efddea9ea79a168">Vectrix::Model::getVertexArray</a></div><div class="ttdeci">std::shared_ptr&lt; VertexArray &gt; getVertexArray() const</div><div class="ttdoc">Returns the vertex array containing the GPU buffers of this model.</div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00035">Model.h:35</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Model_html_ad779eba4d327a8f16f1a180ec9acd73f"><div class="ttname"><a href="classVectrix_1_1Model.html#ad779eba4d327a8f16f1a180ec9acd73f">Vectrix::Model::getTransform</a></div><div class="ttdeci">Transform getTransform() const</div><div class="ttdoc">Returns the full transform struct of the model.</div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00096">Model.h:96</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1PerspectiveCamera_html"><div class="ttname"><a href="classVectrix_1_1PerspectiveCamera.html">Vectrix::PerspectiveCamera</a></div><div class="ttdoc">This class is the camera class.</div><div class="ttdef"><b>Definition</b> <a href="PerspectiveCamera_8h_source.html#l00015">PerspectiveCamera.h:15</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1RendererAPI_html_a14022aa6735cd7e84eaf0ea840160391"><div class="ttname"><a href="classVectrix_1_1RendererAPI.html#a14022aa6735cd7e84eaf0ea840160391">Vectrix::RendererAPI::getAPI</a></div><div class="ttdeci">static API getAPI()</div><div class="ttdoc">This function return the current graphics API used.</div><div class="ttdef"><b>Definition</b> <a href="RendererAPI_8h_source.html#l00039">RendererAPI.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae301ebbcbb902ae1c0bc7581de557f8"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae301ebbcbb902ae1c0bc7581de557f8">Vectrix::Renderer::submit</a></div><div class="ttdeci">static void submit(Shader &amp;shader, const std::shared_ptr&lt; VertexArray &gt; &amp;vertexArray, const Transform &amp;transform=Transform{ glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f) })</div><div class="ttdoc">Submit geometry with transform.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">Renderer.cpp:28</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_aae62ac1bd1413ba9db62165ec8df9b99"><div class="ttname"><a href="classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99">Vectrix::Renderer::endScene</a></div><div class="ttdeci">static void endScene()</div><div class="ttdoc">End the current rendering scene.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">Renderer.cpp:19</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Renderer_html_ae3fb1998571670bd8e2cee70de4fa5c3"><div class="ttname"><a href="classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3">Vectrix::Renderer::beginScene</a></div><div class="ttdeci">static void beginScene(PerspectiveCamera &amp;camera)</div><div class="ttdoc">Start rendering a scene with the given camera.</div><div class="ttdef"><b>Definition</b> <a href="#l00009">Renderer.cpp:9</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Renderer_html_ae6c9044a00415bf5d488059951765693"><div class="ttname"><a href="classVectrix_1_1Renderer.html#ae6c9044a00415bf5d488059951765693">Vectrix::Renderer::submit</a></div><div class="ttdeci">static void submit(Shader &amp;shader, const VertexArray &amp;vertexArray, Transform transform=Transform{glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)})</div><div class="ttdoc">Submit geometry with transform.</div><div class="ttdef"><b>Definition</b> <a href="#l00018">Renderer.cpp:18</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1Shader_html"><div class="ttname"><a href="classVectrix_1_1Shader.html">Vectrix::Shader</a></div><div class="ttdoc">This class represent a shader.</div><div class="ttdef"><b>Definition</b> <a href="Shader_8h_source.html#l00028">Shader.h:28</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Shader_html_ac40fc14b31e3fbb0f93b2eb601789728"><div class="ttname"><a href="classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728">Vectrix::Shader::bind</a></div><div class="ttdeci">void bind() const</div><div class="ttdoc">Tell the GPU that we need to use this shader  This function tell the GPU that this shader will be use...</div></div>
-<div class="ttc" id="aclassVectrix_1_1Shader_html_af7c6d680a5472ae797ee35630f9908f4"><div class="ttname"><a href="classVectrix_1_1Shader.html#af7c6d680a5472ae797ee35630f9908f4">Vectrix::Shader::isAffectedByCamera</a></div><div class="ttdeci">bool isAffectedByCamera() const</div><div class="ttdoc">Return if the shader is set up to receives the camera.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00007">Transform.h:7</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1VertexArray_html"><div class="ttname"><a href="classVectrix_1_1VertexArray.html">Vectrix::VertexArray</a></div><div class="ttdef"><b>Definition</b> <a href="VertexArray_8h_source.html#l00008">VertexArray.h:8</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00013">Application.cpp:13</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Transform_html"><div class="ttname"><a href="classVectrix_1_1Transform.html">Vectrix::Transform</a></div><div class="ttdoc">This class represent the 3D information about an object.</div><div class="ttdef"><b>Definition</b> <a href="Transform_8h_source.html#l00016">Transform.h:16</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
