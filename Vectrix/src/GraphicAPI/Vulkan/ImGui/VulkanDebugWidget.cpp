@@ -36,7 +36,7 @@ namespace Vectrix {
         ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
         ImGui::Separator();
 
-        if (ImGui::CollapsingHeader("Frame Stats", ImGuiTreeNodeFlags_DefaultOpen)) {
+        if (ImGui::CollapsingHeader("Frame Stats")) {
             ImGui::Text("Draw Calls: %u", frame.drawCalls);
             ImGui::Text("Dispatch Calls: %u", frame.dispatchCalls);
         }
@@ -52,7 +52,9 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Pipeline")) {
             for (const auto& pipeline : frame.pipelines) {
-                if (ImGui::TreeNode(pipeline.name)) {
+                char name[256] = "Pipeline - ";
+                strcat(name,pipeline.name);
+                if (ImGui::TreeNode(name)) {
                     // TODO: add a hot shader edition
                     // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
                     // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
@@ -64,7 +66,7 @@ namespace Vectrix {
         }
 
         if (ImGui::CollapsingHeader("GPU Memory")) {
-            if (ImGui::CollapsingHeader("SSBO")) {
+            if (ImGui::TreeNode("SSBOMem")) {
                 for (const auto& heap : memorySSBO) {
                     float fraction = 0.0f;
                     if (heap.budgetBytes > 0) {
@@ -90,8 +92,9 @@ namespace Vectrix {
 
                     ImGui::Separator();
                 }
+                ImGui::TreePop();
             }
-            if (ImGui::CollapsingHeader("Images")) {
+            if (ImGui::TreeNode("ImagesMem")) {
                 for (const auto& heap : memoryTexture) {
                     float fraction = 0.0f;
                     if (heap.budgetBytes > 0) {
@@ -117,8 +120,9 @@ namespace Vectrix {
 
                     ImGui::Separator();
                 }
+                ImGui::TreePop();
             }
-            if (ImGui::CollapsingHeader("Buffers")) {
+            if (ImGui::TreeNode("BuffersMem")) {
                 for (const auto& heap : memoryBuffer) {
                     float fraction = 0.0f;
                     if (heap.budgetBytes > 0) {
@@ -144,6 +148,7 @@ namespace Vectrix {
 
                     ImGui::Separator();
                 }
+                ImGui::TreePop();
             }
         }
 
@@ -161,7 +166,9 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) {
             for (const auto& img : frame.images) {
-                if (ImGui::TreeNode(img.name.c_str())) {
+                char name[256] = "Images - ";
+                strcat(name,img.name.c_str());
+                if (ImGui::TreeNode(name)) {
                     ImGui::Text("Format: %s", string_VkFormat(img.format));
                     ImGui::Text("Layout: %d", img.layout);
                     ImGui::Text(
@@ -174,17 +181,6 @@ namespace Vectrix {
                 }
             }
         }
-
-        //if (ImGui::CollapsingHeader("Buffers")) {
-        //    for (const auto& buf : frame.buffers) {
-        //        ImGui::BulletText(
-        //            "%s | Size: %llu | Offset: %llu",
-        //            buf.name,
-        //            static_cast<unsigned long long>(buf.size),
-        //            static_cast<unsigned long long>(buf.offset)
-        //        );
-        //    }
-        //}
 
         ImGui::End();
     }
