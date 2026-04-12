@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rendercommand_2eh_0',['RenderCommand.h',['../RenderCommand_8h.html',1,'']]],
-  ['renderer_2eh_1',['Renderer.h',['../Renderer_8h.html',1,'']]]
+  ['imguilayer_2eh_0',['ImGuiLayer.h',['../ImGuiLayer_8h.html',1,'']]],
+  ['imguiwidget_2eh_1',['ImGuiWidget.h',['../ImGuiWidget_8h.html',1,'']]]
 ];

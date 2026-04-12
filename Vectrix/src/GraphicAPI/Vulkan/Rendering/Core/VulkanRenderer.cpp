@@ -228,7 +228,7 @@ namespace Vectrix {
 		uint32_t index = b.elementCount++;
 
 		ObjectData currentObjectData = {
-			.modelMatrix = transform.mat4(),
+			.modelMatrix = transform.modelMatrix(),
 			.textureIndex = textureIndex
 		};
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();

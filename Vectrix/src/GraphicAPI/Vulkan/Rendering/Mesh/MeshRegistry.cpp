@@ -1,5 +1,6 @@
 #include "MeshRegistry.h"
 
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Mesh/Model.h"
 
@@ -19,13 +20,13 @@ namespace Vectrix {
         VC_CORE_ASSERT(!m_uploaded, "Cannot register mesh after GPU upload!");
 
         MeshHandle handle {
-            .firstIndex   = static_cast<uint32_t>(m_pendingIndices.size()),
-            .indexCount   = static_cast<uint32_t>(indices.size()),
+            .firstIndex = static_cast<uint32_t>(m_pendingIndices.size()),
+            .indexCount = static_cast<uint32_t>(indices.size()),
             .vertexOffset = static_cast<int32_t>(m_pendingVertices.size())
         };
 
         m_pendingVertices.insert(m_pendingVertices.end(), vertices.begin(), vertices.end());
-        m_pendingIndices.insert(m_pendingIndices.end(),   indices.begin(),  indices.end());
+        m_pendingIndices.insert(m_pendingIndices.end(),indices.begin(), indices.end());
 
         return handle;
     }

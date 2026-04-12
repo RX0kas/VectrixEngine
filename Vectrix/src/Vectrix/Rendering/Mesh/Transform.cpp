@@ -1,10 +1,7 @@
 #include "Transform.h"
 
 namespace Vectrix {
-    // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
-    // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
-    // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
-    glm::mat4 Transform::mat4() {
+    glm::mat4 Transform::modelMatrix() const {
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
         const float c2 = glm::cos(rotation.x);
@@ -33,7 +30,7 @@ namespace Vectrix {
           {translation.x, translation.y, translation.z, 1.0f}};
     }
 
-    glm::mat3 Transform::normalMatrix() {
+    glm::mat3 Transform::normalMatrix() const {
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
         const float c2 = glm::cos(rotation.x);

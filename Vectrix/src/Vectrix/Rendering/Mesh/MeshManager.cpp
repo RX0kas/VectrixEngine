@@ -32,16 +32,16 @@ namespace Vectrix {
         return model;
     }
 
-    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices, const BufferLayout &layout) {
+    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const std::vector<uint32_t> &indices) {
         VC_PROFILER_FUNCTION();
-        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,indices,layout));
+        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,indices,getTinyObjLayout()));
         instance().add(name,model);
         Application::instance().window().getGraphicContext().registerMesh(name,model);
         return model;
     }
-    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices, const BufferLayout &layout) {
+    std::shared_ptr<Model> MeshManager::createModel(const std::string &name, const std::vector<Vertex> &vertices) {
         VC_PROFILER_FUNCTION();
-        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,layout));
+        std::shared_ptr<Model> model = std::make_unique<Model>(Model::create(vertices,getTinyObjLayout()));
         instance().add(name,model);
         Application::instance().window().getGraphicContext().registerMesh(name,model);
         return model;

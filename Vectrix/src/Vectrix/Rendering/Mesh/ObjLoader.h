@@ -6,18 +6,19 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
+#include <unordered_map>
+#include <sstream>
 #include "Vertex.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Utils/Hashing.h"
-#include <unordered_map>
 
 namespace Vectrix {
     inline BufferLayout getTinyObjLayout() {
         return {
-            {ShaderDataType::Float3, "a_Position" },
-            {ShaderDataType::Float3, "a_Normal" },
-            {ShaderDataType::Float2, "a_TexCoord" }
+            { ShaderDataType::Float3, "a_Position" },
+            { ShaderDataType::Float3, "a_Normal" },
+            { ShaderDataType::Float2, "a_TexCoord" }
         };
     }
 

@@ -20,7 +20,6 @@ var hierarchy =
       [ "Vectrix::WindowResizeEvent", "classVectrix_1_1WindowResizeEvent.html", null ]
     ] ],
     [ "Vectrix::EventDispatcher", "classVectrix_1_1EventDispatcher.html", null ],
-    [ "Vectrix::ImGuiManager", "classVectrix_1_1ImGuiManager.html", null ],
     [ "Vectrix::ImGuiWidget", "classVectrix_1_1ImGuiWidget.html", null ],
     [ "Vectrix::IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
     [ "Vectrix::Input", "classVectrix_1_1Input.html", null ],
@@ -31,7 +30,6 @@ var hierarchy =
     ] ],
     [ "Vectrix::LayerStack", "classVectrix_1_1LayerStack.html", null ],
     [ "Vectrix::Log", "classVectrix_1_1Log.html", null ],
-    [ "Vectrix::MeshHandle", "structVectrix_1_1MeshHandle.html", null ],
     [ "Vectrix::MeshManager", "classVectrix_1_1MeshManager.html", null ],
     [ "Vectrix::Model", "classVectrix_1_1Model.html", null ],
     [ "Vectrix::PerspectiveCamera", "classVectrix_1_1PerspectiveCamera.html", null ],

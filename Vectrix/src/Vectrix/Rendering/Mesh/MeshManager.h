@@ -10,6 +10,7 @@
 /**
  * @file MeshManager.h
  * @brief Definition of the class that manage the life of mesh
+ * @ingroup mesh
  */
 
 namespace Vectrix {
@@ -61,18 +62,18 @@ namespace Vectrix {
         /**
          * @brief Function to create a new mesh
          * @param name Name given to the mesh
-         * @param vertices
-         * @param indices
+         * @param vertices The vertices of the model
+         * @param indices The indices of the model
          * @return A reference to the model that was created
          */
-        static std::shared_ptr<Model> createModel(const std::string &name, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const BufferLayout& layout=getTinyObjLayout());
+        static std::shared_ptr<Model> createModel(const std::string &name, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
         /**
          * @brief Function to create a new mesh
          * @param name Name given to the mesh
-         * @param vertices
+         * @param vertices The vertices of the mesh
          * @return A reference to the model that was created
          */
-        static std::shared_ptr<Model> createModel(const std::string &name, const std::vector<Vertex>& vertices, const BufferLayout& layout=getTinyObjLayout());
+        static std::shared_ptr<Model> createModel(const std::string &name, const std::vector<Vertex>& vertices);
 
         ~MeshManager();
     private:

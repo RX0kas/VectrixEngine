@@ -11,7 +11,7 @@ namespace Vectrix {
 
         vertexBuffer->setLayout(layout);
 
-        m_vertexArray = std::shared_ptr<VertexArray>(VertexArray::create());
+        m_vertexArray = VertexArray::create();
         m_vertexArray->addVertexBuffer(vertexBuffer);
 
         m_transform = {glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)};
@@ -19,11 +19,11 @@ namespace Vectrix {
 
     Model::Model(const std::vector<Vertex>& vertices,std::vector<uint32_t> indices, const BufferLayout& layout) {
         VC_PROFILER_FUNCTION();
-        const auto vertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size())));
-        const auto indexBuffer = std::shared_ptr<IndexBuffer>(IndexBuffer::create(indices.data(),static_cast<uint32_t>(indices.size())));
+        const auto vertexBuffer = VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size()));
+        const auto indexBuffer = IndexBuffer::create(indices.data(),static_cast<uint32_t>(indices.size()));
         vertexBuffer->setLayout(layout);
 
-        m_vertexArray = std::shared_ptr<VertexArray>(VertexArray::create());
+        m_vertexArray = VertexArray::create();
         m_vertexArray->addVertexBuffer(vertexBuffer);
         m_vertexArray->setIndexBuffer(indexBuffer);
         m_vertices = vertices;

@@ -14,10 +14,10 @@
 #define VC_PROFILER_VERSION "1.1"
 
 /**
- * @file Profiler.h
- * @brief Class that provides time analysis on how the application and the engine run
- * @ingroup debugtools
- */
+* @file Profiler.h
+* @brief Class that provides time analysis on how the application and the engine run
+* @ingroup debugtools
+*/
 
 namespace Vectrix {
     using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
