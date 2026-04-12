@@ -1,8 +1,15 @@
 var searchData=
 [
-  ['window_0',['Window',['../classVectrix_1_1Window.html',1,'Vectrix']]],
-  ['window_1',['window',['../classVectrix_1_1Application.html#a9539d0f3266ac7335e95a1b9a7fc9511',1,'Vectrix::Application']]],
-  ['windowattributes_2',['WindowAttributes',['../structVectrix_1_1WindowAttributes.html',1,'Vectrix']]],
-  ['windowcloseevent_3',['WindowCloseEvent',['../classVectrix_1_1WindowCloseEvent.html',1,'Vectrix']]],
-  ['windowresizeevent_4',['WindowResizeEvent',['../classVectrix_1_1WindowResizeEvent.html',1,'Vectrix']]]
+  ['v0_201_200_20—_2019_2002_202026_0',['v0.1.0 — (19-02-2026)',['../changelog.html#v0_1_0',1,'']]],
+  ['v0_202_200_20—_2004_2003_202026_1',['v0.2.0 — (04-03-2026)',['../changelog.html#v0_2_0',1,'']]],
+  ['v0_203_200_20—_2014_2003_202026_2',['v0.3.0 — (14-03-2026)',['../changelog.html#v0_3_0',1,'']]],
+  ['vc_5fprofiler_5ffunction_3',['VC_PROFILER_FUNCTION',['../Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b',1,'Profiler.h']]],
+  ['vc_5fprofiler_5fscope_4',['VC_PROFILER_SCOPE',['../Profiler_8h.html#a4545cbd6de7a64b3b857d7c777a10502',1,'Profiler.h']]],
+  ['vectrix_5',['Vectrix',['../namespaceVectrix.html',1,'']]],
+  ['vectrix_20engine_6',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
+  ['vertex_7',['Vertex',['../structVectrix_1_1Vertex.html',1,'Vectrix']]],
+  ['vertex_2eh_8',['Vertex.h',['../Vertex_8h.html',1,'']]],
+  ['vertexarray_9',['VertexArray',['../classVectrix_1_1VertexArray.html',1,'Vectrix']]],
+  ['vertexarray_2eh_10',['VertexArray.h',['../VertexArray_8h.html',1,'']]],
+  ['vertexbuffer_11',['VertexBuffer',['../classVectrix_1_1VertexBuffer.html',1,'Vectrix']]]
 ];

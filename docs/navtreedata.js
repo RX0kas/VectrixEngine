@@ -50,7 +50,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AppInfo_8cpp_source.html",
-"docs_home.html#autotoc_md1"
+"dir_3bf2d475275315ad8b811b840ed679bd.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

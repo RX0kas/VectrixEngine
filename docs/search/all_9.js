@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['find_0',['find',['../classVectrix_1_1ShaderUniformLayout.html#ab446700cb0b5f966a959be5f5415ee35',1,'Vectrix::ShaderUniformLayout']]]
+  ['endscene_0',['endScene',['../classVectrix_1_1Renderer.html#aae62ac1bd1413ba9db62165ec8df9b99',1,'Vectrix::Renderer']]],
+  ['engine_1',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
+  ['event_2',['Event',['../classVectrix_1_1Event.html',1,'Vectrix']]],
+  ['eventdispatcher_3',['EventDispatcher',['../classVectrix_1_1EventDispatcher.html',1,'Vectrix']]],
+  ['exist_4',['exist',['../classVectrix_1_1ShaderManager.html#a4cb047816cd6a5a5e7a58f23964d0889',1,'Vectrix::ShaderManager']]]
 ];

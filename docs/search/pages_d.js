@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['shaders_0',['2. &lt;a class=&quot;el&quot; href=&quot;group__shaders.html&quot; title=&quot;Shaders&quot;&gt;Shaders&lt;/a&gt;',['../rendering_overview.html#autotoc_md5',1,'']]],
-  ['system_20guide_1',['Rendering System Guide',['../rendering_overview.html',1,'docs_home']]]
+  ['of_20the_20vectrix_20engine_0',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
+  ['overview_1',['Overview',['../rendering_overview.html#autotoc_md6',1,'']]]
 ];

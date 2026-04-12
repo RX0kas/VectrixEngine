@@ -1,0 +1,53 @@
+/**
+ * @page changelog Changelog
+ * @brief History of changes, fixes and new features across all versions
+ *
+ * ---
+ *
+ * @section v0_3_0 v0.3.0 — (14-03-2026)
+ *
+ * @subsection v0_3_0_added Added
+ * - Profiling
+ * - OS Independent Window Class
+ * - Added JSON and Cache class
+ * - Stop using raw pointer
+ * @subsection v0_3_0_fixed Fixed
+ * - Fix compilation warnings
+ * @subsection v0_3_0_removed Removed
+ * - Remove Windows and Linux Window class
+ *
+ * ---
+ * @section v0_2_0 v0.2.0 — (04-03-2026)
+ *
+ * @subsection v0_2_0_added Added
+ * - Texture support
+ * - New CameraController
+ * @subsection v0_2_0_changed Changed
+ * - Alpha Blending enable
+ *
+ * @subsection v0_2_0_fixed Fixed
+ * - Fix resize error
+ *
+ * ---
+ *
+ * @section v0_1_0 v0.1.0 — (19-02-2026)
+ *
+ * @subsection v0_1_0_added Added
+ * - Universal Uniform function
+ * - Runtime shader compilation
+ * - New ImGuiWidget class
+ * - New ShaderType Enum
+ * - New Window.getAspect(), Window.show(), Window.hide() and Window.isVisible() functions
+ * - New Shader.isAffectedByCamera() function
+ * @subsection v0_1_0_changed Changed
+ * - LayerStack take shared ptr instead of raw ptr
+ * - Renderer::BeginScene() now return nothing
+ * - The window will not show directly on creation but when the run function is called
+ * @subsection v0_1_0_removed Removed
+ * - RenderCommand::clear() was removed
+ * - Model::create(const std::string &filepath, const BufferLayout& layout) was removed
+ *
+ * ---
+ *
+ * @note This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ */

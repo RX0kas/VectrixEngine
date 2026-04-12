@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['recalculatematrices_0',['recalculateMatrices',['../classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9',1,'Vectrix::PerspectiveCamera']]],
-  ['render_1',['render',['../classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79',1,'Vectrix::ImGuiWidget']]],
-  ['rendercommand_2',['RenderCommand',['../classVectrix_1_1RenderCommand.html',1,'Vectrix']]],
-  ['rendercommand_2eh_3',['RenderCommand.h',['../RenderCommand_8h.html',1,'']]],
-  ['renderer_4',['Renderer',['../classVectrix_1_1Renderer.html',1,'Vectrix::Renderer'],['../group__renderer.html',1,'Renderer']]],
-  ['renderer_2eh_5',['Renderer.h',['../Renderer_8h.html',1,'']]],
-  ['rendererapi_6',['RendererAPI',['../classVectrix_1_1RendererAPI.html',1,'Vectrix']]],
-  ['rendererapi_2eh_7',['RendererAPI.h',['../RendererAPI_8h.html',1,'']]],
-  ['rendering_8',['rendering',['../rendering_overview.html#autotoc_md4',1,'1. &lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;'],['../group__rendering.html',1,'Graphic rendering']]],
-  ['rendering_20system_20guide_9',['Rendering System Guide',['../rendering_overview.html',1,'docs_home']]],
-  ['rotation_10',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
+  ['parse_0',['parse',['../classVectrix_1_1Json.html#a08cf986f79a59623f4c06d7d7e369aec',1,'Vectrix::Json']]],
+  ['perspectivecamera_1',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix::PerspectiveCamera'],['../classVectrix_1_1PerspectiveCamera.html#a938388e3a7226ddc4e6afb1bb54ac003',1,'Vectrix::PerspectiveCamera::PerspectiveCamera()']]],
+  ['perspectivecamera_2eh_2',['PerspectiveCamera.h',['../PerspectiveCamera_8h.html',1,'']]],
+  ['perspectivecameracontroller_3',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix::PerspectiveCameraController'],['../classVectrix_1_1PerspectiveCameraController.html#af3afadba024e59e819f1032b18288a45',1,'Vectrix::PerspectiveCameraController::PerspectiveCameraController()']]],
+  ['perspectivecameracontroller_2eh_4',['PerspectiveCameraController.h',['../PerspectiveCameraController_8h.html',1,'']]],
+  ['position_5',['position',['../structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce',1,'Vectrix::Vertex']]],
+  ['profiler_6',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
+  ['profiler_2eh_7',['Profiler.h',['../Profiler_8h.html',1,'']]],
+  ['profilerresult_8',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
+  ['profilersession_9',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]],
+  ['pushlayer_10',['PushLayer',['../classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94',1,'Vectrix::Application']]],
+  ['pushoverlay_11',['PushOverlay',['../classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f',1,'Vectrix::Application']]]
 ];

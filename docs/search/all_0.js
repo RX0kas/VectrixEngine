@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['1_20debugtools_0',['1. &lt;a class=&quot;el&quot; href=&quot;group__debugtools.html&quot; title=&quot;Debugging Tools&quot;&gt;Debugging Tools&lt;/a&gt;',['../tools_overview.html#autotoc_md9',1,'']]],
-  ['1_20rendering_1',['1. &lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;',['../rendering_overview.html#autotoc_md4',1,'']]]
+  ['0_20—_2004_2003_202026_0',['v0.2.0 — (04-03-2026)',['../changelog.html#v0_2_0',1,'']]],
+  ['0_20—_2014_2003_202026_1',['v0.3.0 — (14-03-2026)',['../changelog.html#v0_3_0',1,'']]],
+  ['0_20—_2019_2002_202026_2',['v0.1.0 — (19-02-2026)',['../changelog.html#v0_1_0',1,'']]],
+  ['02_202026_3',['v0.1.0 — (19-02-2026)',['../changelog.html#v0_1_0',1,'']]],
+  ['03_202026_4',['03 2026',['../changelog.html#v0_2_0',1,'v0.2.0 — (04-03-2026)'],['../changelog.html#v0_3_0',1,'v0.3.0 — (14-03-2026)']]],
+  ['04_2003_202026_5',['v0.2.0 — (04-03-2026)',['../changelog.html#v0_2_0',1,'']]]
 ];

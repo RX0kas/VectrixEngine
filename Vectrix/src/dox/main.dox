@@ -4,6 +4,6 @@
  * # Modules
  * @li @subpage docs_home "API Documentation"
  * @li @subpage tools_overview "Tools"
- * @li @subpage change_logs "What's new"
+ * @li @subpage changelog "What's new"
  * @li @subpage get_started "Get started (WIP)"
  */

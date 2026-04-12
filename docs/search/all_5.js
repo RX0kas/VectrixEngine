@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['beginscene_0',['beginScene',['../classVectrix_1_1Renderer.html#ae3fb1998571670bd8e2cee70de4fa5c3',1,'Vectrix::Renderer']]],
-  ['bind_1',['bind',['../classVectrix_1_1VertexBuffer.html#a183f2e11a96cef299859a6263ba7dc4c',1,'Vectrix::VertexBuffer::bind()'],['../classVectrix_1_1IndexBuffer.html#a430180debaf271da6499078e9773c245',1,'Vectrix::IndexBuffer::bind()'],['../classVectrix_1_1VertexArray.html#ad4f4f5c90f42ac1e03b11b3a05e9a952',1,'Vectrix::VertexArray::bind()'],['../classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728',1,'Vectrix::Shader::bind()']]],
-  ['buffer_2eh_2',['Buffer.h',['../Buffer_8h.html',1,'']]],
-  ['bufferelement_3',['BufferElement',['../structVectrix_1_1BufferElement.html',1,'Vectrix']]],
-  ['bufferlayout_4',['BufferLayout',['../classVectrix_1_1BufferLayout.html',1,'Vectrix']]],
-  ['buffers_5',['Buffers',['../group__buffers.html',1,'']]]
+  ['add_0',['add',['../classVectrix_1_1ShaderUniformLayout.html#ac2ab0483896a0bf3d1762dcfb0679f71',1,'Vectrix::ShaderUniformLayout']]],
+  ['added_1',['Added',['../changelog.html#v0_3_0_added',1,'Added'],['../changelog.html#v0_2_0_added',1,'Added'],['../changelog.html#v0_1_0_added',1,'Added']]],
+  ['addvertexbuffer_2',['addVertexBuffer',['../classVectrix_1_1VertexArray.html#a9c1a891a53a28c1f59f18b2e52bfc5b6',1,'Vectrix::VertexArray']]],
+  ['addwidget_3',['addWidget',['../classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b',1,'Vectrix::ImGuiLayer']]],
+  ['api_4',['API',['../classVectrix_1_1RendererAPI.html#a76b5cc6b7ab90105563ed03ad666d314',1,'Vectrix::RendererAPI']]],
+  ['appinfo_2eh_5',['AppInfo.h',['../AppInfo_8h.html',1,'']]],
+  ['application_6',['Application',['../classVectrix_1_1Application.html',1,'Vectrix']]],
+  ['application_2eh_7',['Application.h',['../Application_8h.html',1,'']]],
+  ['applicationinfo_8',['ApplicationInfo',['../classVectrix_1_1ApplicationInfo.html',1,'Vectrix']]],
+  ['architecture_9',['Architecture',['../rendering_overview.html#autotoc_md7',1,'']]],
+  ['available_10',['Different modules available',['../docs_home.html',1,'index']]]
 ];

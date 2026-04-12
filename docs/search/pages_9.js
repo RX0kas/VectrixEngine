@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['list_0',['Deprecated List',['../deprecated.html',1,'']]]
+  ['fixed_0',['Fixed',['../changelog.html#v0_3_0_fixed',1,'Fixed'],['../changelog.html#v0_2_0_fixed',1,'Fixed']]]
 ];

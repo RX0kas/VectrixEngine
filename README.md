@@ -1,7 +1,6 @@
-# Vectrix 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.3.1-green.svg)
+![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
 
-![VectrixLogo](/docs/images/vectrix_square_no_background_256.png)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.4.1-green.svg)
 
 An engine made to run all of my little graphics project
 
