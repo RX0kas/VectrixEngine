@@ -4,7 +4,7 @@
 
 An engine made to run all of my little graphics project
 
-Current Working branch: [feature/batch_rendering](https://github.com/RX0kas/VectrixEngine/tree/feature/batch_rendering)
+Current Working branch: [feature/editor](https://github.com/RX0kas/VectrixEngine/tree/feature/batch_rendering)
 
 ![Screenshot or demo GIF](preview.png)
 
