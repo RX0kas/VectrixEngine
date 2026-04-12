@@ -82,7 +82,7 @@ namespace Vectrix {
 		}
 
 	private:
-		friend class ImGuiManager;
+		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
