@@ -5,7 +5,7 @@ var searchData=
   ['texturemanager_2',['TextureManager',['../classVectrix_1_1TextureManager.html',1,'Vectrix']]],
   ['texturemanager_2eh_3',['TextureManager.h',['../TextureManager_8h.html',1,'']]],
   ['textures_4',['Textures',['../group__textures.html',1,'']]],
-  ['textures_5',['4. &lt;a class=&quot;el&quot; href=&quot;group__textures.html&quot; title=&quot;Textures&quot;&gt;Textures&lt;/a&gt;',['../rendering_overview.html#autotoc_md11',1,'']]],
+  ['textures_5',['4. &lt;a class=&quot;el&quot; href=&quot;group__textures.html&quot; title=&quot;Textures&quot;&gt;Textures&lt;/a&gt;',['../rendering_overview.html#autotoc_md13',1,'']]],
   ['the_20vectrix_20engine_6',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
   ['tools_7',['Tools',['../group__debugtools.html',1,'Debugging Tools'],['../group__tools.html',1,'Tools'],['../group__utilities.html',1,'Utility Tools']]],
   ['tools_20guide_8',['Tools Guide',['../tools_overview.html',1,'index']]],

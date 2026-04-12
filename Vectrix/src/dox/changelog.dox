@@ -3,13 +3,33 @@
  * @brief History of changes, fixes and new features across all versions
  *
  * ---
+ * @note Only the minor updates are written before this version
+ * ---
+ *
+ * @section v0_4_0 v0.4.0 — (12-04-2026)
+ *
+ * @subsection v0_4_0_added Added
+ * - First version of batch rendering
+ * - New MeshManager and MeshRegistry class
+ * @subsection v0_4_0_changed Changed
+ * - Logs will now appear only on debug mode
+ * - Vulkan validation layers will be enable only on debug mode
+ * - Debug graphics widget will only show on debug mode
+ * @subsection v0_4_0_fixed Fixed
+ * - Fix linux drivers freeze
+ * - Minor Vulkan fix
+ * @subsection v0_4_0_removed Removed
+ * - Remove Own and Ref
+ *
+ * ---
  *
  * @section v0_3_0 v0.3.0 — (14-03-2026)
  *
  * @subsection v0_3_0_added Added
  * - Profiling
  * - OS Independent Window Class
- * - Added JSON and Cache class
+ * - New JSON and Cache class
+ * @subsection v0_3_0_changed Changed
  * - Stop using raw pointer
  * @subsection v0_3_0_fixed Fixed
  * - Fix compilation warnings

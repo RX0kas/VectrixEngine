@@ -50,7 +50,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AppInfo_8cpp_source.html",
-"dir_3bf2d475275315ad8b811b840ed679bd.html"
+"classVectrix_1_1Window.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
