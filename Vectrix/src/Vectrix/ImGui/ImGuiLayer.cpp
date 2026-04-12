@@ -39,7 +39,9 @@ namespace Vectrix {
 	void ImGuiLayer::OnAttach() {
 		VC_PROFILER_FUNCTION();
 		m_manager->initImGui();
+#ifdef VC_DEBUG
 		m_manager->attachDebugGraphicWidget();
+#endif
 		m_attached = true;
 	}
 
