@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.4.1 LANGUAGES CXX)
+project(VectrixWorkspace VERSION 0.4.1 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,6 +36,11 @@ set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
 
 find_package(Vulkan REQUIRED)
+# Volk
+message(VERBOSE "Initializing Volk")
+set(VOLK_STATIC_DEFINES)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Vectrix/extern/Volk)
+
 # Compiling Shader
 # Setup SPIRV-Tools
 message(VERBOSE "Initializing SPIRV-Header")
@@ -79,6 +84,7 @@ list(APPEND Vectrix_SOURCES
         Vectrix/src/vcpch.cpp
         Vectrix/src/vcpch.h
         Vectrix/src/Vectrix.h
+        Vectrix/extern/Volk/volk.c
 )
 
 
@@ -130,8 +136,7 @@ target_include_directories(Vectrix PUBLIC
 
 target_compile_definitions(Vectrix PRIVATE
         VC_STATIC_LIB
-        IMGUI_API=
-        IMGUI_IMPL_API=
+        IMGUI_IMPL_VULKAN_USE_VOLK
 )
 
 if(WIN32)
@@ -151,19 +156,19 @@ if (UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
     target_link_libraries(Vectrix
             glfw
-            Vulkan::Vulkan
             shaderc
             X11::X11
             xxHash::xxhash
             GPUOpen::VulkanMemoryAllocator
+            volk::volk
     )
 else()
 target_link_libraries(Vectrix
         glfw
-        Vulkan::Vulkan
         shaderc
         xxHash::xxhash
         GPUOpen::VulkanMemoryAllocator
+        volk::volk
 )
 endif()
 
