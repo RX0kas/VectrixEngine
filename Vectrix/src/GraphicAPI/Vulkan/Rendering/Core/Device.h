@@ -1,4 +1,5 @@
 #pragma once
+#include "volk.h"
 #include "vk_mem_alloc.h"
 #include "vector"
 
@@ -46,9 +47,9 @@ namespace Vectrix {
         [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const {return m_descriptorSetLayout;}
 
         SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_physicalDevice); }
-        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+        [[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
         QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(m_physicalDevice); }
-        VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
+        [[nodiscard]] VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
         // Buffer Helper Functions
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags memoryProperties, VkBuffer& buffer, VmaAllocation& allocation,VmaAllocator allocator=nullptr);
@@ -111,7 +112,9 @@ namespace Vectrix {
 	    VkDescriptorPool m_descriptorPool;
 	    VkDescriptorSetLayout m_descriptorSetLayout;
 
+        VolkDeviceTable m_deviceTable;
+
         const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
-        const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+        const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME };
 	};
 }

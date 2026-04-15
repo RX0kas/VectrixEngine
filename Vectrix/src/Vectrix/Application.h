@@ -81,6 +81,13 @@ namespace Vectrix {
 			return {"not_found",0};
 		}
 
+		/**
+		 * @brief This function close the application
+		 **/
+		void close() {
+			m_running = false;
+		}
+
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);

@@ -16,20 +16,23 @@ namespace Vectrix {
 		VulkanContext::instance().getRenderer().makeClearColor(color);
 	}
 
-	bool VulkanRendererAPI::prepareFrame() {
+	bool VulkanRendererAPI::canRender() {
 		VC_PROFILER_FUNCTION();
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
 		auto commandBuffer = renderer.beginFrame();
-		s_drawCalls = 0;
 
 		if (commandBuffer == VK_NULL_HANDLE) {
 			renderer.recreateSwapChain();
-			VC_CORE_INFO("commandBuffer is NULL");
 			return false;
 		}
 
-		renderer.beginSwapChainRenderPass(commandBuffer);
 		return true;
+	}
+
+	void VulkanRendererAPI::beginFrame() {
+		VC_PROFILER_FUNCTION();
+		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
+		renderer.beginSwapChainRenderPass(renderer.getCurrentCommandBuffer());
 	}
 
 	void VulkanRendererAPI::endFrame() {

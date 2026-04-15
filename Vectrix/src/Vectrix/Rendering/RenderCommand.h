@@ -36,7 +36,7 @@ namespace Vectrix
 		static void setClearColor(const glm::vec4& color)
 		{
 			VC_PROFILER_FUNCTION();
-			s_RendererAPI->setClearColor(color);
+			s_rendererAPI->setClearColor(color);
 		}
 
 		/**
@@ -50,33 +50,37 @@ namespace Vectrix
 		static void drawIndexed(const VertexArray& vertexArray)
 		{
 			VC_PROFILER_FUNCTION();
-			if (!frameStarted) VC_ERROR("Trying to draw but no frame has started");
-			s_RendererAPI->drawIndexed(vertexArray);
+			if (!s_frameStarted) VC_ERROR("Trying to draw but no frame has started");
+			s_rendererAPI->drawIndexed(vertexArray);
 		}
 
 	private:
-		static bool setupFrame() {
+		static bool canRender() {
 			VC_PROFILER_FUNCTION();
-			frameStarted = true;
-			return s_RendererAPI->prepareFrame();
+			s_frameStarted = true;
+			return s_rendererAPI->canRender();
+		}
+
+		static void beginFrame() {
+			s_rendererAPI->beginFrame();
 		}
 
 		static void endFrame() {
 			VC_PROFILER_FUNCTION();
-			if (!frameStarted) VC_ERROR("Trying to end a frame but none has started");
-			s_RendererAPI->endFrame();
+			if (!s_frameStarted) VC_ERROR("Trying to end a frame but none has started");
+			s_rendererAPI->endFrame();
 		}
 		static void sendFrame() {
 			VC_PROFILER_FUNCTION();
-			if (!frameStarted) VC_ERROR("Trying to send a frame but none has started");
-			s_RendererAPI->sendFrame();
-			frameStarted = false;
+			if (!s_frameStarted) VC_ERROR("Trying to send a frame but none has started");
+			s_rendererAPI->sendFrame();
+			s_frameStarted = false;
 		}
 		friend class Application;
-		static bool frameStarted;
 		friend class Renderer;
 
-		static RendererAPI* s_RendererAPI;
+		static bool s_frameStarted;
+		static RendererAPI* s_rendererAPI;
 	};
 }
 

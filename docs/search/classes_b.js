@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['rendercommand_0',['RenderCommand',['../classVectrix_1_1RenderCommand.html',1,'Vectrix']]],
-  ['renderer_1',['Renderer',['../classVectrix_1_1Renderer.html',1,'Vectrix']]],
-  ['rendererapi_2',['RendererAPI',['../classVectrix_1_1RendererAPI.html',1,'Vectrix']]]
+  ['perspectivecamera_0',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
+  ['perspectivecameracontroller_1',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]],
+  ['profiler_2',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
+  ['profilerresult_3',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
+  ['profilersession_4',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]]
 ];

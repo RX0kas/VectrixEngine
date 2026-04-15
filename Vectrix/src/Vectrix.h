@@ -36,6 +36,7 @@
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Mesh/Model.h"
+#include "Vectrix/Rendering/Framebuffer.h"
 
 #include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
 #include "Vectrix/Rendering/Camera/PerspectiveCameraController.h"

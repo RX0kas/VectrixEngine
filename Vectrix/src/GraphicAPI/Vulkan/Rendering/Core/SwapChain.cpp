@@ -163,9 +163,6 @@ namespace Vectrix {
         }
 
 
-        VC_CORE_INFO("capabilities.minImageCount = {0}", capabilities.minImageCount);
-        VC_CORE_INFO("capabilities.maxImageCount = {0}", capabilities.maxImageCount);
-
 
         VkSwapchainCreateInfoKHR createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

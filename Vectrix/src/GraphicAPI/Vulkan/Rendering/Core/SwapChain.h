@@ -41,6 +41,7 @@ namespace Vectrix {
         [[nodiscard]] VkImageView getImageView(int index) const { return m_swapChainImageViews[index]; }
         std::vector<VkImageView> getImageViews() { return m_swapChainImageViews; }
         [[nodiscard]] size_t imageCount() const { return m_swapChainImages.size(); }
+	    [[nodiscard]] VkImage getSwapChainImage(int index) const { return m_swapChainImages[index]; }
         [[nodiscard]] VkFormat getSwapChainImageFormat() const { return m_swapChainImageFormat; }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const { return m_swapChainExtent; }
         [[nodiscard]] uint32_t width() const { return m_swapChainExtent.width; }
@@ -49,7 +50,7 @@ namespace Vectrix {
         [[nodiscard]] float extentAspectRatio() const {
             return static_cast<float>(m_swapChainExtent.width) / static_cast<float>(m_swapChainExtent.height);
         }
-        VkFormat findDepthFormat() const;
+        [[nodiscard]] VkFormat findDepthFormat() const;
 
         VkResult acquireNextImage(uint32_t* imageIndex) const;
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex);

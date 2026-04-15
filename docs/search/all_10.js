@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix']]],
+  ['layer_0',['Layer',['../classVectrix_1_1Layer.html',1,'Vectrix::Layer'],['../classVectrix_1_1Layer.html#aa574de23b396df49ed5657c60fd2e385',1,'Vectrix::Layer::Layer()']]],
   ['layerstack_1',['LayerStack',['../classVectrix_1_1LayerStack.html',1,'Vectrix']]],
   ['list_2',['Deprecated List',['../deprecated.html',1,'']]],
   ['load_3',['load',['../classVectrix_1_1Json.html#a3f6d3f2a37624b93bf4afa036814fe85',1,'Vectrix::Json']]],

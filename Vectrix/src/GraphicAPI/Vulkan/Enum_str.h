@@ -1,6 +1,6 @@
 #ifndef VECTRIXWORKSPACE_ENUM_STR_H
 #define VECTRIXWORKSPACE_ENUM_STR_H
-#include "vulkan/vulkan.h"
+#include "volk.h"
 
 namespace Vectrix {
 	static const char* string_VkResult(VkResult input_value) {

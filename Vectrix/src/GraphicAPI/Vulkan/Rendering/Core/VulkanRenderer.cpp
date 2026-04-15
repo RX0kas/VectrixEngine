@@ -5,6 +5,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
 #include "GraphicAPI/Vulkan/Rendering/Mesh/MeshRegistry.h"
 #include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
 #include "GraphicAPI/Vulkan/Rendering/Shaders/Pipeline.h"
@@ -49,10 +50,8 @@ namespace Vectrix {
 		}
 		else {
 			vkDeviceWaitIdle(m_device.device());
-			VulkanImGuiManager::instance().destroyImGuiFramebuffers();
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_swapChain);
 			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain);
-			VulkanImGuiManager::instance().createImGuiFramebuffers();
 
 			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {
 				VC_CORE_ERROR("Swap chain image(or depth) format has changed");
@@ -253,6 +252,29 @@ namespace Vectrix {
 		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
 		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
 		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+
+		VkExtent2D extent = m_swapChain->getSwapChainExtent();
+
+		// If we draw to offscreen framebuffer
+		VulkanFramebuffer* currentFB = VulkanFramebuffer::getCurrentFramebuffer();
+		if (currentFB!=nullptr) {
+			extent = currentFB->getExtent();
+		}
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(extent.width);
+		viewport.height  = static_cast<float>(extent.height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = {0, 0};
+		scissor.extent = extent;
+		vkCmdSetScissor(cmd, 0, 1, &scissor);
+
 		auto &[camera] = Renderer::getSceneData();
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
 		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();

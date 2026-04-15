@@ -6,6 +6,8 @@ var dir_4aa01486a295e7b0b42bebe6d16d0719 =
     [ "Textures", "dir_ddffb9450812be96d570a03ba2d158f3.html", "dir_ddffb9450812be96d570a03ba2d158f3" ],
     [ "Buffer.cpp", "Buffer_8cpp_source.html", null ],
     [ "Buffer.h", "Buffer_8h.html", "Buffer_8h" ],
+    [ "Framebuffer.cpp", "Framebuffer_8cpp_source.html", null ],
+    [ "Framebuffer.h", "Framebuffer_8h_source.html", null ],
     [ "GraphicsContext.cpp", "GraphicsContext_8cpp_source.html", null ],
     [ "GraphicsContext.h", "GraphicsContext_8h_source.html", null ],
     [ "RenderCommand.cpp", "RenderCommand_8cpp_source.html", null ],

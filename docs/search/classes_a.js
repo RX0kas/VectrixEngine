@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['perspectivecamera_0',['PerspectiveCamera',['../classVectrix_1_1PerspectiveCamera.html',1,'Vectrix']]],
-  ['perspectivecameracontroller_1',['PerspectiveCameraController',['../classVectrix_1_1PerspectiveCameraController.html',1,'Vectrix']]],
-  ['profiler_2',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
-  ['profilerresult_3',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
-  ['profilersession_4',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]]
+  ['meshmanager_0',['MeshManager',['../classVectrix_1_1MeshManager.html',1,'Vectrix']]],
+  ['model_1',['Model',['../classVectrix_1_1Model.html',1,'Vectrix']]],
+  ['mousebuttonevent_2',['MouseButtonEvent',['../classVectrix_1_1MouseButtonEvent.html',1,'Vectrix']]],
+  ['mousebuttonpressedevent_3',['MouseButtonPressedEvent',['../classVectrix_1_1MouseButtonPressedEvent.html',1,'Vectrix']]],
+  ['mousebuttonreleasedevent_4',['MouseButtonReleasedEvent',['../classVectrix_1_1MouseButtonReleasedEvent.html',1,'Vectrix']]],
+  ['mousemovedevent_5',['MouseMovedEvent',['../classVectrix_1_1MouseMovedEvent.html',1,'Vectrix']]],
+  ['mousescrolledevent_6',['MouseScrolledEvent',['../classVectrix_1_1MouseScrolledEvent.html',1,'Vectrix']]]
 ];

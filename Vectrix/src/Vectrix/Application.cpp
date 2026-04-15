@@ -69,14 +69,21 @@ namespace Vectrix {
 			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
-			if (RenderCommand::setupFrame()) {
-				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
-					layer->OnRender();
+			if (RenderCommand::canRender()) {
+				for (auto& layer : m_layerStack) {
+					layer->OnRenderOffscreen();
 					layer->OnUpdate(m_deltaTime);
 				}
+
+				RenderCommand::beginFrame();
+				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
+					layer->OnRender();
+				}
 				RenderCommand::endFrame();
+
 				m_imGuiLayer->OnRender();
 				m_imGuiLayer->OnUpdate(m_deltaTime);
+
 				RenderCommand::sendFrame();
 			}
 

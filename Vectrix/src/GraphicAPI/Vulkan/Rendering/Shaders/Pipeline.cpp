@@ -26,7 +26,6 @@ namespace Vectrix {
     void Pipeline::createGraphicsPipeline(const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(configInfo.pipelineLayout != VK_NULL_HANDLE,"Cannot create graphics pipeline: no pipelineLayout provided in configInfo");
-        VC_CORE_ASSERT(configInfo.renderPass != VK_NULL_HANDLE,"Cannot create graphics pipeline: no renderPass provided in configInfo");
 
         createShaderModule(vertCode, &m_vertShaderModule);
         createShaderModule(fragCode, &m_fragShaderModule);
@@ -57,6 +56,13 @@ namespace Vectrix {
         vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
         vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
+        VkPipelineRenderingCreateInfoKHR renderingInfo{};
+        renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+        renderingInfo.colorAttachmentCount = 1;
+        VkFormat f =  VulkanContext::instance().getRenderer().getImageFormat();
+        renderingInfo.pColorAttachmentFormats = &f;
+        renderingInfo.depthAttachmentFormat = VK_FORMAT_D32_SFLOAT;
+
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -72,7 +78,10 @@ namespace Vectrix {
         pipelineInfo.pDynamicState = &configInfo.dynamicStateInfo;
 
         pipelineInfo.layout = configInfo.pipelineLayout;
-        pipelineInfo.renderPass = configInfo.renderPass;
+
+        pipelineInfo.renderPass = VK_NULL_HANDLE;
+        pipelineInfo.pNext = &renderingInfo;
+
         pipelineInfo.subpass = configInfo.subpass;
 
         pipelineInfo.basePipelineIndex = -1;
