@@ -55,6 +55,7 @@ namespace Vectrix {
         [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return m_swapChain->getRenderPass(); }
         [[nodiscard]] size_t getSwapChainImageCount() const { return m_swapChain->imageCount();}
         [[nodiscard]] VkFormat getImageFormat() const { return m_swapChain->getSwapChainImageFormat(); }
+        [[nodiscard]] VkFormat findDepthFormat() const { return m_swapChain->findDepthFormat(); }
         [[nodiscard]] bool isFrameInProgress() const { return m_isFrameStarted; }
         [[nodiscard]] VkImageView getSwapChainImageView(int i) const {return m_swapChain->getImageView(i);}
         [[nodiscard]] VkImage getSwapChainImage(int i) const {return m_swapChain->getSwapChainImage(i);}

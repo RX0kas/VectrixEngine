@@ -116,6 +116,12 @@ namespace Vectrix {
 			recalculateMatrices();
 		}
 
+		void setCustomAspect(float aspect) {
+			m_customAspect = aspect;
+		}
+
+		[[nodiscard]] float getAspect() const;
+
 		/**
 		 * @brief This function recalculate all the matrices
 		 */
@@ -135,6 +141,8 @@ namespace Vectrix {
 
 		glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_rotation = { 0.0f, 0.0f, 0.0f };
+
+		float m_customAspect = -1;
 	};
 
 }

@@ -1,11 +1,16 @@
 #include "EditorLayer.h"
 
 namespace Vectrix {
-    EditorLayer::EditorLayer() : Layer("VC_Editor") {
+    EditorLayer::EditorLayer() : Layer("VC_Editor"),m_viewportSize(1,1) {
         FramebufferSpecification fbSpec;
-        fbSpec.width = 1280;
-        fbSpec.height = 720;
+        fbSpec.width = 1;
+        fbSpec.height = 1;
         m_framebuffer = Framebuffer::create(fbSpec);
+
+    	ShaderUniformLayout layout;
+    	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag",layout);
+    	m_testModel = MeshManager::loadModel("VC_testModel","./models/fox.obj");
+    	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
     }
 
     void EditorLayer::OnEvent(Event &event) {
@@ -73,11 +78,17 @@ namespace Vectrix {
 
 			ImGui::End();
 
-			ImGui::Begin("Preview");
-			ImVec2 s{};
-			s.x = static_cast<float>(m_framebuffer->getSpecification().width); // TODO: resize the framebuffer if the size of the image change
-			s.y = static_cast<float>(m_framebuffer->getSpecification().height);
-			ImGui::Image(m_framebuffer->getTextureID(),s);
+			ImGui::Begin("Viewport");
+			ImVec2 size = ImGui::GetContentRegionAvail();
+			if (size.x==0 || size.y==0) {
+				ImGui::Text("Loading...");
+			} else {
+				if (size.x != m_viewportSize.x || size.y != m_viewportSize.y) {
+					m_mustResize = true;
+					m_viewportSize = {size.x,size.y};
+				}
+				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
+			}
 			ImGui::End();
 		}
     }
@@ -89,11 +100,20 @@ namespace Vectrix {
     void EditorLayer::OnRenderOffscreen() {
         m_framebuffer->bind();
         Renderer::beginScene(m_cameraController.getCamera());
+
+    	m_viewportShader->setTexture(0,m_testTexture);
+    	Renderer::submit(*m_viewportShader,*m_testModel);
+
         Renderer::endScene();
         m_framebuffer->unbind();
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
         m_cameraController.onUpdate(dt);
+    	if (m_mustResize) {
+    		m_framebuffer->resize(m_viewportSize);
+    		m_cameraController.getCamera().setCustomAspect(m_viewportSize.x/m_viewportSize.y);
+    		m_mustResize = false;
+    	}
     }
 } // Vectrix

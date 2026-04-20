@@ -21,27 +21,34 @@ namespace Vectrix {
             return reinterpret_cast<ImTextureID>(m_descriptorSet);
         }
 
+        void resize(glm::vec2 size) override;
+
         [[nodiscard]] const FramebufferSpecification& getSpecification() const override { return m_specification; }
         [[nodiscard]] VkExtent2D getExtent() const { return {m_specification.width, m_specification.height}; }
         [[nodiscard]] VkImage getImage() const { return m_image; }
         [[nodiscard]] VkImageView getImageView() const { return m_imageView; }
         [[nodiscard]] VkDescriptorSet getDescriptorSet() const { return m_descriptorSet; }
         [[nodiscard]] bool isBound() const override { return m_bind; }
-        [[nodiscard]] static VulkanFramebuffer* getCurrentFramebuffer() { return s_currentFB; }
+        [[nodiscard]] float getAspectRatio() const override { return static_cast<float>(m_specification.width)/static_cast<float>(m_specification.height);}
     private:
         static void transitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
 
         Device& m_device;
 
         FramebufferSpecification m_specification;
-        VkImage m_image;
-        VkImageView m_imageView;
-        VmaAllocation m_allocation;
-        VkSampler m_sampler;
+        VkImage m_image = VK_NULL_HANDLE;
+        VkImageView m_imageView = VK_NULL_HANDLE;
+        VmaAllocation m_allocation = VK_NULL_HANDLE;
+
+        VkImage m_depthImage = VK_NULL_HANDLE;
+        VkImageView m_depthImageView = VK_NULL_HANDLE;
+        VmaAllocation  m_depthAllocation = VK_NULL_HANDLE;
+        VkFormat m_depthFormat;
+
+        VkSampler m_sampler = VK_NULL_HANDLE;
         VkDescriptorSet m_descriptorSet;
         VkImageLayout m_currentLayout;
-
-        static VulkanFramebuffer* s_currentFB;
+        VkImageLayout m_currentDepthLayout;
 
         bool m_bind = false;
     };

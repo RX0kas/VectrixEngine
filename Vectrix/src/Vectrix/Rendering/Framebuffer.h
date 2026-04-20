@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "imgui.h"
+#include "glm/vec2.hpp"
 
 namespace Vectrix {
     /**
@@ -55,11 +56,33 @@ namespace Vectrix {
          */
         [[nodiscard]] virtual const FramebufferSpecification& getSpecification() const = 0;
 
+
+        /**
+         * @brief This function change the size of a framebuffer
+         * @param size The new size
+         */
+        virtual void resize(glm::vec2 size) = 0;
+
         /**
          * @brief This function can be used to create a framebuffer
          * @param spec The specification of the framebuffer
          */
         static std::shared_ptr<Framebuffer> create(const FramebufferSpecification& spec);
+
+        /**
+         * @brief This function return the current framebuffer
+         * @warning This function return nullptr if no framebuffer is currently bound
+         */
+        [[nodiscard]] static Framebuffer* getCurrentFramebuffer() { return s_currentFramebuffer; }
+
+        /**
+         * @brief This function return true if a framebuffer is currently bound
+         */
+        [[nodiscard]] static bool isAFramebufferActive() { return s_currentFramebuffer!=nullptr; }
+
+        [[nodiscard]] virtual float getAspectRatio() const = 0;
+    protected:
+        static Framebuffer* s_currentFramebuffer;
     };
 } // Vectrix
 

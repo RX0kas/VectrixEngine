@@ -296,7 +296,7 @@ namespace Vectrix {
 		VkExtent2D extent = m_swapChain->getSwapChainExtent();
 
 		// If we draw to offscreen framebuffer
-		VulkanFramebuffer* currentFB = VulkanFramebuffer::getCurrentFramebuffer();
+		auto* currentFB = dynamic_cast<VulkanFramebuffer*>(Framebuffer::getCurrentFramebuffer());
 		if (currentFB!=nullptr) {
 			extent = currentFB->getExtent();
 		}

@@ -4,6 +4,8 @@
 #include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
 
 namespace Vectrix {
+    Framebuffer* Framebuffer::s_currentFramebuffer = nullptr;
+
     std::shared_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecification& spec)
     {
         switch (Renderer::getAPI())

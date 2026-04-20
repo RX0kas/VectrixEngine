@@ -21,7 +21,13 @@ namespace Vectrix {
 
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
-	    };
-	} // Vectrix
+
+    	std::shared_ptr<Texture> m_testTexture;
+    	std::shared_ptr<Model> m_testModel;
+
+    	glm::vec2 m_viewportSize;
+    	bool m_mustResize = false;
+    };
+} // Vectrix
 
 #endif //VECTRIXWORKSPACE_EDITORLAYER_H
