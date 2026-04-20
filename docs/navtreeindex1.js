@@ -1,5 +1,12 @@
 var NAVTREEINDEX1 =
 {
+"classVectrix_1_1TextureManager.html":[1,0,0,47],
+"classVectrix_1_1TextureManager.html#a1d557a7d11fe3e540836f6d35ec56611":[1,0,0,47,5],
+"classVectrix_1_1TextureManager.html#a677c13cdf8f63b25268fc6570cc85809":[1,0,0,47,0],
+"classVectrix_1_1TextureManager.html#a9ff1904ffa911ba90e9ce5af84f06eb4":[1,0,0,47,3],
+"classVectrix_1_1TextureManager.html#aa0b19cc2358f723690ba6e9e089104dd":[1,0,0,47,2],
+"classVectrix_1_1TextureManager.html#ad0f7793a5b51178668c178aecb37469b":[1,0,0,47,4],
+"classVectrix_1_1TextureManager.html#af35bb1da3a5335ce60086d6adc1a2633":[1,0,0,47,1],
 "classVectrix_1_1Transform.html":[1,0,0,36],
 "classVectrix_1_1Transform.html#a266df24f28722bbde31392744f0b7313":[1,0,0,36,4],
 "classVectrix_1_1Transform.html#a4028a0f086fa2c08d1b0c8d196d00b1f":[1,0,0,36,2],
@@ -65,8 +72,7 @@ var NAVTREEINDEX1 =
 "structVectrix_1_1BufferElement.html#ac6560e190ad0406c8be8950b4d57e85a":[1,0,0,26,0],
 "structVectrix_1_1BufferElement.html#af9cad1928b9df20c14b0cda89002cbbd":[1,0,0,26,3],
 "structVectrix_1_1FramebufferSpecification.html":[1,0,0,32],
-"structVectrix_1_1FramebufferSpecification.html#a146388263279da91f75f582402589740":[1,0,0,32,1],
-"structVectrix_1_1FramebufferSpecification.html#ab85d29725ec7031bbdd1e8c84c61835f":[1,0,0,32,2],
+"structVectrix_1_1FramebufferSpecification.html#ab85d29725ec7031bbdd1e8c84c61835f":[1,0,0,32,1],
 "structVectrix_1_1FramebufferSpecification.html#abdd5c4cbf6d10b4d2d46e33772ff5269":[1,0,0,32,0],
 "structVectrix_1_1ProfilerResult.html":[1,0,0,6],
 "structVectrix_1_1ProfilerSession.html":[1,0,0,7],

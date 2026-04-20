@@ -116,16 +116,28 @@ bool&#160;</td><td class="memItemRight"><b>isBound</b> () const</td></tr>
 <tr class="memitem:af631d43ca6a8d5dc562a3ff7dd8c83fd" id="r_af631d43ca6a8d5dc562a3ff7dd8c83fd"><td class="memItemLeft"><a id="af631d43ca6a8d5dc562a3ff7dd8c83fd" name="af631d43ca6a8d5dc562a3ff7dd8c83fd"></a>
 const <a class="el" href="structVectrix_1_1FramebufferSpecification.html">FramebufferSpecification</a> &amp;&#160;</td><td class="memItemRight"><b>getSpecification</b> () const</td></tr>
 <tr class="memdesc:af631d43ca6a8d5dc562a3ff7dd8c83fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the specification of the <a class="el" href="classVectrix_1_1Framebuffer.html" title="This class can be used to draw on an image.">Framebuffer</a>. <br /></td></tr>
+<tr class="memitem:ab9c536ce38b4d4790d6823db35adf266" id="r_ab9c536ce38b4d4790d6823db35adf266"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab9c536ce38b4d4790d6823db35adf266">resize</a> (glm::vec2 size)</td></tr>
+<tr class="memdesc:ab9c536ce38b4d4790d6823db35adf266"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function change the size of a framebuffer.  <br /></td></tr>
+<tr class="memitem:a709b3d38f356d91c099dbab32b80b321" id="r_a709b3d38f356d91c099dbab32b80b321"><td class="memItemLeft"><a id="a709b3d38f356d91c099dbab32b80b321" name="a709b3d38f356d91c099dbab32b80b321"></a>
+float&#160;</td><td class="memItemRight"><b>getAspectRatio</b> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:aa0adafb87a404168ec895c96720d324c" id="r_aa0adafb87a404168ec895c96720d324c"><td class="memItemLeft">static std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aa0adafb87a404168ec895c96720d324c">create</a> (const <a class="el" href="structVectrix_1_1FramebufferSpecification.html">FramebufferSpecification</a> &amp;spec)</td></tr>
 <tr class="memdesc:aa0adafb87a404168ec895c96720d324c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function can be used to create a framebuffer.  <br /></td></tr>
+<tr class="memitem:ab87ea6ac35d48710d519e7e737326d78" id="r_ab87ea6ac35d48710d519e7e737326d78"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> *&#160;</td><td class="memItemRight"><a class="el" href="#ab87ea6ac35d48710d519e7e737326d78">getCurrentFramebuffer</a> ()</td></tr>
+<tr class="memdesc:ab87ea6ac35d48710d519e7e737326d78"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the current framebuffer.  <br /></td></tr>
+<tr class="memitem:ac4215b4688346cb6b228e49ba5994766" id="r_ac4215b4688346cb6b228e49ba5994766"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#ac4215b4688346cb6b228e49ba5994766">isAFramebufferActive</a> ()</td></tr>
+<tr class="memdesc:ac4215b4688346cb6b228e49ba5994766"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return true if a framebuffer is currently bound.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-static-attribs" class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a40af6544cefe38d8828fb2ad801c4f64" id="r_a40af6544cefe38d8828fb2ad801c4f64"><td class="memItemLeft">static <a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a40af6544cefe38d8828fb2ad801c4f64">s_currentFramebuffer</a> = nullptr</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class can be used to draw on an image. </p>
 
-<p class="definition">Definition at line <a class="el" href="Framebuffer_8h_source.html#l00033">33</a> of file <a class="el" href="Framebuffer_8h_source.html">Framebuffer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Framebuffer_8h_source.html#l00027">27</a> of file <a class="el" href="Framebuffer_8h_source.html">Framebuffer.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
 <a id="a53284ee2927943def196e4ab3aef52f1" name="a53284ee2927943def196e4ab3aef52f1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a53284ee2927943def196e4ab3aef52f1">&#9670;&#160;</a></span>bind()</h2>
@@ -178,9 +190,93 @@ Public Static Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Framebuffer_8cpp_source.html#l00007">7</a> of file <a class="el" href="Framebuffer_8cpp_source.html">Framebuffer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Framebuffer_8cpp_source.html#l00009">9</a> of file <a class="el" href="Framebuffer_8cpp_source.html">Framebuffer.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="Renderer_8h_source.html#l00069">Vectrix::Renderer::getAPI()</a>.</p>
+
+</div>
+</div>
+<a id="ab87ea6ac35d48710d519e7e737326d78" name="ab87ea6ac35d48710d519e7e737326d78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab87ea6ac35d48710d519e7e737326d78">&#9670;&#160;</a></span>getCurrentFramebuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> * Vectrix::Framebuffer::getCurrentFramebuffer </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function return the current framebuffer. </p>
+<dl class="section warning"><dt>Warning</dt><dd>This function return nullptr if no framebuffer is currently bound </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Framebuffer_8h_source.html#l00076">76</a> of file <a class="el" href="Framebuffer_8h_source.html">Framebuffer.h</a>.</p>
+
+</div>
+</div>
+<a id="ac4215b4688346cb6b228e49ba5994766" name="ac4215b4688346cb6b228e49ba5994766"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4215b4688346cb6b228e49ba5994766">&#9670;&#160;</a></span>isAFramebufferActive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::Framebuffer::isAFramebufferActive </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>This function return true if a framebuffer is currently bound. </p>
+
+<p class="definition">Definition at line <a class="el" href="Framebuffer_8h_source.html#l00081">81</a> of file <a class="el" href="Framebuffer_8h_source.html">Framebuffer.h</a>.</p>
+
+</div>
+</div>
+<a id="ab9c536ce38b4d4790d6823db35adf266" name="ab9c536ce38b4d4790d6823db35adf266"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c536ce38b4d4790d6823db35adf266">&#9670;&#160;</a></span>resize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::Framebuffer::resize </td>
+          <td>(</td>
+          <td class="paramtype">glm::vec2</td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function change the size of a framebuffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>The new size </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -202,6 +298,31 @@ Public Static Functions</h2></td></tr>
 <p>This function tell the renderer to stop drawing inside this framebuffer. </p>
 <dl class="section pre"><dt>Precondition</dt><dd>Must be bound </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>This function must be called before you try </dd></dl>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Variables</h2>
+<a id="a40af6544cefe38d8828fb2ad801c4f64" name="a40af6544cefe38d8828fb2ad801c4f64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40af6544cefe38d8828fb2ad801c4f64">&#9670;&#160;</a></span>s_currentFramebuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> * Vectrix::Framebuffer::s_currentFramebuffer = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Framebuffer_8h_source.html#l00085">85</a> of file <a class="el" href="Framebuffer_8h_source.html">Framebuffer.h</a>.</p>
 
 </div>
 </div>

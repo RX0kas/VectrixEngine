@@ -11,5 +11,6 @@ var searchData=
   ['rendererapi_2eh_8',['RendererAPI.h',['../RendererAPI_8h.html',1,'']]],
   ['rendering_9',['rendering',['../rendering_overview.html#autotoc_md10',1,'1. &lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;'],['../group__rendering.html',1,'Graphic rendering']]],
   ['rendering_20system_20guide_10',['Rendering System Guide',['../rendering_overview.html',1,'docs_home']]],
-  ['rotation_11',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
+  ['resize_11',['resize',['../classVectrix_1_1Framebuffer.html#ab9c536ce38b4d4790d6823db35adf266',1,'Vectrix::Framebuffer']]],
+  ['rotation_12',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
 ];
