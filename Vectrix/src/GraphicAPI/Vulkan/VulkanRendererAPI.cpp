@@ -32,13 +32,13 @@ namespace Vectrix {
 	void VulkanRendererAPI::beginFrame() {
 		VC_PROFILER_FUNCTION();
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
-		renderer.beginSwapChainRenderPass(renderer.getCurrentCommandBuffer());
+		renderer.beginDynamicRendering(renderer.getCurrentCommandBuffer());
 	}
 
 	void VulkanRendererAPI::endFrame() {
 		VC_PROFILER_FUNCTION();
 		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
-		renderer.endSwapChainRenderPass(renderer.getCurrentCommandBuffer());
+		renderer.endDynamicRendering(renderer.getCurrentCommandBuffer());
 	}
 
 	void VulkanRendererAPI::sendFrame() {

@@ -20,6 +20,7 @@ namespace Vectrix {
         [[nodiscard]] VulkanBuffer& getVertexBuffer() const { return *m_globalVertexBuffer; }
         [[nodiscard]] VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer;  }
         [[nodiscard]] bool isUploaded() const { return m_uploaded; }
+        [[nodiscard]] bool isEmpty() const { return m_empty; }
     private:
         static void uploadBuffer(const void* data, VkDeviceSize size, VkBufferUsageFlags usage, std::unique_ptr<VulkanBuffer>& outBuffer);
 
@@ -29,7 +30,8 @@ namespace Vectrix {
 
         std::unique_ptr<VulkanBuffer> m_globalVertexBuffer;
         std::unique_ptr<VulkanBuffer> m_globalIndexBuffer;
-        bool m_uploaded;
+        bool m_uploaded = false;
+        bool m_empty = false;
     };
 } // Vectrix
 

@@ -41,7 +41,4 @@
 #include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
 #include "Vectrix/Rendering/Camera/PerspectiveCameraController.h"
 #include "Vectrix/Rendering/Mesh/ObjLoader.h"
-
-// Entry Point
-#include "Vectrix/EntryPoint.h"
 #endif

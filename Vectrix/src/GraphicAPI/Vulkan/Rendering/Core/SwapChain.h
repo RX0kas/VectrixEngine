@@ -1,6 +1,4 @@
 #pragma once
-#include "vcpch.h"
-#include "Vectrix/Core/Core.h"
 #include "Vectrix/Core/Log.h"
 
 #include "Device.h"
@@ -39,9 +37,11 @@ namespace Vectrix {
 
         [[nodiscard]] VkRenderPass getRenderPass() const { return m_renderPass; }
         [[nodiscard]] VkImageView getImageView(int index) const { return m_swapChainImageViews[index]; }
+        [[nodiscard]] VkImageView getDepthImageView(int index) const { return m_depthImageViews[index]; }
         std::vector<VkImageView> getImageViews() { return m_swapChainImageViews; }
         [[nodiscard]] size_t imageCount() const { return m_swapChainImages.size(); }
 	    [[nodiscard]] VkImage getSwapChainImage(int index) const { return m_swapChainImages[index]; }
+	    [[nodiscard]] VkImage getDepthImage(int index) const { return m_depthImages[index]; }
         [[nodiscard]] VkFormat getSwapChainImageFormat() const { return m_swapChainImageFormat; }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const { return m_swapChainExtent; }
         [[nodiscard]] uint32_t width() const { return m_swapChainExtent.width; }

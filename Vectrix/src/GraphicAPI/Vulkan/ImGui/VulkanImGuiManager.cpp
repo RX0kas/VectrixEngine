@@ -115,7 +115,7 @@ namespace Vectrix {
 		    	io.ConfigDpiScaleFonts    = true;
 		    	io.ConfigDpiScaleViewports = true;
 		#else
-		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues.");
+		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues");
 		    	io.ConfigDpiScaleFonts    = false;
 		    	io.ConfigDpiScaleViewports = false;
 		#endif

@@ -34,7 +34,10 @@ namespace Vectrix {
     void MeshRegistry::uploadToGPU() {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(!m_uploaded, "Already uploaded!");
-        if (m_pendingVertices.empty() || m_pendingIndices.empty()) {return;}
+        if (m_pendingVertices.empty() || m_pendingIndices.empty()) {
+            m_empty = true;
+            return;
+        }
 
         const VkDeviceSize vertexDataSize = m_pendingVertices.size() * sizeof(Vertex);
         const VkDeviceSize indexDataSize  = m_pendingIndices.size()  * sizeof(uint32_t);
@@ -48,7 +51,6 @@ namespace Vectrix {
         m_pendingVertices.shrink_to_fit();
         m_pendingIndices.clear();
         m_pendingIndices.shrink_to_fit();
-
         m_uploaded = true;
     }
 

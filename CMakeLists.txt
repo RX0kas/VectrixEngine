@@ -194,6 +194,32 @@ elseif(UNIX AND NOT APPLE)
     )
 endif()
 
+##########
+# Editor #
+##########
+
+file(GLOB_RECURSE EDITOR_SOURCES
+        VectrixEditor/src/*.cpp
+        VectrixEditor/src/*.h
+)
+
+add_executable(VectrixEditor ${EDITOR_SOURCES})
+
+target_link_libraries(VectrixEditor PRIVATE Vectrix)
+
+target_include_directories(VectrixEditor PRIVATE
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
+target_compile_definitions(VectrixEditor PRIVATE
+        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
+)
+
+if(MSVC)
+    target_compile_options(VectrixEditor PRIVATE /utf-8)
+endif()
+
+
 ###########
 # Sandbox #
 ###########

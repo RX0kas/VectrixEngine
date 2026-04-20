@@ -76,10 +76,10 @@ namespace Vectrix {
 
         VkCommandBuffer beginFrame();
         void endFrame();
-        void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        void beginDynamicRendering(VkCommandBuffer commandBuffer);
         [[nodiscard]] float getAspectRatio() const { return m_swapChain->extentAspectRatio(); }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
-        void endSwapChainRenderPass(VkCommandBuffer commandBuffer) const;
+        void endDynamicRendering(VkCommandBuffer commandBuffer) const;
 
         [[nodiscard]] std::vector<VkFence> getInFlightFences() const {
             return m_swapChain->getInFlightFences();

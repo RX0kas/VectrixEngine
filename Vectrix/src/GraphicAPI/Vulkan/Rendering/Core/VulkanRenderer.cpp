@@ -147,45 +147,84 @@ namespace Vectrix {
 		m_swapChain->advanceFrame();
 	}
 
-	void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
+	void VulkanRenderer::beginDynamicRendering(VkCommandBuffer commandBuffer) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
 
-		VkRenderPassBeginInfo renderPassInfo{};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_swapChain->getRenderPass();
-		renderPassInfo.framebuffer = m_swapChain->getFrameBuffer(static_cast<int>(m_currentImageIndex));
+		VkImageMemoryBarrier colorBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+		colorBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		colorBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		colorBarrier.image = m_swapChain->getSwapChainImage(m_currentImageIndex);
+		colorBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+		colorBarrier.srcAccessMask = 0;
+		colorBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = m_swapChain->getSwapChainExtent();
+		VkImageMemoryBarrier depthBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+		depthBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		depthBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+		depthBarrier.image = m_swapChain->getDepthImage(m_currentImageIndex);
+		depthBarrier.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
+		depthBarrier.srcAccessMask = 0;
+		depthBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-		std::array<VkClearValue, 2> clearValues{};
-		clearValues[0].color = { 0.01f, 0.01f, 0.01f, 1.0f };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-		renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-		renderPassInfo.pClearValues = clearValues.data();
+		std::array<VkImageMemoryBarrier, 2> barriers = { colorBarrier, depthBarrier };
+		vkCmdPipelineBarrier(commandBuffer,
+			VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			0, 0, nullptr, 0, nullptr,
+			static_cast<uint32_t>(barriers.size()), barriers.data());
 
-		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    	VkRenderingAttachmentInfoKHR colorAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
+    	colorAttachment.imageView = m_swapChain->getImageView(m_currentImageIndex);
+    	colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    	colorAttachment.clearValue = m_clearValue;
 
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_swapChain->getSwapChainExtent().width);
-		viewport.height = static_cast<float>(m_swapChain->getSwapChainExtent().height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		VkRect2D scissor{ {0, 0}, m_swapChain->getSwapChainExtent() };
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+    	VkRenderingAttachmentInfoKHR depthAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
+    	depthAttachment.imageView = m_swapChain->getDepthImageView(m_currentImageIndex);
+    	depthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    	depthAttachment.clearValue = { .depthStencil = { 1.0f, 0 } };
+
+    	VkRenderingInfoKHR renderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO_KHR };
+    	renderingInfo.renderArea = { {0, 0}, m_swapChain->getSwapChainExtent() };
+    	renderingInfo.layerCount = 1;
+    	renderingInfo.colorAttachmentCount = 1;
+    	renderingInfo.pColorAttachments = &colorAttachment;
+    	renderingInfo.pDepthAttachment = &depthAttachment;
+
+    	vkCmdBeginRenderingKHR(commandBuffer, &renderingInfo);
+
+    	VkViewport viewport{ 0.0f, 0.0f,
+    	    static_cast<float>(m_swapChain->getSwapChainExtent().width),
+    	    static_cast<float>(m_swapChain->getSwapChainExtent().height),
+    	    0.0f, 1.0f };
+    	VkRect2D scissor{ {0, 0}, m_swapChain->getSwapChainExtent() };
+    	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+    	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 	}
 
-	void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) const {
+	void VulkanRenderer::endDynamicRendering(VkCommandBuffer commandBuffer) const {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_isFrameStarted, "Can't call endSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(),"Can't end render pass on command buffer from a different frame");
 		VC_CORE_ASSERT(commandBuffer != VK_NULL_HANDLE,"Can't end render pass if commandBuffer is VK_NULL_HANDLE");
-		vkCmdEndRenderPass(commandBuffer);
+		vkCmdEndRenderingKHR(commandBuffer);
+
+		VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		barrier.image = m_swapChain->getSwapChainImage(static_cast<int>(m_currentImageIndex));
+		barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+		vkCmdPipelineBarrier(commandBuffer,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 
 	std::vector<std::unique_ptr<VulkanBuffer>> createIndirectBuffers() {
@@ -248,6 +287,7 @@ namespace Vectrix {
 
 	void VulkanRenderer::flush() {
 		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
+		if (meshRegistry.isEmpty()) {return;}
 		VC_CORE_ASSERT(meshRegistry.isUploaded(), "MeshRegistry not uploaded! Call uploadToGPU() before rendering.");
 		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
 		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
