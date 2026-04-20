@@ -1,6 +1,22 @@
 /**
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
+ * @section v0_4_2 v0.4.2 — (12-04-2026)
+ *
+ * @subsection v0_4_2_added Added
+ * - New Framebuffer class
+ * - New Layer.OnRenderOffscreen() function for drawing on framebuffer
+ * @subsection v0_4_2_changed Changed
+ * - Started using Vulkan dynamic rendering
+ * - Started using Volk for Vulkan graphic API
+ * - Updated VmaAllocator to support Vulkan 1.3
+ * -
+ * @subsection v0_4_2_fixed Fixed
+ * - Fix ImGui ID bug
+ * - Fix ImGui Import
+ * @subsection v0_4_2_removed Removed
+ * - Remove Own and Ref
+ *
  *
  * ---
  * @note Only the minor updates are written before this version
