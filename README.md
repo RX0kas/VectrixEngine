@@ -146,6 +146,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ## Known Issues
 
 - Multi-Viewport is disabled on Linux due to numerous compatibility issues
+- Crash when putting an ImGui widget on another screen
 
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration
