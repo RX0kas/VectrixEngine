@@ -23,9 +23,9 @@ namespace Vectrix {
         if (Input::isKeyPressed(VC_KEY_RIGHT))
             cameraRot.y += m_cameraRotationSpeed * dt;
         if (Input::isKeyPressed(VC_KEY_UP))
-            cameraRot.x += m_cameraRotationSpeed * dt;
-        if (Input::isKeyPressed(VC_KEY_DOWN))
             cameraRot.x -= m_cameraRotationSpeed * dt;
+        if (Input::isKeyPressed(VC_KEY_DOWN))
+            cameraRot.x += m_cameraRotationSpeed * dt;
         m_camera.setRotation(cameraRot);
 
         float yaw = cameraRot.y;
