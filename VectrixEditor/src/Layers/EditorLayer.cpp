@@ -78,6 +78,7 @@ namespace Vectrix {
 
 			ImGui::End();
 
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{0,0});
 			ImGui::Begin("Viewport");
 			ImVec2 size = ImGui::GetContentRegionAvail();
 			if (size.x==0 || size.y==0) {
@@ -90,6 +91,7 @@ namespace Vectrix {
 				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
 			}
 			ImGui::End();
+			ImGui::PopStyleVar();
 		}
     }
 
