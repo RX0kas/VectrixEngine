@@ -26,6 +26,7 @@ namespace Vectrix {
     	std::shared_ptr<Model> m_testModel;
 
     	glm::vec2 m_viewportSize;
+    	bool m_viewportFocused = false, m_viewportHovered = false;
     	bool m_mustResize = false;
     };
 } // Vectrix

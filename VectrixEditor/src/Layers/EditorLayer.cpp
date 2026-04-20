@@ -25,11 +25,8 @@ namespace Vectrix {
 			bool opt_fullscreen = opt_fullscreen_persistant;
 			static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-			// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-			// because it would be confusing to have two docking targets within each others.
 			ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-			if (opt_fullscreen)
-			{
+			if (opt_fullscreen)	{
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				ImGui::SetNextWindowPos(viewport->Pos);
 				ImGui::SetNextWindowSize(viewport->Size);
@@ -40,15 +37,9 @@ namespace Vectrix {
 				window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 			}
 
-			// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
 			if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 				window_flags |= ImGuiWindowFlags_NoBackground;
 
-			// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-			// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-			// all active windows docked into it will lose their parent and become undocked.
-			// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-			// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 			ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
 			ImGui::PopStyleVar();
@@ -80,6 +71,13 @@ namespace Vectrix {
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{0,0});
 			ImGui::Begin("Viewport");
+			m_viewportFocused = ImGui::IsWindowFocused();
+			m_viewportHovered = ImGui::IsWindowHovered();
+			if (!m_viewportFocused || !m_viewportHovered)
+				Application::instance().imguiLayer().startBlockEvents();
+			else
+				Application::instance().imguiLayer().stopBlockEvents();
+
 			ImVec2 size = ImGui::GetContentRegionAvail();
 			if (size.x==0 || size.y==0) {
 				ImGui::Text("Loading...");
@@ -111,7 +109,8 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
-        m_cameraController.onUpdate(dt);
+    	if (m_viewportFocused || m_viewportHovered)
+    		m_cameraController.onUpdate(dt);
     	if (m_mustResize) {
     		m_framebuffer->resize(m_viewportSize);
     		m_cameraController.getCamera().setCustomAspect(m_viewportSize.x/m_viewportSize.y);
