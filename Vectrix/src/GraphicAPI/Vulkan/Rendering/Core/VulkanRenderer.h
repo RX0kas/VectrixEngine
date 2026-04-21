@@ -33,12 +33,6 @@ namespace Vectrix {
         DynamicSSBO objectDataSSBO; // The buffer that will send the objectDatas
 
         std::uint32_t elementCount = 0;
-
-        BatchInfo() = delete;
-        BatchInfo(BatchInfo&&) = default;
-        BatchInfo& operator=(BatchInfo&&) = delete;
-        BatchInfo(const BatchInfo&) = delete;
-        BatchInfo& operator=(const BatchInfo&) = delete;
     };
 
     constexpr uint32_t MAX_OBJECTS_BATCHING = 10'000;
