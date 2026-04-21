@@ -72,6 +72,10 @@ message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
 add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 
+# EnTT
+message(VERBOSE "Initializing EnTT")
+add_subdirectory(Vectrix/extern/EnTT)
+
 # Vectrix
 message(STATUS "Initializing Vectrix")
 
@@ -161,6 +165,7 @@ if (UNIX AND NOT APPLE)
             xxHash::xxhash
             GPUOpen::VulkanMemoryAllocator
             volk::volk
+            EnTT::EnTT
     )
 else()
 target_link_libraries(Vectrix
@@ -169,6 +174,7 @@ target_link_libraries(Vectrix
         xxHash::xxhash
         GPUOpen::VulkanMemoryAllocator
         volk::volk
+        EnTT::EnTT
 )
 endif()
 
