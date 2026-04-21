@@ -14,7 +14,7 @@
 #include <cstring>
 #include <set>
 
-#include <vulkan/vulkan.h>
+#include "volk.h"
 
 #ifndef GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_NONE

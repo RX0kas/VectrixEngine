@@ -1,6 +1,6 @@
 ![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.4.1-green.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.4.2-green.svg)
 
 An engine made to run all of my little graphics project
 
@@ -61,7 +61,8 @@ endif()
 ```
 #### main.cpp
 ```c++
-// Include the entry point
+// Include the entry point and the main header
+#include "Vectrix/EntryPoint.h"
 #include <Vectrix.h>
 // Create a custom layer
 class CustomLayer : public Vectrix::Layer
@@ -145,7 +146,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 ## Known Issues
 
 - Multi-Viewport is disabled on Linux due to numerous compatibility issues
-- Synchronization bug
+- Crash when putting an ImGui widget on another screen
 
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration

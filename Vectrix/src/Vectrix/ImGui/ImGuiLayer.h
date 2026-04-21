@@ -22,6 +22,7 @@ namespace Vectrix {
 		void OnDetach() override;
 		void OnImGuiRender() override;
 		void OnUpdate(const DeltaTime& deltaTime) override;
+		void OnEvent(Event &event) override;
 		/// @endcond
 
 		/**
@@ -31,12 +32,15 @@ namespace Vectrix {
 		void addWidget(const std::shared_ptr<ImGuiWidget> &widget) {
 			m_widgets.push_back(widget);
 		}
+		void startBlockEvents() { m_blockEvents = true; }
+		void stopBlockEvents() { m_blockEvents = false; }
 	private:
 		friend class Application;
 		ImGuiLayer();
 		std::unique_ptr<ImGuiManager> m_manager;
 		std::vector<std::shared_ptr<ImGuiWidget>> m_widgets;
 		bool m_attached;
+		bool m_blockEvents = true;
 	};
 
 }

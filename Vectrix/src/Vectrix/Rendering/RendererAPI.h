@@ -26,7 +26,8 @@ namespace Vectrix {
 		};
 		/// @cond INTERNAL
 		virtual void setClearColor(const glm::vec4& color) = 0;
-		virtual bool prepareFrame() = 0;
+		virtual bool canRender() = 0;
+		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 		virtual void sendFrame() = 0;
 

@@ -43,6 +43,7 @@ private:
 	std::shared_ptr<Vectrix::Shader> defaultShader;
 	std::shared_ptr<Vectrix::Texture> customTexture;
 	std::shared_ptr<Vectrix::Model> m_model;
+	std::shared_ptr<Vectrix::Framebuffer> m_framebuffer;
 	const char* p_defaultName = "default";
 };
 

@@ -18,6 +18,9 @@ namespace Vectrix {
         std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
 
+        VkFormat colorAttachmentFormat = VK_FORMAT_UNDEFINED;
+        VkFormat depthAttachmentFormat = VK_FORMAT_UNDEFINED;
+
         VkPipelineViewportStateCreateInfo viewportInfo;
         VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
         VkPipelineRasterizationStateCreateInfo rasterizationInfo;

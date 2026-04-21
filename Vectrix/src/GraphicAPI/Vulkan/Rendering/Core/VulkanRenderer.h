@@ -55,8 +55,10 @@ namespace Vectrix {
         [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return m_swapChain->getRenderPass(); }
         [[nodiscard]] size_t getSwapChainImageCount() const { return m_swapChain->imageCount();}
         [[nodiscard]] VkFormat getImageFormat() const { return m_swapChain->getSwapChainImageFormat(); }
+        [[nodiscard]] VkFormat findDepthFormat() const { return m_swapChain->findDepthFormat(); }
         [[nodiscard]] bool isFrameInProgress() const { return m_isFrameStarted; }
         [[nodiscard]] VkImageView getSwapChainImageView(int i) const {return m_swapChain->getImageView(i);}
+        [[nodiscard]] VkImage getSwapChainImage(int i) const {return m_swapChain->getSwapChainImage(i);}
 
         [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() const { return m_swapChain->getFrameBuffer(m_swapChain->getFrameIndex()); }
 
@@ -75,10 +77,10 @@ namespace Vectrix {
 
         VkCommandBuffer beginFrame();
         void endFrame();
-        void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        void beginDynamicRendering(VkCommandBuffer commandBuffer);
         [[nodiscard]] float getAspectRatio() const { return m_swapChain->extentAspectRatio(); }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
-        void endSwapChainRenderPass(VkCommandBuffer commandBuffer) const;
+        void endDynamicRendering(VkCommandBuffer commandBuffer) const;
 
         [[nodiscard]] std::vector<VkFence> getInFlightFences() const {
             return m_swapChain->getInFlightFences();

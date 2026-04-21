@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['window_0',['Window',['../classVectrix_1_1Window.html',1,'Vectrix']]],
-  ['windowattributes_1',['WindowAttributes',['../structVectrix_1_1WindowAttributes.html',1,'Vectrix']]],
-  ['windowcloseevent_2',['WindowCloseEvent',['../classVectrix_1_1WindowCloseEvent.html',1,'Vectrix']]],
-  ['windowresizeevent_3',['WindowResizeEvent',['../classVectrix_1_1WindowResizeEvent.html',1,'Vectrix']]]
+  ['vertex_0',['Vertex',['../structVectrix_1_1Vertex.html',1,'Vectrix']]],
+  ['vertexarray_1',['VertexArray',['../classVectrix_1_1VertexArray.html',1,'Vectrix']]],
+  ['vertexbuffer_2',['VertexBuffer',['../classVectrix_1_1VertexBuffer.html',1,'Vectrix']]]
 ];

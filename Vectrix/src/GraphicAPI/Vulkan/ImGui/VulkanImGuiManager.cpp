@@ -14,7 +14,7 @@
 namespace Vectrix {
 	VulkanImGuiManager* VulkanImGuiManager::m_instance = nullptr;
 
-    VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window }, m_imGuiRenderPass(VK_NULL_HANDLE) {
+    VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
     	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists!");
     	m_instance = this;
@@ -34,74 +34,71 @@ namespace Vectrix {
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
-		if (m_imGuiRenderPass != VK_NULL_HANDLE) {
-			vkDestroyRenderPass(m_device.device(), m_imGuiRenderPass, nullptr);
-			m_imGuiRenderPass = VK_NULL_HANDLE;
-		}
-
 		if (m_descriptorPool != VK_NULL_HANDLE) {
 			vkDestroyDescriptorPool(m_device.device(), m_descriptorPool, nullptr);
 			m_descriptorPool = VK_NULL_HANDLE;
 		}
-
-    	for (const auto f : m_imGuiFramebuffers) {
-    		if (f!=VK_NULL_HANDLE)
-    			vkDestroyFramebuffer(m_device.device(),f,nullptr);
-    	}
-
 	}
-
-	void VulkanImGuiManager::createImGuiFramebuffers() {
-    	m_imGuiFramebuffers.resize(m_renderer->getSwapChainImageCount());
-
-    	for (int i = 0; i < m_imGuiFramebuffers.size(); i++) {
-    		VC_CORE_ASSERT(m_renderer->getSwapChainImageView(i) != VK_NULL_HANDLE,"Swapchain image view is null for index {}", i);
-    		const VkImageView attachments[] = { m_renderer->getSwapChainImageView(i) };
-
-    		VkFramebufferCreateInfo framebufferInfo{};
-    		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    		framebufferInfo.renderPass = m_imGuiRenderPass;
-    		framebufferInfo.attachmentCount = 1;
-    		framebufferInfo.pAttachments = attachments;
-    		framebufferInfo.width = m_renderer->getSwapChainExtent().width;
-    		framebufferInfo.height = m_renderer->getSwapChainExtent().height;
-    		framebufferInfo.layers = 1;
-
-    		if (vkCreateFramebuffer(m_device.device(),&framebufferInfo,nullptr,&m_imGuiFramebuffers[i]) != VK_SUCCESS) {
-    			VC_CORE_ERROR("Failed to create ImGui framebuffer");
-    		}
-    	}
-    }
-
-	void VulkanImGuiManager::destroyImGuiFramebuffers() {
-    	for (const auto fb : m_imGuiFramebuffers) {
-    		if (fb != VK_NULL_HANDLE) {
-    			vkDestroyFramebuffer(m_device.device(), fb, nullptr);
-    		}
-    	}
-    	m_imGuiFramebuffers.clear();
-    }
 
 
 
 	void VulkanImGuiManager::render() {
-    	const VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
-    	beginImGuiRenderPass(cmd,VulkanContext::instance().getRenderer().getCurrentImageIndex());
+    	VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+		VkExtent2D extent = VulkanContext::instance().getRenderer().getSwapChainExtent();
+		uint32_t imageIndex = VulkanContext::instance().getRenderer().getCurrentImageIndex();
+		VkImageView imageView = VulkanContext::instance().getRenderer().getSwapChainImageView(static_cast<int>(imageIndex));
+
+		VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+		barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		barrier.image = VulkanContext::instance().getRenderer().getSwapChainImage(imageIndex);
+		barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+		barrier.srcAccessMask = 0;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		vkCmdPipelineBarrier(cmd,
+		    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+		    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+		    0, 0, nullptr, 0, nullptr, 1, &barrier);
+
+		VkRenderingAttachmentInfoKHR colorAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
+		colorAttachment.imageView = imageView;
+		colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+		VkRenderingInfoKHR renderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO_KHR };
+		renderingInfo.renderArea = { {0, 0}, extent };
+		renderingInfo.layerCount = 1;
+		renderingInfo.colorAttachmentCount = 1;
+		renderingInfo.pColorAttachments = &colorAttachment;
+
+		vkCmdBeginRenderingKHR(cmd, &renderingInfo);
+
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		Application::instance().renderImGui();
 		ImGui::Render();
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
-    	endImGuiRenderPass(cmd);
-	}
 
-	void VulkanImGuiManager::update() {
+		vkCmdEndRenderingKHR(cmd);
+
+		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = 0;
+		vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+		    0, 0, nullptr, 0, nullptr, 1, &barrier);
     }
+
+	void VulkanImGuiManager::update() {}
 
 	void VulkanImGuiManager::initImGui() {
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 		VC_CORE_INFO("Initializing ImGui");
+    	VC_CORE_ASSERT(vkGetInstanceProcAddr != nullptr, "Volk global functions not loaded!");
+    	VC_CORE_ASSERT(vkGetDeviceProcAddr != nullptr, "Volk device proc addr function is null!");
+
 
 		auto* w = static_cast<GLFWwindow*>(m_window.getNativeWindow());
 
@@ -109,8 +106,6 @@ namespace Vectrix {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		#ifndef VC_PLATFORM_LINUX
@@ -118,7 +113,7 @@ namespace Vectrix {
 		    	io.ConfigDpiScaleFonts    = true;
 		    	io.ConfigDpiScaleViewports = true;
 		#else
-		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues.");
+		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues");
 		    	io.ConfigDpiScaleFonts    = false;
 		    	io.ConfigDpiScaleViewports = false;
 		#endif
@@ -147,112 +142,54 @@ namespace Vectrix {
 				});
 		#endif
 
-		ImGui_ImplVulkan_InitInfo init_info = {};
-		init_info.ApiVersion = VK_API_VERSION_1_2; // same as VkApplicationInfo::apiVersion
-		init_info.Instance = m_device.instance();
-		init_info.PhysicalDevice = m_device.physicalDevice();
-		init_info.Device = m_device.device();
-		init_info.QueueFamily = findGraphicsQueueFamilyIndex(m_device.physicalDevice());
-		init_info.Queue = m_device.graphicsQueue();
-		//init_info.PipelineCache = g_PipelineCache;
-		init_info.DescriptorPool = createImGuiDescriptorPool();
-		init_info.MinImageCount = 2;
-		init_info.ImageCount = m_renderer->getSwapChainImageCount(); // lets Dear ImGui know how many framebuffers and resources in general it should allocate
-		init_info.Allocator = nullptr;
-		init_info.PipelineInfoMain.RenderPass = createImGuiRenderPass();
-		init_info.PipelineInfoMain.Subpass = 0;
-		init_info.PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
-		init_info.CheckVkResultFn = VulkanContext::check_vk_result;
+    	ImGui_ImplVulkan_InitInfo init_info = {};
+    	init_info.ApiVersion = VK_API_VERSION_1_3;
+    	init_info.Instance = m_device.instance();
+    	init_info.PhysicalDevice = m_device.physicalDevice();
+    	init_info.Device = m_device.device();
+    	init_info.QueueFamily = findGraphicsQueueFamilyIndex(m_device.physicalDevice());
+    	init_info.Queue = m_device.graphicsQueue();
+    	init_info.DescriptorPool = createImGuiDescriptorPool();
+    	init_info.MinImageCount = 2;
+    	init_info.ImageCount = m_renderer->getSwapChainImageCount();
+    	init_info.Allocator = nullptr;
+    	init_info.CheckVkResultFn = VulkanContext::check_vk_result;
 
+    	init_info.UseDynamicRendering = true;
+    	init_info.PipelineInfoMain.RenderPass = VK_NULL_HANDLE;
+    	init_info.PipelineInfoMain.Subpass = 0;
+    	init_info.PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+
+    	VkPipelineRenderingCreateInfoKHR pipelineRenderingCreateInfo{};
+    	pipelineRenderingCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+    	pipelineRenderingCreateInfo.colorAttachmentCount = 1;
+    	VkFormat colorFormat = m_renderer->getImageFormat();
+    	pipelineRenderingCreateInfo.pColorAttachmentFormats = &colorFormat;
+
+    	init_info.PipelineInfoMain.PipelineRenderingCreateInfo = pipelineRenderingCreateInfo;
+
+#ifndef VC_PLATFORM_LINUX
+    	init_info.PipelineInfoMain.SwapChainImageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+#endif
 
 		VC_CORE_ASSERT(init_info.Device != VK_NULL_HANDLE, "Vulkan device is null!");
-		VC_CORE_ASSERT(init_info.PipelineInfoMain.RenderPass != VK_NULL_HANDLE, "Render pass for ImGui is null!");
 		VC_CORE_ASSERT(init_info.DescriptorPool != VK_NULL_HANDLE, "Descriptor pool is null!");
+    	PFN_vkVoidFunction testFunc = vkGetDeviceProcAddr(init_info.Device, "vkCmdBeginRenderingKHR");
+    	VC_CORE_ASSERT(testFunc != nullptr, "vkCmdBeginRenderingKHR not found – dynamic rendering feature not enabled?");
+
 
 
 		ImGui_ImplVulkan_Init(&init_info);
 
 		//ImGui_ImplVulkan_CreateFontsTexture();
 
+    	//createImGuiFramebuffers();
 		VC_CORE_INFO("ImGui has been initialized");
-    	createImGuiFramebuffers();
 #else
 		VC_CORE_ERROR("The only Platform supported is Windows and Linux, ImGui can't be initialized");
 #endif
 	}
 
-
-	VkRenderPass VulkanImGuiManager::createImGuiRenderPass() {
-    	VC_CORE_INFO("Creating ImGui RenderPass");
-    	VkAttachmentDescription colorAttachment{};
-    	colorAttachment.format = m_renderer->getImageFormat();
-    	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-    	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
-    	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    	colorAttachment.finalLayout   = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-    	VkAttachmentReference colorAttachmentRef{};
-    	colorAttachmentRef.attachment = 0;
-    	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    	VkSubpassDescription subpass{};
-    	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    	subpass.colorAttachmentCount = 1;
-    	subpass.pColorAttachments = &colorAttachmentRef;
-
-    	VkSubpassDependency dependency{};
-    	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    	dependency.dstSubpass = 0;
-    	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    	dependency.srcAccessMask = 0;
-    	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-    	VkRenderPassCreateInfo renderPassInfo{};
-    	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    	renderPassInfo.attachmentCount = 1;
-    	renderPassInfo.pAttachments = &colorAttachment;
-    	renderPassInfo.subpassCount = 1;
-    	renderPassInfo.pSubpasses = &subpass;
-    	renderPassInfo.dependencyCount = 1;
-    	renderPassInfo.pDependencies = &dependency;
-
-    	VkRenderPass renderPass = VK_NULL_HANDLE;
-    	VkResult res = vkCreateRenderPass(m_device.device(), &renderPassInfo, nullptr, &renderPass);
-
-    	if (res != VK_SUCCESS) {
-    		VC_CORE_ERROR("Failed to create ImGui render pass");
-    	}
-
-    	m_imGuiRenderPass = renderPass;
-
-    	return renderPass;
-    }
-
-	void VulkanImGuiManager::beginImGuiRenderPass(VkCommandBuffer commandBuffer,uint32_t imageIndex) const {
-    	VC_CORE_ASSERT(m_imGuiRenderPass != VK_NULL_HANDLE, "ImGui render pass not created");
-    	VC_CORE_ASSERT(imageIndex < m_imGuiFramebuffers.size(), "Invalid ImGui framebuffer index");
-
-    	VkRenderPassBeginInfo renderPassInfo{};
-    	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    	renderPassInfo.renderPass = m_imGuiRenderPass;
-    	renderPassInfo.framebuffer = m_imGuiFramebuffers[imageIndex];
-    	renderPassInfo.renderArea.offset = {0, 0};
-    	renderPassInfo.renderArea.extent = VulkanContext::instance().getRenderer().getSwapChainExtent();
-
-    	// Aucun clear : on dessine PAR-DESSUS la scène
-    	renderPassInfo.clearValueCount = 0;
-    	renderPassInfo.pClearValues = nullptr;
-
-    	vkCmdBeginRenderPass(commandBuffer,&renderPassInfo,VK_SUBPASS_CONTENTS_INLINE);
-    }
-
-	void VulkanImGuiManager::endImGuiRenderPass(VkCommandBuffer commandBuffer) {
-    	vkCmdEndRenderPass(commandBuffer);
-    }
 
 	uint32_t VulkanImGuiManager::findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice) {
 		uint32_t queueFamilyCount = 0;

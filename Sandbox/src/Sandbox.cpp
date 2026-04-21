@@ -2,6 +2,8 @@
 
 #include "Layers/ExampleLayer.h"
 
+#include "Vectrix/EntryPoint.h"
+
 class Sandbox : public Vectrix::Application {
 public:
 	Sandbox() {
@@ -13,8 +15,7 @@ private:
 	std::shared_ptr<ExampleLayer> m_exampleLayer;
 };
 
-Vectrix::Application* Vectrix::createApplication()
-{
+Vectrix::Application* Vectrix::createApplication() {
 	return new Sandbox();
 }
 

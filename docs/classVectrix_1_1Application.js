@@ -1,5 +1,6 @@
 var classVectrix_1_1Application =
 [
+    [ "close", "classVectrix_1_1Application.html#a6e8143edecf4139f23d7d128f95905e2", null ],
     [ "getAppInfo", "classVectrix_1_1Application.html#ae45c757a101d698f82b647a0130d5972", null ],
     [ "getDeltaTime", "classVectrix_1_1Application.html#a8be2aea764612ecf5adb8d82193246f3", null ],
     [ "imguiLayer", "classVectrix_1_1Application.html#aa04aa8c2448af21f423b16d910f3ecba", null ],

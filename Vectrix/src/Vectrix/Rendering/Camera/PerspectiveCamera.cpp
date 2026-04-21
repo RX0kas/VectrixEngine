@@ -7,12 +7,17 @@
 
 #include "Vectrix/Application.h"
 #include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Rendering/Framebuffer.h"
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
 
 	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
 		recalculateMatrices();
+	}
+
+	float PerspectiveCamera::getAspect() const {
+		return m_customAspect!=-1 ? m_customAspect : Application::instance().window().getAspect();
 	}
 
 	void PerspectiveCamera::recalculateMatrices() {
@@ -71,7 +76,7 @@ namespace Vectrix {
 
 	void PerspectiveCamera::recalculateProjectionMatrix() {
 		VC_PROFILER_FUNCTION();
-		const float aspect = Application::instance().window().getAspect();
+		float aspect = getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
 
 		const float tanHalfFovy = std::tan(m_fov / 2.f);

@@ -166,7 +166,7 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) {
             for (const auto& img : frame.images) {
-                char name[256] = "Images - ";
+                char name[256] = "Image - ";
                 strcat(name,img.name.c_str());
                 if (ImGui::TreeNode(name)) {
                     ImGui::Text("Format: %s", string_VkFormat(img.format));

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['keyevent_0',['KeyEvent',['../classVectrix_1_1KeyEvent.html',1,'Vectrix']]],
-  ['keypressedevent_1',['KeyPressedEvent',['../classVectrix_1_1KeyPressedEvent.html',1,'Vectrix']]],
-  ['keyreleasedevent_2',['KeyReleasedEvent',['../classVectrix_1_1KeyReleasedEvent.html',1,'Vectrix']]]
+  ['json_0',['Json',['../classVectrix_1_1Json.html',1,'Vectrix']]],
+  ['jsonvalue_1',['JsonValue',['../classVectrix_1_1JsonValue.html',1,'Vectrix']]]
 ];

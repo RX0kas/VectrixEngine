@@ -20,6 +20,8 @@ var hierarchy =
       [ "Vectrix::WindowResizeEvent", "classVectrix_1_1WindowResizeEvent.html", null ]
     ] ],
     [ "Vectrix::EventDispatcher", "classVectrix_1_1EventDispatcher.html", null ],
+    [ "Vectrix::Framebuffer", "classVectrix_1_1Framebuffer.html", null ],
+    [ "Vectrix::FramebufferSpecification", "structVectrix_1_1FramebufferSpecification.html", null ],
     [ "Vectrix::ImGuiWidget", "classVectrix_1_1ImGuiWidget.html", null ],
     [ "Vectrix::IndexBuffer", "classVectrix_1_1IndexBuffer.html", null ],
     [ "Vectrix::Input", "classVectrix_1_1Input.html", null ],

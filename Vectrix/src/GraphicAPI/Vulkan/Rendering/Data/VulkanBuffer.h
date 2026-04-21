@@ -1,6 +1,7 @@
 #pragma once
 
-#include "vulkan/vulkan.h"
+#include "volk.h"
+
 #include <sstream>
 #include "../Core/Device.h"
 #include "Vectrix/Rendering/Mesh/Vertex.h"

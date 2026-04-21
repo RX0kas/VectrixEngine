@@ -8,7 +8,8 @@ namespace Vectrix {
 	{
 	public:
 		void setClearColor(const glm::vec4& color) override;
-		bool prepareFrame() override;
+		bool canRender() override;
+		void beginFrame() override;
 		void endFrame() override;
 		void sendFrame() override;
 		void drawIndexed(const VertexArray& vertexArray) override;

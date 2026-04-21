@@ -29,7 +29,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.1</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.2</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -111,41 +111,51 @@ $(function(){initNavTree('ImGuiLayer_8h_source.html','',''); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">     * @brief This function is the layer responsible for drawing Dear ImGui</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">     */</span></div>
 <div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiLayer.html">   16</a></span>    <span class="keyword">class </span>ImGuiLayer : <span class="keyword">public</span> Layer {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiLayer.html">   16</a></span>    <span class="keyword">class </span>ImGuiLayer : <span class="keyword">public</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#aa574de23b396df49ed5657c60fd2e385">Layer</a> {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        ~ImGuiLayer() <span class="keyword">override</span>;<span class="comment"></span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">        /// @cond INTERNAL</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordtype">void</span> OnRender() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> OnAttach() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">void</span> OnDetach() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">void</span> OnImGuiRender() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordtype">void</span> OnUpdate(<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1DeltaTime.html">DeltaTime</a>&amp; deltaTime) <span class="keyword">override</span>;<span class="comment"></span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">        /// @endcond</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"></span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">         * @brief This function add a new ImGuiWidget</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">         * @param widget A shared_ptr to the widget</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">         */</span></div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">   31</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">addWidget</a>(<span class="keyword">const</span> std::shared_ptr&lt;ImGuiWidget&gt; &amp;widget) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            m_widgets.push_back(widget);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        }</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#a1aa34422ce3bb128f7a61d17083bd50f">OnRender</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#a93c0b71eb7f61b131c53969c8ad0acac">OnAttach</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#a63f0dfe30e621ab02f4a0b928a843dd5">OnDetach</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#aac9467056a1c586e6b8b4e1cbbb61fe2">OnImGuiRender</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#a5882d4e2be086fb0c10fbe111e5f7ea2">OnUpdate</a>(<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1DeltaTime.html">DeltaTime</a>&amp; deltaTime) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Layer.html#a8fa29f02cb8f28b2489fc91ae84ea473">OnEvent</a>(<a class="code hl_class" href="classVectrix_1_1Event.html">Event</a> &amp;event) <span class="keyword">override</span>;<span class="comment"></span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">        /// @endcond</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"></span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">        /**</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">         * @brief This function add a new ImGuiWidget</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">         * @param widget A shared_ptr to the widget</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">         */</span></div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">   32</a></span>        <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">addWidget</a>(<span class="keyword">const</span> std::shared_ptr&lt;ImGuiWidget&gt; &amp;widget) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            m_widgets.push_back(widget);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        }</div>
 </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <a class="code hl_class" href="classVectrix_1_1ImGuiLayer.html">ImGuiLayer</a>();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        std::unique_ptr&lt;ImGuiManager&gt; m_manager;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::vector&lt;std::shared_ptr&lt;ImGuiWidget&gt;&gt; m_widgets;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">bool</span> m_attached;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    };</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordtype">void</span> startBlockEvents() { m_blockEvents = <span class="keyword">true</span>; }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordtype">void</span> stopBlockEvents() { m_blockEvents = <span class="keyword">false</span>; }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">friend</span> <span class="keyword">class </span>Application;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        ImGuiLayer();</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        std::unique_ptr&lt;ImGuiManager&gt; m_manager;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        std::vector&lt;std::shared_ptr&lt;ImGuiWidget&gt;&gt; m_widgets;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordtype">bool</span> m_attached;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordtype">bool</span> m_blockEvents = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    };</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
 <div class="ttc" id="aImGuiWidget_8h_html"><div class="ttname"><a href="ImGuiWidget_8h.html">ImGuiWidget.h</a></div><div class="ttdoc">Definition of the ImGuiWidget.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00034">Application.h:34</a></div></div>
 <div class="ttc" id="aclassVectrix_1_1DeltaTime_html"><div class="ttname"><a href="classVectrix_1_1DeltaTime.html">Vectrix::DeltaTime</a></div><div class="ttdoc">This class represent how many times have past since the last frame.</div><div class="ttdef"><b>Definition</b> <a href="DeltaTime_8h_source.html#l00015">DeltaTime.h:15</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ImGuiLayer_html"><div class="ttname"><a href="classVectrix_1_1ImGuiLayer.html">Vectrix::ImGuiLayer</a></div><div class="ttdoc">This function is the layer responsible for drawing Dear ImGui.</div><div class="ttdef"><b>Definition</b> <a href="#l00016">ImGuiLayer.h:16</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ImGuiLayer_html_a1b32306732027d3cab8925f11485313b"><div class="ttname"><a href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">Vectrix::ImGuiLayer::addWidget</a></div><div class="ttdeci">void addWidget(const std::shared_ptr&lt; ImGuiWidget &gt; &amp;widget)</div><div class="ttdoc">This function add a new ImGuiWidget.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">ImGuiLayer.h:31</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Event_html"><div class="ttname"><a href="classVectrix_1_1Event.html">Vectrix::Event</a></div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00043">Event.h:43</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ImGuiLayer_html_a1b32306732027d3cab8925f11485313b"><div class="ttname"><a href="classVectrix_1_1ImGuiLayer.html#a1b32306732027d3cab8925f11485313b">Vectrix::ImGuiLayer::addWidget</a></div><div class="ttdeci">void addWidget(const std::shared_ptr&lt; ImGuiWidget &gt; &amp;widget)</div><div class="ttdoc">This function add a new ImGuiWidget.</div><div class="ttdef"><b>Definition</b> <a href="#l00032">ImGuiLayer.h:32</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_a1aa34422ce3bb128f7a61d17083bd50f"><div class="ttname"><a href="classVectrix_1_1Layer.html#a1aa34422ce3bb128f7a61d17083bd50f">Vectrix::Layer::OnRender</a></div><div class="ttdeci">void OnRender()</div><div class="ttdoc">The function called every frame.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00036">Layer.h:36</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_a5882d4e2be086fb0c10fbe111e5f7ea2"><div class="ttname"><a href="classVectrix_1_1Layer.html#a5882d4e2be086fb0c10fbe111e5f7ea2">Vectrix::Layer::OnUpdate</a></div><div class="ttdeci">void OnUpdate(const DeltaTime &amp;deltaTime)</div><div class="ttdoc">The function called every update.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00030">Layer.h:30</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_a63f0dfe30e621ab02f4a0b928a843dd5"><div class="ttname"><a href="classVectrix_1_1Layer.html#a63f0dfe30e621ab02f4a0b928a843dd5">Vectrix::Layer::OnDetach</a></div><div class="ttdeci">void OnDetach()</div><div class="ttdoc">The function called when the layer is removed from the layer stack.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00024">Layer.h:24</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_a8fa29f02cb8f28b2489fc91ae84ea473"><div class="ttname"><a href="classVectrix_1_1Layer.html#a8fa29f02cb8f28b2489fc91ae84ea473">Vectrix::Layer::OnEvent</a></div><div class="ttdeci">void OnEvent(Event &amp;event)</div><div class="ttdoc">Called every time an event occurre.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00052">Layer.h:52</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_a93c0b71eb7f61b131c53969c8ad0acac"><div class="ttname"><a href="classVectrix_1_1Layer.html#a93c0b71eb7f61b131c53969c8ad0acac">Vectrix::Layer::OnAttach</a></div><div class="ttdeci">void OnAttach()</div><div class="ttdoc">The function called when the Layer is added to the layer stack.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00019">Layer.h:19</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_aa574de23b396df49ed5657c60fd2e385"><div class="ttname"><a href="classVectrix_1_1Layer.html#aa574de23b396df49ed5657c60fd2e385">Vectrix::Layer::Layer</a></div><div class="ttdeci">Layer(const std::string &amp;name=&quot;Layer&quot;)</div><div class="ttdoc">Layer constructor.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8cpp_source.html#l00005">Layer.cpp:5</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html_aac9467056a1c586e6b8b4e1cbbb61fe2"><div class="ttname"><a href="classVectrix_1_1Layer.html#aac9467056a1c586e6b8b4e1cbbb61fe2">Vectrix::Layer::OnImGuiRender</a></div><div class="ttdeci">void OnImGuiRender()</div><div class="ttdoc">The function called every time we draw all the ImGui widget.</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00046">Layer.h:46</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
