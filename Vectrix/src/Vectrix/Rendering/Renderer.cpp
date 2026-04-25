@@ -9,34 +9,18 @@ namespace Vectrix {
 	void Renderer::beginScene(PerspectiveCamera& camera) {
 		VC_PROFILER_FUNCTION();
 		m_SceneData->camera = &camera;
-		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
-			VulkanContext::instance().getRenderer().resetCache();
-		} else {
-			VC_CORE_ERROR("Can't begin a scene because the renderer API is set to an unsupported value");
-		}
 	}
 
 	void Renderer::endScene() {
 		VC_PROFILER_FUNCTION();
-		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
-			VulkanContext::instance().getRenderer().flush();
-		} else {
-			VC_CORE_ERROR("Can't end a scene because the renderer API is set to an unsupported value");
-		}
 	}
 
-	void Renderer::submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray, const Transform &transform) {
+	void Renderer::submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix,uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
 		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
-			VulkanRenderer::submit(shader,vertexArray,transform);
+			VulkanRenderer::submit(shader,vertexArray,modelMatrix);
 		} else {
 			VC_CORE_ERROR("Can't submit a vertex array because the renderer API is set to an unsupported value");
 		}
-	}
-
-	void Renderer::submit(Shader& shader, const Model& model) {
-		VC_PROFILER_FUNCTION();
-
-		submit(shader,model.getVertexArray(),model.getTransform());
 	}
 }

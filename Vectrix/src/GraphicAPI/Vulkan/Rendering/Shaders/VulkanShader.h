@@ -22,7 +22,7 @@ namespace Vectrix {
         void setUniform4f(const std::string &name, glm::vec4 value) const override;
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
-        void setTexture(uint32_t index, std::shared_ptr<Texture> texture) override;
+        uint32_t useTexture(std::shared_ptr<Texture> texture) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
             VC_VERIFY_UNIFORM_NAME(name);
@@ -62,6 +62,13 @@ namespace Vectrix {
         friend class ShaderManager;
         friend class Shader;
         friend class VulkanRenderer;
+
+        uint32_t m_firstTextureIndexAvailable = 0;
+        /**
+         * m_textureIndexCache[str(texture.getUniqueID)] = index in ssbo
+         */
+        Cache<std::string,uint32_t> m_textureIndexCache;
+
         // Info
         const std::string m_name;
     };

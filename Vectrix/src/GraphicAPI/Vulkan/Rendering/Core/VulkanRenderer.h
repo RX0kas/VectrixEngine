@@ -12,9 +12,9 @@
 #include "GraphicAPI/Vulkan/Rendering/Data/DynamicSSBO.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
-#include "Vectrix/Rendering/Mesh/Transform.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
+#include "Vectrix/Scene/Components/TransformComponent.h"
 
 namespace Vectrix {
     struct ObjectData {
@@ -87,12 +87,13 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray,Transform transform=Transform{glm::vec3(0.0f),glm::vec3(1.0f),glm::vec3(0.0f)},std::uint32_t textureIndex=0);
+        static void submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray,glm::mat4 modelMatrix,std::uint32_t textureIndex=0);
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
         friend class Renderer;
         friend class VulkanContext;
+        friend class Application;
         [[nodiscard]] DebugFrameInfo getCurrentFrameInfo() const;
         void createCommandBuffers();
         void freeCommandBuffers();

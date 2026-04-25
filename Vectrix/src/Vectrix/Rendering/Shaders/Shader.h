@@ -266,9 +266,8 @@ namespace Vectrix {
 		/**
 		 * @brief Define the value of the current texture in the shader
 		 *
-		 * This function permit to modify the value of the current texture in this shader
+		 * This function permit to modify the value of the current texture in this shader and return the index it has been set to
 		 *
-		 * @param index The slot in which the texture will be
 		 * @param texture texture that is sent
 		 *
 		 * @pre The shader must be bind before
@@ -280,7 +279,7 @@ namespace Vectrix {
 		 *
 		 * @warning There is a limited number of texture allowed per shader Texture::getMaxTexturePerShader()
 		 */
-		virtual void setTexture(uint32_t index, std::shared_ptr<Texture> texture)  = 0;
+		virtual uint32_t useTexture(std::shared_ptr<Texture> texture) = 0;
 
 		/**
 		 * @brief Define the value of a uniform in the shader, without needing to think about the type

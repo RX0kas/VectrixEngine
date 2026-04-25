@@ -1,16 +1,21 @@
 #include "EditorLayer.h"
 
 namespace Vectrix {
-    EditorLayer::EditorLayer() : Layer("VC_Editor"),m_viewportSize(1,1) {
-        FramebufferSpecification fbSpec;
-        fbSpec.width = 1;
-        fbSpec.height = 1;
-        m_framebuffer = Framebuffer::create(fbSpec);
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1), m_foxEntity(Entity::nullEntity()) {
+	    FramebufferSpecification fbSpec;
+	    fbSpec.width = 1;
+	    fbSpec.height = 1;
+	    m_framebuffer = Framebuffer::create(fbSpec);
 
-    	ShaderUniformLayout layout;
-    	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag",layout);
-    	m_testModel = MeshManager::loadModel("VC_testModel","./models/fox.obj");
-    	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+	    m_activeScene = std::make_shared<Scene>();
+
+	    ShaderUniformLayout layout;
+	    m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert","./shaders/viewport.frag", layout);
+	    m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+
+	    m_foxEntity = m_activeScene->createEntity();
+    	m_foxEntity.addComponent<TransformComponent>();
+    	m_foxEntity.addComponent<MeshComponent>("./models/fox.obj",*m_viewportShader,m_testTexture);
     }
 
     void EditorLayer::OnEvent(Event &event) {
@@ -98,17 +103,16 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnRenderOffscreen() {
+    	m_cameraController.setCameraAsActive();
         m_framebuffer->bind();
-        Renderer::beginScene(m_cameraController.getCamera());
-
-    	m_viewportShader->setTexture(0,m_testTexture);
-    	Renderer::submit(*m_viewportShader,*m_testModel);
-
-        Renderer::endScene();
+    	Application::resetCache();
+        m_activeScene->OnRender();
+    	Application::flush();
         m_framebuffer->unbind();
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
+    	m_cameraController.setCameraAsActive();
     	if (m_viewportFocused || m_viewportHovered)
     		m_cameraController.onUpdate(dt);
     	if (m_mustResize) {
@@ -116,5 +120,6 @@ namespace Vectrix {
     		m_cameraController.getCamera().setCustomAspect(m_viewportSize.x/m_viewportSize.y);
     		m_mustResize = false;
     	}
+    	m_activeScene->OnUpdate(dt);
     }
 } // Vectrix

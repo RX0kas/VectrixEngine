@@ -23,11 +23,12 @@ namespace Vectrix {
 		std::shared_ptr<Framebuffer> m_framebuffer;
 
     	std::shared_ptr<Texture> m_testTexture;
-    	std::shared_ptr<Model> m_testModel;
-
     	glm::vec2 m_viewportSize;
     	bool m_viewportFocused = false, m_viewportHovered = false;
     	bool m_mustResize = false;
+
+    	std::shared_ptr<Scene> m_activeScene;
+    	Entity m_foxEntity;
     };
 } // Vectrix
 

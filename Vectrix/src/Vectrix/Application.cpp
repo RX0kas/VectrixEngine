@@ -6,9 +6,9 @@
 
 #include "Core/DeltaTime.h"
 #include "Debug/Profiler.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Rendering/GraphicsContext.h"
 #include "Rendering/RenderCommand.h"
-#include "Rendering/Mesh/MeshManager.h"
 #include "Rendering/Shaders/ShaderManager.h"
 #include "Rendering/Textures/TextureManager.h"
 
@@ -31,8 +31,6 @@ namespace Vectrix {
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
 		auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
-		auto mm = new MeshManager();
-		m_meshManager = std::unique_ptr<MeshManager>(mm);
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
@@ -44,7 +42,6 @@ namespace Vectrix {
 		m_imGuiLayer.reset();
 		m_shaderManager.reset();
 		m_textureManager.reset();
-		m_meshManager.reset();
 		m_window.reset();
 	}
 
@@ -79,7 +76,9 @@ namespace Vectrix {
 
 				RenderCommand::beginFrame();
 				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
+					resetCache();
 					layer->OnRender();
+					flush();
 				}
 				RenderCommand::endFrame();
 
@@ -90,6 +89,22 @@ namespace Vectrix {
 			}
 
 			m_window->onUpdate();
+		}
+	}
+
+	void Application::resetCache() {
+		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
+			VulkanContext::instance().getRenderer().resetCache();
+		} else {
+			VC_CORE_ERROR("Can't begin a scene because the renderer API is set to an unsupported value");
+		}
+	}
+
+	void Application::flush() {
+		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
+			VulkanContext::instance().getRenderer().flush();
+		} else {
+			VC_CORE_ERROR("Can't end a scene because the renderer API is set to an unsupported value");
 		}
 	}
 

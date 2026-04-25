@@ -10,6 +10,8 @@
 
 namespace Vectrix {
 
+    uint32_t VulkanTexture::s_numberTexture = 1;
+
     VulkanTexture::VulkanTexture(const std::string &path) : m_device(VulkanContext::instance().getDevice()) {
         VC_PROFILER_FUNCTION();
         stbi_uc* pixels = stbi_load(path.c_str(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
@@ -19,6 +21,8 @@ namespace Vectrix {
             VC_CORE_ERROR("Failed to load texture image");
         }
         createTexture(pixels,STBI_rgb_alpha);
+
+        m_id = s_numberTexture++;
     }
 
     /**
@@ -37,6 +41,7 @@ namespace Vectrix {
         m_channel = 4;
         m_imageSize = m_width * m_height * 4;
         createTexture(pixels,4);
+        m_id = 0;
     }
 
     void VulkanTexture::createTexture(stbi_uc *pixels, int channels) {

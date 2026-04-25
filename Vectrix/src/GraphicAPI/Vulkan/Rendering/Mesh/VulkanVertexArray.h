@@ -1,7 +1,7 @@
 #ifndef VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
 #define VECTRIXWORKSPACE_VULKANVERTEXARRAY_H
 #include "Vectrix/Core/Core.h"
-#include "Vectrix/Rendering/Mesh/Model.h"
+#include "Vectrix/Rendering/Mesh/MeshHandle.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 
 namespace Vectrix {

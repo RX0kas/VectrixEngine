@@ -12,6 +12,7 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Rendering/RenderCommand.h"
 #include "Vectrix/Rendering/Renderer.h"
+#include "Vectrix/Rendering/Mesh/MeshHandle.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 
@@ -244,8 +245,7 @@ namespace Vectrix {
 		return buffers;
 	}
 
-	// TODO: Rework this when a material system is created
-	void VulkanRenderer::submit(Shader& shader, const std::shared_ptr<VertexArray>& vertexArray, Transform transform,std::uint32_t textureIndex) {
+	void VulkanRenderer::submit(Shader& shader, const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix, std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
 		Cache<std::string, BatchInfo>& cache = VulkanContext::instance().getRenderer().m_batchCache;
 		auto& vkShader = dynamic_cast<VulkanShader&>(shader);
@@ -266,7 +266,7 @@ namespace Vectrix {
 		uint32_t index = b.elementCount++;
 
 		ObjectData currentObjectData = {
-			.modelMatrix = transform.modelMatrix(),
+			.modelMatrix = modelMatrix,
 			.textureIndex = textureIndex
 		};
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
@@ -315,7 +315,10 @@ namespace Vectrix {
 		scissor.extent = extent;
 		vkCmdSetScissor(cmd, 0, 1, &scissor);
 
-		auto &[camera] = Renderer::getSceneData();
+		PerspectiveCamera* camera = PerspectiveCamera::getCurrentCamera();
+		if (camera==nullptr) {
+			VC_CORE_ERROR("No current camera has been set, can't flush");
+		}
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
 		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
 

@@ -1,17 +1,14 @@
 #pragma once
-#include <string>
 
 #include "GLFW/glfw3.h"
-#include "Vectrix/Core/Core.h"
+#include "Vectrix/Scene/Components/MeshComponent.h"
 
 namespace Vectrix {
 	/// @cond INTERNAL
-	class Model;
-	class GraphicsContext
-	{
+	class GraphicsContext {
 	public:
 		virtual ~GraphicsContext() = default;
-		virtual void registerMesh(const std::string& name,std::shared_ptr<Model> model) = 0;
+		virtual void registerMesh(MeshComponent* model) = 0;
 	private:
 		friend class Application;
 		static void uploadAllMeshData();

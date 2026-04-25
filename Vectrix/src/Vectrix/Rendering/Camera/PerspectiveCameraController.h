@@ -50,6 +50,12 @@ namespace Vectrix {
             m_cameraRotationSpeed = camera_rotation_speed;
         }
 
+        /**
+         * @brief This function set the camera as the current active camera
+         */
+        void setCameraAsActive() {
+            m_camera.setAsCurrent();
+        }
     private:
         bool onWindowResized(WindowResizeEvent& e);
 

@@ -8,6 +8,11 @@
 // For application
 #include "Vectrix/Core/Core.h"
 
+// ECS
+#include "Vectrix/Scene/Scene.h"
+#include "Vectrix/Scene/Entity.h"
+#include "Vectrix/Scene/Component.h"
+
 #ifdef VC_PROFILER_ENABLE
 #include "Vectrix/Debug/Profiler.h"
 #endif
@@ -28,14 +33,12 @@
 #include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/RenderCommand.h"
 
-#include "Vectrix/Rendering/Mesh/MeshManager.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
-#include "Vectrix/Rendering/Mesh/Model.h"
 #include "Vectrix/Rendering/Framebuffer.h"
 
 #include "Vectrix/Rendering/Camera/PerspectiveCamera.h"

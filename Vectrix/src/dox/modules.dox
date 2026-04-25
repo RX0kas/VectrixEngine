@@ -44,4 +44,9 @@
  * @defgroup utils Utility
  * @brief Helper
  * @ingroup core
+ *
+ *
+ * @defgroup ecs Entity component system
+ * @brief The entity component system of the engine
+ * @ingroup core
  */

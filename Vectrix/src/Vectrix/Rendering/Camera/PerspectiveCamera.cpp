@@ -11,9 +11,11 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
+	PerspectiveCamera* PerspectiveCamera::s_currentCamera = nullptr;
 
 	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
 		recalculateMatrices();
+		setAsCurrent();
 	}
 
 	float PerspectiveCamera::getAspect() const {

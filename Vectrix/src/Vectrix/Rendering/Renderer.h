@@ -3,9 +3,9 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 #include "Camera/PerspectiveCamera.h"
-#include "Mesh/Model.h"
 #include "Shaders/Shader.h"
 #include "Mesh/VertexArray.h"
+#include "Vectrix/Scene/Components/TransformComponent.h"
 
 /**
  * @file Renderer.h
@@ -48,19 +48,10 @@ namespace Vectrix {
 		 * @brief Submit geometry with transform
 		 * @param shader Shader to use
 		 * @param vertexArray Geometry to render
-		 * @param transform Transform to apply (position, scale, rotation)
-		 * @deprecated Will be removed when the material system will be created
+		 * @param modelMatrix The object model matrix
+		 * @param textureIndex The index of the texture inside the shader
 		 */
-		static void submit(Shader &shader, const std::shared_ptr<VertexArray> &vertexArray, const Transform &transform = Transform{
-			                   glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)
-		                   });
-
-		/**
-		 * @brief Submit a complete model
-		 * @param shader Shader to use
-		 * @param model Model to render
-		 */
-		static void submit(Shader& shader, const Model& model);
+		static void submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix,uint32_t textureIndex = 0);
 
 		/**
 		 * @brief Get current graphics API

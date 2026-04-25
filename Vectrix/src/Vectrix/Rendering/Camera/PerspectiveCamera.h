@@ -116,16 +116,33 @@ namespace Vectrix {
 			recalculateMatrices();
 		}
 
+		/**
+		 * @brief This function set a custom aspect ratio to the camera
+		 * @param aspect The new custom aspect ratio
+		 */
 		void setCustomAspect(float aspect) {
 			m_customAspect = aspect;
 		}
 
+		/**
+		 * @brief This function return the aspect ratio of the camera
+		 */
 		[[nodiscard]] float getAspect() const;
 
 		/**
 		 * @brief This function recalculate all the matrices
 		 */
 		void recalculateMatrices();
+
+		/**
+		 * @brief This function return the current active camera
+		 */
+		static PerspectiveCamera* getCurrentCamera() { return s_currentCamera; }
+
+		/**
+		 * @brief This function set this camera as the active
+		 */
+		void setAsCurrent() { s_currentCamera = this; }
 	private:
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
@@ -143,6 +160,9 @@ namespace Vectrix {
 		glm::vec3 m_rotation = { 0.0f, 0.0f, 0.0f };
 
 		float m_customAspect = -1;
+
+
+		static PerspectiveCamera* s_currentCamera;
 	};
 
 }

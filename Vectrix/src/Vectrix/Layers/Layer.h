@@ -3,6 +3,12 @@
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Events/Event.h"
 
+/**
+ * @file Layer.h
+ * @brief Definition of the Layer interface
+ * @ingroup rendering
+ */
+
 namespace Vectrix {
 	class Layer {
 	public:
