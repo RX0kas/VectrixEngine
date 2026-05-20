@@ -5,25 +5,24 @@
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
-    Scene::Scene() {
+    Scene::Scene() = default;
 
-    }
-
-    Scene::~Scene() {
-
-    }
+    Scene::~Scene() = default;
 
     void Scene::OnUpdate(DeltaTime dt) {
 
     }
 
     void Scene::OnRender() {
-        auto group = m_registry.group<TransformComponent>(entt::get<MeshComponent>);
-        for (auto entity : group) {
-            auto [transform, mesh] = group.get<TransformComponent, MeshComponent>(entity);
-            if (mesh.enable) {
-                Renderer::submit(mesh.shader,mesh.vertexArray,transform.modelMatrix(),mesh.shader.useTexture(mesh.texture));
-            }
+        auto view = m_registry.view<MeshComponent, TransformComponent>();
+
+        for (auto entity : view) {
+            auto& mesh = view.get<MeshComponent>(entity);
+            auto& transform = view.get<TransformComponent>(entity);
+
+            if (!mesh.enable) continue;
+
+            Renderer::submit(mesh.shader,mesh.vertexArray,transform.modelMatrix(),mesh.shader->useTexture(mesh.texture));
         }
     }
 
@@ -31,6 +30,7 @@ namespace Vectrix {
         Entity entity = { m_registry.create(), this };
         auto& tag = entity.addComponent<InformationComponent>();
         tag.name = name.empty() ? "Entity" : name;
+        entity.addComponent<TransformComponent>();
         return entity;
     }
 } // Vectrix

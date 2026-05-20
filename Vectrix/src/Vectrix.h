@@ -41,7 +41,6 @@
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Framebuffer.h"
 
-#include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
-#include "Vectrix/Rendering/Camera/PerspectiveCameraController.h"
+#include "Vectrix/Rendering/Camera/Camera.h"
 #include "Vectrix/Rendering/Mesh/ObjLoader.h"
 #endif

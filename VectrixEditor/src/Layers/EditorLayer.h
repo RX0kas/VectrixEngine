@@ -17,8 +17,6 @@ namespace Vectrix {
 
 		void OnImGuiRender() override;
 	private:
-		PerspectiveCameraController m_cameraController;
-
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
 
@@ -29,6 +27,10 @@ namespace Vectrix {
 
     	std::shared_ptr<Scene> m_activeScene;
     	Entity m_foxEntity;
+    	Entity m_cameraEntity;
+    	Camera* m_camera;
+    	float m_cameraRotationSpeed = 5.0f;
+    	float m_cameraMoveSpeed = 1.5f;
     };
 } // Vectrix
 

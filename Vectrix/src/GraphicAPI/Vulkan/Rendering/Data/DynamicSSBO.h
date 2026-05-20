@@ -6,7 +6,7 @@
 namespace Vectrix {
     class DynamicSSBO {
     public:
-        explicit DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity = 256);
+        explicit DynamicSSBO(std::shared_ptr<ShaderUniformLayout> layout, uint32_t initialCapacity = 256);
         ~DynamicSSBO();
 
         DynamicSSBO(DynamicSSBO&& other) noexcept;
@@ -36,7 +36,7 @@ namespace Vectrix {
         void grow();
 
         Device& m_device;
-        ShaderUniformLayout* m_layout{};
+        std::shared_ptr<ShaderUniformLayout> m_layout{};
 
         uint32_t m_elementStride{};
 

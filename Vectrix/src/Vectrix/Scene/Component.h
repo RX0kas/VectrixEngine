@@ -18,5 +18,6 @@ struct InformationComponent {
 
 #include "Components/TransformComponent.h"
 #include "Components/MeshComponent.h"
+#include "Components/CameraComponent.h"
 
 #endif //VECTRIXWORKSPACE_COMPONENT_H

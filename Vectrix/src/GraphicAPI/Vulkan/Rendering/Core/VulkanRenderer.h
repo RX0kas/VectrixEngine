@@ -87,7 +87,7 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(Shader& shader,const std::shared_ptr<VertexArray>& vertexArray,glm::mat4 modelMatrix,std::uint32_t textureIndex=0);
+        static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray,glm::mat4 modelMatrix,std::uint32_t textureIndex=0);
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
@@ -105,6 +105,14 @@ namespace Vectrix {
                 batch.elementCount = 0;
                 batch.commands.clear();
             }
+        }
+
+        static std::shared_ptr<ShaderUniformLayout> getObjectDataLayout() {
+            auto l = std::make_shared<ShaderUniformLayout>();
+            l->add("modelMatrix", ShaderUniformType::Mat4);
+            l->add("textureIndex", ShaderUniformType::Uint);
+            l->finalize();
+            return l;
         }
 
         /**

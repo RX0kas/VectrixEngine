@@ -105,6 +105,7 @@ namespace Vectrix {
             }
         }
         void finalize() {
+            if (m_isFinalized) return;
             uint32_t cursor = 0;
 
             for (auto& e : m_elements) {
@@ -121,6 +122,7 @@ namespace Vectrix {
         }
 
         friend class Shader;
+        friend class VulkanRenderer;
         bool m_isFinalized = false;
         std::vector<UniformElement> m_elements;
         uint32_t m_structSize = 0;

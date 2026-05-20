@@ -6,7 +6,8 @@
 namespace Vectrix {
     VkDescriptorSetLayout DynamicSSBO::s_descriptorSetLayout = nullptr;
 
-    DynamicSSBO::DynamicSSBO(ShaderUniformLayout* layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_layout(layout), m_capacity(initialCapacity), m_allocator(VulkanContext::instance().getSSBOAllocator()) {
+    DynamicSSBO::DynamicSSBO(std::shared_ptr<ShaderUniformLayout> layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_capacity(initialCapacity), m_allocator(VulkanContext::instance().getSSBOAllocator()) {
+        m_layout = layout;
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 
         m_setCountID = ShaderSSBO::getGlobalSetCount();
@@ -37,9 +38,10 @@ namespace Vectrix {
     }
 
     DynamicSSBO::DynamicSSBO(DynamicSSBO&& other) noexcept
-    : m_device(other.m_device), m_layout(other.m_layout), m_elementStride(other.m_elementStride), m_capacity(other.m_capacity),
+    : m_device(other.m_device), m_elementStride(other.m_elementStride), m_capacity(other.m_capacity),
         m_framesInFlight(other.m_framesInFlight), m_buffer(other.m_buffer), m_allocation(other.m_allocation), m_allocator(other.m_allocator),
         m_mapped(other.m_mapped), m_storage(std::move(other.m_storage)), m_descriptorSets(std::move(other.m_descriptorSets)), m_setCountID(other.m_setCountID) {
+        m_layout = other.m_layout;
         other.m_layout = nullptr;
         other.m_buffer = VK_NULL_HANDLE;
         other.m_allocation = VK_NULL_HANDLE;

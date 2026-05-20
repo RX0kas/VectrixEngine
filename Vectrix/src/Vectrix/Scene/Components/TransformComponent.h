@@ -20,7 +20,7 @@ namespace Vectrix {
         /**
          * @brief This is the world position
          */
-        glm::vec3 translation{};
+        glm::vec3 position{ 0};
         /**
          * @brief This is the scale or the size
          */
@@ -28,7 +28,7 @@ namespace Vectrix {
         /**
          * @brief This is the rotation (radians)
          */
-        glm::vec3 rotation{};
+        glm::vec3 rotation{ 0 };
 
         /**
         * @brief This function return the model matrix

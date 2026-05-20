@@ -8,7 +8,7 @@
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 
 namespace Vectrix {
-    MeshComponent::MeshComponent(const std::vector<Vertex>& vertices, Shader& shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
+    MeshComponent::MeshComponent(const std::vector<Vertex>& vertices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
         VC_PROFILER_FUNCTION();
         layout = getTinyObjLayout();
         const auto vertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::create(vertices, vertices.size()));
@@ -22,7 +22,7 @@ namespace Vectrix {
         registerMesh();
     }
 
-    MeshComponent::MeshComponent(const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, Shader& shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
+    MeshComponent::MeshComponent(const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
         VC_PROFILER_FUNCTION();
         layout = getTinyObjLayout();
         const auto vertexBuffer = VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size()));
@@ -38,7 +38,7 @@ namespace Vectrix {
         registerMesh();
     }
 
-    MeshComponent::MeshComponent(const std::string &pathObj, Shader& shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
+    MeshComponent::MeshComponent(const std::string &pathObj, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture) : shader(shader),texture(texture) {
         VC_PROFILER_FUNCTION();
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;

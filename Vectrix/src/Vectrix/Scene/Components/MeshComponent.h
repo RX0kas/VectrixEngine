@@ -11,13 +11,13 @@ namespace Vectrix {
         std::shared_ptr<VertexArray> vertexArray;
         std::shared_ptr<Texture> texture;
         BufferLayout layout;
-        Shader& shader;
+        std::shared_ptr<Shader> shader;
         bool enable = true;
 
-        MeshComponent(const MeshComponent&) = default;
-        MeshComponent(const std::vector<Vertex>& vertices, Shader& shader, const std::shared_ptr<Texture>& texture);
-        MeshComponent(const std::string &pathObj, Shader& shader, const std::shared_ptr<Texture>& texture);
-        MeshComponent(const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, Shader& shader, const std::shared_ptr<Texture>& texture);
+        MeshComponent(const MeshComponent&) = delete;
+        MeshComponent(const std::vector<Vertex>& vertices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
+        MeshComponent(const std::string &pathObj, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
+        MeshComponent(const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
     private:
         void registerMesh();
         friend class VulkanContext;

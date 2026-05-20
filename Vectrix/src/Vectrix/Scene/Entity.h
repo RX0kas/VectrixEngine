@@ -2,6 +2,8 @@
 #define VECTRIXWORKSPACE_ENTITY_H
 
 #include <type_traits>
+
+#include "Components/TransformComponent.h"
 #include "entt/entt.hpp"
 #include "Vectrix/Scene/Scene.h"
 #include "Vectrix/Core/Core.h"
@@ -18,6 +20,8 @@ struct InformationComponent;
 namespace Vectrix {
     class Entity {
     public:
+        Entity() : m_scene(nullptr), m_entityHandle(entt::null){}
+
         /**
          * @brief This function add a component to the entity
          * @pre The entity must not have the component
@@ -49,7 +53,9 @@ namespace Vectrix {
         void deleteComponent() {
             VC_CORE_ASSERT(hasComponent<T>(), "Entity has not component");
             bool isInfoComp = std::is_same_v<T, InformationComponent>;
+            bool isTransfComp = std::is_same_v<T, TransformComponent>;
             VC_CORE_ASSERT(!isInfoComp,"Can't remove InformationComponent");
+            VC_CORE_ASSERT(!isTransfComp,"Can't remove TransformComponent");
             m_scene->m_registry.erase<T>(m_entityHandle);
         }
 
@@ -59,7 +65,7 @@ namespace Vectrix {
          * @tparam T The component type
          */
         template<typename T>
-        T getComponent() {
+        T& getComponent() {
             VC_CORE_ASSERT(hasComponent<T>(),"Entity has not component");
             return m_scene->m_registry.get<T>(m_entityHandle);
         }
@@ -67,13 +73,19 @@ namespace Vectrix {
         /**
          * @brief Checks if the entity is valid
          */
+        [[nodiscard]] bool isValid() const {
+            return this;
+        }
+
+        /**
+         * @brief Checks if the entity is valid
+         */
         explicit operator bool() const { return m_scene->m_registry.valid(m_entityHandle) && m_entityHandle!=entt::null; }
 
-        static Entity nullEntity() { return Entity();}
+        static Entity nullEntity() { return {};}
     private:
         friend class Scene;
         Entity(entt::entity handle, Scene* scene);
-        Entity() = default;
         Entity(const Entity& other) = default;
         entt::entity m_entityHandle{ entt::null };
         Scene* m_scene = nullptr;

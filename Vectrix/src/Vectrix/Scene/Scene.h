@@ -21,6 +21,10 @@ namespace Vectrix {
         void OnUpdate(DeltaTime dt);
         void OnRender();
 
+        /**
+         * @brief It creates an entity in the scene with TransformComponent and TagComponent
+         * @param name The name of the Entity
+         */
         Entity createEntity(const std::string& name="");
     private:
         friend class Entity;

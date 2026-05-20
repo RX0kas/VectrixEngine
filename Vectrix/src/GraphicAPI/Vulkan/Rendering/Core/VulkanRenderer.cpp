@@ -17,7 +17,6 @@
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 
 namespace Vectrix {
-
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Initializing Renderer");
@@ -245,24 +244,24 @@ namespace Vectrix {
 		return buffers;
 	}
 
-	void VulkanRenderer::submit(Shader& shader, const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix, std::uint32_t textureIndex) {
+	void VulkanRenderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix, std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
 		Cache<std::string, BatchInfo>& cache = VulkanContext::instance().getRenderer().m_batchCache;
-		auto& vkShader = dynamic_cast<VulkanShader&>(shader);
-		if (!cache.exist(vkShader.m_name)) {
+		auto vkShader = std::dynamic_pointer_cast<VulkanShader>(shader);
+		if (!cache.exist(vkShader->m_name)) {
 			cache.emplace(
-					vkShader.m_name,
+					vkShader->m_name,
 					BatchInfo{
-						.pipeline = vkShader.m_pipeline->getPipeline(),
-						.pipelineLayout = vkShader.m_pipelineLayout,
-						.descriptorSet = vkShader.m_ssbo->descriptorSet(),
+						.pipeline = vkShader->m_pipeline->getPipeline(),
+						.pipelineLayout = vkShader->m_pipelineLayout,
+						.descriptorSet = vkShader->m_ssbo->descriptorSet(),
 						.indirectBuffers = createIndirectBuffers(),
 						.commands = {},
-						.objectDataSSBO = DynamicSSBO(vkShader.m_layout.get(),MAX_OBJECTS_BATCHING),
+						.objectDataSSBO = DynamicSSBO(getObjectDataLayout(), MAX_OBJECTS_BATCHING),
 						.elementCount = 0
 					});
 		}
-		BatchInfo& b = cache.find(vkShader.m_name)->second;
+		BatchInfo& b = cache.find(vkShader->m_name)->second;
 		uint32_t index = b.elementCount++;
 
 		ObjectData currentObjectData = {
@@ -315,7 +314,7 @@ namespace Vectrix {
 		scissor.extent = extent;
 		vkCmdSetScissor(cmd, 0, 1, &scissor);
 
-		PerspectiveCamera* camera = PerspectiveCamera::getCurrentCamera();
+		Camera* camera = Camera::getCurrentCamera();
 		if (camera==nullptr) {
 			VC_CORE_ERROR("No current camera has been set, can't flush");
 		}
@@ -342,11 +341,9 @@ namespace Vectrix {
 			if (shader->isAffectedByCamera())
 				shader->sendCameraUniform(camera->getTransformationMatrix());
 			shader->bind();
-
 			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
 			batch.objectDataSSBO.flush(frameIndex);
 			batch.objectDataSSBO.reset(frameIndex);
-
 			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
 		}
 	}

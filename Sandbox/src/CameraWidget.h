@@ -1,16 +1,15 @@
 #ifndef VECTRIXWORKSPACE_CAMERAWIDGET_H
 #define VECTRIXWORKSPACE_CAMERAWIDGET_H
-#include "Vectrix/ImGui/ImGuiWidget.h"
-#include "Vectrix/Rendering/Camera/PerspectiveCamera.h"
+#include "Vectrix.h"
 
 
 class CameraWidget : public Vectrix::ImGuiWidget {
 public:
-    CameraWidget(Vectrix::PerspectiveCamera &camera);
+    CameraWidget(Vectrix::Entity &camera);
     ~CameraWidget() override;
     void render() override;
 private:
-    Vectrix::PerspectiveCamera &m_camera;
+    Vectrix::Entity &m_camera;
 };
 
 #endif //VECTRIXWORKSPACE_CAMERAWIDGET_H

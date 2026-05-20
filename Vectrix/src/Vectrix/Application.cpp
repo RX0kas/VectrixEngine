@@ -76,9 +76,7 @@ namespace Vectrix {
 
 				RenderCommand::beginFrame();
 				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
-					resetCache();
 					layer->OnRender();
-					flush();
 				}
 				RenderCommand::endFrame();
 
@@ -89,22 +87,6 @@ namespace Vectrix {
 			}
 
 			m_window->onUpdate();
-		}
-	}
-
-	void Application::resetCache() {
-		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
-			VulkanContext::instance().getRenderer().resetCache();
-		} else {
-			VC_CORE_ERROR("Can't begin a scene because the renderer API is set to an unsupported value");
-		}
-	}
-
-	void Application::flush() {
-		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
-			VulkanContext::instance().getRenderer().flush();
-		} else {
-			VC_CORE_ERROR("Can't end a scene because the renderer API is set to an unsupported value");
 		}
 	}
 

@@ -86,9 +86,6 @@ namespace Vectrix {
 		void close() {
 			m_running = false;
 		}
-
-		static void resetCache();
-		static void flush();
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);

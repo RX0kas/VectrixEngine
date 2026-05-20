@@ -2,8 +2,10 @@
 
 #include <glm/glm.hpp>
 
+#include "Vectrix/Scene/Components/TransformComponent.h"
+
 /**
- * @file PerspectiveCamera.h
+ * @file Camera.h
  * @brief Definition of the camera class
  * @ingroup rendering
  */
@@ -12,36 +14,16 @@ namespace Vectrix {
 	/**
 	 * @brief This class is the camera class
 	 */
-	class PerspectiveCamera	{
+	class Camera	{
 	public:
 		/**
 		 * @brief This creates a new camera with a perspective projection
+		 * @param transform The transform component
 		 * @param fov The camera FOV
 		 * @param camNear The camera near
 		 * @param camFar The camera far
 		 */
-		PerspectiveCamera(float fov = 50.0f,float camNear = 0.1f,float camFar = 10.0f);
-
-		/**
-		 * @brief This function return the current world position of the camera
-		 */
-		[[nodiscard]] const glm::vec3& getPosition() const { return m_position; }
-
-		/**
-		 * @brief This function sets the new world position of the camera
-		 * @param position The new position
-		 */
-		void setPosition(const glm::vec3& position) { m_position = position; recalculateMatrices(); }
-
-		/**
-		 * @brief This function return the current rotation of the camera
-		 */
-		[[nodiscard]] glm::vec3 getRotation() const { return m_rotation; }
-		/**
-		 * @brief This function sets the new rotation of the camera
-		 * @param rotation The new rotation (Radians)
-		 */
-		void setRotation(glm::vec3 rotation) { m_rotation = rotation; recalculateMatrices(); }
+		Camera(TransformComponent& transform, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
 
 		/**
 		 * @brief This function return the projection matrix
@@ -137,7 +119,7 @@ namespace Vectrix {
 		/**
 		 * @brief This function return the current active camera
 		 */
-		static PerspectiveCamera* getCurrentCamera() { return s_currentCamera; }
+		static Camera* getCurrentCamera() { return s_currentCamera; }
 
 		/**
 		 * @brief This function set this camera as the active
@@ -155,14 +137,12 @@ namespace Vectrix {
 		glm::mat4 m_projectionMatrix{};
 		glm::mat4 m_viewMatrix;
 		glm::mat4 m_transformationMatrix{};
-
-		glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
-		glm::vec3 m_rotation = { 0.0f, 0.0f, 0.0f };
+		TransformComponent& m_transform;
 
 		float m_customAspect = -1;
 
 
-		static PerspectiveCamera* s_currentCamera;
+		static Camera* s_currentCamera;
 	};
 
 }
