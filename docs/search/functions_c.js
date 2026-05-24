@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normalmatrix_0',['normalMatrix',['../classVectrix_1_1Transform.html#a4028a0f086fa2c08d1b0c8d196d00b1f',1,'Vectrix::Transform']]]
+  ['normalmatrix_0',['normalMatrix',['../classVectrix_1_1TransformComponent.html#a234ec7454e9098d7c20d67ab1dd0464e',1,'Vectrix::TransformComponent']]]
 ];

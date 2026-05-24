@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.4.1 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.5.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rotation_0',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
+  ['rotation_0',['rotation',['../classVectrix_1_1TransformComponent.html#ad171e843ee3daa414be390fc158920af',1,'Vectrix::TransformComponent']]]
 ];

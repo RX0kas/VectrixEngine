@@ -1,16 +1,11 @@
 var searchData=
 [
-  ['recalculatematrices_0',['recalculateMatrices',['../classVectrix_1_1PerspectiveCamera.html#acb6a5f5d15c84f6e33667243cf619ad9',1,'Vectrix::PerspectiveCamera']]],
-  ['removed_1',['Removed',['../changelog.html#v0_4_0_removed',1,'Removed'],['../changelog.html#v0_3_0_removed',1,'Removed'],['../changelog.html#v0_1_0_removed',1,'Removed']]],
-  ['render_2',['render',['../classVectrix_1_1ImGuiWidget.html#ae1834f7bb24ead341a913a450bbaee79',1,'Vectrix::ImGuiWidget']]],
-  ['rendercommand_3',['RenderCommand',['../classVectrix_1_1RenderCommand.html',1,'Vectrix']]],
-  ['rendercommand_2eh_4',['RenderCommand.h',['../RenderCommand_8h.html',1,'']]],
-  ['renderer_5',['Renderer',['../classVectrix_1_1Renderer.html',1,'Vectrix::Renderer'],['../group__renderer.html',1,'Renderer']]],
-  ['renderer_2eh_6',['Renderer.h',['../Renderer_8h.html',1,'']]],
-  ['rendererapi_7',['RendererAPI',['../classVectrix_1_1RendererAPI.html',1,'Vectrix']]],
-  ['rendererapi_2eh_8',['RendererAPI.h',['../RendererAPI_8h.html',1,'']]],
-  ['rendering_9',['rendering',['../rendering_overview.html#autotoc_md10',1,'1. &lt;a class=&quot;el&quot; href=&quot;group__rendering.html&quot; title=&quot;Graphic rendering&quot;&gt;Graphic rendering&lt;/a&gt;'],['../group__rendering.html',1,'Graphic rendering']]],
-  ['rendering_20system_20guide_10',['Rendering System Guide',['../rendering_overview.html',1,'docs_home']]],
-  ['resize_11',['resize',['../classVectrix_1_1Framebuffer.html#ab9c536ce38b4d4790d6823db35adf266',1,'Vectrix::Framebuffer']]],
-  ['rotation_12',['rotation',['../classVectrix_1_1Transform.html#ae0f9d804d3fefd33fc829ac879cd516d',1,'Vectrix::Transform']]]
+  ['parse_0',['parse',['../classVectrix_1_1Json.html#a08cf986f79a59623f4c06d7d7e369aec',1,'Vectrix::Json']]],
+  ['position_1',['position',['../structVectrix_1_1Vertex.html#ab79a77553abc13b8e5b02ff8d0f145ce',1,'Vectrix::Vertex::position'],['../classVectrix_1_1TransformComponent.html#a7175ecdf11519a9453144a569fcf7f23',1,'Vectrix::TransformComponent::position']]],
+  ['profiler_2',['Profiler',['../classVectrix_1_1Profiler.html',1,'Vectrix']]],
+  ['profiler_2eh_3',['Profiler.h',['../Profiler_8h.html',1,'']]],
+  ['profilerresult_4',['ProfilerResult',['../structVectrix_1_1ProfilerResult.html',1,'Vectrix']]],
+  ['profilersession_5',['ProfilerSession',['../structVectrix_1_1ProfilerSession.html',1,'Vectrix']]],
+  ['pushlayer_6',['PushLayer',['../classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94',1,'Vectrix::Application']]],
+  ['pushoverlay_7',['PushOverlay',['../classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f',1,'Vectrix::Application']]]
 ];

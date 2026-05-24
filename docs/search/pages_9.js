@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['fixed_0',['Fixed',['../changelog.html#v0_4_2_fixed',1,'Fixed'],['../changelog.html#v0_4_0_fixed',1,'Fixed'],['../changelog.html#v0_3_0_fixed',1,'Fixed'],['../changelog.html#v0_2_0_fixed',1,'Fixed']]]
+  ['editor_20addition_0',['Editor Addition',['../changelog.html#v0_4_2_editor_added',1,'']]],
+  ['engine_1',['Documentation of the Vectrix Engine',['../index.html',1,'']]]
 ];

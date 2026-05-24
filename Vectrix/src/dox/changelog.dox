@@ -1,6 +1,28 @@
 /**
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
+ *
+ * @section v0_5_0 v0.5.0 — (24-05-2026)
+ *
+ * @subsection v0_5_0_added Added
+ * - New Scene and Entity class
+ * - 4 Component struct
+ * - New PerspectiveCamera::getCurrentCamera and PerspectiveCamera.setAsCurrent function
+ * - Started using EnTT
+ * @subsection v0_5_0_changed Changed
+ * - Renamed PerspectiveCamera to Camera
+ * - DynamicSSBO now takes a shared_ptr
+ * - Texture.useTexture now return the texture index and have only the name parameter
+ * @subsection v0_5_0_fixed Fixed
+ * - Fix ImGui ID bug
+ * - Fix ImGui Import
+ * @subsection v0_5_0_removed Removed
+ * - Application::resetCache & Application::flush
+ * - All the functions in Camera that give information about the 3D state of it
+ * - MeshManager, Model and Transform class
+ *
+ * ---
+ *
  * @section v0_4_2 v0.4.2 — (20-04-2026)
  *
  * @subsection v0_4_2_editor_added Editor Addition

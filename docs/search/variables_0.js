@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['camera_0',['camera',['../structVectrix_1_1Renderer_1_1SceneData.html#ab30beee236bdc928a5d98ca574772c58',1,'Vectrix::Renderer::SceneData']]]
+  ['camera_0',['camera',['../structVectrix_1_1Renderer_1_1SceneData.html#a18efb2486421b74ce5ddfc8635a3c1f2',1,'Vectrix::Renderer::SceneData']]]
 ];
