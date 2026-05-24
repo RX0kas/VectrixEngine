@@ -2,10 +2,10 @@
 
 #include "Vectrix/Rendering/RendererAPI.h"
 
-#include "Camera/PerspectiveCamera.h"
-#include "Mesh/Model.h"
+#include "Camera/Camera.h"
 #include "Shaders/Shader.h"
 #include "Mesh/VertexArray.h"
+#include "Vectrix/Scene/Components/TransformComponent.h"
 
 /**
  * @file Renderer.h
@@ -32,13 +32,13 @@ namespace Vectrix {
 			/**
 			 * @brief The scene camera
 			 */
-			PerspectiveCamera* camera;
+			Camera* camera;
 		};
 		/**
 		 * @brief Start rendering a scene with the given camera
 		 * @param camera Camera to use for view/projection matrices
 		 */
-		static void beginScene(PerspectiveCamera& camera);
+		static void beginScene(Camera& camera);
 		/**
 		 * @brief End the current rendering scene
 		 */
@@ -48,19 +48,10 @@ namespace Vectrix {
 		 * @brief Submit geometry with transform
 		 * @param shader Shader to use
 		 * @param vertexArray Geometry to render
-		 * @param transform Transform to apply (position, scale, rotation)
-		 * @deprecated Will be removed when the material system will be created
+		 * @param modelMatrix The object model matrix
+		 * @param textureIndex The index of the texture inside the shader
 		 */
-		static void submit(Shader &shader, const std::shared_ptr<VertexArray> &vertexArray, const Transform &transform = Transform{
-			                   glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f)
-		                   });
-
-		/**
-		 * @brief Submit a complete model
-		 * @param shader Shader to use
-		 * @param model Model to render
-		 */
-		static void submit(Shader& shader, const Model& model);
+		static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix,uint32_t textureIndex = 0);
 
 		/**
 		 * @brief Get current graphics API
@@ -72,7 +63,13 @@ namespace Vectrix {
 		 * @return Reference to active scene data
 		 */
 		static SceneData& getSceneData() {return *m_SceneData;}
+
+		/**
+		 * @brief Return true if a scene is in progress
+		 */
+		static bool isASceneInProgress() { return s_sceneInProgress; }
 	private:
 		static std::unique_ptr<SceneData> m_SceneData;
+		static bool s_sceneInProgress;
 	};
 }

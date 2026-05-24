@@ -29,7 +29,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.2</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
    </div>
    <div id="projectbrief">An engine made to run all of my little graphics project</div>
   </td>
@@ -96,6 +96,37 @@ $(function(){initNavTree('changelog.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>History of changes, fixes and new features across all versions.</p>
+<h1 class="doxsection"><a class="anchor" id="v0_5_0"></a>
+v0.5.0 — (24-05-2026)</h1>
+<h2 class="doxsection"><a class="anchor" id="v0_5_0_added"></a>
+Added</h2>
+<ul>
+<li>New Scene and Entity class</li>
+<li>4 Component struct</li>
+<li>New PerspectiveCamera::getCurrentCamera and PerspectiveCamera.setAsCurrent function</li>
+<li>Started using EnTT </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_0_changed"></a>
+Changed</h2>
+<ul>
+<li>Renamed PerspectiveCamera to Camera</li>
+<li>DynamicSSBO now takes a shared_ptr</li>
+<li>Texture.useTexture now return the texture index and have only the name parameter </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_0_fixed"></a>
+Fixed</h2>
+<ul>
+<li>Fix ImGui ID bug</li>
+<li>Fix ImGui Import </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_0_removed"></a>
+Removed</h2>
+<ul>
+<li>Application::resetCache &amp; Application::flush</li>
+<li>All the functions in Camera that give information about the 3D state of it</li>
+<li>MeshManager, Model and Transform class</li>
+</ul>
+<hr  />
 <h1 class="doxsection"><a class="anchor" id="v0_4_2"></a>
 v0.4.2 — (20-04-2026)</h1>
 <h2 class="doxsection"><a class="anchor" id="v0_4_2_editor_added"></a>

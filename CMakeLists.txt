@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.4.1 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.5.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -71,6 +71,10 @@ add_subdirectory(Vectrix/extern/spdlog)
 message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
 add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
+
+# EnTT
+message(VERBOSE "Initializing EnTT")
+add_subdirectory(Vectrix/extern/EnTT)
 
 # Vectrix
 message(STATUS "Initializing Vectrix")
@@ -161,6 +165,7 @@ if (UNIX AND NOT APPLE)
             xxHash::xxhash
             GPUOpen::VulkanMemoryAllocator
             volk::volk
+            EnTT::EnTT
     )
 else()
 target_link_libraries(Vectrix
@@ -169,6 +174,7 @@ target_link_libraries(Vectrix
         xxHash::xxhash
         GPUOpen::VulkanMemoryAllocator
         volk::volk
+        EnTT::EnTT
 )
 endif()
 

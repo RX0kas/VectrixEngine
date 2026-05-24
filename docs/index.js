@@ -1,9 +1,15 @@
 var index =
 [
-    [ "Modules", "index.html#autotoc_md6", null ],
+    [ "Modules", "index.html#autotoc_md7", null ],
     [ "Different modules available", "docs_home.html", "docs_home" ],
     [ "Tools Guide", "tools_overview.html", null ],
     [ "Changelog", "changelog.html", [
+      [ "v0.5.0 — (24-05-2026)", "changelog.html#v0_5_0", [
+        [ "Added", "changelog.html#v0_5_0_added", null ],
+        [ "Changed", "changelog.html#v0_5_0_changed", null ],
+        [ "Fixed", "changelog.html#v0_5_0_fixed", null ],
+        [ "Removed", "changelog.html#v0_5_0_removed", null ]
+      ] ],
       [ "v0.4.2 — (20-04-2026)", "changelog.html#v0_4_2", [
         [ "Editor Addition", "changelog.html#v0_4_2_editor_added", null ],
         [ "Added", "changelog.html#v0_4_2_added", null ],

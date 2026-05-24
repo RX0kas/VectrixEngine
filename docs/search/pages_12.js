@@ -5,5 +5,6 @@ var searchData=
   ['v0_203_200_20—_2014_2003_202026_2',['v0.3.0 — (14-03-2026)',['../changelog.html#v0_3_0',1,'']]],
   ['v0_204_200_20—_2012_2004_202026_3',['v0.4.0 — (12-04-2026)',['../changelog.html#v0_4_0',1,'']]],
   ['v0_204_202_20—_2020_2004_202026_4',['v0.4.2 — (20-04-2026)',['../changelog.html#v0_4_2',1,'']]],
-  ['vectrix_20engine_5',['Documentation of the Vectrix Engine',['../index.html',1,'']]]
+  ['v0_205_200_20—_2024_2005_202026_5',['v0.5.0 — (24-05-2026)',['../changelog.html#v0_5_0',1,'']]],
+  ['vectrix_20engine_6',['Documentation of the Vectrix Engine',['../index.html',1,'']]]
 ];

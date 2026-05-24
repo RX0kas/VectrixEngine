@@ -7,6 +7,7 @@ var searchData=
   ['onrender_4',['OnRender',['../classVectrix_1_1Layer.html#a1aa34422ce3bb128f7a61d17083bd50f',1,'Vectrix::Layer']]],
   ['onrenderoffscreen_5',['OnRenderOffscreen',['../classVectrix_1_1Layer.html#a7ba346796182ccb296c7a20f90b8b267',1,'Vectrix::Layer']]],
   ['onupdate_6',['OnUpdate',['../classVectrix_1_1Layer.html#a5882d4e2be086fb0c10fbe111e5f7ea2',1,'Vectrix::Layer']]],
-  ['operator_3d_3d_7',['operator==',['../structVectrix_1_1Vertex.html#a03403da3e8f0b26972b08465e2a850fe',1,'Vectrix::Vertex']]],
-  ['operator_5b_5d_8',['operator[]',['../classVectrix_1_1JsonValue.html#a0fb7fc719708fd7b919c7977509bf3ca',1,'Vectrix::JsonValue::operator[](const std::string &amp;key)'],['../classVectrix_1_1JsonValue.html#ac1fe5b08bee5485ac732918ad07457e6',1,'Vectrix::JsonValue::operator[](size_t index)']]]
+  ['operator_20bool_7',['operator bool',['../classVectrix_1_1Entity.html#a50baee9d8d23e96eac28f5a79ef93fc2',1,'Vectrix::Entity']]],
+  ['operator_3d_3d_8',['operator==',['../structVectrix_1_1Vertex.html#a03403da3e8f0b26972b08465e2a850fe',1,'Vectrix::Vertex']]],
+  ['operator_5b_5d_9',['operator[]',['../classVectrix_1_1JsonValue.html#a0fb7fc719708fd7b919c7977509bf3ca',1,'Vectrix::JsonValue::operator[](const std::string &amp;key)'],['../classVectrix_1_1JsonValue.html#ac1fe5b08bee5485ac732918ad07457e6',1,'Vectrix::JsonValue::operator[](size_t index)']]]
 ];

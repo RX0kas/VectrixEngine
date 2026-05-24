@@ -4,7 +4,6 @@
 #include "Rendering/Mesh/MeshRegistry.h"
 #include "Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
-#include "Vectrix/Rendering/Mesh/Model.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 
 namespace Vectrix {
@@ -49,10 +48,10 @@ namespace Vectrix {
 		glfwPollEvents();
 	}
 
-	void VulkanContext::registerMesh(const std::string &name, std::shared_ptr<Model> model) {
+	void VulkanContext::registerMesh(MeshComponent* model) {
 		VC_PROFILER_FUNCTION();
-		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->getVertexArray());
-		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->getVertices(),model->getIndices()));
+		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->vertexArray);
+		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->m_vertices,model->m_indices));
 	}
 
 	void VulkanContext::uploadMeshData() {

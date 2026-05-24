@@ -2,7 +2,7 @@
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
-#include "Vectrix/Rendering/Mesh/Model.h"
+#include "Vectrix/Rendering/Mesh/MeshHandle.h"
 
 namespace Vectrix {
     MeshRegistry::MeshRegistry() {

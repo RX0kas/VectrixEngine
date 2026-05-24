@@ -7,7 +7,7 @@
 #include "Vectrix/Rendering/Mesh/Vertex.h"
 
 namespace Vectrix {
-    class MeshHandle;
+    struct MeshHandle;
 
     class MeshRegistry {
     public:

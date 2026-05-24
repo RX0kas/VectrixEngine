@@ -25,6 +25,8 @@ namespace Vectrix {
 
         [[nodiscard]] VkFormat getFormat() const { return m_format; }
         [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
+
+        [[nodiscard]] uint32_t getUniqueTextureID() { return m_id; }
     private:
         friend class Texture;
         VulkanTexture();
@@ -41,6 +43,9 @@ namespace Vectrix {
         VkFormat m_format = VK_FORMAT_UNDEFINED;
         VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
         Device& m_device;
+        uint32_t m_id;
+
+        static uint32_t s_numberTexture;
     };
 } // Vectrix
 

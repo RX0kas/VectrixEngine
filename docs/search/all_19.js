@@ -1,17 +1,12 @@
 var searchData=
 [
-  ['v0_201_200_20—_2019_2002_202026_0',['v0.1.0 — (19-02-2026)',['../changelog.html#v0_1_0',1,'']]],
-  ['v0_202_200_20—_2004_2003_202026_1',['v0.2.0 — (04-03-2026)',['../changelog.html#v0_2_0',1,'']]],
-  ['v0_203_200_20—_2014_2003_202026_2',['v0.3.0 — (14-03-2026)',['../changelog.html#v0_3_0',1,'']]],
-  ['v0_204_200_20—_2012_2004_202026_3',['v0.4.0 — (12-04-2026)',['../changelog.html#v0_4_0',1,'']]],
-  ['v0_204_202_20—_2020_2004_202026_4',['v0.4.2 — (20-04-2026)',['../changelog.html#v0_4_2',1,'']]],
-  ['vc_5fprofiler_5ffunction_5',['VC_PROFILER_FUNCTION',['../Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b',1,'Profiler.h']]],
-  ['vc_5fprofiler_5fscope_6',['VC_PROFILER_SCOPE',['../Profiler_8h.html#a4545cbd6de7a64b3b857d7c777a10502',1,'Profiler.h']]],
-  ['vectrix_7',['Vectrix',['../namespaceVectrix.html',1,'']]],
-  ['vectrix_20engine_8',['Documentation of the Vectrix Engine',['../index.html',1,'']]],
-  ['vertex_9',['Vertex',['../structVectrix_1_1Vertex.html',1,'Vectrix']]],
-  ['vertex_2eh_10',['Vertex.h',['../Vertex_8h.html',1,'']]],
-  ['vertexarray_11',['VertexArray',['../classVectrix_1_1VertexArray.html',1,'Vectrix']]],
-  ['vertexarray_2eh_12',['VertexArray.h',['../VertexArray_8h.html',1,'']]],
-  ['vertexbuffer_13',['VertexBuffer',['../classVectrix_1_1VertexBuffer.html',1,'Vectrix']]]
+  ['unbind_0',['unbind',['../classVectrix_1_1Framebuffer.html#a980343d5546e62bce20cf5ae8a72ba6f',1,'Vectrix::Framebuffer']]],
+  ['uniformalignment_1',['uniformAlignment',['../namespaceVectrix.html#add762e9c3c2f921ca240998c51b098a2',1,'Vectrix']]],
+  ['uniformelement_2',['UniformElement',['../structVectrix_1_1UniformElement.html',1,'Vectrix']]],
+  ['uniformsizeinbytes_3',['uniformSizeInBytes',['../namespaceVectrix.html#aa98fdc13824ee10e019b88443a9bce40',1,'Vectrix']]],
+  ['usetexture_4',['useTexture',['../classVectrix_1_1Shader.html#a94d77fe2b9bf322a5b69f5e024e39c17',1,'Vectrix::Shader']]],
+  ['utilities_5',['2. &lt;a class=&quot;el&quot; href=&quot;group__utilities.html&quot; title=&quot;Utility Tools&quot;&gt;Utility Tools&lt;/a&gt;',['../tools_overview.html#autotoc_md17',1,'']]],
+  ['utility_6',['Utility',['../group__utils.html',1,'']]],
+  ['utility_20tools_7',['Utility Tools',['../group__utilities.html',1,'']]],
+  ['uv_8',['uv',['../structVectrix_1_1Vertex.html#abedfb6582f9d476c2ae02998b73a5c62',1,'Vectrix::Vertex']]]
 ];

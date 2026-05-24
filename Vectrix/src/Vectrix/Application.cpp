@@ -6,9 +6,9 @@
 
 #include "Core/DeltaTime.h"
 #include "Debug/Profiler.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Rendering/GraphicsContext.h"
 #include "Rendering/RenderCommand.h"
-#include "Rendering/Mesh/MeshManager.h"
 #include "Rendering/Shaders/ShaderManager.h"
 #include "Rendering/Textures/TextureManager.h"
 
@@ -31,8 +31,6 @@ namespace Vectrix {
 		m_textureManager = std::unique_ptr<TextureManager>(tm);
 		auto sm = new ShaderManager();
 		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
-		auto mm = new MeshManager();
-		m_meshManager = std::unique_ptr<MeshManager>(mm);
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
@@ -44,7 +42,6 @@ namespace Vectrix {
 		m_imGuiLayer.reset();
 		m_shaderManager.reset();
 		m_textureManager.reset();
-		m_meshManager.reset();
 		m_window.reset();
 	}
 

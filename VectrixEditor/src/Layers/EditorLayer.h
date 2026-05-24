@@ -17,17 +17,20 @@ namespace Vectrix {
 
 		void OnImGuiRender() override;
 	private:
-		PerspectiveCameraController m_cameraController;
-
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
 
     	std::shared_ptr<Texture> m_testTexture;
-    	std::shared_ptr<Model> m_testModel;
-
     	glm::vec2 m_viewportSize;
     	bool m_viewportFocused = false, m_viewportHovered = false;
     	bool m_mustResize = false;
+
+    	std::shared_ptr<Scene> m_activeScene;
+    	Entity m_foxEntity;
+    	Entity m_cameraEntity;
+    	Camera* m_camera;
+    	float m_cameraRotationSpeed = 5.0f;
+    	float m_cameraMoveSpeed = 1.5f;
     };
 } // Vectrix
 

@@ -163,6 +163,8 @@ AI has only been used as a review tool and each modification is analyzed
 - [VMA](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator): Vulkan memory allocation library
 - [xxHash](https://github.com/Cyan4973/xxHash): for the hashing functions
 - [STB Image](https://github.com/nothings/stb/blob/master/stb_image.h): to load Textures
+- [Volk](https://github.com/zeux/volk): to manage Vulkan extension
+- [EnTT](https://github.com/skypjack/entt): Entity component system
 ---
 
 If you like this project, feel free to give it a star!

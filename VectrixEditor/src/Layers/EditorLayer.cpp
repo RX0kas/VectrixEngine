@@ -1,20 +1,29 @@
 #include "EditorLayer.h"
 
-namespace Vectrix {
-    EditorLayer::EditorLayer() : Layer("VC_Editor"),m_viewportSize(1,1) {
-        FramebufferSpecification fbSpec;
-        fbSpec.width = 1;
-        fbSpec.height = 1;
-        m_framebuffer = Framebuffer::create(fbSpec);
+#include "Vectrix/Scene/Components/CameraComponent.h"
 
-    	ShaderUniformLayout layout;
-    	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag",layout);
-    	m_testModel = MeshManager::loadModel("VC_testModel","./models/fox.obj");
-    	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+namespace Vectrix {
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {
+	    FramebufferSpecification fbSpec;
+	    fbSpec.width = 1;
+	    fbSpec.height = 1;
+	    m_framebuffer = Framebuffer::create(fbSpec);
+
+	    m_activeScene = std::make_shared<Scene>();
+	    m_cameraEntity = m_activeScene->createEntity();
+	    m_cameraEntity.addComponent<CameraComponent>(m_cameraEntity.getComponent<TransformComponent>());
+    	m_camera = Camera::getCurrentCamera();
+
+	    ShaderUniformLayout layout;
+	    m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
+	    m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+
+	    m_foxEntity = m_activeScene->createEntity();
+	    m_foxEntity.addComponent<MeshComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
     }
 
     void EditorLayer::OnEvent(Event &event) {
-		m_cameraController.onEvent(event);
+    	m_camera->recalculateMatrices();
     }
 
     void EditorLayer::OnImGuiRender() {
@@ -99,22 +108,73 @@ namespace Vectrix {
 
     void EditorLayer::OnRenderOffscreen() {
         m_framebuffer->bind();
-        Renderer::beginScene(m_cameraController.getCamera());
-
-    	m_viewportShader->setTexture(0,m_testTexture);
-    	Renderer::submit(*m_viewportShader,*m_testModel);
-
-        Renderer::endScene();
+    	Renderer::beginScene(*m_camera);
+    	m_activeScene->OnRender();
+    	Renderer::endScene();
         m_framebuffer->unbind();
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
-    	if (m_viewportFocused || m_viewportHovered)
-    		m_cameraController.onUpdate(dt);
+    	if (m_viewportFocused || m_viewportHovered) {
+    		glm::vec3 cameraRot = m_cameraEntity.getComponent<TransformComponent>().rotation;
+    		if (Input::isKeyPressed(VC_KEY_LEFT))
+    			cameraRot.y -= m_cameraRotationSpeed * dt;
+    		if (Input::isKeyPressed(VC_KEY_RIGHT))
+    			cameraRot.y += m_cameraRotationSpeed * dt;
+    		if (Input::isKeyPressed(VC_KEY_UP))
+    			cameraRot.x -= m_cameraRotationSpeed * dt;
+    		if (Input::isKeyPressed(VC_KEY_DOWN))
+    			cameraRot.x += m_cameraRotationSpeed * dt;
+    		m_cameraEntity.getComponent<TransformComponent>().rotation = cameraRot;
+
+    		float yaw = cameraRot.y;
+    		float pitch = cameraRot.x;
+    		float roll = cameraRot.z;
+
+    		float c1 = std::cos(yaw);
+    		float s1 = std::sin(yaw);
+    		float c2 = std::cos(pitch);
+    		float s2 = std::sin(pitch);
+    		float c3 = std::cos(roll);
+    		float s3 = std::sin(roll);
+
+    		glm::vec3 right;
+    		right.x = c1 * c3 + s1 * s2 * s3;
+    		right.y = c2 * s3;
+    		right.z = c1 * s2 * s3 - c3 * s1;
+
+    		glm::vec3 up;
+    		up.x = c3 * s1 * s2 - c1 * s3;
+    		up.y = c2 * c3;
+    		up.z = c1 * c3 * s2 + s1 * s3;
+
+    		glm::vec3 forward;
+    		forward.x = c2 * s1;
+    		forward.y = -s2;
+    		forward.z = c1 * c2;
+
+    		glm::vec3 moveDir(0.0f);
+    		if (Input::isKeyPressed(VC_KEY_A)) moveDir.x -= 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_D)) moveDir.x += 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_W)) moveDir.z += 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_S)) moveDir.z -= 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_Q)) moveDir.y -= 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_E)) moveDir.y += 1.0f;
+
+    		if (glm::length(moveDir) > 0.0f) {
+    			moveDir = glm::normalize(moveDir);
+
+    			glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();
+
+    			m_cameraEntity.getComponent<TransformComponent>().position = m_cameraEntity.getComponent<TransformComponent>().position + delta;
+    		}
+    	}
     	if (m_mustResize) {
     		m_framebuffer->resize(m_viewportSize);
-    		m_cameraController.getCamera().setCustomAspect(m_viewportSize.x/m_viewportSize.y);
+    		m_camera->setCustomAspect(m_viewportSize.x/m_viewportSize.y);
     		m_mustResize = false;
     	}
+    	m_activeScene->OnUpdate(dt);
+    	m_camera->recalculateMatrices();
     }
 } // Vectrix

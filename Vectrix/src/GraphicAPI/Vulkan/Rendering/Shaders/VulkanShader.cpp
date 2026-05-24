@@ -11,7 +11,7 @@
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
-		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_name{std::move(name)},m_affectedByCamera(affectedByCamera)
+		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_affectedByCamera(affectedByCamera),m_name{std::move(name)}
 	{
 		VC_PROFILER_FUNCTION();
 		finalize(m_layout.get());
@@ -152,20 +152,29 @@ namespace Vectrix {
 		m_ssbo->copyToFrame(m_renderer.getFrameIndex(), e->offset, &camera, sizeof(glm::mat4));
 	}
 
-	void VulkanShader::setTexture(uint32_t index, std::shared_ptr<Texture> texture) {
+	uint32_t VulkanShader::useTexture(std::shared_ptr<Texture> texture) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(index < Texture::getMaxTexturePerShader(), "Index out of range");
+		VC_CORE_ASSERT(m_firstTextureIndexAvailable < Texture::getMaxTexturePerShader(), "Too many texture has been set in the shader "+m_name+" ("+std::to_string(m_firstTextureIndexAvailable)+"/"+std::to_string(Texture::getMaxTexturePerShader())+")");
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
-
+		auto id = vkTex->getUniqueTextureID();
 		VkDescriptorImageInfo imageInfo = vkTex->getDescriptorInfo();
 		VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
 		write.dstSet = m_ssbo->descriptorSet()[VulkanContext::instance().getRenderer().getFrameIndex()];
 		write.dstBinding = 1;
-		write.dstArrayElement = index;
 		write.descriptorCount = 1;
 		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		write.pImageInfo = &imageInfo;
+
+		if (!m_textureIndexCache.exist(std::to_string(id))) {
+			write.dstArrayElement = m_firstTextureIndexAvailable;
+			vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
+			m_textureIndexCache[std::to_string(id)] = m_firstTextureIndexAvailable;
+			return m_firstTextureIndexAvailable++;
+		}
+		write.dstArrayElement = m_textureIndexCache[std::to_string(id)];
 		vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
+
+		return id;
 	}
 
 	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {

@@ -9,7 +9,6 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
-#include "Rendering/Mesh/MeshManager.h"
 
 
 /**
@@ -87,16 +86,16 @@ namespace Vectrix {
 		void close() {
 			m_running = false;
 		}
-
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
+
+
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<ShaderManager> m_shaderManager;
 		std::unique_ptr<TextureManager> m_textureManager;
-		std::unique_ptr<MeshManager> m_meshManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
 		std::unique_ptr<ApplicationInfo> m_appInfo;
 		bool m_running = true;

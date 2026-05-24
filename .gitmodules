@@ -34,6 +34,9 @@
 	path = Vectrix/extern/VulkanMemoryAllocator
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
     branch = master
+[submodule "Vectrix/extern/EnTT"]
+	path = Vectrix/extern/EnTT
+	url = https://github.com/skypjack/entt
 [submodule "Vectrix/extern/Volk"]
 	path = Vectrix/extern/Volk
 	url = https://github.com/zeux/volk

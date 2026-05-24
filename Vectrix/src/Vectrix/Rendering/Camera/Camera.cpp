@@ -1,6 +1,6 @@
 #include "vcpch.h"
 
-#include "PerspectiveCamera.h"
+#include "Camera.h"
 
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,30 +11,32 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
+	Camera* Camera::s_currentCamera = nullptr;
 
-	PerspectiveCamera::PerspectiveCamera(float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
+	Camera::Camera(TransformComponent& transform, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear), m_transform(transform) {
 		recalculateMatrices();
+		setAsCurrent();
 	}
 
-	float PerspectiveCamera::getAspect() const {
+	float Camera::getAspect() const {
 		return m_customAspect!=-1 ? m_customAspect : Application::instance().window().getAspect();
 	}
 
-	void PerspectiveCamera::recalculateMatrices() {
+	void Camera::recalculateMatrices() {
 		VC_PROFILER_FUNCTION();
 		recalculateProjectionMatrix();
 		recalculateViewMatrix();
 		recalculateTransformationMatrix();
 	}
 
-	void PerspectiveCamera::recalculateViewMatrix()	{
+	void Camera::recalculateViewMatrix()	{
 		VC_PROFILER_FUNCTION();
-		const float c1 = glm::cos(m_rotation.y); // yaw
-		const float s1 = glm::sin(m_rotation.y);
-		const float c2 = glm::cos(m_rotation.x); // pitch
-		const float s2 = glm::sin(m_rotation.x);
-		const float c3 = glm::cos(m_rotation.z); // roll
-		const float s3 = glm::sin(m_rotation.z);
+		const float c1 = glm::cos(m_transform.rotation.y); // yaw
+		const float s1 = glm::sin(m_transform.rotation.y);
+		const float c2 = glm::cos(m_transform.rotation.x); // pitch
+		const float s2 = glm::sin(m_transform.rotation.x);
+		const float c3 = glm::cos(m_transform.rotation.z); // roll
+		const float s3 = glm::sin(m_transform.rotation.z);
 
 		const glm::vec3 u{
 			c1 * c3 + s1 * s2 * s3,
@@ -64,17 +66,17 @@ namespace Vectrix {
 		m_viewMatrix[0][2] = w.x;
 		m_viewMatrix[1][2] = w.y;
 		m_viewMatrix[2][2] = w.z;
-		m_viewMatrix[3][0] = -glm::dot(u, m_position);
-		m_viewMatrix[3][1] = -glm::dot(v, m_position);
-		m_viewMatrix[3][2] = -glm::dot(w, m_position);
+		m_viewMatrix[3][0] = -glm::dot(u, m_transform.position);
+		m_viewMatrix[3][1] = -glm::dot(v, m_transform.position);
+		m_viewMatrix[3][2] = -glm::dot(w, m_transform.position);
 	}
 
 
-	void PerspectiveCamera::recalculateTransformationMatrix() {
+	void Camera::recalculateTransformationMatrix() {
 		m_transformationMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void PerspectiveCamera::recalculateProjectionMatrix() {
+	void Camera::recalculateProjectionMatrix() {
 		VC_PROFILER_FUNCTION();
 		float aspect = getAspect();
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is zero or invalid");
@@ -90,7 +92,7 @@ namespace Vectrix {
 		m_projectionMatrix[1][1] *= -1;
 	}
 
-	void PerspectiveCamera::setViewDirection(glm::vec3 direction) {
+	void Camera::setViewDirection(glm::vec3 direction) {
 		VC_PROFILER_FUNCTION();
 		const glm::vec3 up = {0.0f, 1.0f, 0.0f};
 		const glm::vec3 w{glm::normalize(direction)};
@@ -107,15 +109,15 @@ namespace Vectrix {
 		m_viewMatrix[0][2] = w.x;
 		m_viewMatrix[1][2] = w.y;
 		m_viewMatrix[2][2] = w.z;
-		m_viewMatrix[3][0] = -glm::dot(u, m_position);
-		m_viewMatrix[3][1] = -glm::dot(v, m_position);
-		m_viewMatrix[3][2] = -glm::dot(w, m_position);
+		m_viewMatrix[3][0] = -glm::dot(u, m_transform.position);
+		m_viewMatrix[3][1] = -glm::dot(v, m_transform.position);
+		m_viewMatrix[3][2] = -glm::dot(w, m_transform.position);
 
 		recalculateTransformationMatrix();
 	}
 
-	void PerspectiveCamera::setViewTarget(glm::vec3 target) {
+	void Camera::setViewTarget(glm::vec3 target) {
 		VC_PROFILER_FUNCTION();
-		setViewDirection(target - m_position);
+		setViewDirection(target - m_transform.position);
 	}
 }
