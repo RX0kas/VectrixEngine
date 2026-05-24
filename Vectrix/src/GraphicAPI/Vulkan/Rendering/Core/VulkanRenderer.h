@@ -128,7 +128,7 @@ namespace Vectrix {
         uint32_t m_currentImageIndex{ 0 };
         bool m_isFrameStarted{ false };
 
-        VkClearValue m_clearValue = { 0.05f, 0.05f, 0.05f, 1.0f };
+        VkClearValue m_clearValue = { 0, 0, 0, 1.0f };
 
         Cache<std::string,BatchInfo> m_batchCache;
     };

@@ -27,7 +27,7 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnImGuiRender() {
-        static bool dockingEnabled = false;
+        static bool dockingEnabled = true;
 		if (dockingEnabled) {
 			static bool dockspaceOpen = true;
 			static bool opt_fullscreen_persistant = true;
@@ -103,19 +103,19 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnRender() {
-    	Renderer::beginScene(*m_camera);
-    	m_activeScene->OnRender();
-    	Renderer::endScene();
+
     }
 
     void EditorLayer::OnRenderOffscreen() {
         m_framebuffer->bind();
-
+    	Renderer::beginScene(*m_camera);
+    	m_activeScene->OnRender();
+    	Renderer::endScene();
         m_framebuffer->unbind();
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
-    	if (m_viewportFocused || m_viewportHovered || true) {
+    	if (m_viewportFocused || m_viewportHovered) {
     		glm::vec3 cameraRot = m_cameraEntity.getComponent<TransformComponent>().rotation;
     		if (Input::isKeyPressed(VC_KEY_LEFT))
     			cameraRot.y -= m_cameraRotationSpeed * dt;
