@@ -1,10 +1,10 @@
 ![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.4.2-green.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.0-green.svg)
 
 An engine made to run all of my little graphics project
 
-Current Working branch: [feature/ECS](https://github.com/RX0kas/VectrixEngine/tree/feature/ecs)
+Current Working branch: [feature/editor](https://github.com/RX0kas/VectrixEngine/tree/feature/editor)
 
 ![Screenshot or demo GIF](preview.png)
 
