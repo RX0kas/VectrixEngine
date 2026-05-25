@@ -4,22 +4,25 @@
 
 namespace Vectrix {
     EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {
-	    FramebufferSpecification fbSpec;
-	    fbSpec.width = 1;
-	    fbSpec.height = 1;
-	    m_framebuffer = Framebuffer::create(fbSpec);
+    }
 
-	    m_activeScene = std::make_shared<Scene>();
-	    m_cameraEntity = m_activeScene->createEntity();
-	    m_cameraEntity.addComponent<CameraComponent>(m_cameraEntity.getComponent<TransformComponent>());
+	void EditorLayer::OnAttach() {
+    	FramebufferSpecification fbSpec;
+    	fbSpec.width = 1;
+    	fbSpec.height = 1;
+    	m_framebuffer = Framebuffer::create(fbSpec);
+
+    	m_activeScene = std::make_shared<Scene>();
+    	m_cameraEntity = m_activeScene->createEntity();
+    	m_cameraEntity.addComponent<CameraComponent>(m_cameraEntity.getComponent<TransformComponent>());
     	m_camera = Camera::getCurrentCamera();
 
-	    ShaderUniformLayout layout;
-	    m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
-	    m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+    	ShaderUniformLayout layout;
+    	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
+    	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
 
-	    m_foxEntity = m_activeScene->createEntity();
-	    m_foxEntity.addComponent<MeshComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
+    	m_foxEntity = m_activeScene->createEntity();
+    	m_foxEntity.addComponent<MeshComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
     }
 
     void EditorLayer::OnEvent(Event &event) {
