@@ -16,6 +16,8 @@ namespace Vectrix {
 		void OnEvent(Event &event) override;
 
 		void OnImGuiRender() override;
+
+    	void OnAttach() override;
 	private:
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;

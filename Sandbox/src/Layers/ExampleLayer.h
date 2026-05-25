@@ -8,6 +8,9 @@
 class ExampleLayer : public Vectrix::Layer {
 public:
 	ExampleLayer() : Layer("Example") {
+	}
+
+	void OnAttach() override {
 		m_cameraEntity = m_activeScene.createEntity("Camera");
 		m_cameraEntity.getComponent<Vectrix::TransformComponent>().position = {0.0f,0.0f,3.0f};
 		m_cameraEntity.getComponent<Vectrix::TransformComponent>().rotation = {0.0f,-M_PI,0.0f};
