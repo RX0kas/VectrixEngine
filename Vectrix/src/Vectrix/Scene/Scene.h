@@ -28,6 +28,7 @@ namespace Vectrix {
         Entity createEntity(const std::string& name="");
     private:
         friend class Entity;
+        friend class SceneHierarchyPanel;
         entt::registry m_registry;
     };
 } // Vectrix

@@ -12,7 +12,7 @@ namespace Vectrix {
 
     uint32_t VulkanTexture::s_numberTexture = 1;
 
-    VulkanTexture::VulkanTexture(const std::string &path) : m_device(VulkanContext::instance().getDevice()) {
+    VulkanTexture::VulkanTexture(const std::string &name, const std::string &path) : m_device(VulkanContext::instance().getDevice()),m_name(name) {
         VC_PROFILER_FUNCTION();
         stbi_uc* pixels = stbi_load(path.c_str(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
         m_imageSize = m_width * m_height * 4;
@@ -28,7 +28,7 @@ namespace Vectrix {
     /**
      * Used to createDefaultTexture
      */
-    VulkanTexture::VulkanTexture() : m_device(VulkanContext::instance().getDevice()) {
+    VulkanTexture::VulkanTexture() : m_device(VulkanContext::instance().getDevice()),m_name("DefaultTexture") {
         VC_PROFILER_FUNCTION();
         VC_CORE_INFO("Creating not_found texture");
         int x, y, channels;

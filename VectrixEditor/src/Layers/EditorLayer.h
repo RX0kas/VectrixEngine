@@ -1,6 +1,7 @@
 #ifndef VECTRIXWORKSPACE_EDITORLAYER_H
 #define VECTRIXWORKSPACE_EDITORLAYER_H
 #include "Vectrix.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Vectrix {
     class EditorLayer : public Layer {
@@ -33,6 +34,9 @@ namespace Vectrix {
     	Camera* m_camera;
     	float m_cameraRotationSpeed = 5.0f;
     	float m_cameraMoveSpeed = 1.5f;
+
+    	// Panels
+    	SceneHierarchyPanel m_SceneHierarchyPanel;
     };
 } // Vectrix
 

@@ -37,9 +37,14 @@ namespace Vectrix {
          * @return The maximum number of Texture allowed per shader
          */
         static constexpr uint32_t getMaxTexturePerShader() { return 8; }
+
+        /**
+         * @brief Return the name of the shader
+         */
+        [[nodiscard]] virtual std::string getName() const = 0;
     private:
         friend class TextureManager;
-        static std::shared_ptr<Texture> create(const std::string& path);
+        static std::shared_ptr<Texture> create(const std::string &name,const std::string& path);
         static std::shared_ptr<Texture> createDefaultTexture();
         static unsigned int m_count;
     };

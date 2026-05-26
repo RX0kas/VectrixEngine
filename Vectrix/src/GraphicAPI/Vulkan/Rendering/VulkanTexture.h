@@ -7,7 +7,7 @@
 namespace Vectrix {
     class VulkanTexture : public Texture {
     public:
-        VulkanTexture(const std::string &path);
+        VulkanTexture(const std::string &name, const std::string &path);
         ~VulkanTexture() override;
 
         [[nodiscard]] uint32_t getWidth() const override { return m_width; }
@@ -26,7 +26,8 @@ namespace Vectrix {
         [[nodiscard]] VkFormat getFormat() const { return m_format; }
         [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
 
-        [[nodiscard]] uint32_t getUniqueTextureID() { return m_id; }
+        [[nodiscard]] uint32_t getUniqueTextureID() const { return m_id; }
+        [[nodiscard]] std::string getName() const override { return m_name; }
     private:
         friend class Texture;
         VulkanTexture();
@@ -44,6 +45,8 @@ namespace Vectrix {
         VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
         Device& m_device;
         uint32_t m_id;
+
+        std::string m_name;
 
         static uint32_t s_numberTexture;
     };

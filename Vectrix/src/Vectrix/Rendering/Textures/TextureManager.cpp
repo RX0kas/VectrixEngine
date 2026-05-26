@@ -16,7 +16,7 @@ namespace Vectrix {
     }
 
     std::shared_ptr<Texture> TextureManager::createTexture(const std::string &name, const std::string &path) {
-        std::shared_ptr<Texture> texture(Texture::create(path));
+        std::shared_ptr<Texture> texture(Texture::create(name,path));
         instance().add(name,texture);
         return texture;
     }
