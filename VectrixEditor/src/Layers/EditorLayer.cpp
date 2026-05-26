@@ -3,8 +3,7 @@
 #include "Vectrix/Scene/Components/CameraComponent.h"
 
 namespace Vectrix {
-    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {
-    }
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1), m_camera(nullptr) {}
 
 	void EditorLayer::OnAttach() {
     	FramebufferSpecification fbSpec;
@@ -13,7 +12,9 @@ namespace Vectrix {
     	m_framebuffer = Framebuffer::create(fbSpec);
 
     	m_activeScene = std::make_shared<Scene>();
-    	m_cameraEntity = m_activeScene->createEntity();
+    	m_cameraEntity = m_activeScene->createEntity("Camera");
+    	m_cameraEntity.getComponent<TransformComponent>().position = {0.0f,0.0f,3.0f};
+    	m_cameraEntity.getComponent<TransformComponent>().rotation = {0.0f,-M_PI,0.0f};
     	m_cameraEntity.addComponent<CameraComponent>(m_cameraEntity.getComponent<TransformComponent>());
     	m_camera = Camera::getCurrentCamera();
 
@@ -21,8 +22,9 @@ namespace Vectrix {
     	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
     	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
 
-    	m_foxEntity = m_activeScene->createEntity();
+    	m_foxEntity = m_activeScene->createEntity("Fox");
     	m_foxEntity.addComponent<MeshComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
+    	m_SceneHierarchyPanel.setContext(m_activeScene);
     }
 
     void EditorLayer::OnEvent(Event &event) {
@@ -102,6 +104,8 @@ namespace Vectrix {
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
+
+			m_SceneHierarchyPanel.onImGuiRender();
 		}
     }
 

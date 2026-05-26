@@ -215,6 +215,7 @@ target_link_libraries(VectrixEditor PRIVATE Vectrix)
 
 target_include_directories(VectrixEditor PRIVATE
         $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
+        VectrixEditor/src/
 )
 
 target_compile_definitions(VectrixEditor PRIVATE

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <xxh3.h>
-#include <functional>
 
 #include "Vectrix/Rendering/Mesh/Vertex.h"
 
@@ -11,22 +10,8 @@ struct XXH3 {
     static constexpr uint64_t seed = 0x64AC0CB07C37A232;
 
     std::size_t operator()(const std::string& k) const noexcept {
-        return static_cast<std::size_t>(XXH3_64bits_withSeed(k.data(),k.length(),seed));
+        return XXH3_64bits_withSeed(k.data(),k.length(),seed);
     }
-
-    /*std::size_t operator()(std::string k) const noexcept {
-        return static_cast<std::size_t>(XXH3_64bits_withSeed(k.data(),k.length(),seed));
-    }
-
-    std::size_t operator()(const uint32_t& k) const noexcept {
-        auto s = std::to_string(k);
-        return static_cast<std::size_t>(XXH3_64bits_withSeed(s.data(),s.length(),seed));
-    }
-
-    std::size_t operator()(uint32_t k) const noexcept {
-        auto s = std::to_string(k);
-        return static_cast<std::size_t>(XXH3_64bits_withSeed(s.data(),s.length(),seed));
-    }*/
 };
 
 template <typename T, typename... Rest>

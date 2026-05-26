@@ -318,6 +318,11 @@ namespace Vectrix {
 		 * @brief Return if the shader is set up to receives the camera
 		 */
 		[[nodiscard]] virtual bool isAffectedByCamera() const = 0;
+
+		/**
+		 * @brief Return the name of the shader
+		 */
+		[[nodiscard]] virtual std::string getName() const = 0;
 	protected:
 		/// @cond INTERNAL
 		virtual void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const = 0;
