@@ -22,6 +22,13 @@ namespace Vectrix {
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_selectionContext = {};
 
+        if (ImGui::BeginPopupContextWindow(0, 1)) {
+            if (ImGui::MenuItem("Create Empty Entity"))
+                m_context->createEntity("Empty Entity");
+
+            ImGui::EndPopup();
+        }
+
         ImGui::End();
 
         ImGui::Begin("Properties");
