@@ -7,7 +7,7 @@ namespace Vectrix {
         Camera camera;
 
         CameraComponent(const CameraComponent&) = default;
-        CameraComponent(TransformComponent& transform) : camera(transform) {}
+        CameraComponent(Entity* entity) : camera(entity) {}
     };
 } // Vectrix
 

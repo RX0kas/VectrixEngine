@@ -12,11 +12,13 @@
  */
 
 namespace Vectrix {
+    class Entity;
     /**
      * @brief This class represent the 3D information about an object
      */
     class TransformComponent {
     public:
+        TransformComponent(Entity* entity) {}
         /**
          * @brief This is the world position
          */

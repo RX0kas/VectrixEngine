@@ -48,7 +48,7 @@ namespace Vectrix {
 		glfwPollEvents();
 	}
 
-	void VulkanContext::registerMesh(MeshComponent* model) {
+	void VulkanContext::registerMesh(MeshRenderer* model) {
 		VC_PROFILER_FUNCTION();
 		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->vertexArray);
 		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->m_vertices,model->m_indices));

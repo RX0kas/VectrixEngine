@@ -26,6 +26,8 @@ namespace Vectrix {
          * @param name The name of the Entity
          */
         Entity createEntity(const std::string& name="");
+
+        void destroyEntity(Entity entity);
     private:
         friend class Entity;
         friend class SceneHierarchyPanel;
