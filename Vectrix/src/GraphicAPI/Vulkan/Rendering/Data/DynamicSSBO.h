@@ -6,7 +6,7 @@
 namespace Vectrix {
     class DynamicSSBO {
     public:
-        explicit DynamicSSBO(std::shared_ptr<ShaderUniformLayout> layout, uint32_t initialCapacity = 256);
+        explicit DynamicSSBO(const std::shared_ptr<ShaderUniformLayout> &layout, uint32_t initialCapacity = 256);
         ~DynamicSSBO();
 
         DynamicSSBO(DynamicSSBO&& other) noexcept;

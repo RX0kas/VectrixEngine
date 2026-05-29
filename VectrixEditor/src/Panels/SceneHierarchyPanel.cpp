@@ -4,8 +4,6 @@
 #include "Vectrix/Scene/Component.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include "imgui_internal.h"
-
 namespace Vectrix {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) {
         setContext(scene);

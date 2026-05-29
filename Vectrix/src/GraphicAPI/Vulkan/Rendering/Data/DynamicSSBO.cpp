@@ -6,7 +6,7 @@
 namespace Vectrix {
     VkDescriptorSetLayout DynamicSSBO::s_descriptorSetLayout = nullptr;
 
-    DynamicSSBO::DynamicSSBO(std::shared_ptr<ShaderUniformLayout> layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_capacity(initialCapacity), m_allocator(VulkanContext::instance().getSSBOAllocator()) {
+    DynamicSSBO::DynamicSSBO(const std::shared_ptr<ShaderUniformLayout> &layout, uint32_t initialCapacity) : m_device(VulkanContext::instance().getDevice()), m_capacity(initialCapacity), m_allocator(VulkanContext::instance().getSSBOAllocator()) {
         m_layout = layout;
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 

@@ -48,16 +48,16 @@ namespace Vectrix {
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	protected:
-		MouseButtonEvent(int button) : m_Button(button) {}
+		explicit MouseButtonEvent(int button) : m_Button(button) {}
 
 		int m_Button;
 	};
 
 	class MouseButtonPressedEvent : public MouseButtonEvent	{
 	public:
-		MouseButtonPressedEvent(int button)	: MouseButtonEvent(button) {}
+		explicit MouseButtonPressedEvent(int button)	: MouseButtonEvent(button) {}
 
-		std::string toString() const override {
+		[[nodiscard]] std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << m_Button;
 			return ss.str();
@@ -70,7 +70,7 @@ namespace Vectrix {
 	public:
 		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
 
-		std::string toString() const override {
+		[[nodiscard]] std::string toString() const override {
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << m_Button;
 			return ss.str();

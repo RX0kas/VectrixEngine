@@ -17,7 +17,7 @@ namespace Vectrix {
         void onImGuiRender();
     private:
         void drawEntityNode(Entity& entity);
-        void drawProperties(Entity entity);
+        static void drawProperties(Entity entity);
         static bool drawTreeNodeComponent(const std::string& text, bool& mustBeRemoved, bool removable=true);
 
         static void showField(const char* label, const auto& ptr, const std::string& name) {

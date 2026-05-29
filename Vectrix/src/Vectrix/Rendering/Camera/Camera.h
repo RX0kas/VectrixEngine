@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#include "Vectrix/Scene/Entity.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
 
 /**

@@ -1,7 +1,6 @@
 #ifndef VECTRIXWORKSPACE_UNIFORMTRAIT_H
 #define VECTRIXWORKSPACE_UNIFORMTRAIT_H
 #include "ShaderUniformType.h"
-#include "glm/glm.hpp"
 
 
 namespace Vectrix {

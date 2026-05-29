@@ -2,7 +2,6 @@
 #define VECTRIXWORKSPACE_JSON_H
 #include <any>
 #include <cstddef>
-#include <cstddef>
 #include <map>
 #include <string>
 #include <variant>
@@ -61,7 +60,7 @@ namespace Vectrix {
          * @param value The boolean value
          * @note This constructor is explicit to avoid unintended conversions.
          */
-        explicit JsonValue(bool value) : m_data(value) {}
+        JsonValue(bool value) : m_data(value) {}
 
         /**
          * @brief Constructs a JSON array value
@@ -160,7 +159,7 @@ namespace Vectrix {
         [[nodiscard]] bool contains(const std::string& name) const {
             if (std::holds_alternative<JsonObject>(m_data)) {
                 const auto& o = std::get<JsonObject>(m_data);
-                return o.find(name) != o.end();
+                return o.contains(name);
             }
             VC_CORE_ERROR("JsonValue is not an object");
         }

@@ -8,7 +8,7 @@
 namespace Vectrix {
     class VulkanFramebuffer : public Framebuffer {
     public:
-        VulkanFramebuffer(const FramebufferSpecification& spec);
+        explicit VulkanFramebuffer(const FramebufferSpecification& spec);
         ~VulkanFramebuffer() override;
 
         void bind() override;

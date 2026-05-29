@@ -1,4 +1,3 @@
-#include "vcpch.h"
 #include "RenderCommand.h"
 
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
