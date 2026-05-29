@@ -32,7 +32,7 @@ namespace Vectrix {
         template<typename T,typename... Args>
         T& addComponent(Args&&... args) {
             VC_CORE_ASSERT(!hasComponent<T>(), "Entity already has component");
-            return m_scene->m_registry.emplace<T>(m_entityHandle,std::forward<Args>(args)...);
+            return m_scene->m_registry.emplace<T>(m_entityHandle,this,std::forward<Args>(args)...);
         }
 
         /**

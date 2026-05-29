@@ -15,7 +15,7 @@ namespace Vectrix {
     	m_cameraEntity = m_activeScene->createEntity("Camera");
     	m_cameraEntity.getComponent<TransformComponent>().position = {0.0f,0.0f,3.0f};
     	m_cameraEntity.getComponent<TransformComponent>().rotation = {0.0f,-M_PI,0.0f};
-    	m_cameraEntity.addComponent<CameraComponent>(m_cameraEntity.getComponent<TransformComponent>());
+    	m_cameraEntity.addComponent<CameraComponent>();
     	m_camera = Camera::getCurrentCamera();
 
     	ShaderUniformLayout layout;
@@ -23,7 +23,7 @@ namespace Vectrix {
     	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
 
     	m_foxEntity = m_activeScene->createEntity("Fox");
-    	m_foxEntity.addComponent<MeshComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
+    	m_foxEntity.addComponent<MeshRenderer>("./models/fox.obj", m_viewportShader, m_testTexture);
     	m_SceneHierarchyPanel.setContext(m_activeScene);
     }
 

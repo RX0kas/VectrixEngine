@@ -14,13 +14,13 @@ namespace Vectrix {
     }
 
     void Scene::OnRender() {
-        auto view = m_registry.view<MeshComponent, TransformComponent>();
+        auto view = m_registry.view<MeshRenderer, TransformComponent>();
 
         for (auto entity : view) {
-            auto& mesh = view.get<MeshComponent>(entity);
+            auto& mesh = view.get<MeshRenderer>(entity);
             auto& transform = view.get<TransformComponent>(entity);
 
-            if (!mesh.enable) continue;
+            if (!mesh.isEnable()) continue;
 
             Renderer::submit(mesh.shader,mesh.vertexArray,transform.modelMatrix(),mesh.shader->useTexture(mesh.texture));
         }
@@ -33,4 +33,9 @@ namespace Vectrix {
         entity.addComponent<TransformComponent>();
         return entity;
     }
+
+    void Scene::destroyEntity(Entity entity) {
+        m_registry.destroy(entity);
+    }
+
 } // Vectrix

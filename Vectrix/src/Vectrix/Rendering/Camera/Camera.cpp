@@ -13,7 +13,7 @@
 namespace Vectrix {
 	Camera* Camera::s_currentCamera = nullptr;
 
-	Camera::Camera(TransformComponent& transform, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear), m_transform(transform) {
+	Camera::Camera(Entity* entity, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear), m_transform(entity->getComponent<TransformComponent>()) {
 		recalculateMatrices();
 		setAsCurrent();
 	}

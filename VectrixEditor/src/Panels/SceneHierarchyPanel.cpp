@@ -4,6 +4,8 @@
 #include "Vectrix/Scene/Component.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "imgui_internal.h"
+
 namespace Vectrix {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) {
         setContext(scene);
@@ -25,8 +27,37 @@ namespace Vectrix {
         ImGui::End();
 
         ImGui::Begin("Properties");
-        if (m_selectionContext)
+        if (m_selectionContext) {
             drawProperties(m_selectionContext);
+
+            if (ImGui::Button("Add Component"))
+                ImGui::OpenPopup("AddComponent");
+        }
+
+        if (ImGui::BeginPopup("AddComponent")) {
+            bool hasOneComponent = false;
+            if (!m_selectionContext.hasComponent<CameraComponent>()) {
+                hasOneComponent = true;
+                if (ImGui::MenuItem("Camera")) {
+                    m_selectionContext.addComponent<CameraComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            if (!m_selectionContext.hasComponent<MeshRenderer>()) {
+                hasOneComponent = true;
+                if (ImGui::MenuItem("MeshRenderer")) {
+                    m_selectionContext.addComponent<MeshRenderer>();
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            if (!hasOneComponent) {
+                ImGui::Text("No component can be added");
+            }
+
+            ImGui::EndPopup();
+        }
 
         ImGui::End();
     }
@@ -51,7 +82,8 @@ namespace Vectrix {
         // TransformComponent
         {
             auto& tc = entity.getComponent<TransformComponent>();
-            if (ImGui::TreeNodeEx(reinterpret_cast<void *>(typeid(TransformComponent).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, "Transform")) {
+            bool mustBeRemoved = false;
+            if (drawTreeNodeComponent("Transform",mustBeRemoved,false)) {
                 // Position
                 float p[3] = {tc.position.x,tc.position.y,tc.position.z};
                 if (ImGui::DragFloat3("Position",p,0.1))
@@ -71,24 +103,58 @@ namespace Vectrix {
             }
         }
         // MeshComponent
-        if (entity.hasComponent<MeshComponent>()) {
-            auto& mc = entity.getComponent<MeshComponent>();
-            if (ImGui::TreeNodeEx(reinterpret_cast<void *>(typeid(MeshComponent).hash_code()), ImGuiTreeNodeFlags_None, "Mesh")) {
-                ImGui::Checkbox("Enable",&mc.enable);
-                ImGui::BeginDisabled(!mc.enable);
-                ImGui::Text("Shader: %s",mc.shader->getName().c_str());
-                ImGui::Text("Texture: %s",mc.texture->getName().c_str());
-                ImGui::Text("VertexArray: %p",&mc.vertexArray);
-                ImGui::Text("BufferLayout: %p",&mc.layout);
+        if (entity.hasComponent<MeshRenderer>()) {
+            auto& mc = entity.getComponent<MeshRenderer>();
+            bool mustBeRemoved = false;
+
+            if (drawTreeNodeComponent("Mesh Renderer", mustBeRemoved)) {
+                bool isEnable = mc.isEnable();
+
+                if (ImGui::Checkbox("Enable", &isEnable)) {
+                    if (isEnable) {
+                        if (!mc.tryEnabling()) {
+                            isEnable = false;
+                            ImGui::OpenPopup("MeshRendererEnableError");
+                        }
+                    } else {
+                        mc.disable();
+                    }
+                }
+
+                if (ImGui::BeginPopup("MeshRendererEnableError")) { // TODO: make an error popup
+                    ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1), "Cannot enable Mesh Renderer");
+                    ImGui::Separator();
+                    ImGui::Text("Missing required data:");
+                    if (mc.shader == nullptr)  ImGui::BulletText("Shader is not set");
+                    if (mc.texture == nullptr) ImGui::BulletText("Texture is not set");
+                    if (mc.vertexArray == nullptr) ImGui::BulletText("VertexArray is not set");
+                    if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
+                    ImGui::EndPopup();
+                }
+
+                ImGui::BeginDisabled(!isEnable);
+
+                showField("Shader", mc.shader, mc.shader ? mc.shader->getName() : "");
+                showField("Texture", mc.texture, mc.texture ? mc.texture->getName() : "");
+
+                if (mc.vertexArray != nullptr)
+                    ImGui::Text("VertexArray: %p", mc.vertexArray.get());
+                else
+                    ImGui::TextDisabled("VertexArray: nullptr");
+
                 ImGui::EndDisabled();
                 ImGui::TreePop();
             }
+
+            if (mustBeRemoved)
+                entity.deleteComponent<MeshRenderer>();
         }
 
         // CameraComponent
         if (entity.hasComponent<CameraComponent>()) {
             auto& cc = entity.getComponent<CameraComponent>();
-            if (ImGui::TreeNodeEx(reinterpret_cast<void *>(typeid(CameraComponent).hash_code()), ImGuiTreeNodeFlags_None, "Camera")) {
+            bool mustBeRemoved = false;
+            if (drawTreeNodeComponent("Camera",mustBeRemoved)) {
                 Camera& camera = cc.camera;
                 bool changed = false;
                 float fov = camera.getFOV();
@@ -111,6 +177,42 @@ namespace Vectrix {
 
                 ImGui::TreePop();
             }
+
+            if (mustBeRemoved) {
+                entity.deleteComponent<CameraComponent>();
+            }
         }
+    }
+
+    bool SceneHierarchyPanel::drawTreeNodeComponent(const std::string& text, bool& mustBeRemoved, bool removable) {
+        ImGuiTreeNodeFlags_ flags = ImGuiTreeNodeFlags_Framed;
+
+        const float buttonWidth = ImGui::CalcTextSize("···").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+
+        ImGui::SetNextItemAllowOverlap();
+        bool open = ImGui::TreeNodeEx(reinterpret_cast<void *>(std::hash<std::string>{}(text)), flags, "%s",text.c_str());
+        ImGui::SameLine(ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - buttonWidth);
+
+        if (ImGui::Button(("···##" + text).c_str(), ImVec2{ buttonWidth, 0 })) {
+            ImGui::OpenPopup(("ComponentSettings##" + text).c_str());
+        }
+        ImGui::PopStyleVar();
+
+        // PopUp
+        if (ImGui::BeginPopup(("ComponentSettings##" + text).c_str())) {
+            if (ImGui::MenuItem("Wiki (WiP)")) {
+                ImGui::CloseCurrentPopup();
+            }
+            if (removable) {
+                if (ImGui::MenuItem("Delete Component")) {
+                    mustBeRemoved = true;
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+            ImGui::EndPopup();
+        }
+        return open;
     }
 } // Vectrix

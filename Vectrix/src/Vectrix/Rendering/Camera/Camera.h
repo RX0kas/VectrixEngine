@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+#include "Vectrix/Scene/Entity.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
 
 /**
@@ -18,12 +19,12 @@ namespace Vectrix {
 	public:
 		/**
 		 * @brief This creates a new camera with a perspective projection
-		 * @param transform The transform component
+		 * @param entity The entity
 		 * @param fov The camera FOV
 		 * @param camNear The camera near
 		 * @param camFar The camera far
 		 */
-		Camera(TransformComponent& transform, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
+		Camera(Entity* entity, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
 
 		/**
 		 * @brief This function return the projection matrix

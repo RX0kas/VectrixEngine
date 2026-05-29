@@ -139,6 +139,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [x] Make a universal function for sending shader uniform
 - [x] Make a profiler
 - [ ] Add an editor
+- [ ] Add custom control
 - [ ] Create the API documentation (In progress)
 - [ ] Add a material system
 - [ ] Make a profiler viewer tool

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "GLFW/glfw3.h"
-#include "Vectrix/Scene/Components/MeshComponent.h"
+#include "Vectrix/Scene/Components/MeshRenderer.h"
 
 namespace Vectrix {
 	/// @cond INTERNAL
 	class GraphicsContext {
 	public:
 		virtual ~GraphicsContext() = default;
-		virtual void registerMesh(MeshComponent* model) = 0;
+		virtual void registerMesh(MeshRenderer* model) = 0;
 	private:
 		friend class Application;
 		static void uploadAllMeshData();
