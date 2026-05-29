@@ -177,6 +177,19 @@ namespace Vectrix {
                     camera.setCamFar(camFar);
                     changed = true;
                 }
+                ImGui::Separator();
+
+                ImGui::Text("Active:");
+                ImGui::SameLine(0,2);
+                if (cc.camera.isCurrent())
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1), "True");
+                else
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1), "False");
+
+                if (ImGui::Button("Set as current")) {
+                    cc.camera.setAsCurrent();
+                }
+
                 if (changed)
                     camera.recalculateMatrices();
 

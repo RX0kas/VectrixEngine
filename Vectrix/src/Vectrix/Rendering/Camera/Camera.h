@@ -125,6 +125,11 @@ namespace Vectrix {
 		 * @brief This function set this camera as the active
 		 */
 		void setAsCurrent() { s_currentCamera = this; }
+
+		/**
+		 * @brief This function returns true if this camera is the current camera used
+		 */
+		[[nodiscard]] bool isCurrent() const { return s_currentCamera == this; }
 	private:
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
