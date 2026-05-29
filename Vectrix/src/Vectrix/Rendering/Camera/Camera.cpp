@@ -9,6 +9,7 @@
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Framebuffer.h"
 #include "Vectrix/Rendering/RendererAPI.h"
+#include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
 	Camera* Camera::s_currentCamera = nullptr;
