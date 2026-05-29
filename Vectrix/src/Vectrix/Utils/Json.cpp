@@ -32,7 +32,7 @@ namespace Vectrix {
 
     double Json::parseNumber(const std::string& src, size_t& pos) {
         std::string content;
-        while (std::count(number_characters.begin(),number_characters.end(),peek(src,pos))) {
+        while (std::ranges::count(number_characters,peek(src,pos))) {
             content += consume(src,pos);
         }
 
