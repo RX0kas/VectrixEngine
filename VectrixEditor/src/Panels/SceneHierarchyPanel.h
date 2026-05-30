@@ -15,6 +15,8 @@ namespace Vectrix {
         void setContext(const std::shared_ptr<Scene>& scene);
 
         void onImGuiRender();
+
+        Entity& getSelectedEntity() { return m_selectionContext; }
     private:
         void drawEntityNode(Entity& entity);
         static void drawProperties(Entity entity);

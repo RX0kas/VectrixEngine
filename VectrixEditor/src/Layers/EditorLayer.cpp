@@ -1,6 +1,7 @@
 #include "EditorLayer.h"
 
 #include "Vectrix/Scene/Components/CameraComponent.h"
+#include "Utils/Gizmo.h"
 
 namespace Vectrix {
     EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1), m_camera(nullptr) {}
@@ -13,8 +14,6 @@ namespace Vectrix {
 
     	m_activeScene = std::make_shared<Scene>();
     	m_cameraEntity = m_activeScene->createEntity("Camera");
-    	m_cameraEntity.getComponent<TransformComponent>().position = {0.0f,0.0f,3.0f};
-    	m_cameraEntity.getComponent<TransformComponent>().rotation = {0.0f,-M_PI,0.0f};
     	m_cameraEntity.addComponent<CameraComponent>();
     	m_camera = Camera::getCurrentCamera();
 
@@ -101,11 +100,13 @@ namespace Vectrix {
 					m_viewportSize = {size.x,size.y};
 				}
 				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
+				useGizmo(m_SceneHierarchyPanel.getSelectedEntity(),m_cameraEntity,m_gizmoType,ImGui::GetWindowPos(),{m_viewportSize.x,m_viewportSize.y});
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
 
 			m_SceneHierarchyPanel.onImGuiRender();
+
 		}
     }
 
@@ -182,6 +183,17 @@ namespace Vectrix {
     		m_mustResize = false;
     	}
     	m_activeScene->OnUpdate(dt);
+
+
+    	if (Input::isKeyPressed(VC_KEY_Z))
+    		m_gizmoType = -1;
+    	if (Input::isKeyPressed(VC_KEY_X))
+    		m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+    	if (Input::isKeyPressed(VC_KEY_C))
+    		m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+    	if (Input::isKeyPressed(VC_KEY_V))
+    		m_gizmoType = ImGuizmo::OPERATION::SCALE;
+
     	m_camera->recalculateMatrices();
     }
 } // Vectrix
