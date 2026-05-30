@@ -1,5 +1,7 @@
 #ifndef VECTRIXWORKSPACE_EDITORLAYER_H
 #define VECTRIXWORKSPACE_EDITORLAYER_H
+#include "imgui.h"
+#include "ImGuizmo.h"
 #include "Vectrix.h"
 #include "Panels/SceneHierarchyPanel.h"
 
@@ -34,6 +36,8 @@ namespace Vectrix {
     	Camera* m_camera;
     	float m_cameraRotationSpeed = 5.0f;
     	float m_cameraMoveSpeed = 1.5f;
+
+    	int m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 
     	// Panels
     	SceneHierarchyPanel m_SceneHierarchyPanel;

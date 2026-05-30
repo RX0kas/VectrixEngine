@@ -76,6 +76,30 @@ add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 message(VERBOSE "Initializing EnTT")
 add_subdirectory(Vectrix/extern/EnTT)
 
+# ImGui
+message(VERBOSE "Initializing ImGui")
+file(GLOB IMGUI_SOURCES
+        Vectrix/extern/imgui/*.cpp
+        Vectrix/extern/imgui/backends/imgui_impl_glfw.cpp
+        Vectrix/extern/imgui/backends/imgui_impl_vulkan.cpp
+)
+
+add_library(imgui STATIC
+        ${IMGUI_SOURCES}
+)
+
+target_include_directories(imgui PUBLIC Vectrix/extern/imgui)
+
+# ImGuizmo
+message(VERBOSE "Initializing ImGuizmo")
+add_library(imguizmo STATIC
+        Vectrix/extern/ImGuizmo/src/ImGuizmo.cpp
+        Vectrix/extern/ImGuizmo/src/ImGuizmo.h
+)
+
+target_link_libraries(imguizmo PUBLIC imgui)
+target_include_directories(imguizmo PUBLIC Vectrix/extern/imgui)
+
 # Vectrix
 message(STATUS "Initializing Vectrix")
 
@@ -135,6 +159,7 @@ target_include_directories(Vectrix PUBLIC
         Vectrix/extern/glm
         Vectrix/extern/imgui
         Vectrix/extern/include
+        Vectrix/extern/ImGuizmo/src
         ${Vulkan_INCLUDE_DIRS}
 )
 
@@ -146,12 +171,6 @@ target_compile_definitions(Vectrix PRIVATE
 if(WIN32)
     target_compile_definitions(Vectrix PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
-
-file(GLOB IMGUI_SOURCES
-        Vectrix/extern/imgui/*.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_glfw.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_vulkan.cpp
-)
 
 target_sources(Vectrix PRIVATE ${IMGUI_SOURCES})
 
@@ -166,6 +185,7 @@ if (UNIX AND NOT APPLE)
             GPUOpen::VulkanMemoryAllocator
             volk::volk
             EnTT::EnTT
+            imguizmo
     )
 else()
 target_link_libraries(Vectrix
@@ -175,6 +195,7 @@ target_link_libraries(Vectrix
         GPUOpen::VulkanMemoryAllocator
         volk::volk
         EnTT::EnTT
+        imguizmo
 )
 endif()
 

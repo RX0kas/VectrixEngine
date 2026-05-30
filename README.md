@@ -138,11 +138,11 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [x] Clearly separate the Vulkan part from the rest of the engine
 - [x] Make a universal function for sending shader uniform
 - [x] Make a profiler
-- [ ] Add an editor
-- [ ] Add custom control
 - [ ] Create the API documentation (In progress)
+- [ ] Add an editor
 - [ ] Add a material system
 - [ ] Make a profiler viewer tool
+- [ ] Create own gizmo
 
 ## Known Issues
 
