@@ -3,6 +3,11 @@
 #include "Vectrix/Scene/Components/CameraComponent.h"
 #include "Utils/Gizmo.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/gtx/component_wise.hpp>
+
 namespace Vectrix {
     EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1), m_camera(nullptr) {}
 
@@ -14,16 +19,15 @@ namespace Vectrix {
 
     	m_activeScene = std::make_shared<Scene>();
     	m_cameraEntity = m_activeScene->createEntity("Camera");
-    	m_cameraEntity.addComponent<CameraComponent>();
-    	m_camera = Camera::getCurrentCamera();
+    	m_camera = &m_cameraEntity.addComponent<CameraComponent>().camera;
 
     	ShaderUniformLayout layout;
     	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
     	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
 
     	m_foxEntity = m_activeScene->createEntity("Fox");
-    	m_foxEntity.addComponent<MeshRenderer>("./models/fox.obj", m_viewportShader, m_testTexture);
-    	m_SceneHierarchyPanel.setContext(m_activeScene);
+    	m_foxEntity.addComponent<MeshRendererComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
+    	m_sceneHierarchyPanel.setContext(m_activeScene);
     }
 
     void EditorLayer::OnEvent(Event &event) {
@@ -100,13 +104,23 @@ namespace Vectrix {
 					m_viewportSize = {size.x,size.y};
 				}
 				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
-				useGizmo(m_SceneHierarchyPanel.getSelectedEntity(),m_cameraEntity,m_gizmoType,ImGui::GetWindowPos(),{m_viewportSize.x,m_viewportSize.y});
+				m_viewportPos = {ImGui::GetWindowPos().x,ImGui::GetWindowPos().y};
+				m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
+				useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),m_cameraEntity,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
 
-			m_SceneHierarchyPanel.onImGuiRender();
+			m_sceneHierarchyPanel.onImGuiRender();
 
+			if (ImGui::IsMouseClicked(0) && m_viewportHovered && !ImGuizmo::IsOver()) {
+				auto [mx, my] = ImGui::GetMousePos();
+				Entity picked = pickEntity({ mx, my });
+				if (picked)
+					m_sceneHierarchyPanel.setSelectedEntity(picked);
+				else
+					m_sceneHierarchyPanel.resetSelectedEntity();
+			}
 		}
     }
 
@@ -135,37 +149,17 @@ namespace Vectrix {
     			cameraRot.x += m_cameraRotationSpeed * dt;
     		m_cameraEntity.getComponent<TransformComponent>().setRotationDeg(cameraRot);
 
-    		float yaw = cameraRot.y;
-    		float pitch = cameraRot.x;
-    		float roll = cameraRot.z;
+    		glm::quat q = m_cameraEntity.getComponent<TransformComponent>().rotation;
 
-    		float c1 = std::cos(yaw);
-    		float s1 = std::sin(yaw);
-    		float c2 = std::cos(pitch);
-    		float s2 = std::sin(pitch);
-    		float c3 = std::cos(roll);
-    		float s3 = std::sin(roll);
-
-    		glm::vec3 right;
-    		right.x = c1 * c3 + s1 * s2 * s3;
-    		right.y = c2 * s3;
-    		right.z = c1 * s2 * s3 - c3 * s1;
-
-    		glm::vec3 up;
-    		up.x = c3 * s1 * s2 - c1 * s3;
-    		up.y = c2 * c3;
-    		up.z = c1 * c3 * s2 + s1 * s3;
-
-    		glm::vec3 forward;
-    		forward.x = c2 * s1;
-    		forward.y = -s2;
-    		forward.z = c1 * c2;
+    		glm::vec3 forward = q * glm::vec3(0, 0, -1);
+    		glm::vec3 right = q * glm::vec3(1, 0, 0);
+    		glm::vec3 up = q * glm::vec3(0, 1, 0);
 
     		glm::vec3 moveDir(0.0f);
     		if (Input::isKeyPressed(VC_KEY_A)) moveDir.x -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_D)) moveDir.x += 1.0f;
-    		if (Input::isKeyPressed(VC_KEY_S)) moveDir.z += 1.0f;
-    		if (Input::isKeyPressed(VC_KEY_W)) moveDir.z -= 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_W)) moveDir.z += 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_S)) moveDir.z -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_Q)) moveDir.y -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_E)) moveDir.y += 1.0f;
 
@@ -195,5 +189,50 @@ namespace Vectrix {
     		m_gizmoType = ImGuizmo::OPERATION::SCALE;
 
     	m_camera->recalculateMatrices();
+    }
+	glm::vec3 EditorLayer::screenToWorldRay(glm::vec2 mousePos) {
+    	glm::vec2 ndc = {
+    		(2.0f * (mousePos.x - m_viewportPos.x) / m_viewportSize.x) - 1.0f,
+			1.0f - (2.0f * (mousePos.y - m_viewportPos.y) / m_viewportSize.y)
+		};
+    	auto& camera = m_cameraEntity.getComponent<CameraComponent>().camera;
+    	glm::mat4 invVP = glm::inverse(camera.getTransformationMatrix());
+    	glm::vec4 rayClip  = { ndc.x, ndc.y, -1.0f, 1.0f };
+    	glm::vec4 rayWorld = invVP * rayClip;
+    	rayWorld /= rayWorld.w;
+
+    	glm::vec3 rayOrigin = m_cameraEntity.getComponent<TransformComponent>().position;
+    	glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld) - rayOrigin);
+    	return rayDirection;
+    }
+
+	Entity EditorLayer::pickEntity(glm::vec2 mousePos) {
+    	glm::vec3 rayDir = screenToWorldRay(mousePos);
+    	glm::vec3 rayOrigin = m_cameraEntity.getComponent<TransformComponent>().position;
+
+    	Entity closest = Entity::nullEntity();
+    	float closestT = std::numeric_limits<float>::max();
+
+    	auto view = m_activeScene->m_registry.view<TransformComponent, MeshRendererComponent>();
+    	for (auto entityID : view) {
+    		Entity entity{ entityID, m_activeScene.get() };
+    		auto& tc = entity.getComponent<TransformComponent>();
+    		auto& mc = entity.getComponent<MeshRendererComponent>();
+    		float t;
+
+    		glm::mat4 invModel = glm::inverse(tc.modelMatrix());
+    		invModel[1][1] *= -1;
+    		glm::vec3 localOrigin =	glm::vec3(invModel * glm::vec4(rayOrigin, 1.0f));
+    		glm::vec3 localDir = glm::normalize(glm::vec3(invModel * glm::vec4(rayDir, 0.0f)));
+
+    		if (mc.aabb.intersect(localOrigin, localDir, t)) {
+    			if (t < closestT) {
+    				closestT = t;
+    				closest  = entity;
+    			}
+    		}
+    	}
+
+    	return closest;
     }
 } // Vectrix

@@ -15,7 +15,7 @@ namespace Vectrix {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
 
-            ImGuizmo::SetRect(windowPos.x, windowPos.y+ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f, windowSize.x, windowSize.y);
+            ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x, windowSize.y);
 
             // Camera
             const auto& camera = cameraEntity.getComponent<CameraComponent>().camera;

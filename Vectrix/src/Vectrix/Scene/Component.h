@@ -19,7 +19,7 @@ namespace Vectrix {
 }
 
 #include "Components/TransformComponent.h"
-#include "Components/MeshRenderer.h"
+#include "Components/MeshRendererComponent.h"
 #include "Components/CameraComponent.h"
 
 #endif //VECTRIXWORKSPACE_COMPONENT_H

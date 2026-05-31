@@ -49,10 +49,10 @@ namespace Vectrix {
                 }
             }
 
-            if (!m_selectionContext.hasComponent<MeshRenderer>()) {
+            if (!m_selectionContext.hasComponent<MeshRendererComponent>()) {
                 hasOneComponent = true;
                 if (ImGui::MenuItem("MeshRenderer")) {
-                    m_selectionContext.addComponent<MeshRenderer>();
+                    m_selectionContext.addComponent<MeshRendererComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -108,8 +108,8 @@ namespace Vectrix {
             }
         }
         // MeshComponent
-        if (entity.hasComponent<MeshRenderer>()) {
-            auto& mc = entity.getComponent<MeshRenderer>();
+        if (entity.hasComponent<MeshRendererComponent>()) {
+            auto& mc = entity.getComponent<MeshRendererComponent>();
             bool mustBeRemoved = false;
 
             if (drawTreeNodeComponent("Mesh Renderer", mustBeRemoved)) {
@@ -152,7 +152,7 @@ namespace Vectrix {
             }
 
             if (mustBeRemoved)
-                entity.deleteComponent<MeshRenderer>();
+                entity.deleteComponent<MeshRendererComponent>();
         }
 
         // CameraComponent
