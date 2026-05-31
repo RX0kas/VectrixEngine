@@ -124,16 +124,16 @@ namespace Vectrix {
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
     	if (m_viewportFocused || m_viewportHovered) {
-    		glm::vec3 cameraRot = m_cameraEntity.getComponent<TransformComponent>().rotation;
+    		glm::vec3 cameraRot = m_cameraEntity.getComponent<TransformComponent>().getRotationDeg();
     		if (Input::isKeyPressed(VC_KEY_LEFT))
     			cameraRot.y -= m_cameraRotationSpeed * dt;
     		if (Input::isKeyPressed(VC_KEY_RIGHT))
     			cameraRot.y += m_cameraRotationSpeed * dt;
-    		if (Input::isKeyPressed(VC_KEY_UP))
-    			cameraRot.x -= m_cameraRotationSpeed * dt;
     		if (Input::isKeyPressed(VC_KEY_DOWN))
+    			cameraRot.x -= m_cameraRotationSpeed * dt;
+    		if (Input::isKeyPressed(VC_KEY_UP))
     			cameraRot.x += m_cameraRotationSpeed * dt;
-    		m_cameraEntity.getComponent<TransformComponent>().rotation = cameraRot;
+    		m_cameraEntity.getComponent<TransformComponent>().setRotationDeg(cameraRot);
 
     		float yaw = cameraRot.y;
     		float pitch = cameraRot.x;
@@ -164,8 +164,8 @@ namespace Vectrix {
     		glm::vec3 moveDir(0.0f);
     		if (Input::isKeyPressed(VC_KEY_A)) moveDir.x -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_D)) moveDir.x += 1.0f;
-    		if (Input::isKeyPressed(VC_KEY_W)) moveDir.z += 1.0f;
-    		if (Input::isKeyPressed(VC_KEY_S)) moveDir.z -= 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_S)) moveDir.z += 1.0f;
+    		if (Input::isKeyPressed(VC_KEY_W)) moveDir.z -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_Q)) moveDir.y -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_E)) moveDir.y += 1.0f;
 

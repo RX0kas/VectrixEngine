@@ -95,9 +95,9 @@ namespace Vectrix {
                     tc.position = {p[0],p[1],p[2]};
 
                 // Rotation
-                float r[3] = {tc.rotation.x,tc.rotation.y,tc.rotation.z};
-                if (ImGui::DragFloat3("Rotation",r,0.1))
-                    tc.rotation = {r[0],r[1],r[2]};
+                glm::vec3 r = tc.getRotationDeg();
+                if (ImGui::DragFloat3("Rotation",glm::value_ptr(r),0.1))
+                    tc.setRotationDeg(r);
 
                 // Scale
                 float s[3] = {tc.scale.x,tc.scale.y,tc.scale.z};
