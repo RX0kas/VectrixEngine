@@ -24,7 +24,7 @@ public:
 		m_foxTexture = Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
 
 		m_fox = m_activeScene.createEntity("Fox");
-		m_fox.addComponent<Vectrix::MeshRenderer>("./models/fox.obj",m_shader,m_foxTexture);
+		m_fox.addComponent<Vectrix::MeshRendererComponent>("./models/fox.obj",m_shader,m_foxTexture);
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override {

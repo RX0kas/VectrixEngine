@@ -22,11 +22,14 @@ namespace Vectrix {
 
     	void OnAttach() override;
 	private:
+    	Entity pickEntity(glm::vec2 mousePos);
+    	glm::vec3 screenToWorldRay(glm::vec2 mousePos);
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
 
     	std::shared_ptr<Texture> m_testTexture;
     	glm::vec2 m_viewportSize;
+    	glm::vec2 m_viewportPos{1};
     	bool m_viewportFocused = false, m_viewportHovered = false;
     	bool m_mustResize = false;
 
@@ -40,7 +43,7 @@ namespace Vectrix {
     	int m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 
     	// Panels
-    	SceneHierarchyPanel m_SceneHierarchyPanel;
+    	SceneHierarchyPanel m_sceneHierarchyPanel;
     };
 } // Vectrix
 

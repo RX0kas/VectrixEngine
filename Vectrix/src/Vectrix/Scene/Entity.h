@@ -95,14 +95,18 @@ namespace Vectrix {
         }
 
         static Entity nullEntity() { return {};}
+
+        [[nodiscard]] entt::entity getID() const { return m_entityHandle; }
     private:
         friend class Scene;
         friend class SceneHierarchyPanel;
+        friend class EditorLayer;
         Entity(entt::entity handle, Scene* scene);
         Entity(const Entity& other) = default;
         entt::entity m_entityHandle{ entt::null };
         Scene* m_scene = nullptr;
     };
+
 } // Vectrix
 
 #endif //VECTRIXWORKSPACE_ENTITY_H

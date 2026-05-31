@@ -14,10 +14,10 @@ namespace Vectrix {
     }
 
     void Scene::OnRender() {
-        auto view = m_registry.view<MeshRenderer, TransformComponent>();
+        auto view = m_registry.view<MeshRendererComponent, TransformComponent>();
 
         for (auto entity : view) {
-            auto& mesh = view.get<MeshRenderer>(entity);
+            auto& mesh = view.get<MeshRendererComponent>(entity);
             auto& transform = view.get<TransformComponent>(entity);
 
             if (!mesh.isEnable()) continue;

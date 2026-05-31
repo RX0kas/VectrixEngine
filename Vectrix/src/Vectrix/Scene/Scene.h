@@ -31,6 +31,7 @@ namespace Vectrix {
     private:
         friend class Entity;
         friend class SceneHierarchyPanel;
+        friend class EditorLayer;
         entt::registry m_registry;
     };
 } // Vectrix

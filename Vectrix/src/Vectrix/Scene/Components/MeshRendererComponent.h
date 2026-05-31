@@ -1,23 +1,25 @@
 #ifndef VECTRIXWORKSPACE_MESHCOMPONENT_H
 #define VECTRIXWORKSPACE_MESHCOMPONENT_H
+#include "Vectrix/Physics/AABB.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Mesh/Vertex.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 
 namespace Vectrix {
-    class MeshRenderer {
+    class MeshRendererComponent {
     public:
         std::shared_ptr<VertexArray> vertexArray;
         std::shared_ptr<Texture> texture;
         BufferLayout layout;
         std::shared_ptr<Shader> shader;
+        AABB aabb;
 
-        MeshRenderer(const MeshRenderer&) = delete;
-        MeshRenderer(Entity* entity);
-        MeshRenderer(Entity* entity,const std::vector<Vertex>& vertices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
-        MeshRenderer(Entity* entity,const std::string &pathObj, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
-        MeshRenderer(Entity* entity,const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
+        MeshRendererComponent(const MeshRendererComponent&) = delete;
+        MeshRendererComponent(Entity* entity);
+        MeshRendererComponent(Entity* entity,const std::vector<Vertex>& vertices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
+        MeshRendererComponent(Entity* entity,const std::string &pathObj, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
+        MeshRendererComponent(Entity* entity,const std::vector<Vertex>& vertices, std::vector<uint32_t> indices, std::shared_ptr<Shader> shader, const std::shared_ptr<Texture>& texture);
 
         /**
          * @brief Return true if this mesh renderer can be enabled

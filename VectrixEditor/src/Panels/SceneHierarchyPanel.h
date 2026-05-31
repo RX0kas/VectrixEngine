@@ -9,7 +9,8 @@ namespace Vectrix {
     class SceneHierarchyPanel
     {
     public:
-        SceneHierarchyPanel() = default;
+        SceneHierarchyPanel() : m_selectionContext(Entity::nullEntity()) {}
+
         SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
 
         void setContext(const std::shared_ptr<Scene>& scene);
@@ -17,6 +18,8 @@ namespace Vectrix {
         void onImGuiRender();
 
         Entity& getSelectedEntity() { return m_selectionContext; }
+        void setSelectedEntity(Entity entity) { m_selectionContext = entity; }
+        void resetSelectedEntity() { m_selectionContext = Entity::nullEntity(); }
     private:
         void drawEntityNode(Entity& entity);
         static void drawProperties(Entity entity);
