@@ -28,9 +28,9 @@ namespace Vectrix {
          */
         glm::vec3 scale{ 1.f, 1.f, 1.f };
         /**
-         * @brief This is the rotation (radians)
+         * @brief This is the rotation (quaternion)
          */
-        glm::vec3 rotation{ 0 };
+        glm::quat rotation = glm::identity<glm::quat>();
 
         /**
         * @brief This function return the model matrix
@@ -51,17 +51,16 @@ namespace Vectrix {
          * @brief Sets the rotation of the model in degrees
          * @param newRotation Euler angles in degrees
          */
-        void setRotationDeg(const glm::vec3 newRotation) {
-            rotation.x=rad(newRotation.x);
-            rotation.y=rad(newRotation.y);
-            rotation.z=rad(newRotation.z);
+        void setRotationDeg(glm::vec3 newRotation) {
+            rotation = glm::quat(glm::radians(newRotation));
         }
+
 
         /**
          * @brief Returns the rotation of the model in degrees
          **/
         [[nodiscard]] glm::vec3 getRotationDeg() const {
-            return {deg(rotation.x),deg(rotation.y),deg(rotation.z)};
+            return glm::degrees(glm::eulerAngles(rotation));
         }
 
     };

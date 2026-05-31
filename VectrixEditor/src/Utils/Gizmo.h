@@ -15,7 +15,7 @@ namespace Vectrix {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
 
-            ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x, windowSize.y);
+            ImGuizmo::SetRect(windowPos.x, windowPos.y+ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f, windowSize.x, windowSize.y);
 
             // Camera
             const auto& camera = cameraEntity.getComponent<CameraComponent>().camera;
@@ -43,12 +43,14 @@ namespace Vectrix {
                 nullptr, snap ? snapValues : nullptr);
 
             if (ImGuizmo::IsUsing()) {
-                glm::vec3 position, rotation, scale;
-                decomposeTransform(transform, position, rotation, scale);
+                glm::vec3 position, scale;
+                glm::quat rotation;
+                glm::vec3 skew;
+                glm::vec4 perspective;
+                glm::decompose(transform, scale, rotation, position, skew, perspective);
 
-                glm::vec3 deltaRotation = rotation - tc.rotation;
                 tc.position = position;
-                tc.rotation += deltaRotation;
+                tc.rotation = rotation;
                 tc.scale = scale;
             }
         }
