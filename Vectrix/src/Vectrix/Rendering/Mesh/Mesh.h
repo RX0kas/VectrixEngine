@@ -13,6 +13,7 @@ namespace Vectrix {
 
         [[nodiscard]] std::shared_ptr<VertexArray> getVertexArray() const { return m_vertexArray; }
         [[nodiscard]] AABB& getAABB() { return m_aabb; }
+        [[nodiscard]] std::string getID() const { return m_id; }
     private:
         friend class AssetsManager;
         friend class MeshManager;
@@ -23,6 +24,7 @@ namespace Vectrix {
         AABB m_aabb;
         std::vector<Vertex> m_vertices;
         std::vector<uint32_t> m_indices;
+        std::string m_id = "None";
     };
 } // Vectrix
 

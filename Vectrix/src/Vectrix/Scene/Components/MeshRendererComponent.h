@@ -1,10 +1,6 @@
 #ifndef VECTRIXWORKSPACE_MESHCOMPONENT_H
 #define VECTRIXWORKSPACE_MESHCOMPONENT_H
-#include "Vectrix/Physics/AABB.h"
-#include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Mesh/Mesh.h"
-#include "Vectrix/Rendering/Mesh/Vertex.h"
-#include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 
 namespace Vectrix {

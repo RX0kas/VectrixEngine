@@ -42,7 +42,12 @@ namespace Vectrix {
             return {};
         }
 
-
+        auto entities = readEntities(file);
+        if (!entities.has_value()) {
+            VC_CORE_ERROR_NO_EXIT("Can't load the entities of the scene from file: {}",path.c_str());
+            return {};
+        }
+        data.entities = entities.value();
 
         data.loaded = true;
         return data;

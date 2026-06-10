@@ -322,7 +322,7 @@ namespace Vectrix {
 		/**
 		 * @brief Return the name of the shader
 		 */
-		[[nodiscard]] virtual std::string getName() const = 0;
+		[[nodiscard]] virtual std::string getID() const = 0;
 	protected:
 		/// @cond INTERNAL
 		virtual void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const = 0;

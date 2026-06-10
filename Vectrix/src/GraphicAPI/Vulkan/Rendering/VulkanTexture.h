@@ -27,7 +27,7 @@ namespace Vectrix {
         [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
 
         [[nodiscard]] uint32_t getUniqueTextureID() const { return m_id; }
-        [[nodiscard]] std::string getName() const override { return m_name; }
+        [[nodiscard]] std::string getID() const override { return m_name; }
     private:
         friend class Texture;
         VulkanTexture();

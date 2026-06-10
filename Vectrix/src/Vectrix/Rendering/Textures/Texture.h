@@ -40,7 +40,7 @@ namespace Vectrix {
         /**
          * @brief Return the name of the shader
          */
-        [[nodiscard]] virtual std::string getName() const = 0;
+        [[nodiscard]] virtual std::string getID() const = 0;
     private:
         friend class TextureManager;
         static std::shared_ptr<Texture> create(const std::string &name,const std::string& path);
