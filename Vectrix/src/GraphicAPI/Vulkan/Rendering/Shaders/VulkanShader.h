@@ -41,7 +41,7 @@ namespace Vectrix {
 
         [[nodiscard]] bool isAffectedByCamera() const override {return m_affectedByCamera;}
 
-        [[nodiscard]] std::string getName() const override { return m_name; }
+        [[nodiscard]] std::string getID() const override { return m_name; }
 
     private:
 

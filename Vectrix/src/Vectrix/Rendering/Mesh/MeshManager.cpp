@@ -23,6 +23,7 @@ namespace Vectrix {
             VC_CORE_CRITICAL("Failed to load OBJ");
         }
         auto mesh = std::make_shared<Mesh>(vertices,indices);
+        mesh->m_id = name;
         add(name,mesh);
 
         return mesh;

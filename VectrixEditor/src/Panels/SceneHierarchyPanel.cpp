@@ -132,20 +132,16 @@ namespace Vectrix {
                     ImGui::Text("Missing required data:");
                     if (mc.shader == nullptr)  ImGui::BulletText("Shader is not set");
                     if (mc.texture == nullptr) ImGui::BulletText("Texture is not set");
-                    if (mc.vertexArray == nullptr) ImGui::BulletText("VertexArray is not set");
+                    if (mc.mesh == nullptr) ImGui::BulletText("Mesh is not set");
                     if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
                     ImGui::EndPopup();
                 }
 
                 ImGui::BeginDisabled(!isEnable);
 
-                showField("Shader", mc.shader, mc.shader ? mc.shader->getName() : "");
-                showField("Texture", mc.texture, mc.texture ? mc.texture->getName() : "");
-
-                if (mc.vertexArray != nullptr)
-                    ImGui::Text("VertexArray: %p", mc.vertexArray.get());
-                else
-                    ImGui::TextDisabled("VertexArray: nullptr");
+                showField("Shader", mc.shader, mc.shader ? mc.shader->getID() : "");
+                showField("Texture", mc.texture, mc.texture ? mc.texture->getID() : "");
+                showField("Mesh", mc.mesh, mc.mesh ? mc.mesh->getID() : "");
 
                 ImGui::EndDisabled();
                 ImGui::TreePop();
