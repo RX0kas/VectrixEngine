@@ -1,7 +1,6 @@
 #ifndef VECTRIXWORKSPACE_SHADERMANAGER_H
 #define VECTRIXWORKSPACE_SHADERMANAGER_H
 #include "Vectrix/Core/Core.h"
-#include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Mesh/ObjLoader.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 
@@ -32,8 +31,8 @@ namespace Vectrix {
          * @param name Name of the shader
          * @return If the shader exist in the cache
          */
-        static bool exist(const std::string& name) {
-            return instance().m_cache.find(name) != instance().m_cache.end();
+        bool exist(const std::string& name) {
+            return m_cache.find(name) != m_cache.end();
         }
 
         /**
@@ -45,32 +44,21 @@ namespace Vectrix {
         }
 
         /**
-         * @brief Return a reference to the instance of this class
-         * @return The instance of the class ShaderManager
-         */
-        static ShaderManager& instance() { return *s_instance; }
-
-        /**
          * @brief Function to create a new shader
          * @pre A shader with the name given should not already exist
          * @param name Name given to the shader
-         * @param vertexPath Path of the vertex source file
-         * @param fragmentPath Path of the fragment source file
-         * @param uniformLayout Description of the element sent to the GPU
-         * @param layout Information on how the vertex are sent to the GPU
+         * @param path Path of the shader source file
          * @param affectedByCamera Tell if we need to send the information of the camera to the GPU
          */
-        static std::shared_ptr<Shader> createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout=getTinyObjLayout(), const bool affectedByCamera=true);
+        std::shared_ptr<Shader> createShader(const std::string &name, const std::string &path, const bool affectedByCamera=true);
         ~ShaderManager();
     private:
         friend class Shader;
-        friend class Application;
+        friend class AssetsManager;
         ShaderManager();
         bool remove(const std::string& name);
         void add(const std::string& name,std::shared_ptr<Shader> shader);
         Cache<std::string,std::shared_ptr<Shader>> m_cache;
-    private:
-        static ShaderManager* s_instance;
     };
 } // Vectrix
 

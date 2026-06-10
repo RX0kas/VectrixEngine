@@ -17,10 +17,10 @@ void CameraWidget::render() {
         m_camera.getComponent<Vectrix::TransformComponent>().position = {pos[0],pos[1],pos[2]};
     }
 
-    glm::vec3 rotation = m_camera.getComponent<Vectrix::TransformComponent>().rotation;
+    glm::vec3 rotation = m_camera.getComponent<Vectrix::TransformComponent>().getRotationDeg();
     float rot[3] = {rotation.x,rotation.y,rotation.z};
     if (ImGui::SliderFloat3("Rotation",rot,-VC_2PI,VC_2PI)) {
-        m_camera.getComponent<Vectrix::TransformComponent>().rotation = {rot[0],rot[1],rot[2]};
+        m_camera.getComponent<Vectrix::TransformComponent>().setRotationDeg({rot[0],rot[1],rot[2]});
     }
     ImGui::End();
 }

@@ -27,10 +27,9 @@ namespace Vectrix {
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->init();
-		auto tm = new TextureManager();
-		m_textureManager = std::unique_ptr<TextureManager>(tm);
-		auto sm = new ShaderManager();
-		m_shaderManager = std::unique_ptr<ShaderManager>(sm);
+
+		m_assetsManager = std::make_unique<AssetsManager>();
+
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
@@ -40,8 +39,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		m_layerStack.destroy();
 		m_imGuiLayer.reset();
-		m_shaderManager.reset();
-		m_textureManager.reset();
+		m_assetsManager.reset();
 		m_window.reset();
 	}
 

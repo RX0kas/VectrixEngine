@@ -3,6 +3,7 @@
 
 #include "Vectrix.h"
 #include "../CameraWidget.h"
+#include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Scene/Components/CameraComponent.h"
 
 class ExampleLayer : public Vectrix::Layer {
@@ -12,19 +13,30 @@ public:
 
 	void OnAttach() override {
 		m_cameraEntity = m_activeScene.createEntity("Camera");
-		m_cameraEntity.getComponent<Vectrix::TransformComponent>().position = {0.0f,0.0f,3.0f};
-		m_cameraEntity.getComponent<Vectrix::TransformComponent>().rotation = {0.0f,-M_PI,0.0f};
-		m_cameraEntity.addComponent<Vectrix::CameraComponent>(m_cameraEntity.getComponent<Vectrix::TransformComponent>());
+		m_cameraEntity.getComponent<Vectrix::TransformComponent>().position = {0.0f,0.0f,-3.0f};
+		m_cameraEntity.addComponent<Vectrix::CameraComponent>();
 		m_cameraWidget = std::make_shared<CameraWidget>(m_cameraEntity);
 		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
-		Vectrix::ShaderUniformLayout layout;
-		layout.add("time",Vectrix::ShaderUniformType::Float);
-		m_shader = Vectrix::ShaderManager::createShader(p_defaultName, "./shaders/v.vert", "./shaders/f.frag",layout);
-		m_foxTexture = Vectrix::TextureManager::createTexture(p_defaultName, "./textures/fox.png");
+		auto s = Vectrix::AssetsManager::load<Vectrix::Shader>("./shaders/sandbox.vcshader");
+		if (s.first!=Vectrix::SUCCESS) {
+			VC_ERROR("Can't load shader sandbox");
+		}
+		m_shader = s.second;
+		auto t = Vectrix::AssetsManager::load<Vectrix::Texture>("./textures/fox.png");
+		if (t.first!=Vectrix::SUCCESS) {
+			VC_ERROR("Can't load texture for fox");
+		}
+		m_foxTexture = t.second;
+
+		auto m = Vectrix::AssetsManager::load<Vectrix::Mesh>("./models/fox.obj");
+		if (m.first!=Vectrix::SUCCESS) {
+			VC_ERROR("Can't load model for fox");
+		}
+		m_meshFox = m.second;
 
 		m_fox = m_activeScene.createEntity("Fox");
-		m_fox.addComponent<Vectrix::MeshRendererComponent>("./models/fox.obj",m_shader,m_foxTexture);
+		m_fox.addComponent<Vectrix::MeshRendererComponent>(m_meshFox,m_shader,m_foxTexture);
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override {
@@ -47,6 +59,7 @@ private:
 
 	std::shared_ptr<Vectrix::Shader> m_shader;
 	std::shared_ptr<Vectrix::Texture> m_foxTexture;
+	std::shared_ptr<Vectrix::Mesh> m_meshFox;
 	std::shared_ptr<Vectrix::Framebuffer> m_framebuffer;
 	Vectrix::Entity m_fox = Vectrix::Entity::nullEntity();
 	Vectrix::Scene m_activeScene;

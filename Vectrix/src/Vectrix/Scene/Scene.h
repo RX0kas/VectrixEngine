@@ -1,6 +1,7 @@
 #ifndef VECTRIXWORKSPACE_SCENE_H
 #define VECTRIXWORKSPACE_SCENE_H
 
+#include "SceneSerializer.h"
 #include "entt/entt.hpp"
 #include "Vectrix/Core/DeltaTime.h"
 
@@ -15,6 +16,7 @@ namespace Vectrix {
 
     class Scene {
     public:
+        //Scene(const SceneCreationData& creationData);
         Scene();
         ~Scene();
 

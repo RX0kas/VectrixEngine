@@ -17,8 +17,6 @@ namespace Vectrix {
      */
     class TextureManager {
     public:
-
-
         /**
          * @brief This function is used to get a texture previously created
          * @pre A texture with this name must exist
@@ -51,29 +49,20 @@ namespace Vectrix {
         }
 
         /**
-         * @brief Return a reference to the instance of this class
-         * @return The instance of the class TextureManager
-         */
-        static TextureManager& instance() { return *p_instance; }
-
-        /**
          * @brief Function to create a new texture
          * @param name Name given to the texture
          * @param path Path of the texture file
          */
-        static std::shared_ptr<Texture> createTexture(const std::string &name, const std::string &path);
+        std::shared_ptr<Texture> createTexture(const std::string &name, const std::string &path);
         ~TextureManager();
     private:
         friend class Texture;
-        friend class Application;
+        friend class AssetsManager;
         TextureManager();
         bool remove(const std::string& name);
         void add(const std::string& name,std::shared_ptr<Texture> texture);
         Cache<std::string,std::shared_ptr<Texture>> m_cache;
         std::shared_ptr<Texture> m_notFoundTexture;
-
-    private:
-        static TextureManager* p_instance;
     };
 } // Vectrix
 
