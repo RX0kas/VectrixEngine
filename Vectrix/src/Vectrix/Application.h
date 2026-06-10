@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Assets/AssetsManager.h"
 #include "Core/Window.h"
 #include "Core/AppInfo.h"
 #include "Core/Core.h"
@@ -94,8 +95,7 @@ namespace Vectrix {
 
 
 		std::unique_ptr<Window> m_window;
-		std::unique_ptr<ShaderManager> m_shaderManager;
-		std::unique_ptr<TextureManager> m_textureManager;
+		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
 		std::unique_ptr<ApplicationInfo> m_appInfo;
 		bool m_running = true;

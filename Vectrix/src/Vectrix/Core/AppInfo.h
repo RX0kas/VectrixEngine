@@ -75,6 +75,8 @@ namespace Vectrix {
         return {r};
     }
 
+    static bool isCompatible(Version version1,Version version2);
+
     /**
      * @brief This class hold the information about the application
      */

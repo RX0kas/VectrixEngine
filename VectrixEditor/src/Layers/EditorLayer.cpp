@@ -21,12 +21,26 @@ namespace Vectrix {
     	m_cameraEntity = m_activeScene->createEntity("Camera");
     	m_camera = &m_cameraEntity.addComponent<CameraComponent>().camera;
 
-    	ShaderUniformLayout layout;
-    	m_viewportShader = ShaderManager::createShader("VC_viewport", "./shaders/viewport.vert", "./shaders/viewport.frag", layout);
-    	m_testTexture = TextureManager::createTexture("VC_testTexture", "./textures/fox.png");
+    	auto s = AssetsManager::load<Shader>("./shaders/viewport.vcshader");
+    	if (s.first!=SUCCESS) {
+    		VC_CORE_ERROR("Error while loading shader for viewport: {}", toString(s.first));
+    	}
+    	m_viewportShader = s.second;
+
+    	auto t = AssetsManager::load<Texture>("./textures/fox.png");
+    	if (t.first!=SUCCESS) {
+    		VC_CORE_ERROR("Error while loading texture of fox: {}", toString(t.first));
+    	}
+    	m_foxTexture = t.second;
+
+    	auto m =AssetsManager::load<Mesh>("./models/fox.obj");
+    	if (m.first!=SUCCESS) {
+    		VC_CORE_ERROR("Error while loading modem of fox: {}", toString(m.first));
+    	}
+		m_foxMesh = m.second;
 
     	m_foxEntity = m_activeScene->createEntity("Fox");
-    	m_foxEntity.addComponent<MeshRendererComponent>("./models/fox.obj", m_viewportShader, m_testTexture);
+    	m_foxEntity.addComponent<MeshRendererComponent>(m_foxMesh, m_viewportShader, m_foxTexture);
     	m_sceneHierarchyPanel.setContext(m_activeScene);
     }
 
@@ -225,7 +239,7 @@ namespace Vectrix {
     		glm::vec3 localOrigin =	glm::vec3(invModel * glm::vec4(rayOrigin, 1.0f));
     		glm::vec3 localDir = glm::normalize(glm::vec3(invModel * glm::vec4(rayDir, 0.0f)));
 
-    		if (mc.aabb.intersect(localOrigin, localDir, t)) {
+    		if (mc.mesh->getAABB().intersect(localOrigin, localDir, t)) {
     			if (t < closestT) {
     				closestT = t;
     				closest  = entity;

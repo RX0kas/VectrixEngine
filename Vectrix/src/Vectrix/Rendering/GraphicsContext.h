@@ -8,7 +8,7 @@ namespace Vectrix {
 	class GraphicsContext {
 	public:
 		virtual ~GraphicsContext() = default;
-		virtual void registerMesh(MeshRendererComponent* model) = 0;
+		virtual void registerMesh(Mesh* model) = 0;
 	private:
 		friend class Application;
 		static void uploadAllMeshData();

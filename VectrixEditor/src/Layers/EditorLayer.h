@@ -27,7 +27,8 @@ namespace Vectrix {
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
 
-    	std::shared_ptr<Texture> m_testTexture;
+    	std::shared_ptr<Texture> m_foxTexture;
+    	std::shared_ptr<Mesh> m_foxMesh;
     	glm::vec2 m_viewportSize;
     	glm::vec2 m_viewportPos{1};
     	bool m_viewportFocused = false, m_viewportHovered = false;
@@ -37,7 +38,7 @@ namespace Vectrix {
     	Entity m_foxEntity;
     	Entity m_cameraEntity;
     	Camera* m_camera;
-    	float m_cameraRotationSpeed = 5.0f;
+    	float m_cameraRotationSpeed = 50.0f;
     	float m_cameraMoveSpeed = 1.5f;
 
     	int m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;

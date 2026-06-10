@@ -10,7 +10,7 @@
 #define OPTIMIZE
 
 namespace Vectrix {
-	VulkanShader::VulkanShader(std::string name, const std::string& vertexPath, const std::string& fragmentPath,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
+	VulkanShader::VulkanShader(std::string name, const std::string& path,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
 		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_affectedByCamera(affectedByCamera),m_name{std::move(name)}
 	{
 		VC_PROFILER_FUNCTION();
@@ -19,7 +19,10 @@ namespace Vectrix {
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
 		vkDeviceWaitIdle(m_device.device());
-		createPipeline(m_renderer.getSwapChainRenderPass(), vertexPath, fragmentPath, std::move(buffer_layout));
+		auto src = parse(path);
+		m_vertSRC = src.first;
+		m_fragSRC = src.second;
+		createPipeline(m_renderer.getSwapChainRenderPass(),  std::move(buffer_layout));
 	}
 
     VulkanShader::~VulkanShader() {
@@ -177,7 +180,7 @@ namespace Vectrix {
 		return id;
 	}
 
-	void VulkanShader::createPipeline(VkRenderPass renderPass, const std::string& vertexPath, const std::string& fragmentPath,BufferLayout layout) {
+	void VulkanShader::createPipeline(VkRenderPass renderPass, BufferLayout layout) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_pipelineLayout != nullptr, "Cannot create pipeline before pipeline layout");
 
@@ -188,11 +191,10 @@ namespace Vectrix {
 		pipelineConfig.layout = std::move(layout);
 
 		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
-		m_vertSRC = readUTF8(vertexPath);
-		m_fragSRC = readUTF8(fragmentPath);
-		bool optimize = false;
 #ifdef OPTIMIZE
-		optimize=true;
+		constexpr bool optimize = true;
+#else
+		constexpr bool optimize = false;
 #endif
 		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);

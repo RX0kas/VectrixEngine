@@ -10,6 +10,7 @@
 #include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
 #include "GraphicAPI/Vulkan/Rendering/Shaders/Pipeline.h"
 #include "Vectrix/Application.h"
+#include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Rendering/RenderCommand.h"
 #include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/Mesh/MeshHandle.h"
@@ -329,7 +330,7 @@ namespace Vectrix {
 			if (batch.elementCount == 0) continue;
 
 
-			std::shared_ptr<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(ShaderManager::instance().get(shaderName));
+			std::shared_ptr<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(AssetsManager::instance().getShaderManager().get(shaderName));
 
 			VC_CORE_ASSERT(shader != nullptr, "Shader '{}' not found in ShaderManager", shaderName);
 			VC_CORE_ASSERT(shader->m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shaderName);
@@ -379,11 +380,11 @@ namespace Vectrix {
 		std::vector<DebugPipelineInfo> pipelines;
 		std::vector<DebugDescriptorSetInfo> boundDescriptorSets;
 
-		for (auto& shader : ShaderManager::instance().getAll()) {
+		for (auto& shader : AssetsManager::instance().getShaderManager().getAll()) {
 			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
-			DebugDescriptorSetInfo d{};
+			DebugDescriptorSetInfo d;
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}
@@ -394,7 +395,7 @@ namespace Vectrix {
 		auto defaultTexture = std::dynamic_pointer_cast<VulkanTexture>(TextureManager::getNotFoundTexture());
 		f.images.push_back({"not_found",defaultTexture->getLayout(),defaultTexture->getFormat(),{defaultTexture->getWidth(),defaultTexture->getHeight(),0}});
 
-		for (const auto&[name, tex] : TextureManager::instance().getAllWithName()) {
+		for (const auto&[name, tex] : AssetsManager::instance().getTextureManager().getAllWithName()) {
 			auto t = std::dynamic_pointer_cast<VulkanTexture>(tex);
 			DebugImageInfo i{};
 			i.name = name;
