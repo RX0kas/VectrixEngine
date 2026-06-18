@@ -3,6 +3,7 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 #include "Camera/Camera.h"
+#include "Camera/EditorCamera.h"
 #include "Shaders/Shader.h"
 #include "Mesh/VertexArray.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
@@ -21,8 +22,7 @@ namespace Vectrix {
 	 * Provides static methods for scene-based rendering. All rendering
 	 * must occur between BeginScene() and EndScene() calls.
 	 */
-	class Renderer
-	{
+	class Renderer {
 	public:
 		/**
 		 * @struct SceneData
@@ -32,7 +32,7 @@ namespace Vectrix {
 			/**
 			 * @brief The scene camera
 			 */
-			Camera* camera;
+			glm::mat4 transformation_matrix;
 		};
 		/**
 		 * @brief Start rendering a scene with the given camera
@@ -58,6 +58,7 @@ namespace Vectrix {
 		 * @return The active rendering API
 		 */
 		static RendererAPI::API getAPI() { return RendererAPI::getAPI(); }
+
 		/**
 		 * @brief Get current scene data
 		 * @return Reference to active scene data
@@ -69,6 +70,8 @@ namespace Vectrix {
 		 */
 		static bool isASceneInProgress() { return s_sceneInProgress; }
 	private:
+		friend class EditorLayer;
+		static void beginScene(EditorCamera& camera);
 		static std::unique_ptr<SceneData> m_SceneData;
 		static bool s_sceneInProgress;
 	};

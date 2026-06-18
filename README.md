@@ -166,6 +166,7 @@ AI has only been used as a review tool and each modification is analyzed
 - [STB Image](https://github.com/nothings/stb/blob/master/stb_image.h): to load Textures
 - [Volk](https://github.com/zeux/volk): to manage Vulkan extension
 - [EnTT](https://github.com/skypjack/entt): Entity component system
+- [Nativefiledialog extended](https://github.com/btzy/nativefiledialog-extended): to have the proper file dialog for each OS
 ---
 
 If you like this project, feel free to give it a star!

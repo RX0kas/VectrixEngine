@@ -100,6 +100,19 @@ add_library(imguizmo STATIC
 target_link_libraries(imguizmo PUBLIC imgui)
 target_include_directories(imguizmo PUBLIC Vectrix/extern/imgui)
 
+# nativefiledialog-extended
+message(VERBOSE "Initializing nativefiledialog-extended")
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 gtk+-3.0)
+
+if (GTK3_FOUND)
+    message(VERBOSE "GTK3 found")
+else()
+    message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
+endif()
+add_subdirectory(Vectrix/extern/NativeFileDialog)
+
 # Vectrix
 message(STATUS "Initializing Vectrix")
 
@@ -186,6 +199,7 @@ if (UNIX AND NOT APPLE)
             volk::volk
             EnTT::EnTT
             imguizmo
+            nfd
     )
 else()
 target_link_libraries(Vectrix
@@ -196,6 +210,7 @@ target_link_libraries(Vectrix
         volk::volk
         EnTT::EnTT
         imguizmo
+        nfd
 )
 endif()
 

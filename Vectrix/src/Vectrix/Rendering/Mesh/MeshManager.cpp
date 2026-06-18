@@ -24,13 +24,16 @@ namespace Vectrix {
         }
         auto mesh = std::make_shared<Mesh>(vertices,indices);
         mesh->m_id = name;
-        add(name,mesh);
 
         return mesh;
     }
 
     MeshManager::~MeshManager() {
         VC_CORE_INFO("Destroying MeshManager");
+        m_cache.clear();
+    }
+
+    void MeshManager::clear() {
         m_cache.clear();
     }
 

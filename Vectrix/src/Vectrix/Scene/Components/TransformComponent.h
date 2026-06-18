@@ -1,6 +1,7 @@
 #ifndef VECTRIXWORKSPACE_TRANSFORMCOMPONENT_H
 #define VECTRIXWORKSPACE_TRANSFORMCOMPONENT_H
 
+#include <memory>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Vectrix/Utils/Math.h"
@@ -18,7 +19,7 @@ namespace Vectrix {
      */
     class TransformComponent {
     public:
-        TransformComponent(Entity* entity) {}
+        TransformComponent(std::shared_ptr<Entity> entity) {}
         /**
          * @brief This is the world position
          */
@@ -40,6 +41,8 @@ namespace Vectrix {
         * @return The model matrix of an object
         */
         [[nodiscard]] glm::mat4 modelMatrix() const;
+
+        static glm::mat4 modelMatrix(glm::vec3 pos, glm::vec3 scale, glm::quat rotation);
 
         /**
         * @brief This function return a matrix that is the equivalent of "glm::transpose(glm::inverse(modelMatrix))"

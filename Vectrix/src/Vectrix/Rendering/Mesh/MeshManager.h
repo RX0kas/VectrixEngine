@@ -42,10 +42,14 @@ namespace Vectrix {
             ~MeshManager();
         private:
             friend class Mesh;
+            friend class Scene;
             MeshManager();
             friend class AssetsManager;
+            friend class Application;
+            friend class EditorLayer;
             bool remove(const std::string& name);
             void add(const std::string& name,std::shared_ptr<Mesh> mesh);
+            void clear();
             Cache<std::string,std::shared_ptr<Mesh>> m_cache;
     };
 } // Vectrix

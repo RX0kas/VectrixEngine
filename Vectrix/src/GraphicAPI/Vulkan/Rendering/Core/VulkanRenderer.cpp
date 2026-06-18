@@ -16,6 +16,7 @@
 #include "Vectrix/Rendering/Mesh/MeshHandle.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
+#include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
@@ -245,7 +246,7 @@ namespace Vectrix {
 		return buffers;
 	}
 
-	void VulkanRenderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, glm::mat4 modelMatrix, std::uint32_t textureIndex) {
+	void VulkanRenderer::submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4 &modelMatrix, std::uint32_t textureIndex) {
 		VC_PROFILER_FUNCTION();
 		Cache<std::string, BatchInfo>& cache = VulkanContext::instance().getRenderer().m_batchCache;
 		auto vkShader = std::dynamic_pointer_cast<VulkanShader>(shader);
@@ -314,11 +315,6 @@ namespace Vectrix {
 		scissor.offset = {0, 0};
 		scissor.extent = extent;
 		vkCmdSetScissor(cmd, 0, 1, &scissor);
-
-		Camera* camera = Camera::getCurrentCamera();
-		if (camera==nullptr) {
-			VC_CORE_ERROR("No current camera has been set, can't flush");
-		}
 		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
 		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
 
@@ -340,7 +336,7 @@ namespace Vectrix {
 			VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shaderName);
 
 			if (shader->isAffectedByCamera())
-				shader->sendCameraUniform(camera->getTransformationMatrix());
+				shader->sendCameraUniform(Renderer::getSceneData().transformation_matrix);
 			shader->bind();
 			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
 			batch.objectDataSSBO.flush(frameIndex);
@@ -384,7 +380,7 @@ namespace Vectrix {
 			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
 			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
 			pipelines.push_back(i);
-			DebugDescriptorSetInfo d;
+			DebugDescriptorSetInfo d{};
 			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
 			boundDescriptorSets.push_back(d);
 		}

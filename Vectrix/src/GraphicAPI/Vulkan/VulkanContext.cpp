@@ -57,4 +57,13 @@ namespace Vectrix {
 	void VulkanContext::uploadMeshData() {
 		s_instance->m_meshRegistry->uploadToGPU();
 	}
+
+	void VulkanContext::unloadGPU() {
+		s_instance->m_meshRegistry->unloadGPU();
+	}
+
+	void VulkanContext::waitIdle() {
+		VulkanContext& i = instance();
+		vkDeviceWaitIdle(i.m_device->device());
+	}
 }

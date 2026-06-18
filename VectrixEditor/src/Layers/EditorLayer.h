@@ -1,5 +1,6 @@
 #ifndef VECTRIXWORKSPACE_EDITORLAYER_H
 #define VECTRIXWORKSPACE_EDITORLAYER_H
+#include "../../../Vectrix/src/Vectrix/Rendering/Camera/EditorCamera.h"
 #include "imgui.h"
 #include "ImGuizmo.h"
 #include "Vectrix.h"
@@ -22,10 +23,14 @@ namespace Vectrix {
 
     	void OnAttach() override;
 	private:
-    	Entity pickEntity(glm::vec2 mousePos);
+    	void showSaveDialog();
+    	void showOpenDialog();
+    	void processPendingSceneLoad();
+    	std::shared_ptr<Entity> pickEntity(glm::vec2 mousePos);
     	glm::vec3 screenToWorldRay(glm::vec2 mousePos);
 		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
+    	std::unique_ptr<EditorCamera> m_camera;
 
     	std::shared_ptr<Texture> m_foxTexture;
     	std::shared_ptr<Mesh> m_foxMesh;
@@ -35,9 +40,9 @@ namespace Vectrix {
     	bool m_mustResize = false;
 
     	std::shared_ptr<Scene> m_activeScene;
-    	Entity m_foxEntity;
-    	Entity m_cameraEntity;
-    	Camera* m_camera;
+    	std::string m_pendingScenePath{};
+
+    	std::shared_ptr<Entity> m_foxEntity;
     	float m_cameraRotationSpeed = 50.0f;
     	float m_cameraMoveSpeed = 1.5f;
 

@@ -10,6 +10,7 @@
 #include "Vectrix/Rendering/Textures/TextureManager.h"
 #include "Vectrix/Rendering/Mesh/MeshManager.h"
 #include "Vectrix/Utils/Memory.h"
+#include "Vectrix/Utils/Result.h"
 
 namespace Vectrix {
 
@@ -20,22 +21,6 @@ namespace Vectrix {
         MESH,
         SCENE
     };
-
-    enum ResultAssetLoading {
-        SUCCESS,
-        UNKNOWN_TYPE,
-        NOT_FOUND,
-        WRONG_TYPE
-    };
-    inline std::string toString(ResultAssetLoading r) {
-        switch (r) {
-            case SUCCESS: return "SUCCESS";
-            case UNKNOWN_TYPE: return "UNKNOWN_TYPE";
-            case NOT_FOUND: return "NOT_FOUND";
-            case WRONG_TYPE: return "WRONG_TYPE";
-        }
-        return "UNKNOWN_RESULT_ASSET_LOADING";
-    }
 
     class AssetsManager {
     public:
@@ -48,7 +33,7 @@ namespace Vectrix {
          * @param path The path of the assets
          */
         template<typename T>
-        static std::pair<ResultAssetLoading, std::shared_ptr<T>> load(const std::string& path);
+        static std::pair<VectrixResult, std::shared_ptr<T>> load(const std::string& path);
 
 
 
@@ -70,60 +55,60 @@ namespace Vectrix {
     };
 
     template<>
-    inline std::pair<ResultAssetLoading, std::shared_ptr<Texture>> AssetsManager::load(const std::string& path) {
+    inline std::pair<VectrixResult, std::shared_ptr<Texture>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
         if (p.empty())
-            return {ResultAssetLoading::NOT_FOUND, nullptr};
+            return {VectrixResult::NOT_FOUND, nullptr};
 
         if (getAssetType(path)!=TEXTURE) {
-            return {ResultAssetLoading::WRONG_TYPE,nullptr};
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
-            return {ResultAssetLoading::SUCCESS, std::static_pointer_cast<Texture>(it->second)};
+            return {VectrixResult::SUCCESS, std::static_pointer_cast<Texture>(it->second)};
 
         auto texture = s_instance->m_textureManager->createTexture(p.c_str(), path);
         s_instance->m_cache.emplace(p.c_str(), texture);
-        return {ResultAssetLoading::SUCCESS, texture};
+        return {VectrixResult::SUCCESS, texture};
     }
 
     template<>
-    inline std::pair<ResultAssetLoading, std::shared_ptr<Shader>> AssetsManager::load(const std::string& path) {
+    inline std::pair<VectrixResult, std::shared_ptr<Shader>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
         if (p.empty())
-            return {ResultAssetLoading::NOT_FOUND, nullptr};
+            return {VectrixResult::NOT_FOUND, nullptr};
 
         if (getAssetType(path)!=SHADER) {
-            return {ResultAssetLoading::WRONG_TYPE,nullptr};
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
-            return {ResultAssetLoading::SUCCESS, std::static_pointer_cast<Shader>(it->second)};
+            return {VectrixResult::SUCCESS, std::static_pointer_cast<Shader>(it->second)};
 
         auto shader = s_instance->m_shaderManager->createShader(p.c_str(), path);
         s_instance->m_cache.emplace(p.c_str(), shader);
-        return {ResultAssetLoading::SUCCESS, shader};
+        return {VectrixResult::SUCCESS, shader};
     }
 
     template<>
-    inline std::pair<ResultAssetLoading, std::shared_ptr<Mesh>> AssetsManager::load(const std::string& path) {
+    inline std::pair<VectrixResult, std::shared_ptr<Mesh>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
         if (p.empty())
-            return {ResultAssetLoading::NOT_FOUND, nullptr};
+            return {VectrixResult::NOT_FOUND, nullptr};
 
         if (getAssetType(path)!=MESH) {
-            return {ResultAssetLoading::WRONG_TYPE,nullptr};
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
-            return {ResultAssetLoading::SUCCESS, std::static_pointer_cast<Mesh>(it->second)};
+            return {VectrixResult::SUCCESS, std::static_pointer_cast<Mesh>(it->second)};
 
         auto shader = s_instance->m_meshManager->createMesh(p.c_str(), path);
         s_instance->m_cache.emplace(p.c_str(), shader);
-        return {ResultAssetLoading::SUCCESS, shader};
+        return {VectrixResult::SUCCESS, shader};
     }
 } // Vectrix
 

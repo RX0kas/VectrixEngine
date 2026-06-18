@@ -6,7 +6,7 @@
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
-    Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<uint32_t> indices) {
+    Mesh::Mesh(const std::vector<Vertex> &vertices, std::vector<uint32_t> indices) : m_aabb(vertices) {
         VC_PROFILER_FUNCTION();
         m_layout = getTinyObjLayout();
         const auto vertexBuffer = VertexBuffer::create(vertices, static_cast<uint32_t>(vertices.size()));
@@ -18,11 +18,9 @@ namespace Vectrix {
         m_vertexArray->setIndexBuffer(indexBuffer);
         m_vertices = vertices;
         m_indices = indices;
-
-        registerMesh();
     }
 
-    Mesh::Mesh(const std::vector<Vertex> &vertices) {
+    Mesh::Mesh(const std::vector<Vertex> &vertices) : m_aabb(vertices) {
         VC_PROFILER_FUNCTION();
         m_layout = getTinyObjLayout();
         const auto vertexBuffer = std::shared_ptr<VertexBuffer>(VertexBuffer::create(vertices, vertices.size()));
@@ -32,8 +30,6 @@ namespace Vectrix {
 
         m_vertexArray = VertexArray::create();
         m_vertexArray->addVertexBuffer(vertexBuffer);
-
-        registerMesh();
     }
 
     void Mesh::registerMesh() {
@@ -44,7 +40,7 @@ namespace Vectrix {
             case RendererAPI::API::None:
                 VC_CORE_ERROR("Can't register Mesh because RendererAPI is None");
             default:
-                VC_CORE_ERROR("Unkown RendererAPI");
+                VC_CORE_ERROR("Unknown RendererAPI");
         }
     }
 } // Vectrix

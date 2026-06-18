@@ -4,28 +4,13 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-#include "Vectrix/Scene/Components/TransformComponent.h"
+#include "glm/gtc/quaternion.hpp"
 
-/**
- * @file Camera.h
- * @brief Definition of the camera class
- * @ingroup rendering
- */
 
 namespace Vectrix {
-	/**
-	 * @brief This class is the camera class
-	 */
-	class Camera {
+	class EditorCamera {
 	public:
-		/**
-		 * @brief This creates a new camera with a perspective projection
-		 * @param entity The entity
-		 * @param fov The camera FOV
-		 * @param camNear The camera near
-		 * @param camFar The camera far
-		 */
-		Camera(std::shared_ptr<Entity> entity, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
+		EditorCamera(float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
 
 		/**
 		 * @brief This function return the projection matrix
@@ -109,11 +94,6 @@ namespace Vectrix {
 		}
 
 		/**
-		 * @brief This function return true if the camera has a custom aspect
-		 */
-		bool hasCustomAspect() const { return m_customAspect!=-1; }
-
-		/**
 		 * @brief This function return the aspect ratio of the camera
 		 */
 		[[nodiscard]] float getAspect() const;
@@ -123,20 +103,22 @@ namespace Vectrix {
 		 */
 		void recalculateMatrices();
 
-		/**
-		 * @brief This function return the current active camera
-		 */
-		static std::shared_ptr<Entity> getCurrentCamera();
+
+		void setRotationDeg(glm::vec3 newRotation) {
+			m_rotation = glm::quat(glm::radians(newRotation));
+		}
+
 
 		/**
-		 * @brief This function set this camera as the active
-		 */
-		void setAsCurrent();
+		 * @brief Returns the rotation of the model in degrees
+		 **/
+		[[nodiscard]] glm::vec3 getRotationDeg() const {
+			return glm::degrees(glm::eulerAngles(m_rotation));
+		}
 
-		/**
-		 * @brief This function returns true if this camera is the current camera used
-		 */
-		[[nodiscard]] bool isCurrent() const;
+		glm::vec3 m_position{ 0};
+		glm::vec3 m_scale{ 1.f, 1.f, 1.f };
+		glm::quat m_rotation = glm::identity<glm::quat>();
 	private:
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
@@ -149,13 +131,9 @@ namespace Vectrix {
 		glm::mat4 m_projectionMatrix{};
 		glm::mat4 m_viewMatrix;
 		glm::mat4 m_transformationMatrix{};
-		TransformComponent& m_transform;
 
 		float m_customAspect = -1;
-		std::shared_ptr<Entity> m_entity;
 
-
-		static std::shared_ptr<Entity> s_currentCamera;
 	};
 
 }

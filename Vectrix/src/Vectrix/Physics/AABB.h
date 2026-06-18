@@ -8,6 +8,8 @@ namespace Vectrix {
         AABB() = default;
         AABB(const std::vector<Vertex> &vertices);
 
+        void update(const std::vector<Vertex> &vertices);
+
         bool intersect(glm::vec3 rayOrigin, glm::vec3 rayDir,float& tOut) const;
     private:
         glm::vec3 m_min{};

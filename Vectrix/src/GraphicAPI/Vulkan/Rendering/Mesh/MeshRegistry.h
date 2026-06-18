@@ -16,11 +16,12 @@ namespace Vectrix {
         MeshHandle registerMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
         void uploadToGPU();
+        void unloadGPU();
 
         [[nodiscard]] VulkanBuffer& getVertexBuffer() const { return *m_globalVertexBuffer; }
         [[nodiscard]] VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer;  }
         [[nodiscard]] bool isUploaded() const { return m_uploaded; }
-        [[nodiscard]] bool isEmpty() const { return m_empty; }
+        [[nodiscard]] bool isEmpty() const { return m_pendingVertices.empty() && m_globalVertexBuffer==nullptr; }
     private:
         static void uploadBuffer(const void* data, VkDeviceSize size, VkBufferUsageFlags usage, std::unique_ptr<VulkanBuffer>& outBuffer);
 
@@ -31,7 +32,6 @@ namespace Vectrix {
         std::unique_ptr<VulkanBuffer> m_globalVertexBuffer;
         std::unique_ptr<VulkanBuffer> m_globalIndexBuffer;
         bool m_uploaded = false;
-        bool m_empty = false;
     };
 } // Vectrix
 

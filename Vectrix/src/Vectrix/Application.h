@@ -28,9 +28,6 @@ extern AppInfoFunc g_getAppInfo;
 int main(int argc, char** argv);
 
 namespace Vectrix {
-	class ShaderManager;
-	class TextureManager;
-
 	class Application {
 	public:
 		Application();

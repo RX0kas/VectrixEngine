@@ -14,7 +14,8 @@ namespace Vectrix {
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
+		SceneSaved, SceneLoading, SceneLoaded
 	};
 
 	enum EventCategory
@@ -24,7 +25,8 @@ namespace Vectrix {
 		EventCategoryInput = BIT(1),
 		EventCategoryKeyboard = BIT(2),
 		EventCategoryMouse = BIT(3),
-		EventCategoryMouseButton = BIT(4)
+		EventCategoryMouseButton = BIT(4),
+		EventCategoryEditor = BIT(5)
 	};
 
 	// A macro to not have to rewrite those tree function every time we create a new event

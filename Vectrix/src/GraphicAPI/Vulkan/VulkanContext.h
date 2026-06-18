@@ -21,6 +21,8 @@ namespace Vectrix {
 		void swapBuffers() override;
 		void registerMesh(Mesh* model) override;
 		static void uploadMeshData();
+		static void unloadGPU();
+		static void waitIdle();
 
 
 		[[nodiscard]] Device& getDevice() const { return *m_device; }

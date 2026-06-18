@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "RenderCommand.h"
+#include "Camera/EditorCamera.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
 namespace Vectrix {
@@ -11,7 +12,19 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(!isASceneInProgress(),"Can't begin a scene because another one is in progress");
 		s_sceneInProgress = true;
-		m_SceneData->camera = &camera;
+		m_SceneData->transformation_matrix = camera.getTransformationMatrix();
+		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
+			VulkanContext::instance().getRenderer().resetCache();
+		} else {
+			VC_CORE_ERROR("Can't begin a scene because the renderer API is set to an unsupported value");
+		}
+	}
+
+	void Renderer::beginScene(EditorCamera& camera) {
+		VC_PROFILER_FUNCTION();
+		VC_CORE_ASSERT(!isASceneInProgress(),"Can't begin a scene because another one is in progress");
+		s_sceneInProgress = true;
+		m_SceneData->transformation_matrix = camera.getTransformationMatrix();
 		if (RendererAPI::getAPI()==RendererAPI::API::Vulkan) {
 			VulkanContext::instance().getRenderer().resetCache();
 		} else {
