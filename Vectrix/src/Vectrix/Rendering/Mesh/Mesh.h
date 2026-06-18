@@ -18,6 +18,7 @@ namespace Vectrix {
         friend class AssetsManager;
         friend class MeshManager;
         friend class VulkanContext;
+        friend class Scene;
         void registerMesh();
         std::shared_ptr<VertexArray> m_vertexArray;
         BufferLayout m_layout;

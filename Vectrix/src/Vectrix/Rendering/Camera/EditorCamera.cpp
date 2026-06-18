@@ -1,6 +1,6 @@
 #include "vcpch.h"
 
-#include "Camera.h"
+#include "EditorCamera.h"
 
 #include <cmath>
 #define GLM_FORCE_RADIANS
@@ -11,42 +11,37 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Framebuffer.h"
-#include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
-	std::shared_ptr<Entity> Camera::s_currentCamera = nullptr;
 
-	Camera::Camera(std::shared_ptr<Entity> entity, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear), m_transform(entity->getComponent<TransformComponent>()) {
-		m_entity = entity;
+	EditorCamera::EditorCamera(float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
 		recalculateMatrices();
-		setAsCurrent();
 	}
 
-	float Camera::getAspect() const {
+	float EditorCamera::getAspect() const {
 		return m_customAspect!=-1 ? m_customAspect : Application::instance().window().getAspect();
 	}
 
-	void Camera::recalculateMatrices() {
+	void EditorCamera::recalculateMatrices() {
 		VC_PROFILER_FUNCTION();
 		recalculateProjectionMatrix();
 		recalculateViewMatrix();
 		recalculateTransformationMatrix();
 	}
 
-	void Camera::recalculateViewMatrix() {
-		glm::mat4 transform = m_transform.modelMatrix();
-
-		m_viewMatrix = glm::inverse(transform);
+	void EditorCamera::recalculateViewMatrix() {
+		VC_PROFILER_FUNCTION();
+		m_viewMatrix = glm::inverse(TransformComponent::modelMatrix(m_position,m_scale,m_rotation));
 	}
 
 
-	void Camera::recalculateTransformationMatrix() {
+	void EditorCamera::recalculateTransformationMatrix() {
 		m_transformationMatrix = m_projectionMatrix * m_viewMatrix;
 	}
 
-	void Camera::recalculateProjectionMatrix() {
+	void EditorCamera::recalculateProjectionMatrix() {
+		VC_PROFILER_FUNCTION();
 		float aspect = getAspect();
-
 		VC_CORE_ASSERT(aspect > std::numeric_limits<float>::epsilon(),"Aspect ratio is invalid");
 
 		m_projectionMatrix = glm::perspectiveRH_ZO(m_fov,aspect,m_camNear,m_camFar);
@@ -54,7 +49,7 @@ namespace Vectrix {
 		m_projectionMatrix[1][1] *= -1.0f;
 	}
 
-	void Camera::setViewDirection(glm::vec3 direction) {
+	void EditorCamera::setViewDirection(glm::vec3 direction) {
 		VC_PROFILER_FUNCTION();
 		const glm::vec3 up = {0.0f, 1.0f, 0.0f};
 		const glm::vec3 w{glm::normalize(direction)};
@@ -71,21 +66,15 @@ namespace Vectrix {
 		m_viewMatrix[0][2] = w.x;
 		m_viewMatrix[1][2] = w.y;
 		m_viewMatrix[2][2] = w.z;
-		m_viewMatrix[3][0] = -glm::dot(u, m_transform.position);
-		m_viewMatrix[3][1] = -glm::dot(v, m_transform.position);
-		m_viewMatrix[3][2] = -glm::dot(w, m_transform.position);
+		m_viewMatrix[3][0] = -glm::dot(u, m_position);
+		m_viewMatrix[3][1] = -glm::dot(v, m_position);
+		m_viewMatrix[3][2] = -glm::dot(w, m_position);
 
 		recalculateTransformationMatrix();
 	}
 
-	void Camera::setViewTarget(glm::vec3 target) {
+	void EditorCamera::setViewTarget(glm::vec3 target) {
 		VC_PROFILER_FUNCTION();
-		setViewDirection(target - m_transform.position);
+		setViewDirection(target - m_position);
 	}
-
-	std::shared_ptr<Entity> Camera::getCurrentCamera() { return s_currentCamera; }
-
-	void Camera::setAsCurrent() { s_currentCamera = m_entity; }
-
-	[[nodiscard]] bool Camera::isCurrent() const { return m_entity==s_currentCamera; }
 }

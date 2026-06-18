@@ -92,7 +92,6 @@ namespace Vectrix {
 	void VulkanImGuiManager::update() {}
 
 	void VulkanImGuiManager::initImGui() {
-#if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 		VC_CORE_INFO("Initializing ImGui");
     	VC_CORE_ASSERT(vkGetInstanceProcAddr != nullptr, "Volk global functions not loaded!");
     	VC_CORE_ASSERT(vkGetDeviceProcAddr != nullptr, "Volk device proc addr function is null!");
@@ -180,9 +179,6 @@ namespace Vectrix {
 
     	//createImGuiFramebuffers();
 		VC_CORE_INFO("ImGui has been initialized");
-#else
-		VC_CORE_ERROR("The only Platform supported is Windows and Linux, ImGui can't be initialized");
-#endif
 	}
 
 

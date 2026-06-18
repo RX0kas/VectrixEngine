@@ -7,7 +7,10 @@
 #include <fstream>
 #include <optional>
 
+#include "Scene.h"
+#include "Scene.h"
 #include "Vectrix/Core/AppInfo.h"
+#include "Vectrix/Utils/Result.h"
 
 #define SCENE_VERSION_MAJOR 0
 #define SCENE_VERSION_MINOR 1
@@ -36,6 +39,7 @@ namespace Vectrix {
     [FOOTER]
         uint32_t  hash;
      */
+    class Scene;
 
     struct ComponentCreationData {
         uint32_t type_id;
@@ -48,7 +52,7 @@ namespace Vectrix {
     };
 
     struct SceneCreationData {
-        bool loaded = false;
+        VectrixResult result;
         uint32_t engine_version;
         uint32_t file_version;
         std::string name;
@@ -57,11 +61,12 @@ namespace Vectrix {
     class SceneSerializer {
     public:
         static SceneCreationData loadSceneFile(const std::string& path);
+        static VectrixResult saveScene(const std::string& path, Scene& scene);
     private:
         static bool validMagicNumber(std::ifstream& stream);
         static std::optional<uint32_t> validVectrixVersion(std::ifstream& stream);
         static std::optional<uint32_t> validSceneVersion(std::ifstream& stream);
-        static std::optional<std::string> getName(std::ifstream& stream);
+        static std::optional<std::string> getString(std::ifstream& stream);
         static std::optional<std::vector<EntityCreationData>> readEntities(std::ifstream& stream);
         static std::optional<std::vector<ComponentCreationData>> readComponents(std::ifstream& stream);
 

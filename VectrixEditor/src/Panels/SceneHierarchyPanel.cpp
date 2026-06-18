@@ -11,18 +11,19 @@ namespace Vectrix {
 
     void SceneHierarchyPanel::setContext(const std::shared_ptr<Scene> &scene) {
         m_context = scene;
+        resetSelectedEntity();
     }
 
     void SceneHierarchyPanel::onImGuiRender() {
         ImGui::Begin("Scene Hierarchy");
-        for(entt::entity entityID: m_context->m_registry.view<entt::entity>()) {
-            Entity entity{ entityID , m_context.get() };
+        for (const auto& e : m_context->m_entities) {
+            const std::shared_ptr<Entity>& entity = e.second;
             drawEntityNode(entity);
         }
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_selectionContext = {};
 
-        if (ImGui::BeginPopupContextWindow(0, 1)) {
+        if (ImGui::BeginPopupContextWindow(nullptr, 1)) {
             if (ImGui::MenuItem("Create Empty Entity"))
                 m_context->createEntity("Empty Entity");
 
@@ -41,18 +42,18 @@ namespace Vectrix {
 
         if (ImGui::BeginPopup("AddComponent")) {
             bool hasOneComponent = false;
-            if (!m_selectionContext.hasComponent<CameraComponent>()) {
+            if (!m_selectionContext->hasComponent<CameraComponent>()) {
                 hasOneComponent = true;
                 if (ImGui::MenuItem("Camera")) {
-                    m_selectionContext.addComponent<CameraComponent>();
+                    m_selectionContext->addComponent<CameraComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
 
-            if (!m_selectionContext.hasComponent<MeshRendererComponent>()) {
+            if (!m_selectionContext->hasComponent<MeshRendererComponent>()) {
                 hasOneComponent = true;
                 if (ImGui::MenuItem("MeshRenderer")) {
-                    m_selectionContext.addComponent<MeshRendererComponent>();
+                    m_selectionContext->addComponent<MeshRendererComponent>();
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -67,17 +68,18 @@ namespace Vectrix {
         ImGui::End();
     }
 
-    void SceneHierarchyPanel::drawEntityNode(Entity& entity) {
-        const char* name = entity.getComponent<InformationComponent>().name.c_str();
-        if (ImGui::Selectable(name)) {
+    void SceneHierarchyPanel::drawEntityNode(const std::shared_ptr<Entity>& entity) {
+        std::string name = entity->getComponent<InformationComponent>().name;
+
+        if (ImGui::Selectable(name.empty() ? "##" : name.c_str())) {
             m_selectionContext = entity;
         }
     }
 
-    void SceneHierarchyPanel::drawProperties(Entity entity) {
+    void SceneHierarchyPanel::drawProperties(const std::shared_ptr<Entity>& entity) {
         // InformationComponent
         {
-            auto& ic = entity.getComponent<InformationComponent>();
+            auto& ic = entity->getComponent<InformationComponent>();
             char buffer[256] = {};
             strcpy(buffer,ic.name.c_str());
             if (ImGui::InputText("Name",buffer,sizeof(buffer)))
@@ -86,7 +88,7 @@ namespace Vectrix {
 
         // TransformComponent
         {
-            auto& tc = entity.getComponent<TransformComponent>();
+            auto& tc = entity->getComponent<TransformComponent>();
             bool mustBeRemoved = false;
             if (drawTreeNodeComponent("Transform",mustBeRemoved,false)) {
                 // Position
@@ -108,8 +110,8 @@ namespace Vectrix {
             }
         }
         // MeshComponent
-        if (entity.hasComponent<MeshRendererComponent>()) {
-            auto& mc = entity.getComponent<MeshRendererComponent>();
+        if (entity->hasComponent<MeshRendererComponent>()) {
+            auto& mc = entity->getComponent<MeshRendererComponent>();
             bool mustBeRemoved = false;
 
             if (drawTreeNodeComponent("Mesh Renderer", mustBeRemoved)) {
@@ -148,12 +150,12 @@ namespace Vectrix {
             }
 
             if (mustBeRemoved)
-                entity.deleteComponent<MeshRendererComponent>();
+                entity->deleteComponent<MeshRendererComponent>();
         }
 
         // CameraComponent
-        if (entity.hasComponent<CameraComponent>()) {
-            auto& cc = entity.getComponent<CameraComponent>();
+        if (entity->hasComponent<CameraComponent>()) {
+            auto& cc = entity->getComponent<CameraComponent>();
             bool mustBeRemoved = false;
             if (drawTreeNodeComponent("Camera",mustBeRemoved)) {
                 Camera& camera = cc.camera;
@@ -193,7 +195,7 @@ namespace Vectrix {
             }
 
             if (mustBeRemoved) {
-                entity.deleteComponent<CameraComponent>();
+                entity->deleteComponent<CameraComponent>();
             }
         }
     }

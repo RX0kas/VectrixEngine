@@ -87,7 +87,7 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray,glm::mat4 modelMatrix,std::uint32_t textureIndex=0);
+        static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4 &modelMatrix,std::uint32_t textureIndex=0);
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;

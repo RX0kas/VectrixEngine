@@ -5,7 +5,7 @@
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
-    MeshRendererComponent::MeshRendererComponent(Entity* entity,const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Shader> &shader, const std::shared_ptr<Texture>& texture) {
+    MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Entity> entity,const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Shader> &shader, const std::shared_ptr<Texture>& texture) {
         VC_PROFILER_FUNCTION();
         VC_CORE_ASSERT(shader,"The shader is a nullptr");
         VC_CORE_ASSERT(texture,"The texture is a nullptr");
@@ -15,5 +15,5 @@ namespace Vectrix {
         this->mesh = mesh;
     }
 
-    MeshRendererComponent::MeshRendererComponent(Entity *entity) : enable(false) {}
+    MeshRendererComponent::MeshRendererComponent(std::shared_ptr<Entity> entity) : enable(false) {}
 } // Vectrix

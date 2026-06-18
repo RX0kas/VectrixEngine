@@ -75,7 +75,13 @@ namespace Vectrix {
         return {r};
     }
 
-    static bool isCompatible(Version version1,Version version2);
+    static bool isCompatible(Version version1,Version version2) {
+        if (getMajor(version1)!=getMajor(version2)) return false;
+
+        if (getMinor(version1) < getMinor(version2)) return false;
+
+        return true;
+    }
 
     /**
      * @brief This class hold the information about the application

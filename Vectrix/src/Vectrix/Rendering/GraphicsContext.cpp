@@ -32,4 +32,20 @@ namespace Vectrix {
                 break;
         }
     }
+
+    void GraphicsContext::unloadGPUMeshData() {
+        switch (RendererAPI::getAPI()) {
+            case RendererAPI::API::Vulkan: VulkanContext::unloadGPU();
+            case RendererAPI::API::None:
+                break;
+        }
+    }
+
+    void GraphicsContext::waitIdle() {
+        switch (RendererAPI::getAPI()) {
+            case RendererAPI::API::Vulkan: VulkanContext::waitIdle();
+            case RendererAPI::API::None:
+                break;
+        }
+    }
 }

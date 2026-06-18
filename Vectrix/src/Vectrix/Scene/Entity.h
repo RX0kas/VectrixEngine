@@ -3,8 +3,7 @@
 
 #include <type_traits>
 
-#include "Components/TransformComponent.h"
-#include "entt/entt.hpp"
+#include "Component.h"
 #include "Vectrix/Scene/Scene.h"
 #include "Vectrix/Core/Core.h"
 #include "Vectrix/Core/Log.h"
@@ -15,7 +14,6 @@
  * @ingroup ecs
  */
 
-struct InformationComponent;
 
 namespace Vectrix {
     class Entity {
@@ -32,7 +30,7 @@ namespace Vectrix {
         template<typename T,typename... Args>
         T& addComponent(Args&&... args) {
             VC_CORE_ASSERT(!hasComponent<T>(), "Entity already has component");
-            return m_scene->m_registry.emplace<T>(m_entityHandle,this,std::forward<Args>(args)...);
+            return m_scene->m_registry.emplace<T>(m_entityHandle,m_scene->getEntity(m_entityHandle),std::forward<Args>(args)...);
         }
 
         /**
@@ -101,6 +99,7 @@ namespace Vectrix {
         friend class Scene;
         friend class SceneHierarchyPanel;
         friend class EditorLayer;
+        friend class SceneSerializer;
         Entity(entt::entity handle, Scene* scene);
         Entity(const Entity& other) = default;
         entt::entity m_entityHandle{ entt::null };

@@ -43,3 +43,6 @@
 [submodule "Vectrix/extern/ImGuizmo"]
 	path = Vectrix/extern/ImGuizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "Vectrix/extern/NativeFileDialog"]
+	path = Vectrix/extern/NativeFileDialog
+	url = https://github.com/btzy/nativefiledialog-extended.git

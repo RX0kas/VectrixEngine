@@ -12,8 +12,8 @@ namespace Vectrix {
 
 
         MeshRendererComponent(const MeshRendererComponent&) = delete;
-        MeshRendererComponent(Entity* entity);
-        MeshRendererComponent(Entity* entity, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Shader> &shader, const std::shared_ptr<Texture>& texture);
+        MeshRendererComponent(std::shared_ptr<Entity> entity);
+        MeshRendererComponent(std::shared_ptr<Entity> entity, const std::shared_ptr<Mesh>& mesh, const std::shared_ptr<Shader> &shader, const std::shared_ptr<Texture>& texture);
 
         /**
          * @brief Return true if this mesh renderer can be enabled

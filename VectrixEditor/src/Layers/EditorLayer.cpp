@@ -8,8 +8,14 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/gtx/component_wise.hpp>
 
+#include <nfd.h>
+
+#include "../../../Vectrix/src/Vectrix/Rendering/Camera/EditorCamera.h"
+#include "Vectrix/Events/EditorEvent.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
+
 namespace Vectrix {
-    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1), m_camera(nullptr) {}
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {}
 
 	void EditorLayer::OnAttach() {
     	FramebufferSpecification fbSpec;
@@ -17,10 +23,9 @@ namespace Vectrix {
     	fbSpec.height = 1;
     	m_framebuffer = Framebuffer::create(fbSpec);
 
-    	m_activeScene = std::make_shared<Scene>();
-    	m_cameraEntity = m_activeScene->createEntity("Camera");
-    	m_camera = &m_cameraEntity.addComponent<CameraComponent>().camera;
-
+    	m_activeScene = std::make_shared<Scene>("EditorScene");
+    	m_camera = std::make_unique<EditorCamera>();
+#if 0
     	auto s = AssetsManager::load<Shader>("./shaders/viewport.vcshader");
     	if (s.first!=SUCCESS) {
     		VC_CORE_ERROR("Error while loading shader for viewport: {}", toString(s.first));
@@ -33,19 +38,102 @@ namespace Vectrix {
     	}
     	m_foxTexture = t.second;
 
-    	auto m =AssetsManager::load<Mesh>("./models/fox.obj");
+    	auto m = AssetsManager::load<Mesh>("./models/fox.obj");
     	if (m.first!=SUCCESS) {
     		VC_CORE_ERROR("Error while loading modem of fox: {}", toString(m.first));
     	}
 		m_foxMesh = m.second;
 
     	m_foxEntity = m_activeScene->createEntity("Fox");
-    	m_foxEntity.addComponent<MeshRendererComponent>(m_foxMesh, m_viewportShader, m_foxTexture);
+    	m_foxEntity->addComponent<MeshRendererComponent>(m_foxMesh, m_viewportShader, m_foxTexture);
+#endif
     	m_sceneHierarchyPanel.setContext(m_activeScene);
+
+    	m_activeScene->registerAllMesh();
+    	GraphicsContext::uploadAllMeshData();
     }
 
     void EditorLayer::OnEvent(Event &event) {
-    	m_camera->recalculateMatrices();
+    	if (event.getEventType()==EventType::WindowResize)
+    		m_camera->recalculateMatrices();
+    }
+
+	void EditorLayer::showOpenDialog() {
+    	NFD_Init();
+
+    	nfdchar_t* outPath;
+    	nfdfilteritem_t filters[] = { { "Vectrix Scene", "vctx" } };
+
+    	nfdresult_t result = NFD_OpenDialog(&outPath, filters, 1, nullptr);
+
+    	if (result == NFD_OKAY) {
+    		m_pendingScenePath = std::string(outPath);
+    		NFD_FreePath(outPath);
+    	} else if (result == NFD_CANCEL) {
+    		VC_CORE_INFO("User cancelled");
+    	} else {
+    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
+    	}
+
+    	NFD_Quit();
+    }
+
+	void EditorLayer::processPendingSceneLoad() {
+    	if (m_pendingScenePath.empty())
+    		return;
+
+    	std::string path = m_pendingScenePath;
+    	m_pendingScenePath.clear();
+
+    	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path);
+    	if (sceneCreationData.result != SUCCESS) {
+    		VC_CORE_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
+    		return;
+    	}
+
+    	auto newScene = Scene::loadScene(sceneCreationData);
+    	if (newScene.first != SUCCESS) {
+    		VC_CORE_ERROR_NO_EXIT("Error while loading scene {}: {}",m_pendingScenePath,toString(newScene.first));
+    		return;
+    	}
+
+    	GraphicsContext::waitIdle();
+
+    	m_activeScene->m_entities.clear();
+    	m_activeScene->m_registry.clear<>();
+
+    	m_activeScene = newScene.second;
+    	m_activeScene->m_filePath = path;
+    	m_sceneHierarchyPanel.setContext(m_activeScene);
+
+    	GraphicsContext::unloadGPUMeshData();
+    	AssetsManager::instance().getMeshManager().clear();
+    	m_activeScene->registerAllMesh();
+    	GraphicsContext::uploadAllMeshData();
+
+    	GraphicsContext::waitIdle();
+	}
+
+	void EditorLayer::showSaveDialog() {
+    	NFD_Init();
+
+    	nfdchar_t* outPath;
+    	nfdfilteritem_t filters[] = { { "Vectrix Scene", "vctx" } };
+
+    	nfdresult_t result = NFD_SaveDialog(&outPath, filters, 1, nullptr, "scene.vctx");
+
+    	if (result == NFD_OKAY) {
+    		std::string path(outPath);
+    		m_activeScene->m_filePath = path;
+    		SceneSerializer::saveScene(path,*m_activeScene);
+    		NFD_FreePath(outPath);
+    	} else if (result == NFD_CANCEL) {
+    		VC_CORE_INFO("User cancelled");
+    	} else {
+    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
+    	}
+
+    	NFD_Quit();
     }
 
     void EditorLayer::OnImGuiRender() {
@@ -85,17 +173,26 @@ namespace Vectrix {
 				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 			}
 
-			if (ImGui::BeginMenuBar()) {
+			// Menu Bar
+			if (ImGui::BeginMainMenuBar()) {
 				if (ImGui::BeginMenu("File")) {
-					// Disabling fullscreen would allow the window to be moved to the front of other windows,
-					// which we can't undo at the moment without finer window depth/z control.
-					//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+					if (ImGui::MenuItem("Open")) {
+						showOpenDialog();
+					}
+					if (ImGui::MenuItem("Save")) {
+						if (m_activeScene->getFilePath().empty()) {
+							showSaveDialog();
+						} else {
+							SceneSerializer::saveScene(m_activeScene->getFilePath(),*m_activeScene);
+						}
+					}
+					if (ImGui::MenuItem("Save As")) showSaveDialog();
 
-					if (ImGui::MenuItem("Exit")) Vectrix::Application::instance().close();
+					if (ImGui::MenuItem("Exit")) Application::instance().close();
 					ImGui::EndMenu();
 				}
 
-				ImGui::EndMenuBar();
+				ImGui::EndMainMenuBar();
 			}
 
 			ImGui::End();
@@ -120,7 +217,8 @@ namespace Vectrix {
 				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
 				m_viewportPos = {ImGui::GetWindowPos().x,ImGui::GetWindowPos().y};
 				m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
-				useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),m_cameraEntity,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
+
+				useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
 			}
 			ImGui::End();
 			ImGui::PopStyleVar();
@@ -129,7 +227,7 @@ namespace Vectrix {
 
 			if (ImGui::IsMouseClicked(0) && m_viewportHovered && !ImGuizmo::IsOver()) {
 				auto [mx, my] = ImGui::GetMousePos();
-				Entity picked = pickEntity({ mx, my });
+				std::shared_ptr<Entity> picked = pickEntity({ mx, my });
 				if (picked)
 					m_sceneHierarchyPanel.setSelectedEntity(picked);
 				else
@@ -144,6 +242,7 @@ namespace Vectrix {
 
     void EditorLayer::OnRenderOffscreen() {
         m_framebuffer->bind();
+
     	Renderer::beginScene(*m_camera);
     	m_activeScene->OnRender();
     	Renderer::endScene();
@@ -151,8 +250,10 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
+    	processPendingSceneLoad();
+
     	if (m_viewportFocused || m_viewportHovered) {
-    		glm::vec3 cameraRot = m_cameraEntity.getComponent<TransformComponent>().getRotationDeg();
+    		glm::vec3 cameraRot = m_camera->getRotationDeg();
     		if (Input::isKeyPressed(VC_KEY_LEFT))
     			cameraRot.y -= m_cameraRotationSpeed * dt;
     		if (Input::isKeyPressed(VC_KEY_RIGHT))
@@ -161,9 +262,9 @@ namespace Vectrix {
     			cameraRot.x -= m_cameraRotationSpeed * dt;
     		if (Input::isKeyPressed(VC_KEY_UP))
     			cameraRot.x += m_cameraRotationSpeed * dt;
-    		m_cameraEntity.getComponent<TransformComponent>().setRotationDeg(cameraRot);
+    		m_camera->setRotationDeg(cameraRot);
 
-    		glm::quat q = m_cameraEntity.getComponent<TransformComponent>().rotation;
+    		glm::quat q = m_camera->m_rotation;
 
     		glm::vec3 forward = q * glm::vec3(0, 0, -1);
     		glm::vec3 right = q * glm::vec3(1, 0, 0);
@@ -182,7 +283,7 @@ namespace Vectrix {
 
     			glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();
 
-    			m_cameraEntity.getComponent<TransformComponent>().position = m_cameraEntity.getComponent<TransformComponent>().position + delta;
+    			m_camera->m_position = m_camera->m_position + delta;
     		}
     	}
     	if (m_mustResize) {
@@ -190,6 +291,7 @@ namespace Vectrix {
     		m_camera->setCustomAspect(m_viewportSize.x/m_viewportSize.y);
     		m_mustResize = false;
     	}
+
     	m_activeScene->OnUpdate(dt);
 
 
@@ -209,30 +311,31 @@ namespace Vectrix {
     		(2.0f * (mousePos.x - m_viewportPos.x) / m_viewportSize.x) - 1.0f,
 			1.0f - (2.0f * (mousePos.y - m_viewportPos.y) / m_viewportSize.y)
 		};
-    	auto& camera = m_cameraEntity.getComponent<CameraComponent>().camera;
-    	glm::mat4 invVP = glm::inverse(camera.getTransformationMatrix());
+    	glm::mat4 invVP = glm::inverse(m_camera->getTransformationMatrix());
     	glm::vec4 rayClip  = { ndc.x, ndc.y, -1.0f, 1.0f };
     	glm::vec4 rayWorld = invVP * rayClip;
     	rayWorld /= rayWorld.w;
 
-    	glm::vec3 rayOrigin = m_cameraEntity.getComponent<TransformComponent>().position;
+    	glm::vec3 rayOrigin = m_camera->m_position;
     	glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld) - rayOrigin);
     	return rayDirection;
     }
 
-	Entity EditorLayer::pickEntity(glm::vec2 mousePos) {
+	std::shared_ptr<Entity> EditorLayer::pickEntity(glm::vec2 mousePos) {
     	glm::vec3 rayDir = screenToWorldRay(mousePos);
-    	glm::vec3 rayOrigin = m_cameraEntity.getComponent<TransformComponent>().position;
+    	glm::vec3 rayOrigin = m_camera->m_position;
 
-    	Entity closest = Entity::nullEntity();
+    	std::shared_ptr<Entity> closest;
     	float closestT = std::numeric_limits<float>::max();
 
-    	auto view = m_activeScene->m_registry.view<TransformComponent, MeshRendererComponent>();
-    	for (auto entityID : view) {
-    		Entity entity{ entityID, m_activeScene.get() };
-    		auto& tc = entity.getComponent<TransformComponent>();
-    		auto& mc = entity.getComponent<MeshRendererComponent>();
-    		float t;
+    	for (auto e : m_activeScene->m_entities) {
+    		std::shared_ptr<Entity> entity = e.second;
+
+    		if (entity->hasComponent<CameraComponent>()) { continue; } // TODO: make camera visible and clickable
+
+    		auto& tc = entity->getComponent<TransformComponent>();
+    		auto& mc = entity->getComponent<MeshRendererComponent>();
+    		float t = 0;
 
     		glm::mat4 invModel = glm::inverse(tc.modelMatrix());
     		invModel[1][1] *= -1;
@@ -242,7 +345,7 @@ namespace Vectrix {
     		if (mc.mesh->getAABB().intersect(localOrigin, localDir, t)) {
     			if (t < closestT) {
     				closestT = t;
-    				closest  = entity;
+    				closest = entity;
     			}
     		}
     	}

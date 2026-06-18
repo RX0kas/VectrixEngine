@@ -9,12 +9,17 @@
 
 namespace Vectrix {
     AABB::AABB(const std::vector<Vertex> &vertices) {
+        update(vertices);
+    }
+
+    void AABB::update(const std::vector<Vertex> &vertices) {
         if (vertices.empty()) {
-            VC_CORE_WARN("Can't create the AABB because the vertices are empty");
+            VC_CORE_WARN("Can't update the AABB because the vertices are empty");
             m_min = {0,0,0};
             m_max = {0,0,0};
             return;
         }
+
         m_min = vertices[0].position;
         m_max = vertices[0].position;
 

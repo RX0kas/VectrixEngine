@@ -8,8 +8,7 @@
 
 class ExampleLayer : public Vectrix::Layer {
 public:
-	ExampleLayer() : Layer("Example") {
-	}
+	ExampleLayer() : Layer("Example"),m_activeScene("ExampleScene") {}
 
 	void OnAttach() override {
 		m_cameraEntity = m_activeScene.createEntity("Camera");

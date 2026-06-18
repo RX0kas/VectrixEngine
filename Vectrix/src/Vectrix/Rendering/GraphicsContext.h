@@ -9,9 +9,12 @@ namespace Vectrix {
 	public:
 		virtual ~GraphicsContext() = default;
 		virtual void registerMesh(Mesh* model) = 0;
+		static void waitIdle();
 	private:
 		friend class Application;
+		friend class EditorLayer;
 		static void uploadAllMeshData();
+		static void unloadGPUMeshData();
 		virtual float getAspect() = 0;
 		virtual void swapBuffers() = 0;
 		virtual void init() = 0;

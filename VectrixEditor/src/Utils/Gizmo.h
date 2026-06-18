@@ -7,10 +7,9 @@
 #include "Vectrix/Input/Input.h"
 #include "Vectrix/Input/KeyCodes.h"
 #include "Vectrix/Scene/Entity.h"
-#include "Vectrix/Scene/Components/CameraComponent.h"
 
 namespace Vectrix {
-    inline void useGizmo(Entity& selectedEntity, Entity& cameraEntity, int gizmoType,ImVec2 windowPos,ImVec2 windowSize) {
+    inline void useGizmo(const std::shared_ptr<Entity>& selectedEntity, const EditorCamera& camera, int gizmoType,ImVec2 windowPos,ImVec2 windowSize) {
         if (selectedEntity && gizmoType != -1) {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
@@ -18,7 +17,6 @@ namespace Vectrix {
             ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x, windowSize.y);
 
             // Camera
-            const auto& camera = cameraEntity.getComponent<CameraComponent>().camera;
             const glm::mat4& cameraProjectionVulkan = camera.getProjectionMatrix();
             glm::mat4 cameraProjection = cameraProjectionVulkan;
             cameraProjection[1][1] *= -1;
@@ -26,7 +24,7 @@ namespace Vectrix {
             glm::mat4 cameraView = camera.getViewMatrix();
 
             // Entity transform
-            auto& tc = selectedEntity.getComponent<TransformComponent>();
+            auto& tc = selectedEntity->getComponent<TransformComponent>();
             glm::mat4 transform = tc.modelMatrix();
 
             // Snapping

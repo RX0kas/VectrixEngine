@@ -21,12 +21,4 @@ namespace Vectrix {
         m_appName = appName;
         m_appVersion = appVersion;
     }
-
-    bool isCompatible(Version version1,Version version2) {
-        if (getMajor(version1)!=getMajor(version2)) return false;
-
-        if (getMinor(version1) < getMinor(version2)) return false;
-
-        return true;
-    }
 }
