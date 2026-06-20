@@ -47,11 +47,11 @@ namespace Vectrix {
 
 	void Window::init(const WindowAttributes& attributes) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_INFO("Creating window {0} ({1}, {2})", attributes.title, attributes.width, attributes.height);
+		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::instance().getAppInfo().getAppName(), attributes.width, attributes.height);
 
-		m_data.Width = attributes.width;
-		m_data.Height = attributes.height;
-		m_data.Title = attributes.title;
+		m_data.width = attributes.width;
+		m_data.height = attributes.height;
+		m_data.title = Application::instance().getAppInfo().getAppName();
 		m_data.visible = false;
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
@@ -64,17 +64,17 @@ namespace Vectrix {
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-			data.Width = width;
-			data.Height = height;
+			data.width = width;
+			data.height = height;
 
 			WindowResizeEvent event(width, height);
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 			WindowCloseEvent event;
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -84,19 +84,19 @@ namespace Vectrix {
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event(key, 0);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent event(key);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent event(key, 1);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				default: {
@@ -112,13 +112,13 @@ namespace Vectrix {
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent event(button);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(button);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				default: {
@@ -131,24 +131,28 @@ namespace Vectrix {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 			MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 			MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 	}
 
+	void Window::setTitle(const std::string &title) {
+		glfwSetWindowTitle(m_window,title.c_str());
+	}
+
 	void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-		data.Width = width;
-		data.Height = height;
+		data.width = width;
+		data.height = height;
 		data.windowResized = true;
 		// TODO: implement that
 	}
@@ -166,11 +170,11 @@ namespace Vectrix {
 	void Window::setVSync(bool enabled)	{
 		VC_PROFILER_FUNCTION();
 		// TODO: Changer la swapchain pour appliquer l'effet
-		m_data.VSync = enabled;
+		m_data.vSync = enabled;
 	}
 
 	bool Window::isVSync() const {
-		return m_data.VSync;
+		return m_data.vSync;
 	}
 
 	GraphicsContext* Window::createGraphicContext(GLFWwindow* window) {

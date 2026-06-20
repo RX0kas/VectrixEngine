@@ -9,12 +9,11 @@
 namespace Vectrix {
 	struct WindowAttributes
 	{
-		const char* title;
 		unsigned int width;
 		unsigned int height;
 
-		WindowAttributes(const char* title = "Vectrix Engine", unsigned int width = 1280, unsigned int height = 720)
-			: title(std::move(title)), width(width), height(height) {}
+		WindowAttributes( unsigned int width = 1280, unsigned int height = 720)
+			: width(width), height(height) {}
 	};
 
 	class GraphicsContext;
@@ -28,8 +27,8 @@ namespace Vectrix {
 
 		void onUpdate() const;
 
-		[[nodiscard]] unsigned int getWidth() const { return m_data.Width; }
-		[[nodiscard]] unsigned int getHeight() const { return m_data.Height;}
+		[[nodiscard]] unsigned int getWidth() const { return m_data.width; }
+		[[nodiscard]] unsigned int getHeight() const { return m_data.height;}
 
 		[[nodiscard]] float getAspect() const;
 
@@ -41,7 +40,7 @@ namespace Vectrix {
 		[[nodiscard]] void* getNativeWindow() const { return m_window; }
 		[[nodiscard]] GraphicsContext& getGraphicContext() const { return *m_context;}
 
-		void setEventCallback(const EventCallbackFn& callback) { m_data.EventCallback = callback; }
+		void setEventCallback(const EventCallbackFn& callback) { m_data.eventCallback = callback; }
 
 		void setVSync(bool enabled);
 		[[nodiscard]] bool isVSync() const;
@@ -59,16 +58,19 @@ namespace Vectrix {
 		[[nodiscard]] bool isVisible() const {
 			return m_data.visible;
 		}
+
+		void setTitle(const std::string &title);
+		std::string getTitle() { return m_data.title; }
 	private:
 		Window();
 
 		struct WindowData
 		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;
+			std::string title;
+			unsigned int width, height;
+			bool vSync;
 			bool windowResized;
-			EventCallbackFn EventCallback;
+			EventCallbackFn eventCallback;
 			bool visible;
 		};
 		
