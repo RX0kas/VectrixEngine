@@ -1,11 +1,12 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.28)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Dist")
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 
@@ -107,9 +108,9 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK3 gtk+-3.0)
 
 if (GTK3_FOUND)
-    message(VERBOSE "GTK3 found")
+  message(VERBOSE "GTK3 found")
 else()
-    message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
+  message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
 endif()
 add_subdirectory(Vectrix/extern/NativeFileDialog)
 
@@ -130,23 +131,23 @@ list(APPEND Vectrix_SOURCES
 
 
 if (WIN32)
-    message(STATUS "Windows Platform detected")
+  message(STATUS "Windows Platform detected")
 
-    file(GLOB_RECURSE PLATFORM_SOURCES
+  file(GLOB_RECURSE PLATFORM_SOURCES
             Vectrix/src/Platform/Windows/*.cpp
             Vectrix/src/Platform/Windows/*.h
     )
 
 elseif (UNIX AND NOT APPLE)
-    message(STATUS "Linux Platform detected")
+  message(STATUS "Linux Platform detected")
 
-    file(GLOB_RECURSE PLATFORM_SOURCES
+  file(GLOB_RECURSE PLATFORM_SOURCES
             Vectrix/src/Platform/Linux/*.cpp
             Vectrix/src/Platform/Linux/*.h
     )
 
 else()
-    message(FATAL_ERROR "Unsupported platform")
+  message(FATAL_ERROR "Unsupported platform")
 endif()
 
 file(GLOB_RECURSE GRAPHICS_API_SOURCES
@@ -160,7 +161,7 @@ list(APPEND Vectrix_SOURCES ${GRAPHICS_API_SOURCES})
 add_library(Vectrix STATIC ${Vectrix_SOURCES})
 
 if(MSVC)
-    target_precompile_headers(Vectrix PRIVATE
+  target_precompile_headers(Vectrix PRIVATE
             Vectrix/src/vcpch.h
     )
 endif()
@@ -182,15 +183,15 @@ target_compile_definitions(Vectrix PRIVATE
 )
 
 if(WIN32)
-    target_compile_definitions(Vectrix PRIVATE _CRT_SECURE_NO_WARNINGS)
+  target_compile_definitions(Vectrix PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
 target_sources(Vectrix PRIVATE ${IMGUI_SOURCES})
 
 if (UNIX AND NOT APPLE)
-    # For Linux we need X11
-    find_package(X11 REQUIRED)
-    target_link_libraries(Vectrix
+  # For Linux we need X11
+  find_package(X11 REQUIRED)
+  target_link_libraries(Vectrix
             glfw
             shaderc
             X11::X11
@@ -202,7 +203,7 @@ if (UNIX AND NOT APPLE)
             nfd
     )
 else()
-target_link_libraries(Vectrix
+  target_link_libraries(Vectrix
         glfw
         shaderc
         xxHash::xxhash
@@ -216,7 +217,7 @@ endif()
 
 # UTF-8 (MSVC)
 if(MSVC)
-    target_compile_options(Vectrix PRIVATE /utf-8)
+  target_compile_options(Vectrix PRIVATE /utf-8)
 endif()
 
 target_compile_definitions(Vectrix PUBLIC
@@ -226,12 +227,12 @@ target_compile_definitions(Vectrix PUBLIC
 )
 
 if(WIN32)
-    target_compile_definitions(Vectrix PUBLIC
+  target_compile_definitions(Vectrix PUBLIC
             VC_PLATFORM_WINDOWS
             GLFW_INCLUDE_NONE
     )
 elseif(UNIX AND NOT APPLE)
-    target_compile_definitions(Vectrix PUBLIC
+  target_compile_definitions(Vectrix PUBLIC
             VC_PLATFORM_LINUX
     )
 endif()
@@ -259,7 +260,7 @@ target_compile_definitions(VectrixEditor PRIVATE
 )
 
 if(MSVC)
-    target_compile_options(VectrixEditor PRIVATE /utf-8)
+  target_compile_options(VectrixEditor PRIVATE /utf-8)
 endif()
 
 
@@ -284,5 +285,5 @@ target_compile_definitions(Sandbox PRIVATE
 )
 
 if(MSVC)
-    target_compile_options(Sandbox PRIVATE /utf-8)
+  target_compile_options(Sandbox PRIVATE /utf-8)
 endif()

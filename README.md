@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.0-green.svg)
 
-An engine made to run all of my little graphics project
+#### An engine built to be accessible to anyone, while letting those who want it retain full control
 
 Current Working branch: [feature/editor](https://github.com/RX0kas/VectrixEngine/tree/feature/editor)
 
@@ -15,7 +15,7 @@ Current Working branch: [feature/editor](https://github.com/RX0kas/VectrixEngine
  - Batch Rendering
 
 ## Prerequisites
-- [CMake 3.20](https://cmake.org/download/)
+- [CMake >=3.28](https://cmake.org/download/)
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
 - [Python 3](https://www.python.org/downloads/)
 - Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
