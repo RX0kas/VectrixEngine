@@ -5,6 +5,7 @@
 
 namespace Vectrix {
     AssetsManager* AssetsManager::s_instance = nullptr;
+    std::filesystem::path AssetsManager::s_assetsPath = "./assets";
     static const std::unordered_map<std::string, AssetType> EXTENSION_MAP = {
         {".png",  TEXTURE},
         {".jpg",  TEXTURE},

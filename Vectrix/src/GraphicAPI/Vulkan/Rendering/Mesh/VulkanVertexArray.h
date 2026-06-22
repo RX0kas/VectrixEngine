@@ -19,9 +19,6 @@ namespace Vectrix {
         [[nodiscard]] const std::shared_ptr<IndexBuffer>& getIndexBuffer() const override { return m_indexBuffer; }
         [[nodiscard]] MeshHandle getHandle() const { return m_handle; }
         void setHandle(MeshHandle handle) {
-            if (hasHandle) {
-                VC_CORE_WARN("Changing the handle of a vertex array that already have it");
-            }
             m_handle = handle;
             hasHandle = true;
         }

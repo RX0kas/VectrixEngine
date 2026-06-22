@@ -31,8 +31,16 @@ namespace Vectrix {
          * @brief This function return the name of the widget
          */
         [[nodiscard]] const std::string& getName() const { return m_DebugName; }
+
+        bool isEnable() const { return m_enable; }
+        void setEnable(bool enable) { m_enable = enable; }
+        void disable() { m_enable = false; }
+        void enable() { m_enable = true; }
+        bool& getEnable() { return m_enable; }
     protected:
         std::string m_DebugName;
+        bool m_enable = true;
+        static bool vc_defaultEnable;
     };
 }
 #endif //VECTRIXWORKSPACE_IMGUIWIDGET_H

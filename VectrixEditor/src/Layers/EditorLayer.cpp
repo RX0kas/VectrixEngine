@@ -1,5 +1,6 @@
 #include "EditorLayer.h"
 
+#include "imgui.h"
 #include "Vectrix/Scene/Components/CameraComponent.h"
 #include "Utils/Gizmo.h"
 
@@ -25,28 +26,6 @@ namespace Vectrix {
 
     	m_activeScene = std::make_shared<Scene>("EditorScene");
     	m_camera = std::make_unique<EditorCamera>();
-#if 0
-    	auto s = AssetsManager::load<Shader>("./shaders/viewport.vcshader");
-    	if (s.first!=SUCCESS) {
-    		VC_CORE_ERROR("Error while loading shader for viewport: {}", toString(s.first));
-    	}
-    	m_viewportShader = s.second;
-
-    	auto t = AssetsManager::load<Texture>("./textures/fox.png");
-    	if (t.first!=SUCCESS) {
-    		VC_CORE_ERROR("Error while loading texture of fox: {}", toString(t.first));
-    	}
-    	m_foxTexture = t.second;
-
-    	auto m = AssetsManager::load<Mesh>("./models/fox.obj");
-    	if (m.first!=SUCCESS) {
-    		VC_CORE_ERROR("Error while loading modem of fox: {}", toString(m.first));
-    	}
-		m_foxMesh = m.second;
-
-    	m_foxEntity = m_activeScene->createEntity("Fox");
-    	m_foxEntity->addComponent<MeshRendererComponent>(m_foxMesh, m_viewportShader, m_foxTexture);
-#endif
     	m_sceneHierarchyPanel.setContext(m_activeScene);
 
     	m_activeScene->registerAllMesh();
@@ -108,6 +87,8 @@ namespace Vectrix {
 
     	GraphicsContext::unloadGPUMeshData();
     	AssetsManager::instance().getMeshManager().clear();
+    	AssetsManager::instance().getTextureManager().clear();
+    	AssetsManager::instance().getMeshManager().clear();
     	m_activeScene->registerAllMesh();
     	GraphicsContext::uploadAllMeshData();
 
@@ -137,103 +118,110 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnImGuiRender() {
-        static bool dockingEnabled = true;
-		if (dockingEnabled) {
-			static bool dockspaceOpen = true;
-			static bool opt_fullscreen_persistant = true;
-			bool opt_fullscreen = opt_fullscreen_persistant;
-			static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+		static bool dockspaceOpen = true;
+		static bool opt_fullscreen_persistant = true;
+		bool opt_fullscreen = opt_fullscreen_persistant;
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-			ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-			if (opt_fullscreen)	{
-				ImGuiViewport* viewport = ImGui::GetMainViewport();
-				ImGui::SetNextWindowPos(viewport->Pos);
-				ImGui::SetNextWindowSize(viewport->Size);
-				ImGui::SetNextWindowViewport(viewport->ID);
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-				ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-				window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-				window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-			}
-
-			if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-				window_flags |= ImGuiWindowFlags_NoBackground;
-
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-			ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-			ImGui::PopStyleVar();
-
-			if (opt_fullscreen)
-				ImGui::PopStyleVar(2);
-
-			// DockSpace
-			ImGuiIO& io = ImGui::GetIO();
-			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-			}
-
-			// Menu Bar
-			if (ImGui::BeginMainMenuBar()) {
-				if (ImGui::BeginMenu("File")) {
-					if (ImGui::MenuItem("Open")) {
-						showOpenDialog();
-					}
-					if (ImGui::MenuItem("Save")) {
-						if (m_activeScene->getFilePath().empty()) {
-							showSaveDialog();
-						} else {
-							SceneSerializer::saveScene(m_activeScene->getFilePath(),*m_activeScene);
-						}
-					}
-					if (ImGui::MenuItem("Save As")) showSaveDialog();
-
-					if (ImGui::MenuItem("Exit")) Application::instance().close();
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMainMenuBar();
-			}
-
-			ImGui::End();
-
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{0,0});
-			ImGui::Begin("Viewport");
-			m_viewportFocused = ImGui::IsWindowFocused();
-			m_viewportHovered = ImGui::IsWindowHovered();
-			if (!m_viewportFocused || !m_viewportHovered)
-				Application::instance().imguiLayer().startBlockEvents();
-			else
-				Application::instance().imguiLayer().stopBlockEvents();
-
-			ImVec2 size = ImGui::GetContentRegionAvail();
-			if (size.x==0 || size.y==0) {
-				ImGui::Text("Loading...");
-			} else {
-				if (size.x != m_viewportSize.x || size.y != m_viewportSize.y) {
-					m_mustResize = true;
-					m_viewportSize = {size.x,size.y};
-				}
-				ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
-				m_viewportPos = {ImGui::GetWindowPos().x,ImGui::GetWindowPos().y};
-				m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
-
-				useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
-			}
-			ImGui::End();
-			ImGui::PopStyleVar();
-
-			m_sceneHierarchyPanel.onImGuiRender();
-
-			if (ImGui::IsMouseClicked(0) && m_viewportHovered && !ImGuizmo::IsOver()) {
-				auto [mx, my] = ImGui::GetMousePos();
-				std::shared_ptr<Entity> picked = pickEntity({ mx, my });
-				if (picked)
-					m_sceneHierarchyPanel.setSelectedEntity(picked);
-				else
-					m_sceneHierarchyPanel.resetSelectedEntity();
-			}
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		if (opt_fullscreen)	{
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGui::SetNextWindowPos(viewport->Pos);
+			ImGui::SetNextWindowSize(viewport->Size);
+			ImGui::SetNextWindowViewport(viewport->ID);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 		}
+
+		if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+			window_flags |= ImGuiWindowFlags_NoBackground;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+		ImGui::PopStyleVar();
+
+		if (opt_fullscreen)
+			ImGui::PopStyleVar(2);
+
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+		}
+
+		// Menu Bar
+		if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("Open")) {
+					showOpenDialog();
+				}
+				if (ImGui::MenuItem("Save")) {
+					if (m_activeScene->getFilePath().empty()) {
+						showSaveDialog();
+					} else {
+						SceneSerializer::saveScene(m_activeScene->getFilePath(),*m_activeScene);
+					}
+				}
+				if (ImGui::MenuItem("Save As")) showSaveDialog();
+
+				if (ImGui::MenuItem("Exit")) Application::instance().close();
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Window")) {
+				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
+
+		ImGui::End();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding,{0,0});
+		ImGui::Begin("Viewport");
+		m_viewportFocused = ImGui::IsWindowFocused();
+		m_viewportHovered = ImGui::IsWindowHovered();
+		if (!m_viewportFocused || !m_viewportHovered)
+			Application::instance().imguiLayer().startBlockEvents();
+		else
+			Application::instance().imguiLayer().stopBlockEvents();
+
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		if (size.x==0 || size.y==0) {
+			ImGui::Text("Loading...");
+		} else {
+			if (size.x != m_viewportSize.x || size.y != m_viewportSize.y) {
+				m_mustResize = true;
+				m_viewportSize = {size.x,size.y};
+			}
+			ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
+			m_viewportPos = {ImGui::GetWindowPos().x,ImGui::GetWindowPos().y};
+			m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
+
+			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
+		}
+		ImGui::End();
+		ImGui::PopStyleVar();
+
+		m_sceneHierarchyPanel.onImGuiRender();
+    	m_contentBrowserPanel.onImGuiRender();
+
+		if (ImGui::IsMouseClicked(0) && m_viewportHovered && !ImGuizmo::IsOver()) {
+			auto [mx, my] = ImGui::GetMousePos();
+			std::shared_ptr<Entity> picked = pickEntity({ mx, my });
+			if (picked)
+				m_sceneHierarchyPanel.setSelectedEntity(picked);
+			else
+				m_sceneHierarchyPanel.resetSelectedEntity();
+		}
+
+    	if (m_graphicDebugWidgetEnable) {
+    		Application::instance().imguiLayer().getManager().renderDebugGraphicWidget(m_graphicDebugWidgetEnable);
+    	}
     }
 
     void EditorLayer::OnRender() {
@@ -285,6 +273,13 @@ namespace Vectrix {
 
     			m_camera->m_position = m_camera->m_position + delta;
     		}
+
+    		if (Input::isKeyPressed(VC_KEY_F)) {
+    			auto e = m_sceneHierarchyPanel.getSelectedEntity();
+    			if (e) {
+    				m_camera->setViewTarget(e->getComponent<TransformComponent>().position);
+    			}
+    		}
     	}
     	if (m_mustResize) {
     		m_framebuffer->resize(m_viewportSize);
@@ -328,7 +323,7 @@ namespace Vectrix {
     	std::shared_ptr<Entity> closest;
     	float closestT = std::numeric_limits<float>::max();
 
-    	for (auto e : m_activeScene->m_entities) {
+    	for (const auto& e : m_activeScene->m_entities) {
     		std::shared_ptr<Entity> entity = e.second;
 
     		if (entity->hasComponent<CameraComponent>()) { continue; } // TODO: make camera visible and clickable
