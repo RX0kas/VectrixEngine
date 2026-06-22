@@ -36,6 +36,8 @@ namespace Vectrix {
 		void stopBlockEvents() { m_blockEvents = false; }
 	private:
 		friend class Application;
+		friend class EditorLayer;
+		[[nodiscard]] ImGuiManager& getManager() const { return *m_manager; }
 		ImGuiLayer();
 		std::unique_ptr<ImGuiManager> m_manager;
 		std::vector<std::shared_ptr<ImGuiWidget>> m_widgets;

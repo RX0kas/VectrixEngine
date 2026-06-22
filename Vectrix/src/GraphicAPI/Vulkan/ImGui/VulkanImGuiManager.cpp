@@ -17,14 +17,203 @@ namespace Vectrix {
 
     VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
-    	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists!");
+    	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists");
     	m_instance = this;
 		m_renderer = &VulkanContext::instance().getRenderer();
 	}
 
-    void VulkanImGuiManager::attachDebugGraphicWidget() {
-    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
-    	Application::instance().imguiLayer().addWidget(m_debugWidget);
+	std::vector<DebugMemoryHeapInfo> collectMemoryInfo(VmaAllocator allocator) {
+    	std::vector<DebugMemoryHeapInfo> heap_infos;
+    	VmaBudget budgets[VK_MAX_MEMORY_HEAPS];
+
+    	vmaGetHeapBudgets(allocator, budgets);
+
+    	uint32_t heapCount = 0;
+    	VkPhysicalDeviceMemoryProperties props;
+    	vkGetPhysicalDeviceMemoryProperties(VulkanContext::instance().getDevice().physicalDevice(),&props);
+    	heapCount = props.memoryHeapCount;
+
+    	for (uint32_t i = 0; i < heapCount; ++i) {
+    		DebugMemoryHeapInfo info{};
+    		info.name = (props.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) ? "DEVICE_LOCAL" : "HOST_VISIBLE";
+
+    		info.usedBytes = budgets[i].usage;
+    		info.budgetBytes = budgets[i].budget;
+    		heap_infos.push_back(info);
+    	}
+    	return heap_infos;
+    }
+
+    void VulkanImGuiManager::renderDebugGraphicWidget(bool& enable) {
+    	if (!ImGui::Begin("Vulkan Debug", &enable)) {
+            ImGui::End();
+            return;
+        }
+
+        const ApplicationInfo info = Application::getAppInfo();
+        if (ImGui::CollapsingHeader("Application Information")) {
+            ImGui::Text("Application name: %s",info.getAppName());
+            ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
+            ImGui::Text("Engine name: %s",ApplicationInfo::getEngineName());
+            ImGui::Text("Engine version: %s",toString(ApplicationInfo::getEngineVersion()).c_str());
+            ImGui::Text("FPS: %f",1/Application::instance().getDeltaTime().getSeconds());
+        }
+        ImGui::Separator();
+        const DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
+        const std::vector<DebugMemoryHeapInfo> memorySSBO = collectMemoryInfo(VulkanContext::instance().getSSBOAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryBuffer = collectMemoryInfo(VulkanContext::instance().getBufferAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryTexture = collectMemoryInfo(VulkanContext::instance().getTextureAllocator());
+        ImGui::Text("Frame Index: %u", frame.frameIndex);
+        ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
+        ImGui::Separator();
+
+        if (ImGui::CollapsingHeader("Frame Stats")) {
+            ImGui::Text("Draw Calls: %u", frame.drawCalls);
+            ImGui::Text("Dispatch Calls: %u", frame.dispatchCalls);
+        }
+
+        if (ImGui::CollapsingHeader("Synchronization")) {
+            if (ImGui::TreeNode("Fences")) {
+                for (const auto& f : frame.fences) {
+                    ImGui::Text("%s : %s", f.name, f.isNull ? "VK_NULL_HANDLE" : f.signaled ? "SIGNALED" : "UNSIGNALED");
+                }
+                ImGui::TreePop();
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Pipeline")) {
+            for (const auto& pipeline : frame.pipelines) {
+                char name[256] = "Pipeline - ";
+                strcat(name,pipeline.name);
+                if (ImGui::TreeNode(name)) {
+                    // TODO: add a hot shader edition
+                    // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
+                    // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
+                    ImGui::Text("Pipeline Handle: 0x%p", pipeline.pipeline);
+                    ImGui::Text("Layout Handle: 0x%p", pipeline.layout);
+                    ImGui::TreePop();
+                }
+            }
+        }
+
+        if (ImGui::CollapsingHeader("GPU Memory")) {
+            if (ImGui::TreeNode("SSBOMem")) {
+                for (const auto& heap : memorySSBO) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
+
+                    ImGui::Text("%s", heap.name);
+
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
+
+
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+                    ImGui::Separator();
+                }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("ImagesMem")) {
+                for (const auto& heap : memoryTexture) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
+
+                    ImGui::Text("%s", heap.name);
+
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
+
+
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+                    ImGui::Separator();
+                }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("BuffersMem")) {
+                for (const auto& heap : memoryBuffer) {
+                    float fraction = 0.0f;
+                    if (heap.budgetBytes > 0) {
+                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+                    }
+
+                    ImGui::Text("%s", heap.name);
+
+                    ImVec4 color;
+                    if (fraction < 0.6f)
+                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+                    else if (fraction < 0.85f)
+                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+                    else
+                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+                    ImGui::PopStyleColor();
+
+
+                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+                    ImGui::Separator();
+                }
+                ImGui::TreePop();
+            }
+        }
+
+
+        if (ImGui::CollapsingHeader("Descriptor Sets")) {
+            for (const auto& set : frame.boundDescriptorSets) {
+                ImGui::BulletText(
+                    "Set %u (%s) | Layout: 0x%p",
+                    set.setIndex,
+                    set.name,
+                    set.layout
+                );
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Images")) {
+            for (const auto& img : frame.images) {
+                char name[256] = "Image - ";
+                strcat(name,img.name.c_str());
+                if (ImGui::TreeNode(name)) {
+                    ImGui::Text("Format: %s", string_VkFormat(img.format));
+                    ImGui::Text("Layout: %d", img.layout);
+                    ImGui::Text(
+                        "Extent: %u x %u x %u",
+                        img.extent.width,
+                        img.extent.height,
+                        img.extent.depth
+                    );
+                    ImGui::TreePop();
+                }
+            }
+        }
+
+        ImGui::End();
     }
 
     void VulkanImGuiManager::cleanup() {
@@ -196,7 +385,6 @@ namespace Vectrix {
 		}
 
 		VC_CORE_ERROR("No graphics queue family found");
-		return 0;
 	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {

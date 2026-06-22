@@ -1,9 +1,10 @@
 #ifndef VECTRIXWORKSPACE_EDITORLAYER_H
 #define VECTRIXWORKSPACE_EDITORLAYER_H
-#include "../../../Vectrix/src/Vectrix/Rendering/Camera/EditorCamera.h"
+#include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "imgui.h"
 #include "ImGuizmo.h"
 #include "Vectrix.h"
+#include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 
 namespace Vectrix {
@@ -50,6 +51,8 @@ namespace Vectrix {
 
     	// Panels
     	SceneHierarchyPanel m_sceneHierarchyPanel;
+    	ContentBrowserPanel m_contentBrowserPanel;
+    	bool m_graphicDebugWidgetEnable = false;
     };
 } // Vectrix
 

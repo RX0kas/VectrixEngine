@@ -41,6 +41,10 @@ namespace Vectrix {
         TextureManager& getTextureManager() const { return *m_textureManager; }
         ShaderManager& getShaderManager() const { return *m_shaderManager; }
         MeshManager& getMeshManager() const { return *m_meshManager; }
+        static std::string getAssetsPath() {
+            return s_assetsPath.string();
+        }
+
     private:
         friend class TextureManager;
         friend class ShaderManager;
@@ -49,7 +53,7 @@ namespace Vectrix {
         std::unique_ptr<TextureManager> m_textureManager;
         std::unique_ptr<ShaderManager> m_shaderManager;
         std::unique_ptr<MeshManager> m_meshManager;
-
+        static std::filesystem::path s_assetsPath;
 
         static AssetsManager* s_instance;
     };
@@ -63,13 +67,19 @@ namespace Vectrix {
         if (getAssetType(path)!=TEXTURE) {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
+        if (p.is_relative()) {
+            std::filesystem::path tempPath;
+            tempPath.append(s_assetsPath.string());
+            tempPath.append(p.string());
+            p = tempPath;
+        }
 
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Texture>(it->second)};
 
-        auto texture = s_instance->m_textureManager->createTexture(p.c_str(), path);
-        s_instance->m_cache.emplace(p.c_str(), texture);
+        auto texture = s_instance->m_textureManager->createTexture(path, p.string());
+        s_instance->m_cache.emplace(path, texture);
         return {VectrixResult::SUCCESS, texture};
     }
 
@@ -83,12 +93,19 @@ namespace Vectrix {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
+        if (p.is_relative()) {
+            std::filesystem::path tempPath;
+            tempPath.append(s_assetsPath.string());
+            tempPath.append(p.string());
+            p = tempPath;
+        }
+
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Shader>(it->second)};
 
-        auto shader = s_instance->m_shaderManager->createShader(p.c_str(), path);
-        s_instance->m_cache.emplace(p.c_str(), shader);
+        auto shader = s_instance->m_shaderManager->createShader(path, p.string());
+        s_instance->m_cache.emplace(path, shader);
         return {VectrixResult::SUCCESS, shader};
     }
 
@@ -102,13 +119,21 @@ namespace Vectrix {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
+        if (p.is_relative()) {
+            std::filesystem::path tempPath;
+            tempPath.append(s_assetsPath.string());
+            tempPath.append(p.string());
+            p = tempPath;
+            VC_CORE_INFO(p.c_str());
+        }
+
         auto it = s_instance->m_cache.find(p.c_str());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Mesh>(it->second)};
 
-        auto shader = s_instance->m_meshManager->createMesh(p.c_str(), path);
-        s_instance->m_cache.emplace(p.c_str(), shader);
-        return {VectrixResult::SUCCESS, shader};
+        auto mesh = s_instance->m_meshManager->createMesh(path, p.string());
+        s_instance->m_cache.emplace(path, mesh);
+        return {VectrixResult::SUCCESS, mesh};
     }
 } // Vectrix
 

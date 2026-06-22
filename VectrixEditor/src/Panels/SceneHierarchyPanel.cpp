@@ -71,7 +71,7 @@ namespace Vectrix {
     void SceneHierarchyPanel::drawEntityNode(const std::shared_ptr<Entity>& entity) {
         std::string name = entity->getComponent<InformationComponent>().name;
 
-        if (ImGui::Selectable(name.empty() ? "##" : name.c_str())) {
+        if (ImGui::Selectable(name.empty() ? "##" : name.c_str(), m_selectionContext && entity->getID()==m_selectionContext->getID())) {
             m_selectionContext = entity;
         }
     }

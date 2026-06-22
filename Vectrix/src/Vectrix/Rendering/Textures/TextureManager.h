@@ -59,8 +59,10 @@ namespace Vectrix {
         friend class Texture;
         friend class AssetsManager;
         TextureManager();
+        friend class EditorLayer;
         bool remove(const std::string& name);
         void add(const std::string& name,std::shared_ptr<Texture> texture);
+        void clear() { m_cache.clear(); }
         Cache<std::string,std::shared_ptr<Texture>> m_cache;
         std::shared_ptr<Texture> m_notFoundTexture;
     };

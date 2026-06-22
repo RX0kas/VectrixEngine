@@ -9,9 +9,9 @@
 
 #include <glm/vec4.hpp>
 
+#include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/DynamicSSBO.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
-#include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
@@ -51,8 +51,8 @@ namespace Vectrix {
         [[nodiscard]] VkFormat getImageFormat() const { return m_swapChain->getSwapChainImageFormat(); }
         [[nodiscard]] VkFormat findDepthFormat() const { return m_swapChain->findDepthFormat(); }
         [[nodiscard]] bool isFrameInProgress() const { return m_isFrameStarted; }
-        [[nodiscard]] VkImageView getSwapChainImageView(int i) const {return m_swapChain->getImageView(i);}
-        [[nodiscard]] VkImage getSwapChainImage(int i) const {return m_swapChain->getSwapChainImage(i);}
+        [[nodiscard]] VkImageView getSwapChainImageView(std::uint32_t i) const {return m_swapChain->getImageView(i);}
+        [[nodiscard]] VkImage getSwapChainImage(std::uint32_t i) const {return m_swapChain->getSwapChainImage(i);}
 
         [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() const { return m_swapChain->getFrameBuffer(m_swapChain->getFrameIndex()); }
 
@@ -94,6 +94,7 @@ namespace Vectrix {
         friend class Renderer;
         friend class VulkanContext;
         friend class Application;
+        friend class VulkanImGuiManager;
         [[nodiscard]] DebugFrameInfo getCurrentFrameInfo() const;
         void createCommandBuffers();
         void freeCommandBuffers();
