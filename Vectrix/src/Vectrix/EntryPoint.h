@@ -8,9 +8,6 @@ extern Vectrix::Application* Vectrix::createApplication();
 int main(int argc, char** argv) {
 	VC_PROFILER_BEGIN_SESSION("Startup","Profile-Startup.json");
 	Vectrix::Log::init();
-#ifdef VC_PLATFORM_WINDOWS
-	VC_CORE_WARN("The support for Windows is still experimental");
-#endif
 	const auto app = Vectrix::createApplication();
 	VC_PROFILER_END_SESSION();
 

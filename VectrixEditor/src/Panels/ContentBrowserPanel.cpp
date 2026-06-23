@@ -8,7 +8,7 @@ namespace Vectrix {
 
     ContentBrowserPanel::ContentBrowserPanel() {
         if (std::filesystem::path(s_AssetPath).empty()) {
-            VC_WARN("{} doesn't exist for the asset path",s_AssetPath.c_str());
+            VC_WARN("{} doesn't exist for the asset path",s_AssetPath.string());
             m_currentDirectory = std::filesystem::current_path();
         } else {
             m_currentDirectory = s_AssetPath;

@@ -74,7 +74,7 @@ namespace Vectrix {
             p = tempPath;
         }
 
-        auto it = s_instance->m_cache.find(p.c_str());
+        auto it = s_instance->m_cache.find(p.string());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Texture>(it->second)};
 
@@ -100,7 +100,7 @@ namespace Vectrix {
             p = tempPath;
         }
 
-        auto it = s_instance->m_cache.find(p.c_str());
+        auto it = s_instance->m_cache.find(p.string());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Shader>(it->second)};
 
@@ -124,10 +124,9 @@ namespace Vectrix {
             tempPath.append(s_assetsPath.string());
             tempPath.append(p.string());
             p = tempPath;
-            VC_CORE_INFO(p.c_str());
         }
 
-        auto it = s_instance->m_cache.find(p.c_str());
+        auto it = s_instance->m_cache.find(p.string());
         if (it != s_instance->m_cache.end())
             return {VectrixResult::SUCCESS, std::static_pointer_cast<Mesh>(it->second)};
 
