@@ -88,6 +88,8 @@ file(GLOB IMGUI_SOURCES
 add_library(imgui STATIC
         ${IMGUI_SOURCES}
 )
+target_compile_definitions(imgui PRIVATE IMGUI_IMPL_VULKAN_USE_VOLK)
+target_link_libraries(imgui volk::volk glfw)
 
 target_include_directories(imgui PUBLIC Vectrix/extern/imgui)
 
@@ -103,14 +105,15 @@ target_include_directories(imguizmo PUBLIC Vectrix/extern/imgui)
 
 # nativefiledialog-extended
 message(VERBOSE "Initializing nativefiledialog-extended")
+if (UNIX AND NOT APPLE)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(GTK3 gtk+-3.0)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK3 gtk+-3.0)
-
-if (GTK3_FOUND)
-  message(VERBOSE "GTK3 found")
-else()
-  message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
+  if (GTK3_FOUND)
+    message(VERBOSE "GTK3 found")
+  else()
+    message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
+  endif()
 endif()
 add_subdirectory(Vectrix/extern/NativeFileDialog)
 
