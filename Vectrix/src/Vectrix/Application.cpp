@@ -38,8 +38,8 @@ namespace Vectrix {
 	Application::~Application() {
 		VC_PROFILER_FUNCTION();
 		m_layerStack.destroy();
-		m_imGuiLayer.reset();
 		m_assetsManager.reset();
+		m_imGuiLayer.reset();
 		m_window.reset();
 	}
 

@@ -8,7 +8,7 @@
 #include "Vectrix/Rendering/Camera/Camera.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
-#define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") VC_ERROR("The uniform name \"{}\" is reserved",name)
+#define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") {VC_ERROR("The uniform name \"{}\" is reserved",name);}
 
 
 /**

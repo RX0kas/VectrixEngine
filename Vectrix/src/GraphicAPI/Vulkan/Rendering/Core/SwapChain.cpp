@@ -195,7 +195,7 @@ namespace Vectrix {
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
-        createInfo.oldSwapchain = m_oldSwapChain.get() == nullptr ? VK_NULL_HANDLE : m_oldSwapChain->m_swapChain;
+        createInfo.oldSwapchain = m_oldSwapChain == nullptr ? VK_NULL_HANDLE : m_oldSwapChain->m_swapChain;
 
 
         VkResult result = vkCreateSwapchainKHR(m_device.device(), &createInfo, nullptr, &m_swapChain);

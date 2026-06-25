@@ -162,7 +162,7 @@ namespace Vectrix {
 
         VkFormat m_swapChainImageFormat;
         VkFormat m_swapChainDepthFormat;
-        VkExtent2D m_swapChainExtent;
+        VkExtent2D m_swapChainExtent{};
 
         std::vector<VkFramebuffer> m_swapChainFramebuffers;
         VkRenderPass m_renderPass = VK_NULL_HANDLE;
@@ -176,7 +176,7 @@ namespace Vectrix {
         Device& m_device;
         VkExtent2D m_windowExtent;
 
-        VkSwapchainKHR m_swapChain;
+        VkSwapchainKHR m_swapChain{};
 		std::shared_ptr<SwapChain> m_oldSwapChain;
 
         std::vector<VkSemaphore> m_imageAvailableSemaphores; // par frame

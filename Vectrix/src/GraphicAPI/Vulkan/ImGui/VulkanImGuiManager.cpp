@@ -5,8 +5,9 @@
 
 #include "imgui.h"
 #include "ImGuizmo.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_vulkan.h"
+#include "GraphicAPI/Vulkan/ImGui/imgui_impl_glfw.h"
+#include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
+
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
@@ -294,7 +295,7 @@ namespace Vectrix {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-		#ifndef VC_PLATFORM_LINUX
+		#ifdef VC_PLATFORM_LINUX
 		    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		    	io.ConfigDpiScaleFonts    = true;
 		    	io.ConfigDpiScaleViewports = true;
@@ -313,6 +314,8 @@ namespace Vectrix {
 
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+    	ImGuiLayer::setDarkThemeColors();
 
 		ImGui_ImplGlfw_InitForVulkan(w, true);
 		#ifdef VC_PLATFORM_LINUX
@@ -337,6 +340,7 @@ namespace Vectrix {
     	init_info.ImageCount = m_renderer->getSwapChainImageCount();
     	init_info.Allocator = nullptr;
     	init_info.CheckVkResultFn = VulkanContext::check_vk_result;
+    	init_info.ShaderPath = AssetsManager::getAssetsPath().string()+"/shaders/imgui.vcshader";
 
     	init_info.UseDynamicRendering = true;
     	init_info.PipelineInfoMain.RenderPass = VK_NULL_HANDLE;

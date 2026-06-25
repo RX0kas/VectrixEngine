@@ -12,6 +12,8 @@
 #include "Vectrix/Utils/Memory.h"
 #include "Vectrix/Utils/Result.h"
 
+#define VC_LOAD_ASSET(variable,type,path) {auto t = AssetsManager::load<type>(path);if (t.first!=SUCCESS) {VC_ERROR_NO_EXIT("Can't load asset from {}: {}",path,toString(t.first));} variable = t.second;}
+
 namespace Vectrix {
 
     enum AssetType {
@@ -41,14 +43,14 @@ namespace Vectrix {
         TextureManager& getTextureManager() const { return *m_textureManager; }
         ShaderManager& getShaderManager() const { return *m_shaderManager; }
         MeshManager& getMeshManager() const { return *m_meshManager; }
-        static std::string getAssetsPath() {
-            return s_assetsPath.string();
+        static std::filesystem::path getAssetsPath() {
+            return s_assetsPath;
         }
 
+        static AssetType getAssetType(const std::filesystem::path &path);
     private:
         friend class TextureManager;
         friend class ShaderManager;
-        static AssetType getAssetType(const std::filesystem::path &path);
         Cache<std::string, std::shared_ptr<void>> m_cache;
         std::unique_ptr<TextureManager> m_textureManager;
         std::unique_ptr<ShaderManager> m_shaderManager;
@@ -61,17 +63,17 @@ namespace Vectrix {
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Texture>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
-        if (p.empty())
-            return {VectrixResult::NOT_FOUND, nullptr};
 
-        if (getAssetType(path)!=TEXTURE) {
-            return {VectrixResult::WRONG_TYPE,nullptr};
-        }
         if (p.is_relative()) {
             std::filesystem::path tempPath;
             tempPath.append(s_assetsPath.string());
             tempPath.append(p.string());
             p = tempPath;
+        }
+        // No need to check if the texture exist because the default texture will be used
+
+        if (getAssetType(path)!=TEXTURE) {
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.string());
@@ -86,18 +88,20 @@ namespace Vectrix {
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Shader>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
-        if (p.empty())
-            return {VectrixResult::NOT_FOUND, nullptr};
 
-        if (getAssetType(path)!=SHADER) {
-            return {VectrixResult::WRONG_TYPE,nullptr};
-        }
 
         if (p.is_relative()) {
             std::filesystem::path tempPath;
             tempPath.append(s_assetsPath.string());
             tempPath.append(p.string());
             p = tempPath;
+        }
+
+        if (!std::filesystem::exists(p))
+            return {VectrixResult::NOT_FOUND, nullptr};
+
+        if (getAssetType(path)!=SHADER) {
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.string());
@@ -112,18 +116,19 @@ namespace Vectrix {
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Mesh>> AssetsManager::load(const std::string& path) {
         std::filesystem::path p(path);
-        if (p.empty())
-            return {VectrixResult::NOT_FOUND, nullptr};
-
-        if (getAssetType(path)!=MESH) {
-            return {VectrixResult::WRONG_TYPE,nullptr};
-        }
 
         if (p.is_relative()) {
             std::filesystem::path tempPath;
             tempPath.append(s_assetsPath.string());
             tempPath.append(p.string());
             p = tempPath;
+        }
+
+        if (!std::filesystem::exists(p))
+            return {VectrixResult::NOT_FOUND, nullptr};
+
+        if (getAssetType(path)!=MESH) {
+            return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
         auto it = s_instance->m_cache.find(p.string());

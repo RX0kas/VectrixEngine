@@ -30,7 +30,7 @@ namespace Vectrix {
         m_options.SetInvertY(false);
     }
 
-    std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name,ShaderType type,const char *src,bool optimize) {
+    std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name, ShaderType type,const char *src,bool optimize) {
         VC_PROFILER_FUNCTION();
         VC_CORE_INFO("Compiling a {} called {}, with{} optimization",toString(type),src_name,optimize ? "" : "out");
 

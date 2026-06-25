@@ -132,17 +132,7 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 - [API Documentation (In progress)](https://rx0kas.github.io/)
 
 
-## Roadmap
-
-- [x] Clearly separate the Vulkan part from the rest of the engine
-- [x] Make a universal function for sending shader uniform
-- [x] Make a profiler
-- [x] Add an editor
-- [ ] Add scene
-- [ ] Create the API documentation (In progress)
-- [ ] Add a material system
-- [ ] Make a profiler viewer tool
-- [ ] Create own gizmo
+## [Roadmap](https://app.milanote.com/1WzwVV1s9muC5O?p=TjNXxqcH5oo)
 
 ## Known Issues
 
@@ -151,7 +141,8 @@ VC_SET_APP_INFO("Sandbox",0,1,0);
 
 ## Acknowledgments
 - Thanks to [TheCherno](https://github.com/TheCherno) for the API inspiration
-
+- Folder icon from [Nik Icon](https://www.flaticon.com/fr/auteurs/nik-icon)
+- File icon from [deha21](https://www.flaticon.com/fr/auteurs/deha21)
 ## Use of AI
 AI has only been used as a review tool and each modification is analyzed
 

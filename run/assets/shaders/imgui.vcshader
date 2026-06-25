@@ -1,0 +1,54 @@
+#shader frag
+#version 450 core
+layout(location = 0) out vec4 fColor;
+
+layout(set=0, binding=0) uniform sampler2D sTexture;
+
+layout(location = 0) in struct {
+    vec4 Color;
+    vec2 UV;
+} In;
+
+
+vec3 srgbToLinear(vec3 c)
+{
+    bvec3 cutoff = lessThanEqual(c, vec3(0.04045));
+    vec3 lower = c / 12.92;
+    vec3 higher = pow((c + vec3(0.055)) / vec3(1.055), vec3(2.4));
+    return mix(higher, lower, cutoff);
+}
+
+void main()
+{
+    vec4 tex = texture(sTexture, In.UV.st);
+
+    vec3 imgui_color_linear = srgbToLinear(In.Color.rgb);
+
+    fColor = vec4(imgui_color_linear * tex.rgb,In.Color.a * tex.a);
+}
+#shader vert
+#version 450 core
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec2 aUV;
+layout(location = 2) in vec4 aColor;
+
+layout(push_constant) uniform uPushConstant {
+    vec2 uScale;
+    vec2 uTranslate;
+} pc;
+
+out gl_PerVertex {
+    vec4 gl_Position;
+};
+
+layout(location = 0) out struct {
+    vec4 Color;
+    vec2 UV;
+} Out;
+
+void main()
+{
+    Out.Color = aColor;
+    Out.UV = aUV;
+    gl_Position = vec4(aPos * pc.uScale + pc.uTranslate, 0, 1);
+}
