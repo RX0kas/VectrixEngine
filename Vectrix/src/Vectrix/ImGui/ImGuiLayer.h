@@ -37,8 +37,10 @@ namespace Vectrix {
 	private:
 		friend class Application;
 		friend class EditorLayer;
+		friend class VulkanImGuiManager;
 		[[nodiscard]] ImGuiManager& getManager() const { return *m_manager; }
 		ImGuiLayer();
+		static void setDarkThemeColors();
 		std::unique_ptr<ImGuiManager> m_manager;
 		std::vector<std::shared_ptr<ImGuiWidget>> m_widgets;
 		bool m_attached;

@@ -52,7 +52,7 @@ namespace Vectrix {
     */
     ShaderUniformLayout Shader::findShaderUniformLayout(const std::string &path, bool &isAffectedByCamera) {
         std::filesystem::path p(path);
-        if (p.empty()) { VC_CORE_ERROR("Shader {} does not exist", path); }
+        if (p.empty() || !std::filesystem::exists(p)) { VC_CORE_ERROR("Shader {} does not exist", path); }
 
         std::ifstream file(p);
         ShaderUniformLayout layout;
@@ -157,7 +157,7 @@ namespace Vectrix {
 
     std::pair<std::string, std::string> Shader::parse(const std::string &path) {
         std::filesystem::path p = std::filesystem::path(path);
-        if (p.empty()) { VC_CORE_ERROR("Shader {} does not exist",path); }
+        if (p.empty() || !std::filesystem::exists(p)) { VC_CORE_ERROR("Shader {} does not exist",path); }
         std::ifstream file(p);
         std::stringstream vertex, fragment;
         std::stringstream* current = nullptr;

@@ -26,6 +26,7 @@ namespace Vectrix {
         [[nodiscard]] VkFormat getFormat() const { return m_format; }
         [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
 
+        [[nodiscard]] ImTextureID getImGuiTextureID() const override { return reinterpret_cast<ImTextureID>(m_descriptorSet); }
         [[nodiscard]] uint32_t getUniqueTextureID() const { return m_id; }
         [[nodiscard]] std::string getID() const override { return m_name; }
     private:
@@ -41,6 +42,7 @@ namespace Vectrix {
         VmaAllocation m_allocation = VK_NULL_HANDLE;
         VkImageView m_imageView = VK_NULL_HANDLE;
         VkSampler m_sampler = VK_NULL_HANDLE;
+        VkDescriptorSet m_descriptorSet = VK_NULL_HANDLE;
         VkFormat m_format = VK_FORMAT_UNDEFINED;
         VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
         Device& m_device;

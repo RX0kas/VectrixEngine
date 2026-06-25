@@ -32,38 +32,7 @@ namespace Vectrix {
     	GraphicsContext::uploadAllMeshData();
     }
 
-    void EditorLayer::OnEvent(Event &event) {
-    	if (event.getEventType()==EventType::WindowResize)
-    		m_camera->recalculateMatrices();
-    }
-
-	void EditorLayer::showOpenDialog() {
-    	NFD_Init();
-
-    	nfdchar_t* outPath;
-    	nfdfilteritem_t filters[] = { { "Vectrix Scene", "vctx" } };
-
-    	nfdresult_t result = NFD_OpenDialog(&outPath, filters, 1, nullptr);
-
-    	if (result == NFD_OKAY) {
-    		m_pendingScenePath = std::string(outPath);
-    		NFD_FreePath(outPath);
-    	} else if (result == NFD_CANCEL) {
-    		VC_CORE_INFO("User cancelled");
-    	} else {
-    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
-    	}
-
-    	NFD_Quit();
-    }
-
-	void EditorLayer::processPendingSceneLoad() {
-    	if (m_pendingScenePath.empty())
-    		return;
-
-    	std::string path = m_pendingScenePath;
-    	m_pendingScenePath.clear();
-
+	void EditorLayer::openScene(std::filesystem::path path) {
     	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path);
     	if (sceneCreationData.result != SUCCESS) {
     		VC_CORE_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
@@ -95,6 +64,41 @@ namespace Vectrix {
     	GraphicsContext::waitIdle();
 	}
 
+	void EditorLayer::OnEvent(Event &event) {
+    	if (event.getEventType()==EventType::WindowResize)
+    		m_camera->recalculateMatrices();
+    }
+
+	void EditorLayer::showOpenDialog() {
+    	NFD_Init();
+
+    	nfdchar_t* outPath;
+    	nfdfilteritem_t filters[] = { { "Vectrix Scene", "vctx" } };
+
+    	nfdresult_t result = NFD_OpenDialog(&outPath, filters, 1, nullptr);
+
+    	if (result == NFD_OKAY) {
+    		m_pendingScenePath = std::string(outPath);
+    		NFD_FreePath(outPath);
+    	} else if (result == NFD_CANCEL) {
+    		VC_CORE_INFO("User cancelled");
+    	} else {
+    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
+    	}
+
+    	NFD_Quit();
+    }
+
+	void EditorLayer::processPendingSceneLoad() {
+    	if (m_pendingScenePath.empty())
+    		return;
+
+    	std::string path = m_pendingScenePath;
+    	m_pendingScenePath.clear();
+
+    	openScene(path);
+	}
+
 	void EditorLayer::showSaveDialog() {
     	NFD_Init();
 
@@ -121,7 +125,7 @@ namespace Vectrix {
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
 		bool opt_fullscreen = opt_fullscreen_persistant;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 		if (opt_fullscreen)	{
@@ -203,6 +207,17 @@ namespace Vectrix {
 			m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
 
 			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+#ifdef VC_PLATFORM_LINUX
+					const char* path = static_cast<const char *>(payload->Data);
+#else
+					const wchar_t* path = static_cast<const wchar_t *>(payload->Data);
+#endif
+					openScene(AssetsManager::getAssetsPath()/path);
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 		ImGui::End();
 		ImGui::PopStyleVar();

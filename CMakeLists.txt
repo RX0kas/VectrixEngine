@@ -81,8 +81,6 @@ add_subdirectory(Vectrix/extern/EnTT)
 message(VERBOSE "Initializing ImGui")
 file(GLOB IMGUI_SOURCES
         Vectrix/extern/imgui/*.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_glfw.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_vulkan.cpp
 )
 
 add_library(imgui STATIC

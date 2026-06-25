@@ -4,6 +4,7 @@
 
 #include "Core/Device.h"
 #include "stb_image.h"
+#include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Utils/Data.h"
@@ -21,6 +22,7 @@ namespace Vectrix {
             VC_CORE_ERROR("Failed to load texture image");
         }
         createTexture(pixels,STBI_rgb_alpha);
+        m_descriptorSet = ImGui_ImplVulkan_AddTexture(m_sampler,m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         m_id = s_numberTexture++;
     }
@@ -191,6 +193,8 @@ namespace Vectrix {
 
     VulkanTexture::~VulkanTexture() {
         VC_PROFILER_FUNCTION();
+        if (m_descriptorSet != VK_NULL_HANDLE)
+            ImGui_ImplVulkan_RemoveTexture(m_descriptorSet);
         if (m_sampler != VK_NULL_HANDLE)
             vkDestroySampler(m_device.device(), m_sampler, nullptr);
         if (m_imageView != VK_NULL_HANDLE)

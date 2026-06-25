@@ -1,6 +1,5 @@
 #include "VulkanShader.h"
 
-#include <fstream>
 #include <utility>
 
 #include "Pipeline.h"
@@ -196,8 +195,8 @@ namespace Vectrix {
 #else
 		constexpr bool optimize = false;
 #endif
-		auto vertCode = compiler.compile_file(m_name.c_str(),Vertex_Shader,m_vertSRC.c_str(),optimize);
-		auto fragCode = compiler.compile_file(m_name.c_str(),Fragment_Shader,m_fragSRC.c_str(),optimize);
+		auto vertCode = compiler.compile_file(m_name.c_str(),VertexShader,m_vertSRC.c_str(),optimize);
+		auto fragCode = compiler.compile_file(m_name.c_str(),FragmentShader,m_fragSRC.c_str(),optimize);
 
 		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
 	}
