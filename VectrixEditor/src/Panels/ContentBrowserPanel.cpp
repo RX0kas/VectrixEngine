@@ -82,7 +82,7 @@ namespace Vectrix {
             ImGui::PopStyleColor();
 
 
-            ImGui::TextWrapped("%s",relativePath.filename().c_str());
+            ImGui::TextWrapped("%s",filenameString.c_str());
 
             ImGui::NextColumn();
 
@@ -103,7 +103,7 @@ namespace Vectrix {
         // TODO: don't load multiple times
         AssetType type = AssetsManager::getAssetType(path);
         if (type==AssetType::TEXTURE) {
-            auto t = AssetsManager::load<Texture>(relativePath);
+            auto t = AssetsManager::load<Texture>(relativePath.string());
             if (t.first!=SUCCESS) {
                 VC_ERROR_NO_EXIT("Can't load icon for {}: {}",relativePath.string(),toString(t.first));
             }
@@ -112,7 +112,7 @@ namespace Vectrix {
             icon = m_fileIcon;
         }
 
-        ImGui::ImageButton(path.filename().c_str(),icon->getImGuiTextureID(), { thumbnailSize, thumbnailSize }, { 1, 0 }, { 0, 1 });
+        ImGui::ImageButton(path.filename().string().c_str(),icon->getImGuiTextureID(), { thumbnailSize, thumbnailSize }, { 1, 0 }, { 0, 1 });
 
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
 
@@ -130,7 +130,7 @@ namespace Vectrix {
     void ContentBrowserPanel::drawFolder(const std::filesystem::path &path, const std::filesystem::path &relativePath) {
         std::shared_ptr<Texture> icon = m_directoryIcon;
 
-        ImGui::ImageButton(path.filename().c_str(),icon->getImGuiTextureID(), { thumbnailSize, thumbnailSize }, { 1, 0 }, { 0, 1 });
+        ImGui::ImageButton(path.filename().string().c_str(),icon->getImGuiTextureID(), { thumbnailSize, thumbnailSize }, { 1, 0 }, { 0, 1 });
 
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
             m_currentDirectory = path;

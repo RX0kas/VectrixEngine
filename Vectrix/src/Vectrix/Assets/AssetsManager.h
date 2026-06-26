@@ -76,12 +76,17 @@ namespace Vectrix {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        auto it = s_instance->m_cache.find(p.string());
-        if (it != s_instance->m_cache.end())
-            return {VectrixResult::SUCCESS, std::static_pointer_cast<Texture>(it->second)};
+        const std::string cacheKey = p.lexically_normal().generic_string();
+        auto it = s_instance->m_cache.find(cacheKey);
+        if (it != s_instance->m_cache.end()) {
+            auto texture = std::static_pointer_cast<Texture>(it->second);
+            if (s_instance->m_textureManager->m_cache.find(path) == s_instance->m_textureManager->m_cache.end())
+                s_instance->m_textureManager->add(path, texture);
+            return {VectrixResult::SUCCESS, texture};
+        }
 
         auto texture = s_instance->m_textureManager->createTexture(path, p.string());
-        s_instance->m_cache.emplace(path, texture);
+        s_instance->m_cache.emplace(cacheKey, texture);
         return {VectrixResult::SUCCESS, texture};
     }
 
@@ -104,12 +109,17 @@ namespace Vectrix {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        auto it = s_instance->m_cache.find(p.string());
-        if (it != s_instance->m_cache.end())
-            return {VectrixResult::SUCCESS, std::static_pointer_cast<Shader>(it->second)};
+        const std::string cacheKey = p.lexically_normal().generic_string();
+        auto it = s_instance->m_cache.find(cacheKey);
+        if (it != s_instance->m_cache.end()) {
+            auto shader = std::static_pointer_cast<Shader>(it->second);
+            if (!s_instance->m_shaderManager->exist(path))
+                s_instance->m_shaderManager->add(path, shader);
+            return {VectrixResult::SUCCESS, shader};
+        }
 
         auto shader = s_instance->m_shaderManager->createShader(path, p.string());
-        s_instance->m_cache.emplace(path, shader);
+        s_instance->m_cache.emplace(cacheKey, shader);
         return {VectrixResult::SUCCESS, shader};
     }
 
@@ -131,12 +141,17 @@ namespace Vectrix {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        auto it = s_instance->m_cache.find(p.string());
-        if (it != s_instance->m_cache.end())
-            return {VectrixResult::SUCCESS, std::static_pointer_cast<Mesh>(it->second)};
+        const std::string cacheKey = p.lexically_normal().generic_string();
+        auto it = s_instance->m_cache.find(cacheKey);
+        if (it != s_instance->m_cache.end()) {
+            auto mesh = std::static_pointer_cast<Mesh>(it->second);
+            if (!s_instance->m_meshManager->exist(path))
+                s_instance->m_meshManager->add(path, mesh);
+            return {VectrixResult::SUCCESS, mesh};
+        }
 
         auto mesh = s_instance->m_meshManager->createMesh(path, p.string());
-        s_instance->m_cache.emplace(path, mesh);
+        s_instance->m_cache.emplace(cacheKey, mesh);
         return {VectrixResult::SUCCESS, mesh};
     }
 } // Vectrix

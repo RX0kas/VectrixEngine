@@ -4,6 +4,7 @@
 #include "Vectrix.h"
 #include "../CameraWidget.h"
 #include "Vectrix/Assets/AssetsManager.h"
+#include "Vectrix/Rendering/GraphicsContext.h"
 #include "Vectrix/Scene/Components/CameraComponent.h"
 
 class ExampleLayer : public Vectrix::Layer {
@@ -12,8 +13,7 @@ public:
 
 	void OnAttach() override {
 		m_cameraEntity = m_activeScene.createEntity("Camera");
-		m_cameraEntity.getComponent<Vectrix::TransformComponent>().position = {0.0f,0.0f,-3.0f};
-		m_cameraEntity.addComponent<Vectrix::CameraComponent>();
+		m_cameraEntity->addComponent<Vectrix::CameraComponent>();
 		m_cameraWidget = std::make_shared<CameraWidget>(m_cameraEntity);
 		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
@@ -35,7 +35,9 @@ public:
 		m_meshFox = m.second;
 
 		m_fox = m_activeScene.createEntity("Fox");
-		m_fox.addComponent<Vectrix::MeshRendererComponent>(m_meshFox,m_shader,m_foxTexture);
+		m_fox->addComponent<Vectrix::MeshRendererComponent>(m_meshFox,m_shader,m_foxTexture);
+
+		m_activeScene.registerAllMesh();
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override {
@@ -43,24 +45,24 @@ public:
 	}
 
 	void OnRender() override {
-		Vectrix::Renderer::beginScene(m_cameraEntity.getComponent<Vectrix::CameraComponent>().camera);
+		Vectrix::Renderer::beginScene(m_cameraEntity->getComponent<Vectrix::CameraComponent>().camera);
 		m_activeScene.OnRender();
 		Vectrix::Renderer::endScene();
 	}
 
 	void OnEvent(Vectrix::Event &event) override {
-		m_cameraEntity.getComponent<Vectrix::CameraComponent>().camera.recalculateMatrices();
+		m_cameraEntity->getComponent<Vectrix::CameraComponent>().camera.recalculateMatrices();
 	}
 
 private:
 	std::shared_ptr<CameraWidget> m_cameraWidget;
-	Vectrix::Entity m_cameraEntity;
+	std::shared_ptr<Vectrix::Entity> m_cameraEntity;
 
 	std::shared_ptr<Vectrix::Shader> m_shader;
 	std::shared_ptr<Vectrix::Texture> m_foxTexture;
 	std::shared_ptr<Vectrix::Mesh> m_meshFox;
 	std::shared_ptr<Vectrix::Framebuffer> m_framebuffer;
-	Vectrix::Entity m_fox = Vectrix::Entity::nullEntity();
+	std::shared_ptr<Vectrix::Entity> m_fox;
 	Vectrix::Scene m_activeScene;
 	const char* p_defaultName = "default";
 };

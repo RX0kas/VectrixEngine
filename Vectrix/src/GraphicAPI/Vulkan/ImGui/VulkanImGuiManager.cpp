@@ -295,15 +295,9 @@ namespace Vectrix {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-		#ifdef VC_PLATFORM_LINUX
-		    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		    	io.ConfigDpiScaleFonts    = true;
-		    	io.ConfigDpiScaleViewports = true;
-		#else
-		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues");
-		    	io.ConfigDpiScaleFonts    = false;
-		    	io.ConfigDpiScaleViewports = false;
-		#endif
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigDpiScaleFonts    = true;
+		io.ConfigDpiScaleViewports = true;
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
