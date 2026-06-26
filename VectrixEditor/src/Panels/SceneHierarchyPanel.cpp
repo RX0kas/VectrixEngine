@@ -1,8 +1,12 @@
 #include "SceneHierarchyPanel.h"
 
+#include <filesystem>
+
 #include "imgui.h"
 #include "Vectrix/Scene/Component.h"
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Vectrix/Assets/AssetsManager.h"
 
 namespace Vectrix {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) {
@@ -76,6 +80,126 @@ namespace Vectrix {
         }
     }
 
+    template<typename T>
+    static bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText) {
+        bool changed = false;
+
+        ImGui::PushID(label);
+
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+        float fullWidth = ImGui::GetContentRegionAvail().x;
+        float height = 58.0f;
+        float rounding = 8.0f;
+        float spacingY = 8.0f;
+
+        ImVec2 start = ImGui::GetCursorScreenPos();
+        ImVec2 size(fullWidth, height);
+        ImVec2 end(start.x + size.x, start.y + size.y);
+
+        float clearButtonSize = 24.0f;
+        float clearButtonPadding = 10.0f;
+        float reservedRight = asset ? clearButtonSize + clearButtonPadding * 2.0f : clearButtonPadding;
+
+        ImGui::InvisibleButton("##DropZone",ImVec2(fullWidth - reservedRight, height));
+
+        bool hovered = ImGui::IsItemHovered();
+
+        bool payloadHovered = false;
+
+        if (ImGui::BeginDragDropTarget()) {
+            payloadHovered = true;
+
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(payloadType)) {
+#ifdef VC_PLATFORM_LINUX
+                const char* path = static_cast<const char*>(payload->Data);
+                std::filesystem::path assetPath = path;
+#else
+                const wchar_t* path = static_cast<const wchar_t*>(payload->Data);
+                std::filesystem::path assetPath = path;
+#endif
+
+                auto [result, loadedAsset] = AssetsManager::load<T>(assetPath);
+
+                if (result == SUCCESS && loadedAsset) {
+                    asset = loadedAsset;
+                    changed = true;
+                } else {
+                    VC_ERROR_NO_EXIT("Failed to load asset dropped on {}: {} ({})",label,assetPath.string(),toString(result));
+                }
+            }
+
+            ImGui::EndDragDropTarget();
+        }
+
+        ImU32 bgColor = ImGui::GetColorU32(hovered || payloadHovered ? ImVec4(0.18f, 0.185f, 0.20f, 1.0f) : ImVec4(0.13f, 0.135f, 0.15f, 1.0f));
+        ImU32 borderColor = ImGui::GetColorU32(ImVec4(0.45f, 0.62f, 0.90f, 1.0f));
+
+        drawList->AddRectFilled(start, end, bgColor, rounding);
+        drawList->AddRect(start, end, borderColor, rounding, 0, hovered ? 2.0f : 1.0f);
+
+        ImVec2 iconMin(start.x + 10.0f, start.y + 11.0f);
+        ImVec2 iconMax(start.x + 46.0f, start.y + 47.0f);
+
+        drawList->AddRectFilled(iconMin,iconMax,ImGui::GetColorU32(ImVec4(0.20f, 0.205f, 0.23f, 1.0f)),6.0f);
+
+        const char* glyph = asset ? "A" : "+";
+        ImVec2 glyphSize = ImGui::CalcTextSize(glyph);
+
+        drawList->AddText(
+            ImVec2(iconMin.x + ((iconMax.x - iconMin.x) - glyphSize.x) * 0.5f,iconMin.y + ((iconMax.y - iconMin.y) - glyphSize.y) * 0.5f),
+            ImGui::GetColorU32(asset ? ImVec4(0.70f, 0.82f, 1.0f, 1.0f) : ImVec4(0.55f, 0.57f, 0.62f, 1.0f)),
+            glyph
+        );
+
+        const std::string valueText = asset ? asset->getID() : emptyText;
+
+        const float textStartX = start.x + 58.0f;
+        const float textMaxX = end.x - reservedRight - 6.0f;
+        const float textWidth = std::max(20.0f, textMaxX - textStartX);
+
+        drawList->AddText(ImVec2(textStartX, start.y + 10.0f),ImGui::GetColorU32(ImVec4(0.78f, 0.80f, 0.86f, 1.0f)),label);
+
+        const std::string& displayValue = valueText;
+        ImGui::SetCursorScreenPos(ImVec2(textStartX, start.y + 31.0f));
+        ImGui::PushTextWrapPos(textStartX + textWidth);
+        ImGui::TextColored(asset ? ImVec4(0.95f, 0.95f, 0.98f, 1.0f) : ImVec4(0.50f, 0.52f, 0.58f, 1.0f),"%s",displayValue.c_str());
+        ImGui::PopTextWrapPos();
+
+        if (asset) {
+            ImVec2 buttonPos(end.x - clearButtonSize - clearButtonPadding,start.y + (height - clearButtonSize) * 0.5f);
+
+            ImGui::SetCursorScreenPos(buttonPos);
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.22f, 0.225f, 0.25f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.35f, 0.18f, 0.18f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.45f, 0.12f, 0.12f, 1.0f));
+
+            if (ImGui::Button("x", ImVec2(clearButtonSize, clearButtonSize))) {
+                asset.reset();
+                changed = true;
+            }
+
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
+
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip("Clear %s", label);
+            }
+        }
+
+        ImGui::SetCursorScreenPos(ImVec2(start.x, end.y + spacingY));
+
+        if (hovered && !asset) {
+            ImGui::SetTooltip("Drop a %s here", label);
+        }
+
+        ImGui::PopID();
+
+        return changed;
+    }
+
     void SceneHierarchyPanel::drawProperties(const std::shared_ptr<Entity>& entity) {
         // InformationComponent
         {
@@ -139,13 +263,10 @@ namespace Vectrix {
                     ImGui::EndPopup();
                 }
 
-                ImGui::BeginDisabled(!isEnable);
+                drawAssetDropField("Shader",mc.shader,"CONTENT_BROWSER_SHADER","Drop Shader here");
+                drawAssetDropField("Texture",mc.texture,"CONTENT_BROWSER_TEXTURE","Drop texture here");
+                drawAssetDropField("Mesh",mc.mesh,"CONTENT_BROWSER_MESH","Drop mesh here");
 
-                showField("Shader", mc.shader, mc.shader ? mc.shader->getID() : "");
-                showField("Texture", mc.texture, mc.texture ? mc.texture->getID() : "");
-                showField("Mesh", mc.mesh, mc.mesh ? mc.mesh->getID() : "");
-
-                ImGui::EndDisabled();
                 ImGui::TreePop();
             }
 
