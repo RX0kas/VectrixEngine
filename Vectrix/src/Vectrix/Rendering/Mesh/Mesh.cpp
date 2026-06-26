@@ -2,6 +2,7 @@
 
 #include "ObjLoader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Mesh/MeshRegistry.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Renderer.h"
 
@@ -18,6 +19,16 @@ namespace Vectrix {
         m_vertexArray->setIndexBuffer(indexBuffer);
         m_vertices = vertices;
         m_indices = indices;
+
+        switch (Renderer::getAPI()) {
+            case RendererAPI::API::Vulkan:
+                m_vertexArray->setHandle(VulkanContext::instance().getMeshRegistry().uploadMesh(m_vertices,m_indices));
+                break;
+            case RendererAPI::API::None:
+                VC_CORE_ERROR("Can't register Mesh because RendererAPI is None");
+            default:
+                VC_CORE_ERROR("Unknown RendererAPI");
+        }
     }
 
     Mesh::Mesh(const std::vector<Vertex> &vertices) : m_aabb(vertices) {
@@ -30,17 +41,5 @@ namespace Vectrix {
 
         m_vertexArray = VertexArray::create();
         m_vertexArray->addVertexBuffer(vertexBuffer);
-    }
-
-    void Mesh::registerMesh() {
-        switch (Renderer::getAPI()) {
-            case RendererAPI::API::Vulkan:
-                VulkanContext::instance().registerMesh(this);
-                return;
-            case RendererAPI::API::None:
-                VC_CORE_ERROR("Can't register Mesh because RendererAPI is None");
-            default:
-                VC_CORE_ERROR("Unknown RendererAPI");
-        }
     }
 } // Vectrix

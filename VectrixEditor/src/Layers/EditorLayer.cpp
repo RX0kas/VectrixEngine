@@ -27,9 +27,6 @@ namespace Vectrix {
     	m_activeScene = std::make_shared<Scene>("EditorScene");
     	m_camera = std::make_unique<EditorCamera>();
     	m_sceneHierarchyPanel.setContext(m_activeScene);
-
-    	m_activeScene->registerAllMesh();
-    	GraphicsContext::uploadAllMeshData();
     }
 
 	void EditorLayer::openScene(const std::filesystem::path& path) {
@@ -54,12 +51,9 @@ namespace Vectrix {
     	m_activeScene->m_filePath = path.string();
     	m_sceneHierarchyPanel.setContext(m_activeScene);
 
-    	GraphicsContext::unloadGPUMeshData();
     	AssetsManager::instance().getMeshManager().clear();
     	AssetsManager::instance().getTextureManager().clear();
     	AssetsManager::instance().getMeshManager().clear();
-    	m_activeScene->registerAllMesh();
-    	GraphicsContext::uploadAllMeshData();
 
     	GraphicsContext::waitIdle();
 	}

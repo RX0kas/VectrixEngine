@@ -48,20 +48,6 @@ namespace Vectrix {
 		glfwPollEvents();
 	}
 
-	void VulkanContext::registerMesh(Mesh* model) {
-		VC_PROFILER_FUNCTION();
-		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->m_vertexArray);
-		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->m_vertices,model->m_indices));
-	}
-
-	void VulkanContext::uploadMeshData() {
-		s_instance->m_meshRegistry->uploadToGPU();
-	}
-
-	void VulkanContext::unloadGPU() {
-		s_instance->m_meshRegistry->unloadGPU();
-	}
-
 	void VulkanContext::waitIdle() {
 		VulkanContext& i = instance();
 		vkDeviceWaitIdle(i.m_device->device());

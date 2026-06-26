@@ -8,9 +8,10 @@ namespace Vectrix {
      * @brief Used for batch rendering
      **/
     struct MeshHandle {
-        uint32_t firstIndex;
-        uint32_t indexCount;
-        int32_t vertexOffset;
+        uint32_t firstVertex = 0;
+        uint32_t firstIndex = 0;
+        uint32_t vertexCount = 0;
+        uint32_t indexCount = 0;
     };
     /// @endcond
 }

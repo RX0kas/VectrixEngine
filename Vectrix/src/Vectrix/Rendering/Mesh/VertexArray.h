@@ -1,6 +1,7 @@
 #ifndef VECTRIXWORKSPACE_VERTEXARRAY_H
 #define VECTRIXWORKSPACE_VERTEXARRAY_H
 
+#include "MeshHandle.h"
 #include "Vectrix/Rendering/Buffer.h"
 
 /**
@@ -49,6 +50,9 @@ namespace Vectrix {
          * @return A shared_ptr to the newly created VertexArray
          */
         static std::shared_ptr<VertexArray> create();
+    protected:
+        friend class Mesh;
+        virtual void setHandle(MeshHandle handle) = 0;
     };
 } // Vectrix
 

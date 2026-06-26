@@ -279,7 +279,7 @@ namespace Vectrix {
 			.indexCount    = handle.indexCount,
 			.instanceCount = 1,
 			.firstIndex    = handle.firstIndex,
-			.vertexOffset  = handle.vertexOffset,
+			.vertexOffset  = static_cast<int32_t>(handle.firstVertex),
 			.firstInstance = index
 		};
 		b.commands.push_back(command);
@@ -288,8 +288,7 @@ namespace Vectrix {
 
 	void VulkanRenderer::flush() {
 		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
-		if (meshRegistry.isEmpty()) {return;}
-		VC_CORE_ASSERT(meshRegistry.isUploaded(), "MeshRegistry not uploaded! Call uploadToGPU() before rendering.");
+		if (!meshRegistry.isUploaded()) {return;}
 		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
 		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
 		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
