@@ -12,6 +12,10 @@ namespace Vectrix {
     }
 
     std::shared_ptr<Texture> TextureManager::createTexture(const std::string &name, const std::string &path) {
+        const auto it = m_cache.find(name);
+        if (it != m_cache.end())
+            return it->second;
+
         std::shared_ptr<Texture> texture(Texture::create(name,path));
         add(name,texture);
         return texture;

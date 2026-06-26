@@ -23,7 +23,7 @@ namespace Vectrix {
 		void OnImGuiRender() override;
 
     	void OnAttach() override;
-    	void openScene(std::filesystem::path path);
+    	void openScene(const std::filesystem::path& path);
 	private:
     	void showSaveDialog();
     	void showOpenDialog();

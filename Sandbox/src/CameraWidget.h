@@ -5,11 +5,11 @@
 
 class CameraWidget : public Vectrix::ImGuiWidget {
 public:
-    CameraWidget(Vectrix::Entity &camera);
+    CameraWidget(std::shared_ptr<Vectrix::Entity> camera);
     ~CameraWidget() override;
     void render() override;
 private:
-    Vectrix::Entity &m_camera;
+    std::shared_ptr<Vectrix::Entity> m_camera;
 };
 
 #endif //VECTRIXWORKSPACE_CAMERAWIDGET_H

@@ -11,7 +11,7 @@
 
 #include <nfd.h>
 
-#include "../../../Vectrix/src/Vectrix/Rendering/Camera/EditorCamera.h"
+#include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "Vectrix/Events/EditorEvent.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 
@@ -32,8 +32,8 @@ namespace Vectrix {
     	GraphicsContext::uploadAllMeshData();
     }
 
-	void EditorLayer::openScene(std::filesystem::path path) {
-    	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path);
+	void EditorLayer::openScene(const std::filesystem::path& path) {
+    	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path.string());
     	if (sceneCreationData.result != SUCCESS) {
     		VC_CORE_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
     		return;
@@ -51,7 +51,7 @@ namespace Vectrix {
     	m_activeScene->m_registry.clear<>();
 
     	m_activeScene = newScene.second;
-    	m_activeScene->m_filePath = path;
+    	m_activeScene->m_filePath = path.string();
     	m_sceneHierarchyPanel.setContext(m_activeScene);
 
     	GraphicsContext::unloadGPUMeshData();
@@ -212,7 +212,7 @@ namespace Vectrix {
 #ifdef VC_PLATFORM_LINUX
 					const char* path = static_cast<const char *>(payload->Data);
 #else
-					const wchar_t* path = static_cast<const wchar_t *>(payload->Data);
+					const auto* path = static_cast<const wchar_t *>(payload->Data);
 #endif
 					openScene(AssetsManager::getAssetsPath()/path);
 				}

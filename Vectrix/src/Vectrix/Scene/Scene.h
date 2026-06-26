@@ -36,6 +36,7 @@ namespace Vectrix {
         [[nodiscard]] std::string getFilePath() const { return m_filePath; }
 
         static std::pair<VectrixResult,std::shared_ptr<Scene>> loadScene(SceneCreationData& creationData);
+        void registerAllMesh();
     private:
         friend class Entity;
         friend class SceneHierarchyPanel;
@@ -43,7 +44,6 @@ namespace Vectrix {
         friend class SceneSerializer;
         friend class MenuBar;
         std::shared_ptr<Entity> getEntity(entt::entity entityHandle) { return m_entities[entityHandle]; }
-        void registerAllMesh();
         entt::registry m_registry;
         std::string m_name;
         std::string m_filePath;
