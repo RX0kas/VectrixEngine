@@ -36,7 +36,6 @@ namespace Vectrix {
         [[nodiscard]] std::string getFilePath() const { return m_filePath; }
 
         static std::pair<VectrixResult,std::shared_ptr<Scene>> loadScene(SceneCreationData& creationData);
-        void registerAllMesh();
     private:
         friend class Entity;
         friend class SceneHierarchyPanel;

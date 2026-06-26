@@ -19,9 +19,6 @@ namespace Vectrix {
 		~VulkanContext() override;
 		void init() override;
 		void swapBuffers() override;
-		void registerMesh(Mesh* model) override;
-		static void uploadMeshData();
-		static void unloadGPU();
 		static void waitIdle();
 
 

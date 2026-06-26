@@ -5,77 +5,115 @@
 #include "Vectrix/Rendering/Mesh/MeshHandle.h"
 
 namespace Vectrix {
-    MeshRegistry::MeshRegistry() {
-        m_uploaded = false;
-    }
+    MeshRegistry::MeshRegistry() = default;
 
     MeshRegistry::~MeshRegistry() {
-        VC_PROFILER_FUNCTION();
-        m_globalIndexBuffer.reset();
         m_globalVertexBuffer.reset();
+        m_globalIndexBuffer.reset();
     }
 
-    MeshHandle MeshRegistry::registerMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) {
+    MeshHandle MeshRegistry::uploadMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) {
         VC_PROFILER_FUNCTION();
-        VC_CORE_ASSERT(!m_uploaded, "Cannot register mesh after GPU upload!");
+        VC_CORE_ASSERT(!vertices.empty(), "Cannot upload mesh with no vertices");
+        VC_CORE_ASSERT(!indices.empty(), "Cannot upload mesh with no indices");
 
-        MeshHandle handle {
-            .firstIndex = static_cast<uint32_t>(m_pendingIndices.size()),
-            .indexCount = static_cast<uint32_t>(indices.size()),
-            .vertexOffset = static_cast<int32_t>(m_pendingVertices.size())
-        };
+        ensureVertexCapacity(static_cast<uint32_t>(vertices.size()));
+        ensureIndexCapacity(static_cast<uint32_t>(indices.size()));
 
-        m_pendingVertices.insert(m_pendingVertices.end(), vertices.begin(), vertices.end());
-        m_pendingIndices.insert(m_pendingIndices.end(),indices.begin(), indices.end());
+        MeshHandle handle{};
+        handle.firstVertex = m_vertexCount;
+        handle.firstIndex = m_indexCount;
+        handle.vertexCount = static_cast<uint32_t>(vertices.size());
+        handle.indexCount = static_cast<uint32_t>(indices.size());
+
+        VkDeviceSize vertexOffset = static_cast<VkDeviceSize>(handle.firstVertex) * sizeof(Vertex);
+
+        VkDeviceSize indexOffset = static_cast<VkDeviceSize>(handle.firstIndex) * sizeof(uint32_t);
+
+        VkDeviceSize vertexDataSize = vertices.size() * sizeof(Vertex);
+
+        VkDeviceSize indexDataSize = indices.size() * sizeof(uint32_t);
+
+        uploadToBufferOffset(vertices.data(),vertexDataSize,vertexOffset,*m_globalVertexBuffer);
+
+        uploadToBufferOffset(indices.data(),indexDataSize,indexOffset,*m_globalIndexBuffer);
+
+        m_vertexCount += handle.vertexCount;
+        m_indexCount += handle.indexCount;
 
         return handle;
     }
 
-    void MeshRegistry::unloadGPU() {
-        VC_PROFILER_FUNCTION();
-        if (m_uploaded) {
-            vkDeviceWaitIdle(VulkanContext::instance().getDevice().device());
-            m_globalIndexBuffer.reset();
-            m_globalVertexBuffer.reset();
-            m_pendingVertices.clear();
-            m_pendingVertices.shrink_to_fit();
-            m_pendingIndices.clear();
-            m_pendingIndices.shrink_to_fit();
+    void MeshRegistry::ensureVertexCapacity(uint32_t additionalVertices) {
+        uint32_t required = m_vertexCount + additionalVertices;
 
-            m_uploaded = false;
-        }
-    }
-
-    void MeshRegistry::uploadToGPU() {
-        VC_PROFILER_FUNCTION();
-        VC_CORE_ASSERT(!m_uploaded, "Already uploaded");
-        if (m_pendingVertices.empty() || m_pendingIndices.empty()) {
+        if (required <= m_vertexCapacity)
             return;
-        }
 
-        const VkDeviceSize vertexDataSize = m_pendingVertices.size() * sizeof(Vertex);
-        const VkDeviceSize indexDataSize  = m_pendingIndices.size()  * sizeof(uint32_t);
+        uint32_t newCapacity = m_vertexCapacity == 0 ? 4096 : m_vertexCapacity;
 
+        while (newCapacity < required)
+            newCapacity *= 2;
 
-        uploadBuffer(m_pendingVertices.data(), vertexDataSize,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,m_globalVertexBuffer);
+        VkDeviceSize oldSize = static_cast<VkDeviceSize>(m_vertexCapacity) * sizeof(Vertex);
 
-        uploadBuffer(m_pendingIndices.data(), indexDataSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,m_globalIndexBuffer);
+        VkDeviceSize newSize = static_cast<VkDeviceSize>(newCapacity) * sizeof(Vertex);
 
-        m_pendingVertices.clear();
-        m_pendingVertices.shrink_to_fit();
-        m_pendingIndices.clear();
-        m_pendingIndices.shrink_to_fit();
-        m_uploaded = true;
+        growBuffer(m_globalVertexBuffer,oldSize,newSize,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+
+        m_vertexCapacity = newCapacity;
     }
 
-    void MeshRegistry::uploadBuffer(const void* data, VkDeviceSize size, VkBufferUsageFlags usage, std::unique_ptr<VulkanBuffer>& outBuffer) {
+    void MeshRegistry::ensureIndexCapacity(uint32_t additionalIndices) {
+        uint32_t required = m_indexCount + additionalIndices;
+
+        if (required <= m_indexCapacity)
+            return;
+
+        uint32_t newCapacity = m_indexCapacity == 0 ? 8192 : m_indexCapacity;
+
+        while (newCapacity < required)
+            newCapacity *= 2;
+
+        VkDeviceSize oldSize = static_cast<VkDeviceSize>(m_indexCapacity) * sizeof(uint32_t);
+
+        VkDeviceSize newSize = static_cast<VkDeviceSize>(newCapacity) * sizeof(uint32_t);
+
+        growBuffer(m_globalIndexBuffer,oldSize,newSize,VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+
+        m_indexCapacity = newCapacity;
+    }
+
+    void MeshRegistry::growBuffer(std::unique_ptr<VulkanBuffer>& buffer, VkDeviceSize oldSize, VkDeviceSize newSize, VkBufferUsageFlags usage) {
         VC_PROFILER_FUNCTION();
-        VulkanBuffer stagingBuffer(size, 1, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+        // TODO LATER: Place the old buffer in a “deletion queue” on a per-frame basis and do not destroy it until MAX_FRAMES_IN_FLIGHT has elapsed
+        vkDeviceWaitIdle(VulkanContext::instance().getDevice().device());
+
+        auto newBuffer = std::make_unique<VulkanBuffer>(newSize,1,
+            usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        if (buffer && oldSize > 0)
+            VulkanContext::instance().getDevice().copyBuffer(buffer->getBuffer(),newBuffer->getBuffer(),oldSize);
+
+
+        buffer = std::move(newBuffer);
+    }
+
+    void MeshRegistry::uploadToBufferOffset(const void* data, VkDeviceSize size, VkDeviceSize dstOffset, VulkanBuffer& dstBuffer) {
+        VC_PROFILER_FUNCTION();
+
+        VulkanBuffer stagingBuffer(
+            size,
+            1,
+            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+        );
+
         stagingBuffer.map();
         stagingBuffer.writeToBuffer(data, size);
 
-        outBuffer = std::make_unique<VulkanBuffer>(size, 1, usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(), outBuffer->getBuffer(), size);
+        VulkanContext::instance().getDevice().copyBuffer(stagingBuffer.getBuffer(),dstBuffer.getBuffer(),size,0,dstOffset);
     }
 }

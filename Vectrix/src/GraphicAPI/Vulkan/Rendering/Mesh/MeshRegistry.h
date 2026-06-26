@@ -13,25 +13,29 @@ namespace Vectrix {
     public:
         MeshRegistry();
         ~MeshRegistry();
-        MeshHandle registerMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
-
-        void uploadToGPU();
-        void unloadGPU();
+        MeshHandle uploadMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
         [[nodiscard]] VulkanBuffer& getVertexBuffer() const { return *m_globalVertexBuffer; }
-        [[nodiscard]] VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer;  }
-        [[nodiscard]] bool isUploaded() const { return m_uploaded; }
-        [[nodiscard]] bool isEmpty() const { return m_pendingVertices.empty() && m_globalVertexBuffer==nullptr; }
+        [[nodiscard]] VulkanBuffer& getIndexBuffer() const { return *m_globalIndexBuffer; }
+
+        [[nodiscard]] bool isUploaded() const { return m_globalVertexBuffer && m_globalIndexBuffer; }
     private:
-        static void uploadBuffer(const void* data, VkDeviceSize size, VkBufferUsageFlags usage, std::unique_ptr<VulkanBuffer>& outBuffer);
+        void ensureVertexCapacity(uint32_t additionalVertices);
+        void ensureIndexCapacity(uint32_t additionalIndices);
 
+        static void growBuffer(std::unique_ptr<VulkanBuffer>& buffer, VkDeviceSize oldSize, VkDeviceSize newSize, VkBufferUsageFlags usage);
 
-        std::vector<Vertex> m_pendingVertices;
-        std::vector<uint32_t> m_pendingIndices;
-
+        static void uploadToBufferOffset(const void* data, VkDeviceSize size, VkDeviceSize dstOffset, VulkanBuffer& dstBuffer);
+    private:
+        friend class Mesh;
         std::unique_ptr<VulkanBuffer> m_globalVertexBuffer;
         std::unique_ptr<VulkanBuffer> m_globalIndexBuffer;
-        bool m_uploaded = false;
+
+        uint32_t m_vertexCount = 0;
+        uint32_t m_indexCount = 0;
+
+        uint32_t m_vertexCapacity = 0;
+        uint32_t m_indexCapacity = 0;
     };
 } // Vectrix
 

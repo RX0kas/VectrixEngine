@@ -56,6 +56,7 @@ namespace Vectrix {
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset);
         void copyBufferToImage( VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount);
 
         void createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties, VkImage& image, VmaAllocation& allocation);
@@ -66,7 +67,7 @@ namespace Vectrix {
             m_imageFormat = format;
         }
 
-        VkDescriptorSetLayout createFrameSSBOLayout() const;
+        [[nodiscard]] VkDescriptorSetLayout createFrameSSBOLayout() const;
 
         void destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator=nullptr);
         void destroyImage(VkImage image, VmaAllocation allocation);
@@ -85,7 +86,7 @@ namespace Vectrix {
         // helper functions
         bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
         static std::vector<const char*> getRequiredExtensions();
-        bool checkValidationLayerSupport() const;
+        [[nodiscard]] bool checkValidationLayerSupport() const;
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) const;
 
         static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);

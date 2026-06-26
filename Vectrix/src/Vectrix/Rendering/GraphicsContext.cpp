@@ -25,22 +25,6 @@ namespace Vectrix {
         VC_CORE_ERROR("Unknown RendererAPI!");
     }
 
-    void GraphicsContext::uploadAllMeshData() {
-        switch (RendererAPI::getAPI()) {
-            case RendererAPI::API::Vulkan: VulkanContext::uploadMeshData();
-            case RendererAPI::API::None:
-                break;
-        }
-    }
-
-    void GraphicsContext::unloadGPUMeshData() {
-        switch (RendererAPI::getAPI()) {
-            case RendererAPI::API::Vulkan: VulkanContext::unloadGPU();
-            case RendererAPI::API::None:
-                break;
-        }
-    }
-
     void GraphicsContext::waitIdle() {
         switch (RendererAPI::getAPI()) {
             case RendererAPI::API::Vulkan: VulkanContext::waitIdle();

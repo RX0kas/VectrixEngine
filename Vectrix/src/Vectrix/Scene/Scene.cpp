@@ -105,17 +105,6 @@ namespace Vectrix {
         return {SUCCESS, scene};
     }
 
-    void Scene::registerAllMesh() {
-        MeshManager& meshManager = AssetsManager::instance().getMeshManager();
-        auto view = m_registry.view<MeshRendererComponent>();
-        for (auto e : view) {
-            std::shared_ptr<Entity> entity = getEntity(e);
-            auto& m = entity->getComponent<MeshRendererComponent>();
-            meshManager.add(m.mesh->getID(),m.mesh);
-            m.mesh->registerMesh();
-        }
-    }
-
     Scene::Scene(std::string name) : m_name(std::move(name)) {
         m_entities.clear();
         m_entities.reserve(256);

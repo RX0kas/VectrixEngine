@@ -36,8 +36,6 @@ public:
 
 		m_fox = m_activeScene.createEntity("Fox");
 		m_fox->addComponent<Vectrix::MeshRendererComponent>(m_meshFox,m_shader,m_foxTexture);
-
-		m_activeScene.registerAllMesh();
 	}
 
 	void OnUpdate(const Vectrix::DeltaTime& dt) override {

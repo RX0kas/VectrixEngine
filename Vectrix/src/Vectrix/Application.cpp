@@ -57,7 +57,6 @@ namespace Vectrix {
 	}
 
 	void Application::run() {
-		GraphicsContext::uploadAllMeshData();
 		VC_PROFILER_FUNCTION();
 		m_window->show();
 		while (m_running) {
