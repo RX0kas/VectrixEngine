@@ -31,6 +31,20 @@ namespace Vectrix {
         m_fileIcon = f.second;
     }
 
+    void beginDragDropSource(const std::string& type, const std::filesystem::path& path) {
+        if (ImGui::BeginDragDropSource()) {
+#ifdef VC_PLATFORM_LINUX
+            const char* itemPath = path.c_str();
+            ImGui::SetDragDropPayload(type.c_str(), itemPath, (strlen(itemPath) + 1) * sizeof(char));
+#else
+            const wchar_t* itemPath = path.c_str();
+            ImGui::SetDragDropPayload(type.c_str(), itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
+#endif
+
+            ImGui::EndDragDropSource();
+        }
+    }
+
     void ContentBrowserPanel::onImGuiRender() {
         ImGui::Begin("Content Browser");
 
@@ -60,20 +74,9 @@ namespace Vectrix {
 
             if (directoryEntry.is_directory()) {
                 drawFolder(path,relativePath);
+                beginDragDropSource("CONTENT_BROWSER_FOLDER",relativePath);
             } else {
                 drawFile(path,relativePath);
-            }
-
-            if (ImGui::BeginDragDropSource()) {
-#ifdef VC_PLATFORM_LINUX
-                const char* itemPath = relativePath.c_str();
-                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (strlen(itemPath) + 1) * sizeof(char));
-#else
-                const wchar_t* itemPath = relativePath.c_str();
-                ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
-#endif
-
-                ImGui::EndDragDropSource();
             }
 
             ImGui::PopStyleColor();
@@ -97,21 +100,31 @@ namespace Vectrix {
 
     void ContentBrowserPanel::drawFile(const std::filesystem::path& path, const std::filesystem::path &relativePath) {
         std::shared_ptr<Texture> icon;
-            // TODO: don't load multiple times
-            AssetType type = AssetsManager::getAssetType(path);
-            if (type==AssetType::TEXTURE) {
-                auto t = AssetsManager::load<Texture>(relativePath);
-                if (t.first!=SUCCESS) {
-                    VC_ERROR_NO_EXIT("Can't load icon for {}: {}",relativePath.string(),toString(t.first));
-                }
-                icon = t.second;
-            } else {
-                icon = m_fileIcon;
+        // TODO: don't load multiple times
+        AssetType type = AssetsManager::getAssetType(path);
+        if (type==AssetType::TEXTURE) {
+            auto t = AssetsManager::load<Texture>(relativePath);
+            if (t.first!=SUCCESS) {
+                VC_ERROR_NO_EXIT("Can't load icon for {}: {}",relativePath.string(),toString(t.first));
             }
+            icon = t.second;
+        } else {
+            icon = m_fileIcon;
+        }
 
         ImGui::ImageButton(path.filename().c_str(),icon->getImGuiTextureID(), { thumbnailSize, thumbnailSize }, { 1, 0 }, { 0, 1 });
 
-        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {}
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+
+        }
+
+        switch (type) {
+            case TEXTURE: beginDragDropSource("CONTENT_BROWSER_TEXTURE",relativePath); break;
+            case SCENE: beginDragDropSource("CONTENT_BROWSER_SCENE",relativePath); break;
+            case SHADER: beginDragDropSource("CONTENT_BROWSER_SHADER",relativePath); break;
+            case MESH: beginDragDropSource("CONTENT_BROWSER_MESH",relativePath); break;
+                default: beginDragDropSource("CONTENT_BROWSER_FILE",relativePath); break;
+        }
     }
 
     void ContentBrowserPanel::drawFolder(const std::filesystem::path &path, const std::filesystem::path &relativePath) {

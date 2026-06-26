@@ -208,7 +208,7 @@ namespace Vectrix {
 
 			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
 			if (ImGui::BeginDragDropTarget()) {
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM")) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
 #ifdef VC_PLATFORM_LINUX
 					const char* path = static_cast<const char *>(payload->Data);
 #else
