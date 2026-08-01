@@ -19,6 +19,7 @@
 
 
 namespace Vectrix {
+	class Framebuffer;
 	/**
  	* @brief This class represent a shader
 	* @details This class represent a shader that can be created with Vectrix::ShaderManager::createShader() <br>
@@ -280,6 +281,24 @@ namespace Vectrix {
 		 * @warning There is a limited number of texture allowed per shader Texture::getMaxTexturePerShader()
 		 */
 		virtual uint32_t useTexture(std::shared_ptr<Texture> texture) = 0;
+
+		/**
+		 * @brief Define the value of the current framebuffer in the shader
+		 *
+		 * This function permit to modify the value of the current framebuffer in this shader and return the index it has been set to
+		 *
+		 * @param framebuffer the framebuffer that is sent
+		 *
+		 * @pre The shader must be bind before
+		 *
+		 * @post The value is set until another one is given, even for upcoming frames
+		 *
+		 * @warning Don't call this function before the initialization of the window
+		 * @warning The name of the uniform is case-sensitive
+		 *
+		 * @warning There is a limited number of texture/framebuffer allowed per shader Texture::getMaxTexturePerShader()
+		 */
+		virtual uint32_t useFramebuffer(std::shared_ptr<Framebuffer> framebuffer) = 0;
 
 		/**
 		 * @brief Define the value of a uniform in the shader, without needing to think about the type

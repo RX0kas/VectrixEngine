@@ -29,9 +29,10 @@ namespace Vectrix {
 		 * @brief This function add a new ImGuiWidget
 		 * @param widget A shared_ptr to the widget
 		 */
-		void addWidget(const std::shared_ptr<ImGuiWidget> &widget) {
+		void addWidget(ImGuiWidget* widget) {
 			m_widgets.push_back(widget);
 		}
+		void removeWidget(ImGuiWidget* widget);
 		void startBlockEvents() { m_blockEvents = true; }
 		void stopBlockEvents() { m_blockEvents = false; }
 	private:
@@ -42,7 +43,7 @@ namespace Vectrix {
 		ImGuiLayer();
 		static void setDarkThemeColors();
 		std::unique_ptr<ImGuiManager> m_manager;
-		std::vector<std::shared_ptr<ImGuiWidget>> m_widgets;
+		std::vector<ImGuiWidget*> m_widgets;
 		bool m_attached;
 		bool m_blockEvents = true;
 	};

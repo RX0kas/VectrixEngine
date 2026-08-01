@@ -46,8 +46,12 @@ namespace Vectrix {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
-        const std::vector<VkVertexInputAttributeDescription> attributeDescriptions = VulkanVertexBuffer::getAttributeDescriptions(configInfo.layout);
-        const std::vector<VkVertexInputBindingDescription> bindingDescriptions = VulkanVertexBuffer::getBindingDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputAttributeDescription> generatedAttributeDescriptions = VulkanVertexBuffer::getAttributeDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputBindingDescription> generatedBindingDescriptions = VulkanVertexBuffer::getBindingDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions =
+            configInfo.overrideVertexInput ? configInfo.attributeDescriptions : generatedAttributeDescriptions;
+        const std::vector<VkVertexInputBindingDescription>& bindingDescriptions =
+            configInfo.overrideVertexInput ? configInfo.bindingDescriptions : generatedBindingDescriptions;
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -153,7 +157,7 @@ namespace Vectrix {
         configInfo.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         configInfo.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
         configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-        configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+        configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
         configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;

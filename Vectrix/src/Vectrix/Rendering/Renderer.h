@@ -69,9 +69,14 @@ namespace Vectrix {
 		 * @brief Return true if a scene is in progress
 		 */
 		static bool isASceneInProgress() { return s_sceneInProgress; }
+
+		static void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
+		static void resizeMask(glm::vec2 size);
 	private:
+		friend class Application;
 		friend class EditorLayer;
 		static void beginScene(EditorCamera& camera);
+		static void initOutline();
 		static std::unique_ptr<SceneData> m_SceneData;
 		static bool s_sceneInProgress;
 	};

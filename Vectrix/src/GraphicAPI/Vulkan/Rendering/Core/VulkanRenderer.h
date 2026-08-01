@@ -10,6 +10,7 @@
 #include <glm/vec4.hpp>
 
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/DynamicSSBO.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
@@ -17,6 +18,9 @@
 #include "Vectrix/Scene/Components/TransformComponent.h"
 
 namespace Vectrix {
+    class VulkanFramebuffer;
+    class VulkanShader;
+
     struct ObjectData {
         glm::mat4 modelMatrix;
         uint32_t  textureIndex;
@@ -88,6 +92,8 @@ namespace Vectrix {
         }
 
         static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4 &modelMatrix,std::uint32_t textureIndex=0);
+        void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
+        void resizeMask(glm::vec2 size) { m_maskFramebuffer->resize(size); }
     private:
         friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
@@ -100,7 +106,7 @@ namespace Vectrix {
         void freeCommandBuffers();
         void recreateSwapChain();
         void cleanupSwapChain();
-
+        void initOutline();
         void resetCache() {
             for (auto& [name, batch] : m_batchCache) {
                 batch.elementCount = 0;
@@ -120,6 +126,8 @@ namespace Vectrix {
          * Render all submitted data
          */
         void flush();
+        void flushOnly(const std::shared_ptr<VulkanShader> &shader, const VulkanFramebuffer& framebuffer);
+        void renderOutlineFromMask();
 
         Window& m_window;
         Device& m_device;
@@ -132,5 +140,8 @@ namespace Vectrix {
         VkClearValue m_clearValue = { 0, 0, 0, 1.0f };
 
         Cache<std::string,BatchInfo> m_batchCache;
+        std::shared_ptr<VulkanShader> m_maskShader;
+        std::shared_ptr<VulkanShader> m_outlineShader;
+        std::shared_ptr<VulkanFramebuffer> m_maskFramebuffer;
     };
 }

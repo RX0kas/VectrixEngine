@@ -75,6 +75,7 @@ namespace Vectrix {
 		static VulkanImGuiManager& instance() { return *m_instance; }
 
 	private:
+		friend class VulkanRenderer;
         VkDescriptorPool createImGuiDescriptorPool();
         static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
         Device& m_device;

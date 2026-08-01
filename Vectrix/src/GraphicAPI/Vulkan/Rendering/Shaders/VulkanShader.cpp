@@ -1,5 +1,6 @@
 #include "VulkanShader.h"
 
+#include <cstdint>
 #include <utility>
 
 #include "Pipeline.h"
@@ -156,27 +157,46 @@ namespace Vectrix {
 
 	uint32_t VulkanShader::useTexture(std::shared_ptr<Texture> texture) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_ASSERT(m_firstTextureIndexAvailable < Texture::getMaxTexturePerShader(), "Too many texture has been set in the shader "+m_name+" ("+std::to_string(m_firstTextureIndexAvailable)+"/"+std::to_string(Texture::getMaxTexturePerShader())+")");
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
-		auto id = vkTex->getUniqueTextureID();
-		VkDescriptorImageInfo imageInfo = vkTex->getDescriptorInfo();
+		VC_CORE_ASSERT(vkTex != nullptr, "Texture used by shader '{}' is not a VulkanTexture", m_name);
+		return useImage("texture:" + std::to_string(vkTex->getUniqueTextureID()), vkTex->getDescriptorInfo());
+	}
+
+	uint32_t VulkanShader::useFramebuffer(std::shared_ptr<Framebuffer> framebuffer) {
+		VC_PROFILER_FUNCTION();
+		auto vkFramebuffer = std::dynamic_pointer_cast<VulkanFramebuffer>(framebuffer);
+		VC_CORE_ASSERT(vkFramebuffer != nullptr, "Framebuffer used by shader '{}' is not a VulkanFramebuffer", m_name);
+		VC_CORE_ASSERT(!vkFramebuffer->isBound(), "Framebuffer used by shader '{}' must be unbound before sampling", m_name);
+
+		VkDescriptorImageInfo imageInfo{};
+		imageInfo.imageLayout = vkFramebuffer->getImageLayout();
+		imageInfo.imageView = vkFramebuffer->getImageView();
+		imageInfo.sampler = vkFramebuffer->getSampler();
+
+		const auto key = "framebuffer:" + std::to_string(reinterpret_cast<std::uintptr_t>(vkFramebuffer->getImageView()));
+		return useImage(key, imageInfo);
+	}
+
+	uint32_t VulkanShader::useImage(const std::string& key, const VkDescriptorImageInfo& imageInfo) {
 		VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
-		write.dstSet = m_ssbo->descriptorSet()[VulkanContext::instance().getRenderer().getFrameIndex()];
+		write.dstSet = m_ssbo->descriptorSet(m_renderer.getFrameIndex());
 		write.dstBinding = 1;
 		write.descriptorCount = 1;
 		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		write.pImageInfo = &imageInfo;
 
-		if (!m_textureIndexCache.exist(std::to_string(id))) {
+		if (!m_imageIndexCache.exist(key)) {
+			VC_CORE_ASSERT(m_firstTextureIndexAvailable < Texture::getMaxTexturePerShader(), "Too many texture/framebuffer images have been set in the shader "+m_name+" ("+std::to_string(m_firstTextureIndexAvailable)+"/"+std::to_string(Texture::getMaxTexturePerShader())+")");
 			write.dstArrayElement = m_firstTextureIndexAvailable;
 			vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
-			m_textureIndexCache[std::to_string(id)] = m_firstTextureIndexAvailable;
+			m_imageIndexCache[key] = m_firstTextureIndexAvailable;
 			return m_firstTextureIndexAvailable++;
 		}
-		write.dstArrayElement = m_textureIndexCache[std::to_string(id)];
+
+		write.dstArrayElement = m_imageIndexCache[key];
 		vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
 
-		return id;
+		return m_imageIndexCache[key];
 	}
 
 	void VulkanShader::createPipeline(VkRenderPass renderPass, BufferLayout layout) {
@@ -188,6 +208,20 @@ namespace Vectrix {
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = m_pipelineLayout;
 		pipelineConfig.layout = std::move(layout);
+
+		if (m_name.ends_with("mask.vcshader")) {
+			pipelineConfig.overrideVertexInput = true;
+			pipelineConfig.bindingDescriptions = VulkanVertexBuffer::getBindingDescriptions(pipelineConfig.layout);
+			pipelineConfig.attributeDescriptions = VulkanVertexBuffer::getAttributeDescriptions(pipelineConfig.layout);
+			pipelineConfig.attributeDescriptions.resize(1);
+		} else if (m_name.ends_with("outline.vcshader")) {
+			pipelineConfig.overrideVertexInput = true;
+			pipelineConfig.bindingDescriptions.clear();
+			pipelineConfig.attributeDescriptions.clear();
+			pipelineConfig.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
+			pipelineConfig.depthStencilInfo.depthTestEnable = VK_FALSE;
+			pipelineConfig.depthStencilInfo.depthWriteEnable = VK_FALSE;
+		}
 
 		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
 #ifdef OPTIMIZE

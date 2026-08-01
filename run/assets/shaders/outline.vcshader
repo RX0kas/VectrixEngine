@@ -1,0 +1,59 @@
+#shader frag
+#version 450
+
+layout(location = 0) in vec2 v_UV;
+layout(location = 0) out vec4 outColor;
+
+layout(binding = 1) uniform sampler2D u_Textures[128];
+
+layout(set = 0, binding = 0) readonly buffer FrameSSBO {
+    vec2 u_TexelSize;
+    float u_Thickness;
+    vec4 u_Color;
+} frame;
+
+void main()
+{
+    float center = texture(u_Textures[0], v_UV).r;
+
+    float edge = 0.0;
+
+    for (int x = -2; x <= 2; x++)
+    {
+        for (int y = -2; y <= 2; y++)
+        {
+            vec2 offset = vec2(x, y) * frame.u_TexelSize * frame.u_Thickness;
+            edge = max(edge, texture(u_Textures[0], v_UV + offset).r);
+        }
+    }
+
+    float outline = edge - center;
+    float alpha = step(0.0001, outline);
+
+    outColor = vec4(frame.u_Color.rgb, frame.u_Color.a * alpha);
+}
+
+#shader vert
+#version 450
+
+layout(location = 0) out vec2 v_UV;
+
+layout(set = 0, binding = 0) readonly buffer FrameSSBO {
+    vec2 u_TexelSize;
+    float u_Thickness;
+    vec4 u_Color;
+} frame;
+
+vec2 positions[3] = vec2[]
+(
+    vec2(-1.0, -1.0),
+    vec2( 3.0, -1.0),
+    vec2(-1.0,  3.0)
+);
+
+void main()
+{
+    vec2 pos = positions[gl_VertexIndex];
+    v_UV = pos * 0.5 + 0.5;
+    gl_Position = vec4(pos, 0.0, 1.0);
+}

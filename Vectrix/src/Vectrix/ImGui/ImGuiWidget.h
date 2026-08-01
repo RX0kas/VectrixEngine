@@ -32,7 +32,7 @@ namespace Vectrix {
          */
         [[nodiscard]] const std::string& getName() const { return m_DebugName; }
 
-        bool isEnable() const { return m_enable; }
+        [[nodiscard]] bool isEnable() const { return m_enable; }
         void setEnable(bool enable) { m_enable = enable; }
         void disable() { m_enable = false; }
         void enable() { m_enable = true; }

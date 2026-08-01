@@ -25,7 +25,14 @@ namespace Vectrix {
 	}
 
 
-	inline ImVec4 toImVec4(glm::vec4 vec) { return {vec.x,vec.y,vec.z,vec.w};}
+	template<typename T,typename F, int N>
+	T changeVecType(F vec) {
+		T nVec;
+		for (int i = 0; i < N; ++i) {
+			nVec[i] = vec[i];
+		}
+		return nVec;
+	}
 
 	inline bool decomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale) {
 		// From glm::decompose in matrix_decompose.inl

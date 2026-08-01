@@ -38,7 +38,7 @@ namespace Vectrix {
 	void VulkanContext::init() {
 		VC_PROFILER_FUNCTION();
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		DescriptorPoolConfig cfg {64,64,64,64};
+		DescriptorPoolConfig cfg {256,256,4096,512};
 		m_device = std::make_unique<Device>(Application::instance().window(),cfg);
 		m_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*m_device);
 	}

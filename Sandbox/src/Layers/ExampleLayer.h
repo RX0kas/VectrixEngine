@@ -15,7 +15,6 @@ public:
 		m_cameraEntity = m_activeScene.createEntity("Camera");
 		m_cameraEntity->addComponent<Vectrix::CameraComponent>();
 		m_cameraWidget = std::make_shared<CameraWidget>(m_cameraEntity);
-		Vectrix::Application::instance().imguiLayer().addWidget(m_cameraWidget);
 
 		auto s = Vectrix::AssetsManager::load<Vectrix::Shader>("./shaders/sandbox.vcshader");
 		if (s.first!=Vectrix::SUCCESS) {

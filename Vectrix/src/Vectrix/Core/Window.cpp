@@ -51,8 +51,15 @@ namespace Vectrix {
 
 		m_data.width = attributes.width;
 		m_data.height = attributes.height;
-		m_data.title = Application::instance().getAppInfo().getAppName();
+		m_data.title = Application::getAppInfo().getAppName();
 		m_data.visible = false;
+#ifdef VC_PLATFORM_WINDOWS
+		m_data.displayServer = WINDOWS;
+#else
+		m_data.displayServer = detectLinuxDisplayServer();
+#endif
+
+
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
 		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), m_data.title.c_str(), nullptr, nullptr);
@@ -188,5 +195,20 @@ namespace Vectrix {
 
 	float Window::getAspect() const {
 		return m_context->getAspect();
+	}
+
+	DisplayServer Window::detectLinuxDisplayServer() {
+		const char* sessionType = std::getenv("XDG_SESSION_TYPE");
+
+		if (sessionType != nullptr) {
+			std::string type(sessionType);
+			if (type == "wayland") return WAYLAND;
+
+			if (type == "x11") return X11;
+
+			VC_CORE_ERROR("Unknown XDG_SESSION_TYPE variable : {}", sessionType);
+		}
+
+		VC_CORE_CRITICAL("Undefined XDG_SESSION_TYPE variable");
 	}
 }

@@ -27,6 +27,8 @@ namespace Vectrix {
     	m_activeScene = std::make_shared<Scene>("EditorScene");
     	m_camera = std::make_unique<EditorCamera>();
     	m_sceneHierarchyPanel.setContext(m_activeScene);
+
+    	m_settingPanel.setEnable(m_settingsWidgetEnable);
     }
 
 	void EditorLayer::openScene(const std::filesystem::path& path) {
@@ -170,6 +172,10 @@ namespace Vectrix {
 			}
 			if (ImGui::BeginMenu("Window")) {
 				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
+				if (ImGui::MenuItem("Settings (WIP)", nullptr, m_settingsWidgetEnable)) {
+					m_settingsWidgetEnable = !m_settingsWidgetEnable;
+					m_settingPanel.setEnable(m_settingsWidgetEnable);
+				}
 
 				ImGui::EndMenu();
 			}
@@ -197,9 +203,7 @@ namespace Vectrix {
 				m_viewportSize = {size.x,size.y};
 			}
 			ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
-			m_viewportPos = {ImGui::GetWindowPos().x,ImGui::GetWindowPos().y};
-			m_viewportPos.y += ImGui::GetTextLineHeight() + ImGui::GetStyle().FramePadding.y * 2.0f;
-
+			m_viewportPos = changeVecType<glm::vec2,ImVec2,2>(ImGui::GetItemRectMin());
 			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
@@ -215,9 +219,6 @@ namespace Vectrix {
 		}
 		ImGui::End();
 		ImGui::PopStyleVar();
-
-		m_sceneHierarchyPanel.onImGuiRender();
-    	m_contentBrowserPanel.onImGuiRender();
 
 		if (ImGui::IsMouseClicked(0) && m_viewportHovered && !ImGuizmo::IsOver()) {
 			auto [mx, my] = ImGui::GetMousePos();
@@ -244,6 +245,7 @@ namespace Vectrix {
     	m_activeScene->OnRender();
     	Renderer::endScene();
         m_framebuffer->unbind();
+    	Renderer::renderOutline(m_sceneHierarchyPanel.getSelectedEntity(), m_framebuffer);
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
@@ -293,6 +295,7 @@ namespace Vectrix {
     	if (m_mustResize) {
     		m_framebuffer->resize(m_viewportSize);
     		m_camera->setCustomAspect(m_viewportSize.x/m_viewportSize.y);
+			Renderer::resizeMask(m_viewportSize);
     		m_mustResize = false;
     	}
 
@@ -311,49 +314,53 @@ namespace Vectrix {
     	m_camera->recalculateMatrices();
     }
 	glm::vec3 EditorLayer::screenToWorldRay(glm::vec2 mousePos) {
-    	glm::vec2 ndc = {
-    		(2.0f * (mousePos.x - m_viewportPos.x) / m_viewportSize.x) - 1.0f,
+		glm::vec2 ndc = {
+			(2.0f * (mousePos.x - m_viewportPos.x) / m_viewportSize.x) - 1.0f,
 			1.0f - (2.0f * (mousePos.y - m_viewportPos.y) / m_viewportSize.y)
 		};
-    	glm::mat4 invVP = glm::inverse(m_camera->getTransformationMatrix());
-    	glm::vec4 rayClip  = { ndc.x, ndc.y, -1.0f, 1.0f };
-    	glm::vec4 rayWorld = invVP * rayClip;
-    	rayWorld /= rayWorld.w;
+		glm::mat4 proj = m_camera->getProjectionMatrix();
+		proj[1][1] *= -1.0f;
+		glm::mat4 invVP = glm::inverse(proj * m_camera->getViewMatrix());
+		glm::vec4 rayClip  = { ndc.x, ndc.y, -1.0f, 1.0f };
+		glm::vec4 rayWorld = invVP * rayClip;
+		rayWorld /= rayWorld.w;
 
-    	glm::vec3 rayOrigin = m_camera->m_position;
-    	glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld) - rayOrigin);
-    	return rayDirection;
-    }
+		glm::vec3 rayOrigin = m_camera->m_position;
+		glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld) - rayOrigin);
+		return rayDirection;
+	}
 
 	std::shared_ptr<Entity> EditorLayer::pickEntity(glm::vec2 mousePos) {
-    	glm::vec3 rayDir = screenToWorldRay(mousePos);
-    	glm::vec3 rayOrigin = m_camera->m_position;
+		glm::vec3 rayDir = screenToWorldRay(mousePos);
+		glm::vec3 rayOrigin = m_camera->m_position;
 
-    	std::shared_ptr<Entity> closest;
-    	float closestT = std::numeric_limits<float>::max();
+		std::shared_ptr<Entity> closest;
+		float closestT = std::numeric_limits<float>::max();
 
-    	for (const auto& e : m_activeScene->m_entities) {
-    		std::shared_ptr<Entity> entity = e.second;
+		for (const auto& e : m_activeScene->m_entities) {
+			std::shared_ptr<Entity> entity = e.second;
 
-    		if (entity->hasComponent<CameraComponent>()) { continue; } // TODO: make camera visible and clickable
+			if (entity->hasComponent<CameraComponent>()) { continue; } // TODO: make camera visible and clickable
+			if (!entity->hasComponent<MeshRendererComponent>()) { continue; }
 
-    		auto& tc = entity->getComponent<TransformComponent>();
-    		auto& mc = entity->getComponent<MeshRendererComponent>();
-    		float t = 0;
+			auto& tc = entity->getComponent<TransformComponent>();
+			auto& mc = entity->getComponent<MeshRendererComponent>();
+			if (!mc.isEnable() || !mc.mesh) { continue; }
 
-    		glm::mat4 invModel = glm::inverse(tc.modelMatrix());
-    		invModel[1][1] *= -1;
-    		glm::vec3 localOrigin =	glm::vec3(invModel * glm::vec4(rayOrigin, 1.0f));
-    		glm::vec3 localDir = glm::normalize(glm::vec3(invModel * glm::vec4(rayDir, 0.0f)));
+			float t = 0;
+			glm::mat4 modelMatrix = tc.modelMatrix();
+			glm::mat4 invModel = glm::inverse(modelMatrix);
+			glm::vec3 localOrigin =	glm::vec3(invModel * glm::vec4(rayOrigin, 1.0f));
+			glm::vec3 localDir = glm::normalize(glm::vec3(invModel * glm::vec4(rayDir, 0.0f)));
 
-    		if (mc.mesh->getAABB().intersect(localOrigin, localDir, t)) {
-    			if (t < closestT) {
-    				closestT = t;
-    				closest = entity;
-    			}
-    		}
-    	}
+			if (mc.mesh->getAABB().intersect(localOrigin, localDir, t)) {
+				if (t < closestT) {
+					closestT = t;
+					closest = entity;
+				}
+			}
+		}
 
-    	return closest;
-    }
+		return closest;
+	}
 } // Vectrix
