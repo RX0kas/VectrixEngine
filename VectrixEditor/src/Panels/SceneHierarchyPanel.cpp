@@ -9,7 +9,7 @@
 #include "Vectrix/Assets/AssetsManager.h"
 
 namespace Vectrix {
-    SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) {
+    SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) : ImGuiWidget("SceneHierarchyPanel") {
         setContext(scene);
     }
 
@@ -18,7 +18,7 @@ namespace Vectrix {
         resetSelectedEntity();
     }
 
-    void SceneHierarchyPanel::onImGuiRender() {
+    void SceneHierarchyPanel::render() {
         ImGui::Begin("Scene Hierarchy");
         for (const auto& e : m_context->m_entities) {
             const std::shared_ptr<Entity>& entity = e.second;

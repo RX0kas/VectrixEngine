@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.5.0 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.5.1 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -233,9 +233,7 @@ if(WIN32)
             GLFW_INCLUDE_NONE
     )
 elseif(UNIX AND NOT APPLE)
-  target_compile_definitions(Vectrix PUBLIC
-            VC_PLATFORM_LINUX
-    )
+    target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_LINUX)
 endif()
 
 ##########

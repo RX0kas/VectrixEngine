@@ -10,7 +10,7 @@ namespace Vectrix {
     static float padding = 16.0f;
     static float thumbnailSize = 128.0f;
 
-    ContentBrowserPanel::ContentBrowserPanel() {
+    ContentBrowserPanel::ContentBrowserPanel() : ImGuiWidget("ContentBrowserPanel") {
         if (std::filesystem::path(s_AssetPath).empty()) {
             VC_WARN("{} doesn't exist for the asset path",s_AssetPath.string());
             m_currentDirectory = std::filesystem::current_path();
@@ -45,7 +45,7 @@ namespace Vectrix {
         }
     }
 
-    void ContentBrowserPanel::onImGuiRender() {
+    void ContentBrowserPanel::render() {
         ImGui::Begin("Content Browser");
 
         if (m_currentDirectory != std::filesystem::path(s_AssetPath)) {

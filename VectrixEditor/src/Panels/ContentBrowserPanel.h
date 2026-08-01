@@ -2,14 +2,15 @@
 #define VECTRIXWORKSPACE_CONTENTBROWSERPANEL_H
 #include <filesystem>
 
+#include "Vectrix/ImGui/ImGuiWidget.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
 namespace Vectrix {
-    class ContentBrowserPanel {
+    class ContentBrowserPanel : public ImGuiWidget {
     public:
         ContentBrowserPanel();
 
-        void onImGuiRender();
+        void render() override;
     private:
         std::filesystem::path m_currentDirectory;
         std::shared_ptr<Texture> m_directoryIcon;

@@ -196,7 +196,7 @@ namespace Vectrix {
             }
         }
 
-        if (ImGui::CollapsingHeader("Images")) {
+        if (ImGui::CollapsingHeader("Images")) { // TODO : fix images
             for (const auto& img : frame.images) {
                 char name[256] = "Image - ";
                 strcat(name,img.name.c_str());
@@ -222,13 +222,12 @@ namespace Vectrix {
 		VC_CORE_INFO("Destroying ImGui");
 
 		ImGui_ImplVulkan_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-
 		if (m_descriptorPool != VK_NULL_HANDLE) {
 			vkDestroyDescriptorPool(m_device.device(), m_descriptorPool, nullptr);
 			m_descriptorPool = VK_NULL_HANDLE;
 		}
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 
@@ -294,17 +293,18 @@ namespace Vectrix {
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
     	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		if (Application::instance().window().getDisplayServer()!=WAYLAND) {
+			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		} else {
+			VC_CORE_WARN("Multi viewports has been disabled on wayland");
+		}
 
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		io.ConfigDpiScaleFonts    = true;
-		io.ConfigDpiScaleViewports = true;
-
+		io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
+		io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
 
 		ImGuiStyle& style = ImGui::GetStyle();
-		io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
-		io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;

@@ -36,7 +36,7 @@ namespace Vectrix {
          * @brief This function return the maximal number of Texture allowed per Shader
          * @return The maximum number of Texture allowed per shader
          */
-        static constexpr uint32_t getMaxTexturePerShader() { return 8; }
+        static constexpr uint32_t getMaxTexturePerShader() { return 128; }
 
         /**
          * @brief Return the name of the texture

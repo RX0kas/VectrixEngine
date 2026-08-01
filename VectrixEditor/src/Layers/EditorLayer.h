@@ -6,6 +6,7 @@
 #include "Vectrix.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/SettingsPanel.h"
 
 namespace Vectrix {
     class EditorLayer : public Layer {
@@ -53,7 +54,9 @@ namespace Vectrix {
     	// Panels
     	SceneHierarchyPanel m_sceneHierarchyPanel;
     	ContentBrowserPanel m_contentBrowserPanel;
+    	SettingsPanel m_settingPanel;
     	bool m_graphicDebugWidgetEnable = false;
+    	bool m_settingsWidgetEnable = false;
     };
 } // Vectrix
 

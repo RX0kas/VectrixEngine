@@ -9,7 +9,7 @@
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Rendering/GraphicsContext.h"
 #include "Rendering/RenderCommand.h"
-#include "Rendering/Shaders/ShaderManager.h"
+#include "Rendering/Renderer.h"
 #include "Rendering/Textures/TextureManager.h"
 
 
@@ -33,6 +33,9 @@ namespace Vectrix {
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
+
+
+		Renderer::initOutline();
 	}
 
 	Application::~Application() {
@@ -59,6 +62,7 @@ namespace Vectrix {
 	void Application::run() {
 		VC_PROFILER_FUNCTION();
 		m_window->show();
+		Renderer::resizeMask({m_window->getWidth(),m_window->getHeight()});
 		while (m_running) {
 			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;

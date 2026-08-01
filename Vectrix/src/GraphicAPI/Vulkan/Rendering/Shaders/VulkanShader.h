@@ -23,6 +23,7 @@ namespace Vectrix {
         void setUniformMat4f(const std::string &name, glm::mat4 value) const override;
         void sendCameraUniform(const glm::mat4& camera) const override;
         uint32_t useTexture(std::shared_ptr<Texture> texture) override;
+        uint32_t useFramebuffer(std::shared_ptr<Framebuffer> framebuffer) override;
 
         void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const override {
             VC_VERIFY_UNIFORM_NAME(name);
@@ -47,6 +48,7 @@ namespace Vectrix {
 
         void createPipelineLayout();
         void createPipeline(VkRenderPass renderPass, BufferLayout layout);
+        uint32_t useImage(const std::string& key, const VkDescriptorImageInfo& imageInfo);
     private:
         Device& m_device;
         VulkanRenderer& m_renderer;
@@ -66,10 +68,7 @@ namespace Vectrix {
         friend class VulkanRenderer;
 
         uint32_t m_firstTextureIndexAvailable = 0;
-        /**
-         * m_textureIndexCache[str(texture.getUniqueID)] = index in ssbo
-         */
-        Cache<std::string,uint32_t> m_textureIndexCache;
+        Cache<std::string,uint32_t> m_imageIndexCache;
 
         // Info
         const std::string m_name;

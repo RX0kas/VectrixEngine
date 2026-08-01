@@ -37,12 +37,9 @@ namespace Vectrix {
         [[nodiscard]] VkDeviceSize elementStride() const { return m_elementStride; }
         [[nodiscard]] std::array<std::shared_ptr<VulkanTexture>,Texture::getMaxTexturePerShader()> textures() const {return m_textures;}
 
-        [[nodiscard]] static std::uint32_t getGlobalSetCount() { return s_setNumber; }
-        [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
+        [[nodiscard]] std::uint32_t getSetCountID() const { return 0; }
     private:
         friend class DynamicSSBO;
-        static void increaseSetCount() { s_setNumber++; }
-        static std::uint32_t s_setNumber;
         void createDescriptorSetLayout();
         Device& m_device;
         VkBuffer m_buffer{};
@@ -58,7 +55,6 @@ namespace Vectrix {
         std::array<std::shared_ptr<VulkanTexture>, Texture::getMaxTexturePerShader()> m_textures;
 
         VmaAllocation m_allocation{};
-        std::uint32_t m_setCountID;
     };
 } // Vectrix
 

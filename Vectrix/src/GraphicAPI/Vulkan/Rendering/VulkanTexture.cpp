@@ -13,6 +13,29 @@ namespace Vectrix {
 
     uint32_t VulkanTexture::s_numberTexture = 1;
 
+    static VkDescriptorSet createImGuiTextureDescriptor(Device& device, VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout) {
+        VkDescriptorSetLayout layout = ImGui_ImplVulkan_GetTextureDescriptorSetLayout();
+
+        VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
+        VkDescriptorSetAllocateInfo allocInfo{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO };
+        allocInfo.descriptorPool = device.descriptorPool();
+        allocInfo.descriptorSetCount = 1;
+        allocInfo.pSetLayouts = &layout;
+
+        if (vkAllocateDescriptorSets(device.device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
+            VC_CORE_ERROR("Failed to allocate ImGui texture descriptor set");
+            return VK_NULL_HANDLE;
+        }
+
+        ImGui_ImplVulkan_WriteTextureDescriptor(descriptorSet, sampler, imageView, imageLayout);
+        return descriptorSet;
+    }
+
+    static void destroyImGuiTextureDescriptor(Device& device, VkDescriptorSet descriptorSet) {
+        if (descriptorSet == VK_NULL_HANDLE) return;
+        vkFreeDescriptorSets(device.device(), device.descriptorPool(), 1, &descriptorSet);
+    }
+
     VulkanTexture::VulkanTexture(const std::string &name, const std::string &path) : m_device(VulkanContext::instance().getDevice()),m_name(name) {
         VC_PROFILER_FUNCTION();
         stbi_uc* pixels = stbi_load(path.c_str(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
@@ -22,7 +45,7 @@ namespace Vectrix {
             VC_CORE_ERROR("Failed to load texture image");
         }
         createTexture(pixels,STBI_rgb_alpha);
-        m_descriptorSet = ImGui_ImplVulkan_AddTexture(m_sampler,m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        m_descriptorSet = createImGuiTextureDescriptor(m_device,m_sampler,m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         m_id = s_numberTexture++;
     }
@@ -193,8 +216,7 @@ namespace Vectrix {
 
     VulkanTexture::~VulkanTexture() {
         VC_PROFILER_FUNCTION();
-        if (m_descriptorSet != VK_NULL_HANDLE)
-            ImGui_ImplVulkan_RemoveTexture(m_descriptorSet);
+        destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
         if (m_sampler != VK_NULL_HANDLE)
             vkDestroySampler(m_device.device(), m_sampler, nullptr);
         if (m_imageView != VK_NULL_HANDLE)

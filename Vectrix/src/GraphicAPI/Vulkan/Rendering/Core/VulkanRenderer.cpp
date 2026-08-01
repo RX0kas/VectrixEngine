@@ -1,6 +1,7 @@
 #include "vcpch.h"
 #include "VulkanRenderer.h"
 
+#include "Vectrix/Settings/Outline.h"
 #include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
@@ -23,17 +24,12 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Initializing Renderer");
 		recreateSwapChain();
-
-		const VkFormat f = m_swapChain->getSwapChainImageFormat();
-		VC_CORE_ASSERT(f!=VK_FORMAT_UNDEFINED,"SwapChain image format is undefined");
-		device.setImageFormat(f);
-
-
 	}
 
 	VulkanRenderer::~VulkanRenderer() {
 		VC_PROFILER_FUNCTION();
 		vkDeviceWaitIdle(m_device.device());
+		m_maskFramebuffer.reset();
 		freeCommandBuffers();
 		cleanupSwapChain();
 	}
@@ -342,6 +338,132 @@ namespace Vectrix {
 			batch.objectDataSSBO.reset(frameIndex);
 			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
 		}
+	}
+
+	void VulkanRenderer::flushOnly(const std::shared_ptr<VulkanShader> &shader,const VulkanFramebuffer& framebuffer) {
+		VC_CORE_ASSERT(shader != nullptr, "Shader '{}' not found in ShaderManager", shader->getID());
+		VC_CORE_ASSERT(shader->m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shader->getID());
+
+		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
+		if (!meshRegistry.isUploaded()) {return;}
+		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
+		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
+		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+
+		VkExtent2D extent = framebuffer.getExtent();
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(extent.width);
+		viewport.height  = static_cast<float>(extent.height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = {0, 0};
+		scissor.extent = extent;
+		vkCmdSetScissor(cmd, 0, 1, &scissor);
+		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
+		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
+
+		VkDeviceSize offset = 0;
+		vkCmdBindVertexBuffers(cmd, 0, 1, &vertexBuf, &offset);
+		vkCmdBindIndexBuffer(cmd, meshRegistry.getIndexBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+		for (auto& [shaderName, batch] : m_batchCache) {
+			if (shaderName!=shader->getID()) continue;
+			if (batch.elementCount == 0) continue;
+
+			VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
+			VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shaderName);
+
+			if (shader->isAffectedByCamera())
+				shader->sendCameraUniform(Renderer::getSceneData().transformation_matrix);
+			shader->bind();
+			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
+			batch.objectDataSSBO.flush(frameIndex);
+			batch.objectDataSSBO.reset(frameIndex);
+			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
+			break;
+		}
+	}
+
+	void VulkanRenderer::renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer) {
+		if (!entity) return;
+		if (!entity->hasComponent<MeshRendererComponent>()) return;
+
+		auto& meshRenderer = entity->getComponent<MeshRendererComponent>();
+		auto& transform = entity->getComponent<TransformComponent>();
+
+		if (!meshRenderer.mesh) return;
+
+		m_maskFramebuffer->bind();
+		{
+			m_maskShader->bind();
+
+			m_maskShader->setUniformMat4f("model", transform.modelMatrix());
+
+			submit(m_maskShader,meshRenderer.mesh->getVertexArray(),transform.modelMatrix());
+			flushOnly(m_maskShader, *m_maskFramebuffer);
+		}
+		m_maskFramebuffer->unbind();
+
+		framebuffer->bind(false);
+		{
+			m_outlineShader->useFramebuffer(m_maskFramebuffer);
+			glm::vec2 texelSize = {1.0f / static_cast<float>(m_maskFramebuffer->getSpecification().width),1.0f / static_cast<float>(m_maskFramebuffer->getSpecification().height)};
+			m_outlineShader->setUniform2f("u_TexelSize", texelSize*outlineSettings.texelSize);
+			m_outlineShader->setUniform1f("u_Thickness", outlineSettings.thickness);
+			m_outlineShader->setUniform4f("u_Color", outlineSettings.color);
+			renderOutlineFromMask();
+		}
+		framebuffer->unbind();
+	}
+
+	void VulkanRenderer::renderOutlineFromMask() {
+		VkCommandBuffer cmd = getCurrentCommandBuffer();
+		auto* currentFB = dynamic_cast<VulkanFramebuffer*>(Framebuffer::getCurrentFramebuffer());
+		VC_CORE_ASSERT(currentFB != nullptr, "Outline composition requires a bound framebuffer");
+
+		const VkExtent2D extent = currentFB->getExtent();
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(extent.width);
+		viewport.height = static_cast<float>(extent.height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = {0, 0};
+		scissor.extent = extent;
+		vkCmdSetScissor(cmd, 0, 1, &scissor);
+
+		m_outlineShader->bind();
+		vkCmdDraw(cmd, 3, 1, 0, 0);
+	}
+
+	void VulkanRenderer::initOutline() {
+		const VkFormat f = m_swapChain->getSwapChainImageFormat();
+		VC_CORE_ASSERT(f!=VK_FORMAT_UNDEFINED,"SwapChain image format is undefined");
+		m_device.setImageFormat(f);
+
+		std::shared_ptr<Shader> ms;
+		VC_LOAD_ASSET(ms,Shader,"shaders/mask.vcshader")
+		m_maskShader = std::static_pointer_cast<VulkanShader>(ms);
+
+		std::shared_ptr<Shader> os;
+		VC_LOAD_ASSET(os,Shader,"shaders/outline.vcshader")
+		m_outlineShader = std::static_pointer_cast<VulkanShader>(os);
+
+		FramebufferSpecification spec;
+		spec.height = m_window.getHeight();
+		spec.width = m_window.getWidth();
+		spec.hasDepth = false;
+		m_maskFramebuffer = std::static_pointer_cast<VulkanFramebuffer>(Framebuffer::create(spec));
 	}
 
 	DebugFrameInfo VulkanRenderer::getCurrentFrameInfo() const {

@@ -5,6 +5,7 @@
 
 #include "imgui.h"
 #include "glm/vec2.hpp"
+#include "Vectrix/Utils/ImageFormat.h"
 
 namespace Vectrix {
     /**
@@ -19,6 +20,20 @@ namespace Vectrix {
          * @brief The height of the framebuffer
          */
         std::uint32_t height = -1;
+        /**
+         * @brief If the framebuffer has a depth buffer
+         */
+        bool hasDepth = true;
+
+        /**
+         * @brief The framebuffer image format
+         */
+        VectrixImageFormat imageFormat = UNDEFINED;
+
+        /**
+         * @brief The framebuffer image format
+         */
+        VectrixImageFormat depthFormat = UNDEFINED;
     };
 
     /**
@@ -30,9 +45,10 @@ namespace Vectrix {
 
         /**
          * @brief This function tell the renderer to draw inside this framebuffer
+         * @param clear The framebuffer should clear the previous image
          * @pre Must not be already bound
          */
-        virtual void bind() = 0;
+        virtual void bind(bool clear = true) = 0;
 
         /**
          * @brief This function tell the renderer to stop drawing inside this framebuffer
@@ -55,6 +71,10 @@ namespace Vectrix {
          * @brief This function return the specification of the Framebuffer
          */
         [[nodiscard]] virtual const FramebufferSpecification& getSpecification() const = 0;
+
+        virtual void updateSpecification(FramebufferSpecification& spec) = 0;
+        [[nodiscard]] virtual VectrixImageFormat getImageFormat() const = 0;
+        [[nodiscard]] virtual VectrixImageFormat getDepthFormat() const = 0;
 
 
         /**

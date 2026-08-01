@@ -3,18 +3,19 @@
 #include <memory>
 
 #include "imgui.h"
+#include "Vectrix/ImGui/ImGuiWidget.h"
 #include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
-    class SceneHierarchyPanel {
+    class SceneHierarchyPanel : public ImGuiWidget {
     public:
-        SceneHierarchyPanel() = default;
+        SceneHierarchyPanel() : ImGuiWidget("SceneHierarchyPanel"){}
 
         SceneHierarchyPanel(const std::shared_ptr<Scene>& scene);
 
         void setContext(const std::shared_ptr<Scene>& scene);
 
-        void onImGuiRender();
+        void render() override;
 
         std::shared_ptr<Entity> getSelectedEntity() { return m_selectionContext; }
         void setSelectedEntity(const std::shared_ptr<Entity>& entity) { m_selectionContext = entity; }

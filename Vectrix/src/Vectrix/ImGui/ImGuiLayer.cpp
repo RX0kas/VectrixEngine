@@ -16,7 +16,7 @@ namespace Vectrix {
 			m_manager->cleanup();
 		m_manager.reset();
 		VC_CORE_INFO("ImGui destroyed");
-	};
+	}
 
 	void ImGuiLayer::OnRender() {
 		VC_PROFILER_FUNCTION();
@@ -57,9 +57,16 @@ namespace Vectrix {
 
 	void ImGuiLayer::OnImGuiRender() {
 		VC_PROFILER_FUNCTION();
-		for (const auto& w : m_widgets) {
-			w->render();
+		for (auto* w : m_widgets) {
+			if (w != nullptr && w->isEnable())
+				w->render();
 		}
+	}
+
+	void ImGuiLayer::removeWidget(ImGuiWidget* widget) {
+		const auto it = std::find(m_widgets.begin(), m_widgets.end(), widget);
+		if (it != m_widgets.end())
+			m_widgets.erase(it);
 	}
 
 	void ImGuiLayer::setDarkThemeColors() {

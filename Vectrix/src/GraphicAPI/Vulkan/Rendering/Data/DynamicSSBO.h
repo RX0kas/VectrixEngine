@@ -19,7 +19,7 @@ namespace Vectrix {
         [[nodiscard]] VkDescriptorSet descriptorSet(uint32_t frameIndex) const { return m_descriptorSets[frameIndex]; }
         [[nodiscard]] uint32_t capacity() const { return m_capacity; }
 
-        [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
+        [[nodiscard]] std::uint32_t getSetCountID() const { return 1; }
         static VkDescriptorSetLayout getStaticDescriptorSetLayout() {
             if (s_descriptorSetLayout==nullptr) {
                 createDescriptorSetLayout();
@@ -52,7 +52,6 @@ namespace Vectrix {
         std::vector<uint8_t> m_storage;
 
         std::vector<VkDescriptorSet> m_descriptorSets;
-        std::uint32_t m_setCountID{};
     };
 } // Vectrix
 

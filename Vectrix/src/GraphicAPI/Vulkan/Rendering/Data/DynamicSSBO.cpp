@@ -10,9 +10,6 @@ namespace Vectrix {
         m_layout = layout;
         m_framesInFlight = SwapChain::MAX_FRAMES_IN_FLIGHT;
 
-        m_setCountID = ShaderSSBO::getGlobalSetCount();
-        ShaderSSBO::increaseSetCount();
-
         VkPhysicalDeviceProperties props{};
         vkGetPhysicalDeviceProperties(m_device.physicalDevice(), &props);
         VkDeviceSize minAlign = props.limits.minStorageBufferOffsetAlignment;
@@ -40,7 +37,7 @@ namespace Vectrix {
     DynamicSSBO::DynamicSSBO(DynamicSSBO&& other) noexcept
     : m_device(other.m_device), m_elementStride(other.m_elementStride), m_capacity(other.m_capacity),
         m_framesInFlight(other.m_framesInFlight), m_buffer(other.m_buffer), m_allocation(other.m_allocation), m_allocator(other.m_allocator),
-        m_mapped(other.m_mapped), m_storage(std::move(other.m_storage)), m_descriptorSets(std::move(other.m_descriptorSets)), m_setCountID(other.m_setCountID) {
+        m_mapped(other.m_mapped), m_storage(std::move(other.m_storage)), m_descriptorSets(std::move(other.m_descriptorSets)) {
         m_layout = other.m_layout;
         other.m_layout = nullptr;
         other.m_buffer = VK_NULL_HANDLE;
@@ -49,7 +46,6 @@ namespace Vectrix {
         other.m_elementStride = 0;
         other.m_capacity = 0;
         other.m_framesInFlight = 0;
-        other.m_setCountID = 0;
     }
 
     DynamicSSBO::~DynamicSSBO() {
@@ -85,7 +81,6 @@ namespace Vectrix {
         m_mapped = other.m_mapped;
         m_storage = std::move(other.m_storage);
         m_descriptorSets = std::move(other.m_descriptorSets);
-        m_setCountID = other.m_setCountID;
 
         other.m_layout = nullptr;
         other.m_buffer = VK_NULL_HANDLE;
@@ -94,7 +89,6 @@ namespace Vectrix {
         other.m_elementStride = 0;
         other.m_capacity = 0;
         other.m_framesInFlight = 0;
-        other.m_setCountID = 0;
 
         return *this;
     }

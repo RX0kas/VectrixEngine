@@ -7,13 +7,19 @@
 #include "Vectrix/Events/Event.h"
 
 namespace Vectrix {
+	enum DisplayServer {
+		UNKNOWN_DISPLAY_SERVER,
+		X11,
+		WAYLAND,
+		WINDOWS,
+	};
+
 	struct WindowAttributes
 	{
 		unsigned int width;
 		unsigned int height;
 
-		WindowAttributes( unsigned int width = 1280, unsigned int height = 720)
-			: width(width), height(height) {}
+		WindowAttributes( unsigned int width = 1280, unsigned int height = 720) : width(width), height(height) {}
 	};
 
 	class GraphicsContext;
@@ -60,7 +66,9 @@ namespace Vectrix {
 		}
 
 		void setTitle(const std::string &title);
-		std::string getTitle() { return m_data.title; }
+		[[nodiscard]] std::string getTitle() const { return m_data.title; }
+
+		[[nodiscard]] DisplayServer getDisplayServer() const { return m_data.displayServer; }
 	private:
 		Window();
 
@@ -72,6 +80,7 @@ namespace Vectrix {
 			bool windowResized;
 			EventCallbackFn eventCallback;
 			bool visible;
+			DisplayServer displayServer;
 		};
 		
 		void shutdown();
@@ -82,6 +91,8 @@ namespace Vectrix {
 		std::unique_ptr<GraphicsContext> m_context;
 
 		WindowData m_data;
+
+		static DisplayServer detectLinuxDisplayServer();
 		
 		static GraphicsContext* createGraphicContext(GLFWwindow* window);
 		static void setClientAPI();

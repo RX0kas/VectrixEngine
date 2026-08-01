@@ -17,6 +17,7 @@ namespace Vectrix {
 
         std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
+        bool overrideVertexInput = false;
 
         VkFormat colorAttachmentFormat = VK_FORMAT_UNDEFINED;
         VkFormat depthAttachmentFormat = VK_FORMAT_UNDEFINED;
