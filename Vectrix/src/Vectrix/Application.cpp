@@ -11,6 +11,7 @@
 #include "Rendering/RenderCommand.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Textures/TextureManager.h"
+#include "Settings/SettingsManager.h"
 
 
 namespace Vectrix {
@@ -34,6 +35,7 @@ namespace Vectrix {
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
 
+		m_settingsManager = std::shared_ptr<SettingsManager>(new SettingsManager());
 
 		Renderer::initOutline();
 	}

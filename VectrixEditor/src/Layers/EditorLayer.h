@@ -25,6 +25,7 @@ namespace Vectrix {
 
     	void OnAttach() override;
     	void openScene(const std::filesystem::path& path);
+    	std::shared_ptr<Scene> getActiveScene() { return m_activeScene; }
 	private:
     	void showSaveDialog();
     	void showOpenDialog();

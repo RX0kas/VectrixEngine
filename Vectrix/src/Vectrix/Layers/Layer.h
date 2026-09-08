@@ -10,6 +10,15 @@
  */
 
 namespace Vectrix {
+	/**
+	 * @brief One slice of the application, receiving the update, render and event callbacks
+	 *
+	 * Derive from it and override only what is needed, every callback has an empty default.
+	 * The layers are held by a LayerStack, which decides in what order they are called.
+	 * @see LayerStack
+	 * @see Application::pushLayer
+	 * @ingroup layers
+	 */
 	class Layer {
 	public:
 		/**

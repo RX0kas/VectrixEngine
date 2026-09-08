@@ -9,9 +9,11 @@
 namespace Vectrix {
 	static uint8_t s_GLFWWindowCount = 0;
 
+	/// @cond INTERNAL
 	static void errorCallback(int error, const char* description) {
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
 	}
+	/// @endcond
 
 	void Window::shutdown() {
 		VC_PROFILER_FUNCTION();

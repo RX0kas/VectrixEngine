@@ -72,8 +72,23 @@ namespace Vectrix {
          */
         [[nodiscard]] virtual const FramebufferSpecification& getSpecification() const = 0;
 
+        /**
+         * @brief Replace the specification and rebuild the framebuffer to match
+         * @param spec The new specification
+         * @warning The attachments are recreated, so anything already drawn is lost
+         */
         virtual void updateSpecification(FramebufferSpecification& spec) = 0;
+
+        /**
+         * @brief Return the format of the colour attachment
+         * @return The colour format the framebuffer was created with
+         */
         [[nodiscard]] virtual VectrixImageFormat getImageFormat() const = 0;
+
+        /**
+         * @brief Return the format of the depth attachment
+         * @return The depth format the framebuffer was created with
+         */
         [[nodiscard]] virtual VectrixImageFormat getDepthFormat() const = 0;
 
 
@@ -100,8 +115,13 @@ namespace Vectrix {
          */
         [[nodiscard]] static bool isAFramebufferActive() { return s_currentFramebuffer!=nullptr; }
 
+        /**
+         * @brief Return the aspect ratio of the framebuffer
+         * @return The width divided by the height
+         */
         [[nodiscard]] virtual float getAspectRatio() const = 0;
     protected:
+        /// The framebuffer currently bound, or nullptr when drawing to the window
         static Framebuffer* s_currentFramebuffer;
     };
 } // Vectrix

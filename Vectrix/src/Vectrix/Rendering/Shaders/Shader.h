@@ -8,6 +8,14 @@
 #include "Vectrix/Rendering/Camera/Camera.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
+/**
+ * @brief Refuse a uniform name the engine keeps for itself
+ *
+ * `vc_cameraTransform` is set by the renderer on every shader, so a shader defining its
+ * own uniform under that name would have it overwritten.
+ * @param name The uniform name to check
+ * @ingroup shaders
+ */
 #define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") {VC_ERROR("The uniform name \"{}\" is reserved",name);}
 
 

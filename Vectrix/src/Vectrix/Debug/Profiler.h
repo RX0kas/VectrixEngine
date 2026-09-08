@@ -11,6 +11,13 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Utils/Json.h"
 
+/**
+ * @brief The version of the profiler data format
+ *
+ * Written into every profile file, so an old one can be told apart from a current one.
+ * @see Vectrix::Profiler::isCompatible
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_VERSION "1.1"
 
 /**
@@ -20,15 +27,26 @@
 */
 
 namespace Vectrix {
+    /**
+     * @brief A duration in microseconds, kept as a double so it does not lose precision
+     * @ingroup debugtools
+     */
     using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
     /**
      * @brief Data obtained on the execution of a function
      */
     struct ProfilerResult
     {
+        /// The name the scope was measured under
         const char* name;
+
+        /// When the scope was entered, counted from the start of the session
         FloatingPointMicroseconds start;
+
+        /// How long the scope took
         std::chrono::microseconds elapsedTime;
+
+        /// Which thread the scope ran on
         uint32_t threadID;
     };
 
@@ -37,6 +55,7 @@ namespace Vectrix {
      */
     struct ProfilerSession
     {
+        /// The name of the session, which ends up in the profile file
         const char* name;
     };
 
@@ -91,6 +110,11 @@ namespace Vectrix {
             m_profileCount = 0;
         }
         /// @endcond
+        /**
+         * @brief Return the profiler of the application
+         * @return The single instance, created the first time it is asked for
+         * @ingroup debugtools
+         */
         static Profiler& get()
         {
             static Profiler instance;
@@ -104,8 +128,13 @@ namespace Vectrix {
          */
         static bool isCompatible(const std::string &filePath) {
             if (!isValidFormat(filePath)) return false;
+            std::pair<VectrixResult, JsonValue> file = Json::load(filePath);
 
-            JsonValue root = Json::load(filePath);
+            if (file.first!=SUCCESS) {
+                return false;
+            }
+
+            JsonValue root = file.second;
             std::string profiler_version = root["data"]["profiler_version"].getString();
             const size_t pointPos = profiler_version.find('.');
             const std::string majorStr = profiler_version.substr(0, pointPos);
@@ -121,8 +150,21 @@ namespace Vectrix {
             return true;
         }
 
+        /**
+         * @brief Tell if a file is shaped like a profiler data file at all
+         * @param filePath The path of the file to check
+         * @return true when the file has the expected structure
+         * @note Being valid does not mean being compatible, see isCompatible
+         * @see isCompatible
+         */
         static bool isValidFormat(const std::string &filePath) {
-            JsonValue root = Json::load(filePath);
+            std::pair<VectrixResult, JsonValue> file = Json::load(filePath);
+
+            if (file.first!=SUCCESS) {
+                return false;
+            }
+
+            JsonValue root = file.second;
             if (!root.contains("data")) {
                 return false;
             }
@@ -188,6 +230,13 @@ namespace Vectrix {
 
 #if VC_PROFILER_ENABLE
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+/**
+ * @brief The name of the enclosing function, whatever the compiler calls it
+ *
+ * It is what VC_PROFILER_FUNCTION records a measurement under.
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
 #define VC_FUNC_NAME __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
 #define VC_FUNC_NAME __PRETTY_FUNCTION__
@@ -202,13 +251,48 @@ namespace Vectrix {
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
 #define VC_FUNC_NAME __func__
 #else
+/**
+ * @brief The name of the enclosing function, whatever the compiler calls it
+ *
+ * It is what VC_PROFILER_FUNCTION records a measurement under.
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
 #define VC_FUNC_NAME "VC_FUNC_NAME unknown"
 #endif
-/// @cond INTERNAL
+/**
+ * @brief Start recording into a profile file
+ * @param name The name of the session
+ * @param filepath Where the recorded data is written
+ * @note The entry point opens a session for startup, runtime and shutdown
+ * @see VC_PROFILER_END_SESSION
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_BEGIN_SESSION(name, filepath) ::Vectrix::Profiler::get().beginSession(name, filepath)
+
+/**
+ * @brief Stop recording and close the profile file
+ * @see VC_PROFILER_BEGIN_SESSION
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_END_SESSION() ::Vectrix::Profiler::get().endSession()
-/// @endcond
+
+/**
+ * @brief Measure how long the enclosing scope takes, under a name of your choosing
+ * @param name The name the measurement is recorded under
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_SCOPE(name) ::Vectrix::Timer timer##__LINE__(name);
+
+/**
+ * @brief Measure how long the enclosing function takes, under its own name
+ *
+ * The usual way to instrument a function: put it on the first line and the whole call is
+ * timed. It costs nothing on a release build.
+ * @see VC_PROFILER_SCOPE
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_FUNCTION() VC_PROFILER_SCOPE(VC_FUNC_NAME)
 #else
 #define VC_PROFILER_BEGIN_SESSION(name, filepath)

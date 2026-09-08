@@ -5,7 +5,22 @@
 #include "Mesh.h"
 #include "Vectrix/Utils/Memory.h"
 
+/**
+ * @file MeshManager.h
+ * @brief Definition of the MeshManager class
+ * @ingroup mesh
+ */
+
 namespace Vectrix {
+    /**
+     * @brief Keeps the loaded meshes, so the same model is only uploaded once
+     *
+     * The AssetsManager owns it and goes through it to load a mesh, reach it with
+     * AssetsManager::getMeshManager.
+     * @see AssetsManager
+     * @see Mesh
+     * @ingroup mesh
+     */
     class MeshManager {
     public:
             /**

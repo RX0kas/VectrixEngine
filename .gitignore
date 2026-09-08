@@ -381,3 +381,5 @@ FodyWeavers.xsd
 run/Profile-Startup.json
 run/Profile-Runtime.json
 run/Profile-Shutdown.json
+# Added by code-review-graph
+.code-review-graph/

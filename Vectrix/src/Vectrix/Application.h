@@ -23,13 +23,40 @@ using AppInfoFunc = Vectrix::ApplicationInfo(*)();
 extern AppInfoFunc g_getAppInfo;
 /// @endcond
 
+/**
+ * @brief Declare the name and the version of the application
+ *
+ * Put it once at file scope in the application, it is what Application::getAppInfo reads
+ * from. Without it the engine has no name nor version to report.
+ * @param name The name of the application
+ * @param major The major part of its version
+ * @param minor The minor part of its version
+ * @param patch The patch part of its version
+ * @see Vectrix::ApplicationInfo
+ * @ingroup core
+ */
 #define VC_SET_APP_INFO(name,major,minor,patch) AppInfoFunc g_getAppInfo = []() {return Vectrix::ApplicationInfo(name, major, minor, patch);};
 
 int main(int argc, char** argv);
 
 namespace Vectrix {
+	class SettingsManager;
+	/**
+	 * @brief The application itself, owning the window, the assets and the layers
+	 *
+	 * Derive from it, push the layers the application needs from the constructor, and
+	 * return the instance from createApplication. The engine takes care of running it,
+	 * so there is no main loop to write.
+	 * @see createApplication
+	 * @see Layer
+	 * @ingroup core
+	 */
 	class Application {
 	public:
+		/**
+		 * @brief Create the window, the assets manager and the ImGui overlay
+		 * @note The window stays hidden until the application starts running
+		 */
 		Application();
 		virtual ~Application();
 
@@ -84,6 +111,11 @@ namespace Vectrix {
 		void close() {
 			m_running = false;
 		}
+
+		static SettingsManager& getSettingsManager() {
+			VC_CORE_ASSERT(s_instance, "Vectrix has not been created");
+			return *s_instance->m_settingsManager;
+		}
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
@@ -95,6 +127,7 @@ namespace Vectrix {
 		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
 		std::unique_ptr<ApplicationInfo> m_appInfo;
+		std::shared_ptr<SettingsManager> m_settingsManager;
 		bool m_running = true;
 
 		LayerStack m_layerStack;
@@ -104,6 +137,15 @@ namespace Vectrix {
 		static Application* s_instance;
 	};
 
+	/**
+	 * @brief Build the application the engine should run
+	 *
+	 * The application has to define it, it is what the entry point calls to get the
+	 * instance to run.
+	 * @return The application, which the engine takes ownership of
+	 * @see EntryPoint.h
+	 * @ingroup core
+	 */
 	Application* createApplication();
 
 }

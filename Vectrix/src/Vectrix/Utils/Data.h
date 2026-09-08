@@ -1,10 +1,29 @@
 #ifndef VECTRIXWORKSPACE_DATA_H
 #define VECTRIXWORKSPACE_DATA_H
 
+/**
+ * @file Data.h
+ * @brief The placeholder texture, embedded in the binary
+ * @ingroup utils
+ *
+ * Keeping it in the executable means the engine always has something to show when a
+ * texture cannot be loaded, even if no asset at all is reachable.
+ */
+
+/// A single byte of raw data
 typedef unsigned char Byte;
 // Created using hexembed from Lewis Van Winkle (CodePlea)
 
+/**
+ * @brief The size of the embedded placeholder texture, in bytes
+ * @ingroup utils
+ */
 constexpr int notFoundTextureSize = 350;
+
+/**
+ * @brief The placeholder texture itself, as a PNG file held in memory
+ * @ingroup utils
+ */
 constexpr Byte notFoundTextureData[notFoundTextureSize] = {
     0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
     0x00,0x00,0x00,0x64,0x00,0x00,0x00,0x64,0x08,0x06,0x00,0x00,0x00,0x70,0xe2,0x95,
@@ -30,7 +49,18 @@ constexpr Byte notFoundTextureData[notFoundTextureSize] = {
     0x01,0x79,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82
 };
 
+/**
+ * @brief Return how many bytes the placeholder texture takes
+ * @return The size in bytes
+ * @ingroup utils
+ */
 constexpr unsigned int getNotFoundTextureSize() { return notFoundTextureSize; }
+
+/**
+ * @brief Return the bytes of the placeholder texture
+ * @return A pointer to the embedded PNG, valid for the whole run
+ * @ingroup utils
+ */
 constexpr const Byte *getNotFoundTextureData() {
     return notFoundTextureData;
 }
