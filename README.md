@@ -71,7 +71,8 @@ endif()
 - Folder icon from [Nik Icon](https://www.flaticon.com/fr/auteurs/nik-icon)
 - File icon from [deha21](https://www.flaticon.com/fr/auteurs/deha21)
 ## Use of AI
-AI has only been used as a review tool and each modification is analyzed
+AI has been used as a review tool and each modification is analyzed <br>
+It was also used to create part of the documentation
 
 ## Third-party libraries
 - [GLFW](https://github.com/glfw/glfw): to create the window

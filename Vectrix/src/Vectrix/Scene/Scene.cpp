@@ -8,6 +8,7 @@
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
+    /// @cond INTERNAL
     std::string getString(const std::vector<std::byte>& bytes, uint32_t& offset) {
         auto startByte = bytes.begin() + offset;
         std::vector<std::byte> lenData = {startByte, startByte + sizeof(uint16_t)};
@@ -37,6 +38,7 @@ namespace Vectrix {
         offset += sizeof(uint32_t);
         return *reinterpret_cast<float*>(data.data());
     }
+    /// @endcond
 
     std::pair<VectrixResult, std::shared_ptr<Scene>> Scene::loadScene(SceneCreationData &creationData) {
         if (creationData.result!=SUCCESS) {

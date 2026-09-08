@@ -153,11 +153,13 @@ namespace Vectrix {
         return datas;
     }
 
+    /// @cond INTERNAL
     void writeString(std::ofstream& file, const std::string& str) {
         uint16_t len = static_cast<uint16_t>(str.size());
         file.write(reinterpret_cast<const char*>(&len), sizeof(len));
         file.write(str.data(), len);
     }
+    /// @endcond
 
     VectrixResult SceneSerializer::saveScene(const std::string &path, Scene& scene) {
         std::ofstream file(path, std::ios::binary);

@@ -19,6 +19,7 @@ namespace Vectrix {
         return nullptr;
     }
 
+    /// @cond INTERNAL
     void replaceAll(std::string& str, const std::string& from, std::string to) {
         if(from.empty())
             return;
@@ -28,7 +29,9 @@ namespace Vectrix {
             start_pos += to.length();
         }
     }
+    /// @endcond
 
+    /// @cond INTERNAL
     std::string normalizeSpaces(const std::string& s) {
         std::string result;
         bool lastWasSpace = false;
@@ -43,6 +46,7 @@ namespace Vectrix {
         }
         return result;
     }
+    /// @endcond
 
     /*
     layout(set = 0, binding = 0) readonly buffer FrameSSBO {

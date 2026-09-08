@@ -6,19 +6,19 @@
  *
  * The rendering system is organized into several key features:
  * ### 1. @ref rendering
- * - @ref RenderCommand : Class that provides static methods for issuing rendering commands
- * - @ref Renderer : Central rendering manager for 3D scenes
+ * - @ref Vectrix::RenderCommand "RenderCommand" : Class that provides static methods for issuing rendering commands
+ * - @ref Vectrix::Renderer "Renderer" : Central rendering manager for 3D scenes
  *
  * ### 2. @ref shaders
- * - @ref Shader : Base class
- * - @ref ShaderManager : Class that help create and maintain shaders
+ * - @ref Vectrix::Shader "Shader" : Base class
+ * - @ref Vectrix::ShaderManager "ShaderManager" : Class that help create and maintain shaders
  *
  * ### 3. @ref mesh
- * - @ref Models : Class that represents a 3D model with its geometry, layout, and transform
- * - @ref VertexBuffer : Summit data
- * - @ref IndexBuffer : Indexes for indexing
+ * - @ref Vectrix::Mesh "Mesh" : Class that represents the geometry of a 3D model
+ * - @ref Vectrix::VertexBuffer "VertexBuffer" : Vertex data
+ * - @ref Vectrix::IndexBuffer "IndexBuffer" : Indexes for indexing
  *
  * ### 4. @ref textures
- * - @ref Texture : Base class
- * - @ref TextureManager : Class that help create and maintain textures
+ * - @ref Vectrix::Texture "Texture" : Base class
+ * - @ref Vectrix::TextureManager "TextureManager" : Class that help create and maintain textures
  */

@@ -7,6 +7,7 @@
 #include <variant>
 #include <vector>
 
+#include "Result.h"
 #include "Vectrix/Core/Log.h"
 
 
@@ -47,7 +48,15 @@ namespace Vectrix {
          * @brief Constructs a JSON string value
          * @param value The string value
          */
-        JsonValue(const std::string& value) : m_data(value) {}
+        explicit JsonValue(const std::string& value) : m_data(value) {}
+
+        /**
+         * @brief Constructs a JSON string value from a C string
+         * @param value The null-terminated string
+         * @note Non-explicit on purpose, so a string literal binds here instead of
+         *       collapsing to the bool constructor.
+         */
+        JsonValue(const char* value) : m_data(std::string(value)) {}
 
         /**
          * @brief Constructs a JSON number value
@@ -83,6 +92,7 @@ namespace Vectrix {
             if (std::holds_alternative<std::string>(m_data))
                 return std::get<std::string>(m_data);
             VC_CORE_ERROR("JsonValue is not a string");
+            return {};
         }
 
         /**
@@ -104,6 +114,7 @@ namespace Vectrix {
             if (std::holds_alternative<double>(m_data))
                 return std::get<double>(m_data);
             VC_CORE_ERROR("JsonValue is not a double");
+            return 0.0;
         }
 
         /**
@@ -115,6 +126,7 @@ namespace Vectrix {
             if (std::holds_alternative<bool>(m_data))
                 return std::get<bool>(m_data);
             VC_CORE_ERROR("JsonValue is not a boolean");
+            return false;
         }
 
         /**
@@ -126,27 +138,106 @@ namespace Vectrix {
         }
 
         /**
-         * @brief Accesses a member of a JSON object by key.
-         * @param key The object key.
-         * @return The JsonValue associated with the key.
-         * @note If the value is not an object, an error is logged and the returned value is undefined.
+         * @brief Number of elements held by an array, or members held by an object.
+         * @return The element/member count, or 0 for any scalar or null value.
          */
-        JsonValue operator[](const std::string& key) {
-            if (std::holds_alternative<JsonObject>(m_data))
-                return std::get<JsonObject>(m_data)[key];
+        [[nodiscard]] size_t size() const {
+            if (const auto* array = std::get_if<JsonArray>(&m_data))
+                return array->size();
+            if (const auto* object = std::get_if<JsonObject>(&m_data))
+                return object->size();
+            return 0;
+        }
+
+        /**
+         * @brief Accesses or creates a member of a JSON object by key.
+         * @param key The object key.
+         * @return A reference to the value stored under @p key, which can be assigned to.
+         *         A null value is turned into an empty object first, and a missing key is
+         *         inserted with a null value. Use contains() to probe without inserting.
+         * @note If the value holds some other type an error is logged and a reference to a
+         *       shared throwaway value is returned.
+         */
+        JsonValue& operator[](const std::string& key) {
+            if (std::holds_alternative<std::nullptr_t>(m_data))
+                m_data = JsonObject{};
+            if (auto* object = std::get_if<JsonObject>(&m_data))
+                return (*object)[key];
             VC_CORE_ERROR("JsonValue is not an object");
+            return nullSink();
+        }
+
+        /**
+         * @brief Reads a member of a JSON object by key without altering the value.
+         * @param key The object key.
+         * @return The value stored under @p key, or a null value when the key is missing
+         *         or the value is not an object.
+         */
+        const JsonValue& operator[](const std::string& key) const {
+            if (const auto* object = std::get_if<JsonObject>(&m_data)) {
+                const auto it = object->find(key);
+                return it != object->end() ? it->second : nullValue();
+            }
+            VC_CORE_ERROR("JsonValue is not an object");
+            return nullValue();
         }
 
         /**
          * @brief Accesses an element of a JSON array by index.
          * @param index The zero-based index.
-         * @return The JsonValue at the specified index.
-         * @note If the value is not an array, an error is logged and the returned value is undefined.
-         *       If the index is out of bounds, std::vector::operator[] behavior is undefined.
+         * @return A reference to the element, which can be assigned to.
+         * @note If the value is not an array, or the index is out of range, an error is
+         *       logged and a reference to a shared throwaway value is returned.
          */
-        JsonValue operator[](size_t index) {
-            if (std::holds_alternative<JsonArray>(m_data))
-                return std::get<JsonArray>(m_data)[index];
+        JsonValue& operator[](size_t index) {
+            if (auto* array = std::get_if<JsonArray>(&m_data)) {
+                if (index < array->size())
+                    return (*array)[index];
+                VC_CORE_ERROR("JsonValue array index {} is out of range", index);
+                return nullSink();
+            }
+            VC_CORE_ERROR("JsonValue is not an array");
+            return nullSink();
+        }
+
+        /**
+         * @brief Reads an element of a JSON array by index without altering the value.
+         * @param index The zero-based index.
+         * @return The element, or a null value when the index is out of range or the
+         *         value is not an array.
+         */
+        const JsonValue& operator[](size_t index) const {
+            if (const auto* array = std::get_if<JsonArray>(&m_data)) {
+                if (index < array->size())
+                    return (*array)[index];
+                VC_CORE_ERROR("JsonValue array index {} is out of range", index);
+                return nullValue();
+            }
+            VC_CORE_ERROR("JsonValue is not an array");
+            return nullValue();
+        }
+
+        /**
+         * @brief Stores a value under a key, creating the object when the value is null.
+         * @param key The object key.
+         * @param value The value to store.
+         */
+        void set(const std::string& key, JsonValue value) {
+            (*this)[key] = std::move(value);
+        }
+
+        /**
+         * @brief Appends a value, turning a null value into an array first.
+         * @param value The value to append.
+         * @note If the value holds some other type an error is logged and nothing is added.
+         */
+        void pushBack(JsonValue value) {
+            if (std::holds_alternative<std::nullptr_t>(m_data))
+                m_data = JsonArray{};
+            if (auto* array = std::get_if<JsonArray>(&m_data)) {
+                array->push_back(std::move(value));
+                return;
+            }
             VC_CORE_ERROR("JsonValue is not an array");
         }
 
@@ -164,8 +255,68 @@ namespace Vectrix {
             VC_CORE_ERROR("JsonValue is not an object");
         }
 
+        [[nodiscard]] JsonObject getAsObject() {
+            if (std::holds_alternative<JsonObject>(m_data)) {
+                return std::get<JsonObject>(m_data);
+            }
+            VC_CORE_ERROR("JsonValue is not an object");
+            return {};
+        }
+
+        /**
+         * @brief Returns the underlying object by reference, for in-place editing.
+         * @return A reference to the stored object. A null value becomes an empty object
+         *         first; any other type logs an error and yields a shared empty object.
+         */
+        JsonObject& asObject() {
+            if (std::holds_alternative<std::nullptr_t>(m_data))
+                m_data = JsonObject{};
+            if (auto* object = std::get_if<JsonObject>(&m_data))
+                return *object;
+            VC_CORE_ERROR("JsonValue is not an object");
+            static JsonObject s_discard;
+            s_discard.clear();
+            return s_discard;
+        }
+
+        /**
+         * @brief Returns the underlying array by reference, for in-place editing.
+         * @return A reference to the stored array. A null value becomes an empty array
+         *         first; any other type logs an error and yields a shared empty array.
+         */
+        JsonArray& asArray() {
+            if (std::holds_alternative<std::nullptr_t>(m_data))
+                m_data = JsonArray{};
+            if (auto* array = std::get_if<JsonArray>(&m_data))
+                return *array;
+            VC_CORE_ERROR("JsonValue is not an array");
+            static JsonArray s_discard;
+            s_discard.clear();
+            return s_discard;
+        }
+
     private:
+        /**
+         * @brief Shared writable value handed back when a mutating accessor is misused.
+         * @note Reset to null on each call; writes to it are intentionally discarded.
+         */
+        static JsonValue& nullSink() {
+            static JsonValue s_sink;
+            s_sink = JsonValue{};
+            return s_sink;
+        }
+
+        /**
+         * @brief Shared null value handed back when a const accessor misses or is misused.
+         */
+        static const JsonValue& nullValue() {
+            static const JsonValue s_null;
+            return s_null;
+        }
+
         std::variant<std::string, double, bool, std::nullptr_t, JsonArray, JsonObject> m_data;
+
+        friend class Json;
     };
 
     /**
@@ -181,7 +332,7 @@ namespace Vectrix {
          * @return The root JsonValue representing the parsed JSON.
          * @note On parsing error, the behavior is undefined (likely an assertion or error log).
          */
-        static JsonValue parse(const std::string& fileData);
+        [[nodiscard]] static std::pair<VectrixResult,JsonValue> parse(const std::string& fileData);
 
         /**
          * @brief Loads a JSON file from disk and parses its contents.
@@ -189,8 +340,17 @@ namespace Vectrix {
          * @return The root JsonValue representing the parsed JSON.
          * @note If the file cannot be opened or parsed, an error is logged.
          */
-        static JsonValue load(const std::string& filePath);
+        [[nodiscard]] static std::pair<VectrixResult,JsonValue> load(const std::string& filePath);
 
+        /**
+         * @brief Serializes a JSON object and writes it to disk as pretty-printed text.
+         * @param filePath Path of the file to write (created or truncated).
+         * @param object The root object to serialize.
+         * @return #SUCCESS when the file was written, #UNKNOWN_ERROR when it could not be opened or written.
+         * @note The output uses a two-space indent. Map keys are written in sorted order.
+         *       NaN and infinite numbers are written as @c null since JSON cannot represent them.
+         */
+        [[nodiscard]] static VectrixResult save(const std::string& filePath,const JsonObject& object);
     private:
         /**
          * @brief Skips whitespace and returns the next character without consuming it.
@@ -260,6 +420,29 @@ namespace Vectrix {
          * @return The parsed JsonValue.
          */
         static JsonValue parseValue(const std::string& src, size_t& pos);
+
+        /**
+         * @brief Appends the textual form of any JSON value to a buffer.
+         * @param value The value to serialize.
+         * @param out The buffer being built.
+         * @param depth Current nesting depth, used to indent nested arrays and objects.
+         */
+        static void writeValue(const JsonValue& value, std::string& out, size_t depth);
+
+        /**
+         * @brief Appends a JSON string literal (quoted and escaped) to a buffer.
+         * @param str The raw string content.
+         * @param out The buffer being built.
+         */
+        static void writeString(const std::string& str, std::string& out);
+
+        /**
+         * @brief Appends a JSON number to a buffer.
+         * @param value The number to write.
+         * @param out The buffer being built.
+         * @note Integral values are written without a fractional part; NaN and infinities become @c null.
+         */
+        static void writeNumber(double value, std::string& out);
 
         /** @brief Characters allowed in a JSON number (including sign and exponent) */
         static constexpr std::string_view number_characters = "0123456789-+e.";

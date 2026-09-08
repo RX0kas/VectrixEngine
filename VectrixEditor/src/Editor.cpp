@@ -1,20 +1,17 @@
-#include <Vectrix.h>
-#include "Layers/EditorLayer.h"
+#include "Editor.h"
 
 #include "Vectrix/EntryPoint.h"
 
 namespace Vectrix {
-    class VectrixEditor : public Application {
-    public:
-        VectrixEditor() {
-            m_editorLayer = std::make_shared<EditorLayer>();
-            PushLayer(m_editorLayer);
-        }
-        ~VectrixEditor() override = default;
-    private:
-        std::shared_ptr<EditorLayer> m_editorLayer;
-    };
 
+    VectrixEditor::VectrixEditor() {
+        s_instance = this;
+        m_editorLayer = std::make_shared<EditorLayer>();
+        PushLayer(m_editorLayer);
+    }
+
+
+    VectrixEditor* VectrixEditor::s_instance = nullptr;
 
     Application* createApplication() {
         return new VectrixEditor();

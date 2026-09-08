@@ -70,7 +70,20 @@ namespace Vectrix {
 		 */
 		static bool isASceneInProgress() { return s_sceneInProgress; }
 
+		/**
+		 * @brief Draw an outline around an entity, to show it is selected
+		 * @param entity The entity to outline
+		 * @param framebuffer The framebuffer the outline is drawn into
+		 * @see OutlineSettings
+		 */
 		static void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
+
+		/**
+		 * @brief Resize the mask the outline pass draws into
+		 * @param size The new size in pixel
+		 * @note Has to follow the size of the framebuffer the outline is drawn into
+		 * @see renderOutline
+		 */
 		static void resizeMask(glm::vec2 size);
 	private:
 		friend class Application;

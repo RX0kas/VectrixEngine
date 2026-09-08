@@ -14,6 +14,8 @@
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "Vectrix/Events/EditorEvent.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
+#include "Vectrix/Settings/Outline.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 namespace Vectrix {
     EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {}
@@ -50,8 +52,20 @@ namespace Vectrix {
     	m_activeScene->m_registry.clear<>();
 
     	m_activeScene = newScene.second;
-    	m_activeScene->m_filePath = path.string();
+    	m_activeScene->m_projectDirectory = path.parent_path();
+    	m_activeScene->m_fileName = path.filename();
     	m_sceneHierarchyPanel.setContext(m_activeScene);
+
+    	const std::filesystem::path settingsPath =
+    		std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
+    	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().load(settingsPath);
+    		settingsResult == SUCCESS) {
+    		const JsonObject& settings = SettingsManager::getSettings();
+    		if (const auto editorNode = settings.find("editor"); editorNode != settings.end())
+    			readOutlineSettings(editorNode->second["outline"]);
+    	} else {
+    		VC_CORE_WARN("Settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
+    	}
 
     	AssetsManager::instance().getMeshManager().clear();
     	AssetsManager::instance().getTextureManager().clear();
@@ -104,9 +118,10 @@ namespace Vectrix {
     	nfdresult_t result = NFD_SaveDialog(&outPath, filters, 1, nullptr, "scene.vctx");
 
     	if (result == NFD_OKAY) {
-    		std::string path(outPath);
-    		m_activeScene->m_filePath = path;
-    		SceneSerializer::saveScene(path,*m_activeScene);
+    		const std::filesystem::path scenePath(outPath);
+    		m_activeScene->m_projectDirectory = scenePath.parent_path();
+    		m_activeScene->m_fileName = scenePath.filename();
+    		SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {
     		VC_CORE_INFO("User cancelled");
@@ -159,10 +174,12 @@ namespace Vectrix {
 					showOpenDialog();
 				}
 				if (ImGui::MenuItem("Save")) {
-					if (m_activeScene->getFilePath().empty()) {
+					if (m_activeScene->getFileName().empty()) {
 						showSaveDialog();
 					} else {
-						SceneSerializer::saveScene(m_activeScene->getFilePath(),*m_activeScene);
+						const std::filesystem::path scenePath =
+							std::filesystem::path(m_activeScene->getProjectDirectory()) / m_activeScene->getFileName();
+						SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
 					}
 				}
 				if (ImGui::MenuItem("Save As")) showSaveDialog();

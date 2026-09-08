@@ -7,9 +7,30 @@
 #include "glm/gtc/quaternion.hpp"
 
 
+/**
+ * @file EditorCamera.h
+ * @brief Definition of the EditorCamera class
+ * @ingroup rendering
+ */
+
 namespace Vectrix {
+	/**
+	 * @brief The camera the editor looks through, independent of the scene
+	 *
+	 * Unlike Camera it is not tied to an entity, which is what lets the editor move
+	 * around without touching the scene being edited. Its position, scale and rotation
+	 * are public, call recalculateMatrices after changing them.
+	 * @see Camera
+	 * @ingroup rendering
+	 */
 	class EditorCamera {
 	public:
+		/**
+		 * @brief Build the camera with its projection settings
+		 * @param fov The vertical field of view, in degrees
+		 * @param camNear How close something can get before it stops being drawn
+		 * @param camFar How far something can get before it stops being drawn
+		 */
 		EditorCamera(float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
 
 		/**
@@ -104,6 +125,11 @@ namespace Vectrix {
 		void recalculateMatrices();
 
 
+		/**
+		 * @brief Sets the rotation of the camera in degrees
+		 * @param newRotation Euler angles in degrees
+		 * @see getRotationDeg
+		 */
 		void setRotationDeg(glm::vec3 newRotation) {
 			m_rotation = glm::quat(glm::radians(newRotation));
 		}
@@ -116,8 +142,13 @@ namespace Vectrix {
 			return glm::degrees(glm::eulerAngles(m_rotation));
 		}
 
+		/// Where the camera sits in the world
 		glm::vec3 m_position{ 0};
+
+		/// The scale of the camera, which is left at one in normal use
 		glm::vec3 m_scale{ 1.f, 1.f, 1.f };
+
+		/// Which way the camera looks, as a quaternion
 		glm::quat m_rotation = glm::identity<glm::quat>();
 	private:
 		void recalculateViewMatrix();
