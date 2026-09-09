@@ -152,12 +152,15 @@ namespace Vectrix {
     void SwapChain::createSwapChain() {
         auto [capabilities, formats, presentModes] = m_device.getSwapChainSupport();
 
+        const VulkanSettings::Swapchain& scSettings = VulkanContext::instance().settings().swapchain;
+
         const auto [format, colorSpace] = chooseSwapSurfaceFormat(formats);
-        const VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes);
+        const VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes, scSettings.presentMode);
         const VkExtent2D extent = chooseSwapExtent(capabilities);
 
-        uint32_t imageCount = capabilities.minImageCount + 1;
+        uint32_t imageCount = scSettings.imageCount != 0 ? scSettings.imageCount : capabilities.minImageCount + 1;
 
+        imageCount = std::max(imageCount, capabilities.minImageCount);
         if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
             imageCount = capabilities.maxImageCount;
         }
@@ -400,22 +403,16 @@ namespace Vectrix {
         return availableFormats[0];
     }
 
-    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
-        for (const auto& availablePresentMode : availablePresentModes) {
-            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-                VC_CORE_INFO("Present mode: Mailbox");
-                return availablePresentMode;
+    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, VkPresentModeKHR preferred) {
+        for (const VkPresentModeKHR mode : availablePresentModes) {
+            if (mode == preferred) {
+                VC_CORE_INFO("Present mode: {}", presentModeToString(preferred));
+                return preferred;
             }
         }
 
-        // for (const auto &availablePresentMode : availablePresentModes) {  // TODO: Make the user choose the presentMode
-        //   if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
-        //     VC_CORE_INFO("Present mode: Immediate");
-        //     return availablePresentMode;
-        //   }
-        // }
-
-        VC_CORE_INFO("Present mode: V-Sync");
+        // FIFO is the only mode the spec guarantees is always available.
+        VC_CORE_WARN("Present mode '{}' not supported by the surface, falling back to fifo (V-Sync)", presentModeToString(preferred));
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 

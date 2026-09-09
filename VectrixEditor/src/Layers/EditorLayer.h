@@ -30,6 +30,7 @@ namespace Vectrix {
     	void showSaveDialog();
     	void showOpenDialog();
     	void processPendingSceneLoad();
+    	void applyLiveSettings(); // re-reads the settings that take effect without a relaunch
     	std::shared_ptr<Entity> pickEntity(glm::vec2 mousePos);
     	glm::vec3 screenToWorldRay(glm::vec2 mousePos);
 		std::shared_ptr<Shader> m_viewportShader;
@@ -49,6 +50,10 @@ namespace Vectrix {
     	std::shared_ptr<Entity> m_foxEntity;
     	float m_cameraRotationSpeed = 50.0f;
     	float m_cameraMoveSpeed = 1.5f;
+    	float m_gizmoTranslationSnap = 0.5f;
+    	float m_gizmoRotationSnap = 45.0f;
+    	glm::vec4 m_appliedClearColor{0.0f, 0.0f, 0.0f, 1.0f};
+    	std::string m_appliedTheme = "dark";
 
     	int m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 
@@ -57,7 +62,6 @@ namespace Vectrix {
     	ContentBrowserPanel m_contentBrowserPanel;
     	SettingsPanel m_settingPanel;
     	bool m_graphicDebugWidgetEnable = false;
-    	bool m_settingsWidgetEnable = false;
     };
 } // Vectrix
 

@@ -1,5 +1,6 @@
 #include "VulkanTexture.h"
 
+#include <algorithm>
 #include <filesystem>
 
 #include "Core/Device.h"
@@ -150,15 +151,20 @@ namespace Vectrix {
             VC_CORE_ERROR("Failed to create texture image view");
         }
 
+        const VulkanSettings::Textures& texSettings = VulkanContext::instance().settings().textures;
+        const bool useAnisotropy = texSettings.anisotropy > 0.0f;
+
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.magFilter = VK_FILTER_LINEAR;
-        samplerInfo.minFilter = VK_FILTER_LINEAR;
-        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.anisotropyEnable = VK_TRUE;
-        samplerInfo.maxAnisotropy = 16.0f;
+        samplerInfo.magFilter = texSettings.filter;
+        samplerInfo.minFilter = texSettings.filter;
+        samplerInfo.addressModeU = texSettings.wrapMode;
+        samplerInfo.addressModeV = texSettings.wrapMode;
+        samplerInfo.addressModeW = texSettings.wrapMode;
+        samplerInfo.anisotropyEnable = useAnisotropy ? VK_TRUE : VK_FALSE;
+        samplerInfo.maxAnisotropy = useAnisotropy
+            ? std::min(texSettings.anisotropy, m_device.properties.limits.maxSamplerAnisotropy)
+            : 1.0f;
         samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
         samplerInfo.compareEnable = VK_FALSE;

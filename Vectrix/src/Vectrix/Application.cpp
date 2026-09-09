@@ -2,6 +2,7 @@
 
 #include "Application.h"
 
+#include <filesystem>
 #include <memory>
 
 #include "Core/DeltaTime.h"
@@ -25,17 +26,51 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!s_instance, "Application already exists!");
 		s_instance = this;
 
+		// Created and loaded before the window: the graphics backend reads settings
+		// during init(). A per-project load layers on top of this later (openScene).
+		m_settingsManager = std::shared_ptr<SettingsManager>(new SettingsManager());
+		{
+			const auto globalPath = std::filesystem::current_path() / settingsFileName;
+			if (const auto [result, message] = m_settingsManager->loadGlobal(globalPath); result != SUCCESS)
+				VC_CORE_WARN("Global settings not loaded ({}): {}", globalPath.string(), message);
+		}
+
+		// Apply the settings that are consumed before the graphics backend comes up.
+		const JsonObject& startupSettings = SettingsManager::getSettings();
+
+		WindowAttributes windowAttributes;
+		std::string windowTitle;
+		if (const auto windowIt = startupSettings.find("window"); windowIt != startupSettings.end()) {
+			const JsonValue& w = windowIt->second;
+			windowAttributes.width  = w["width"].getAs<uint32_t>().value_or(windowAttributes.width);
+			windowAttributes.height = w["height"].getAs<uint32_t>().value_or(windowAttributes.height);
+			windowTitle = w["title"].getAs<std::string>().value_or("");
+		}
+
+#ifdef VC_DEBUG
+		// Logging is only compiled in on a debug build.
+		if (const auto engineIt = startupSettings.find("engine"); engineIt != startupSettings.end()) {
+			if (const auto level = engineIt->second["logging"]["level"].getAs<std::string>()) {
+				const auto parsed = spdlog::level::from_str(*level);
+				if (parsed != spdlog::level::off || *level == "off") {
+					Log::getCoreLogger()->set_level(parsed);
+					Log::getClientLogger()->set_level(parsed);
+				}
+			}
+		}
+#endif
+
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
-		m_window->init();
+		m_window->init(windowAttributes);
+		if (!windowTitle.empty())
+			m_window->setTitle(windowTitle);
 
 		m_assetsManager = std::make_unique<AssetsManager>();
 
 		auto i = new ImGuiLayer();
 		m_imGuiLayer = std::unique_ptr<ImGuiLayer>(i);
 		m_imGuiLayer->OnAttach();
-
-		m_settingsManager = std::shared_ptr<SettingsManager>(new SettingsManager());
 
 		Renderer::initOutline();
 	}

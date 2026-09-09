@@ -75,6 +75,9 @@ namespace Vectrix {
         [[nodiscard]] VmaAllocator getBufferAllocator() const {return m_bufferAllocator;}
         [[nodiscard]] VmaAllocator getTextureAllocator() const {return m_textureAllocator;}
         [[nodiscard]] VmaAllocator getSSBOAllocator() const {return m_SSBOAllocator;}
+
+        /// @brief Whether the logical device was created with the fillModeNonSolid feature (wireframe).
+        [[nodiscard]] bool supportsFillModeNonSolid() const { return m_fillModeNonSolid; }
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -112,6 +115,7 @@ namespace Vectrix {
         VkFormat m_imageFormat;
 	    VkDescriptorPool m_descriptorPool;
 	    VkDescriptorSetLayout m_descriptorSetLayout;
+	    bool m_fillModeNonSolid = false;
 
         VolkDeviceTable m_deviceTable;
 

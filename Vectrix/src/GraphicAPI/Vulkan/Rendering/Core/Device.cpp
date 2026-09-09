@@ -1,6 +1,8 @@
 #include "vcpch.h"
 #include "Device.h"
 
+#include <algorithm>
+
 #include "GraphicAPI/Vulkan/Enum_str.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
@@ -346,18 +348,36 @@ namespace Vectrix {
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.data());
 
+        std::vector<VkPhysicalDevice> suitable;
         for (const auto& device : devices) {
             if (isDeviceSuitable(device)) {
-                m_physicalDevice = device;
-                break;
+                suitable.push_back(device);
             }
         }
 
-        if (m_physicalDevice == VK_NULL_HANDLE) {
+        if (suitable.empty()) {
             VC_CORE_CRITICAL("Failed to find a suitable GPU");
         }
 
+        const VulkanSettings::DeviceCfg& deviceCfg = VulkanContext::instance().settings().device;
+        const auto score = [&](VkPhysicalDevice d) {
+            VkPhysicalDeviceProperties p;
+            vkGetPhysicalDeviceProperties(d, &p);
+            int s = 0;
+            if (!deviceCfg.preferredGpuName.empty() &&
+                std::string(p.deviceName).find(deviceCfg.preferredGpuName) != std::string::npos) {
+                s += 1000;
+            }
+            if (deviceCfg.preferDiscreteGpu && p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+                s += 100;
+            }
+            return s;
+        };
+        m_physicalDevice = *std::max_element(suitable.begin(), suitable.end(),
+            [&](VkPhysicalDevice a, VkPhysicalDevice b) { return score(a) < score(b); });
+
         vkGetPhysicalDeviceProperties(m_physicalDevice, &properties);
+        VC_CORE_INFO("Selected GPU: {}", properties.deviceName);
     }
 
     void Device::createLogicalDevice() {
@@ -393,8 +413,13 @@ namespace Vectrix {
 
         indexingFeatures.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
 
+        VkPhysicalDeviceFeatures supportedBaseFeatures{};
+        vkGetPhysicalDeviceFeatures(m_physicalDevice, &supportedBaseFeatures);
+        m_fillModeNonSolid = supportedBaseFeatures.fillModeNonSolid == VK_TRUE;
+
         VkPhysicalDeviceFeatures deviceFeatures = {};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
+        deviceFeatures.fillModeNonSolid = supportedBaseFeatures.fillModeNonSolid;
 
         VkDeviceCreateInfo createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -569,7 +594,7 @@ namespace Vectrix {
         VC_PROFILER_FUNCTION();
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+        createInfo.messageSeverity = VulkanContext::instance().settings().device.validationSeverity;
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
         createInfo.pUserData = nullptr;  // Optional

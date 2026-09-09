@@ -5,6 +5,7 @@
 #include "Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 namespace Vectrix {
 	VulkanContext* VulkanContext::s_instance = nullptr;
@@ -37,8 +38,24 @@ namespace Vectrix {
 
 	void VulkanContext::init() {
 		VC_PROFILER_FUNCTION();
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		DescriptorPoolConfig cfg {256,256,4096,512};
+
+		m_vkSettings = VulkanSettings::load();
+
+		bool resizable = false;
+		if (const JsonObject& s = SettingsManager::getSettings(); s.contains("window"))
+			resizable = s.at("window")["resizable"].getAs<bool>().value_or(false);
+		glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+
+		// TODO: Change make it double the size once there is no space left
+		const DescriptorPoolConfig cfg {
+			m_vkSettings.descriptorPool.uboCount,
+			m_vkSettings.descriptorPool.ssboCount,
+			m_vkSettings.descriptorPool.samplerCount,
+			m_vkSettings.descriptorPool.maxSets
+		};
+
+		Device::enableValidationLayers = m_vkSettings.device.validationLayers;
+
 		m_device = std::make_unique<Device>(Application::instance().window(),cfg);
 		m_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*m_device);
 	}

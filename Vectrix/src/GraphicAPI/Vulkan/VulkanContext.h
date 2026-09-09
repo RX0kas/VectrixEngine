@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Enum_str.h"
+#include "VulkanSettings.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Core/Device.h"
 #include "Rendering/Core/VulkanRenderer.h"
@@ -30,6 +31,12 @@ namespace Vectrix {
 		[[nodiscard]] VmaAllocator getSSBOAllocator() const { return getDevice().getSSBOAllocator();}
 		[[nodiscard]] VmaAllocator getTextureAllocator() const { return getDevice().getTextureAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
+
+		/**
+		 * @brief The Vulkan backend options, loaded from the project settings in init().
+		 */
+		[[nodiscard]] static const VulkanSettings& settings() { return s_instance->m_vkSettings; }
+
 		static void check_vk_result(VkResult err) {
 			if (err == VK_SUCCESS)
 				return;
@@ -38,6 +45,7 @@ namespace Vectrix {
 		}
 	private:
 		GLFWwindow* m_WindowHandle;
+		VulkanSettings m_vkSettings;
 		std::unique_ptr<Device> m_device;
 		std::unique_ptr<VulkanRenderer> m_renderer;
 		std::unique_ptr<VulkanShaderCompiler> m_compiler;
