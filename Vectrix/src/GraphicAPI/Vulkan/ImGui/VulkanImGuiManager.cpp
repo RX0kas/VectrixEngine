@@ -10,6 +10,7 @@
 
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 
 
@@ -292,24 +293,42 @@ namespace Vectrix {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		if (Application::instance().window().getDisplayServer()!=WAYLAND) {
-			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		} else {
-			VC_CORE_WARN("Multi viewports has been disabled on wayland");
+		// Editor UI options from the project settings (editor.ui.*)
+		bool uiDocking = true, uiViewports = true, uiDpiScaling = true;
+		std::string uiTheme = "dark";
+		if (const JsonObject& appSettings = SettingsManager::getSettings(); appSettings.contains("editor")) {
+			const JsonValue& ui = appSettings.at("editor")["ui"];
+			uiDocking    = ui["docking"].getAs<bool>().value_or(uiDocking);
+			uiViewports  = ui["viewports"].getAs<bool>().value_or(uiViewports);
+			uiDpiScaling = ui["dpiScaling"].getAs<bool>().value_or(uiDpiScaling);
+			uiTheme      = ui["theme"].getAs<std::string>().value_or(uiTheme);
 		}
 
-		io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
-		io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
+		if (uiDocking) {
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		}
+		if (uiViewports) {
+			if (Application::instance().window().getDisplayServer() != WAYLAND) {
+				io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+			} else {
+				VC_CORE_WARN("Multi viewports has been disabled on wayland");
+			}
+		}
+
+		io.ConfigDpiScaleFonts = uiDpiScaling;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes.
+		io.ConfigDpiScaleViewports = uiDpiScaling;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
 		ImGuiStyle& style = ImGui::GetStyle();
 
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
-    	ImGuiLayer::setDarkThemeColors();
+		if (uiTheme == "light") {
+			ImGui::StyleColorsLight();
+		} else {
+			ImGui::StyleColorsDark();
+			ImGuiLayer::setDarkThemeColors();
+		}
 
 		ImGui_ImplGlfw_InitForVulkan(w, true);
 		#ifdef VC_PLATFORM_LINUX

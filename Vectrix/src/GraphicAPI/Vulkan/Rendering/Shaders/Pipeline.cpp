@@ -7,8 +7,6 @@
 
 #include "Vectrix/Debug/Profiler.h"
 
-//#define NO_CULLING
-
 namespace Vectrix {
 
     Pipeline::Pipeline(Device& device,const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo) : m_device{ device } {
@@ -129,14 +127,17 @@ namespace Vectrix {
         configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
         configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
-        configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
+        const VulkanSettings::Rendering& renderSettings = VulkanContext::instance().settings().rendering;
+
+        bool wireframe = renderSettings.wireframe;
+        if (wireframe && !VulkanContext::instance().getDevice().supportsFillModeNonSolid()) {
+            VC_CORE_WARN("Wireframe requested but the device does not support fillModeNonSolid; using fill");
+            wireframe = false;
+        }
+
+        configInfo.rasterizationInfo.polygonMode = wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
         configInfo.rasterizationInfo.lineWidth = 1.0f;
-#ifdef NO_CULLING
-        VC_CORE_WARN("No culling mode enable");
-        configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-#else
-        configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-#endif
+        configInfo.rasterizationInfo.cullMode = renderSettings.backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
         configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
         configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional

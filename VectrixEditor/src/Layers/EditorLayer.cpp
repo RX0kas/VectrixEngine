@@ -18,6 +18,31 @@
 #include "Vectrix/Settings/SettingsManager.h"
 
 namespace Vectrix {
+    namespace {
+        // Walk the in-memory settings tree without inserting: a missing link falls back to def.
+        double settingNum(std::initializer_list<const char*> path, double def) {
+            const JsonObject& root = SettingsManager::getSettings();
+            auto it = path.begin();
+            const auto found = root.find(*it);
+            if (found == root.end()) return def;
+            const JsonValue* cur = &found->second;
+            for (++it; it != path.end(); ++it)
+                cur = &(*cur)[*it];
+            return cur->getAs<double>().value_or(def);
+        }
+
+        std::string settingStr(std::initializer_list<const char*> path, const std::string& def) {
+            const JsonObject& root = SettingsManager::getSettings();
+            auto it = path.begin();
+            const auto found = root.find(*it);
+            if (found == root.end()) return def;
+            const JsonValue* cur = &found->second;
+            for (++it; it != path.end(); ++it)
+                cur = &(*cur)[*it];
+            return cur->getAs<std::string>().value_or(def);
+        }
+    }
+
     EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {}
 
 	void EditorLayer::OnAttach() {
@@ -27,10 +52,46 @@ namespace Vectrix {
     	m_framebuffer = Framebuffer::create(fbSpec);
 
     	m_activeScene = std::make_shared<Scene>("EditorScene");
-    	m_camera = std::make_unique<EditorCamera>();
+
+    	// Field of view and clip planes are fixed at construction (not live).
+    	m_camera = std::make_unique<EditorCamera>(
+    		static_cast<float>(settingNum({"editor", "camera", "fov"}, 50.0)),
+    		static_cast<float>(settingNum({"editor", "camera", "near"}, 0.1)),
+    		static_cast<float>(settingNum({"editor", "camera", "far"}, 1000.0)));
     	m_sceneHierarchyPanel.setContext(m_activeScene);
 
-    	m_settingPanel.setEnable(m_settingsWidgetEnable);
+    	applyLiveSettings();
+
+    	m_settingPanel.disable(); // opt-in via the Window menu
+    }
+
+	void EditorLayer::applyLiveSettings() {
+    	m_cameraMoveSpeed      = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
+    	m_cameraRotationSpeed  = static_cast<float>(settingNum({"editor", "camera", "rotationSpeed"}, 50.0));
+    	m_gizmoTranslationSnap = static_cast<float>(settingNum({"editor", "gizmo", "translationSnap"}, 0.5));
+    	m_gizmoRotationSnap    = static_cast<float>(settingNum({"editor", "gizmo", "rotationSnap"}, 45.0));
+
+    	glm::vec4 clearColor{0.0f, 0.0f, 0.0f, 1.0f};
+    	if (const JsonObject& s = SettingsManager::getSettings(); s.contains("engine")) {
+    		const JsonValue& c = s.at("engine")["rendering"]["clearColor"];
+    		for (std::size_t i = 0; i < 4 && i < c.size(); ++i)
+    			clearColor[static_cast<glm::length_t>(i)] =
+    				static_cast<float>(c[i].getAs<double>().value_or(clearColor[static_cast<glm::length_t>(i)]));
+    	}
+    	if (clearColor != m_appliedClearColor) {
+    		m_appliedClearColor = clearColor;
+    		RenderCommand::setClearColor(clearColor);
+    	}
+
+    	if (const std::string theme = settingStr({"editor", "ui", "theme"}, "dark"); theme != m_appliedTheme) {
+    		m_appliedTheme = theme;
+    		if (theme == "light") {
+    			ImGui::StyleColorsLight();
+    		} else {
+    			ImGui::StyleColorsDark();
+    			ImGuiLayer::setDarkThemeColors();
+    		}
+    	}
     }
 
 	void EditorLayer::openScene(const std::filesystem::path& path) {
@@ -58,14 +119,13 @@ namespace Vectrix {
 
     	const std::filesystem::path settingsPath =
     		std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
-    	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().load(settingsPath);
-    		settingsResult == SUCCESS) {
-    		const JsonObject& settings = SettingsManager::getSettings();
-    		if (const auto editorNode = settings.find("editor"); editorNode != settings.end())
-    			readOutlineSettings(editorNode->second["outline"]);
-    	} else {
-    		VC_CORE_WARN("Settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
-    	}
+    	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath);
+    		settingsResult != SUCCESS)
+    		VC_CORE_WARN("Project settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
+
+    	const JsonObject& settings = SettingsManager::getSettings();
+    	if (const auto editorNode = settings.find("editor"); editorNode != settings.end())
+    		readOutlineSettings(editorNode->second["outline"]);
 
     	AssetsManager::instance().getMeshManager().clear();
     	AssetsManager::instance().getTextureManager().clear();
@@ -189,10 +249,7 @@ namespace Vectrix {
 			}
 			if (ImGui::BeginMenu("Window")) {
 				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
-				if (ImGui::MenuItem("Settings (WIP)", nullptr, m_settingsWidgetEnable)) {
-					m_settingsWidgetEnable = !m_settingsWidgetEnable;
-					m_settingPanel.setEnable(m_settingsWidgetEnable);
-				}
+				ImGui::MenuItem("Settings (WIP)", nullptr, &m_settingPanel.getEnable());
 
 				ImGui::EndMenu();
 			}
@@ -221,7 +278,7 @@ namespace Vectrix {
 			}
 			ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
 			m_viewportPos = changeVecType<glm::vec2,ImVec2,2>(ImGui::GetItemRectMin());
-			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y});
+			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_gizmoTranslationSnap,m_gizmoRotationSnap);
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
 #ifdef VC_PLATFORM_LINUX
@@ -266,6 +323,7 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
+    	applyLiveSettings();
     	processPendingSceneLoad();
 
     	if (m_viewportFocused || m_viewportHovered) {

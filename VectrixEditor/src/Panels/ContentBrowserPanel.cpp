@@ -7,6 +7,7 @@
 #include "imgui_internal.h"   // for ImGui::GetWindowDrawList()
 #include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 namespace Vectrix {
     constexpr auto colorSurface = ImVec4(0.105f, 0.110f, 0.125f, 1.00f);
@@ -152,6 +153,12 @@ namespace Vectrix {
     }
 
     ContentBrowserPanel::ContentBrowserPanel() : ImGuiWidget("ContentBrowserPanel") {
+        if (const JsonObject& s = SettingsManager::getSettings(); s.contains("editor")) {
+            const JsonValue& cb = s.at("editor")["contentBrowser"];
+            m_thumbnailSize = static_cast<float>(cb["thumbnailSize"].getAs<double>().value_or(m_thumbnailSize));
+            m_padding = static_cast<float>(cb["padding"].getAs<double>().value_or(m_padding));
+        }
+
         m_assetRoot = std::filesystem::path("assets");
         if (!std::filesystem::exists(m_assetRoot)) {
             VC_WARN("Asset path '{}' does not exist, falling back to current directory", m_assetRoot.string());

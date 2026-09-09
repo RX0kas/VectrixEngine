@@ -9,7 +9,8 @@
 #include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
-    inline void useGizmo(const std::shared_ptr<Entity>& selectedEntity, const EditorCamera& camera, int gizmoType,ImVec2 windowPos,ImVec2 windowSize) {
+    inline void useGizmo(const std::shared_ptr<Entity>& selectedEntity, const EditorCamera& camera, int gizmoType,ImVec2 windowPos,ImVec2 windowSize,
+                         float translationSnap = 0.5f, float rotationSnap = 45.0f) {
         if (selectedEntity && gizmoType != -1) {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
@@ -27,12 +28,9 @@ namespace Vectrix {
             auto& tc = selectedEntity->getComponent<TransformComponent>();
             glm::mat4 transform = tc.modelMatrix();
 
-            // Snapping
+            // Snapping (hold Ctrl); snap distances come from the editor settings.
             bool snap = Input::isKeyPressed(VC_KEY_LEFT_CONTROL);
-            float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-            // Snap to 45 degrees for rotation
-            if (gizmoType == ImGuizmo::OPERATION::ROTATE)
-                snapValue = 45.0f;
+            float snapValue = (gizmoType == ImGuizmo::OPERATION::ROTATE) ? rotationSnap : translationSnap;
 
             float snapValues[3] = { snapValue, snapValue, snapValue };
 

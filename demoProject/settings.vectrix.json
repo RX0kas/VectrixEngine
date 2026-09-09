@@ -1,4 +1,16 @@
 {
+  "engine": {
+    "graphicAPI": {
+      "vulkan": {
+        "startingDescriptorPoolConfig": {
+          "uboCount": 256,
+          "ssboCount": 256,
+          "samplerCount": 4096,
+          "maxSets": 512
+        }
+      }
+    }
+  },
   "editor": {
     "outline": {
       "color": [1.0,1.0,1.0,1.0],

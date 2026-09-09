@@ -4,10 +4,9 @@
 #include <utility>
 
 #include "Pipeline.h"
+#include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Debug/Profiler.h"
-
-#define OPTIMIZE
 
 namespace Vectrix {
 	VulkanShader::VulkanShader(std::string name, const std::string& path,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
@@ -224,11 +223,7 @@ namespace Vectrix {
 		}
 
 		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
-#ifdef OPTIMIZE
-		constexpr bool optimize = true;
-#else
-		constexpr bool optimize = false;
-#endif
+		const bool optimize = VulkanContext::instance().settings().shaders.optimize;
 		auto vertCode = compiler.compile_file(m_name.c_str(),VertexShader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),FragmentShader,m_fragSRC.c_str(),optimize);
 

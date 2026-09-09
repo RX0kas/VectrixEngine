@@ -3,7 +3,9 @@
 #include <any>
 #include <cstddef>
 #include <map>
+#include <optional>
 #include <string>
+#include <type_traits>
 #include <variant>
 #include <vector>
 
@@ -130,6 +132,26 @@ namespace Vectrix {
         }
 
         /**
+         * @brief Retrieves the value as @p T, if it holds a matching type.
+         * @tparam T Either a stored alternative (std::string, bool, JsonArray, JsonObject,
+         *           std::nullptr_t) or any arithmetic type. JSON numbers are stored as
+         *           double, so an arithmetic T is read from that double and cast to T.
+         * @return The value, or std::nullopt when the stored type does not match.
+         */
+        template<typename T>
+        [[nodiscard]] std::optional<T> getAs() const {
+            if constexpr (std::is_arithmetic_v<T> && !std::is_same_v<T, bool>) {
+                if (std::holds_alternative<double>(m_data))
+                    return static_cast<T>(std::get<double>(m_data));
+                return std::nullopt;
+            } else {
+                if (std::holds_alternative<T>(m_data))
+                    return std::get<T>(m_data);
+                return std::nullopt;
+            }
+        }
+
+        /**
          * @brief Checks if the value is null.
          * @return true if the value is null, false otherwise.
          */
@@ -178,7 +200,6 @@ namespace Vectrix {
                 const auto it = object->find(key);
                 return it != object->end() ? it->second : nullValue();
             }
-            VC_CORE_ERROR("JsonValue is not an object");
             return nullValue();
         }
 
@@ -210,10 +231,8 @@ namespace Vectrix {
             if (const auto* array = std::get_if<JsonArray>(&m_data)) {
                 if (index < array->size())
                     return (*array)[index];
-                VC_CORE_ERROR("JsonValue array index {} is out of range", index);
                 return nullValue();
             }
-            VC_CORE_ERROR("JsonValue is not an array");
             return nullValue();
         }
 
@@ -253,9 +272,10 @@ namespace Vectrix {
                 return o.contains(name);
             }
             VC_CORE_ERROR("JsonValue is not an object");
+            return false;
         }
 
-        [[nodiscard]] JsonObject getAsObject() {
+        [[nodiscard]] JsonObject getAsObject() const {
             if (std::holds_alternative<JsonObject>(m_data)) {
                 return std::get<JsonObject>(m_data);
             }
