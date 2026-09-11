@@ -77,6 +77,16 @@ namespace Vectrix {
 		void PushOverlay(const std::shared_ptr<Layer>& layer);
 
 		/**
+		 * @tparam T New layer class
+		 */
+		template<std::derived_from<Layer> T>
+		void switchToLayer(Layer* oldLayer) {
+			m_nextLayer = std::make_shared<T>();
+			m_oldLayerDebugName = oldLayer->getName();
+			m_hasToSwitch = true;
+		}
+
+		/**
 		 * @brief This function return the current Window instance
 		 */
 		[[nodiscard]] Window &window() const { return *m_window; }
@@ -116,12 +126,27 @@ namespace Vectrix {
 			VC_CORE_ASSERT(s_instance, "Vectrix has not been created");
 			return *s_instance->m_settingsManager;
 		}
+
+		template<std::derived_from<Layer> T>
+		void PushLayer() { PushLayer(std::make_shared<T>()); }
+
+		template<std::derived_from<Layer> T>
+		void PushOverlay() { PushOverlay(std::make_shared<T>()); }
+
+		template<std::derived_from<Layer> T>
+		void PopLayer() { m_layerStack.PopLayer(std::make_shared<T>()); }
+
+		template<std::derived_from<Layer> T>
+		void PopOverlay() { m_layerStack.PopOverlay(std::make_shared<T>()); }
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
 
+		bool m_hasToSwitch = false;
+		std::shared_ptr<Layer> m_nextLayer;
+		std::string m_oldLayerDebugName;
 
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;

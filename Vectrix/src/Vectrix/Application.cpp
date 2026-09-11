@@ -19,6 +19,19 @@ namespace Vectrix {
 
 #define BIND_EVENT_FN(x) [this](auto && PH1) { x(std::forward<decltype(PH1)>(PH1)); }
 
+	namespace {
+		// Layers get the callback first, then overlays, so an overlay (e.g. the ImGuiLayer)
+		// always ends up drawn/updated on top. Cache is an unordered_map, so only this
+		// layers-before-overlays grouping is preserved, not a finer insertion order.
+		template<typename Fn>
+		void forEachLayer(LayerStack& stack, Fn&& fn) {
+			for (auto it = stack.beginLayers(); it != stack.endLayers(); ++it)
+				fn(it->second);
+			for (auto it = stack.beginOverlays(); it != stack.endOverlays(); ++it)
+				fn(it->second);
+		}
+	}
+
 	Application* Application::s_instance = nullptr;
 
 	Application::Application() {
@@ -88,12 +101,10 @@ namespace Vectrix {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
 
-		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
-		{
-			(*--it)->OnEvent(e);
-			if (e.Handled)
-				break;
-		}
+		for (auto it = m_layerStack.beginOverlays(); it != m_layerStack.endOverlays() && !e.Handled; ++it)
+			it->second->OnEvent(e);
+		for (auto it = m_layerStack.beginLayers(); it != m_layerStack.endLayers() && !e.Handled; ++it)
+			it->second->OnEvent(e);
 	}
 
 	void Application::run() {
@@ -104,18 +115,23 @@ namespace Vectrix {
 			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
-			for (auto& layer : m_layerStack) {
-				layer->OnUpdate(m_deltaTime);
+
+			if (m_hasToSwitch) {
+				m_layerStack.PopLayer(m_oldLayerDebugName);
+				m_layerStack.PushLayer(m_nextLayer);
+				m_nextLayer->OnAttach();
+
+				m_oldLayerDebugName.clear();
+				m_nextLayer.reset();
+				m_hasToSwitch = false;
 			}
+
+			forEachLayer(m_layerStack, [this](const std::shared_ptr<Layer>& layer) { layer->OnUpdate(m_deltaTime); });
 			if (RenderCommand::canRender()) {
-				for (auto& layer : m_layerStack) {
-					layer->OnRenderOffscreen();
-				}
+				forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnRenderOffscreen(); });
 
 				RenderCommand::beginFrame();
-				for (const std::shared_ptr<Layer>& layer : m_layerStack) {
-					layer->OnRender();
-				}
+				forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnRender(); });
 				RenderCommand::endFrame();
 
 				m_imGuiLayer->OnRender();
@@ -149,8 +165,7 @@ namespace Vectrix {
 
 	void Application::renderImGui() {
 		VC_PROFILER_FUNCTION();
-		for (const std::shared_ptr<Layer>& layer : m_layerStack)
-			layer->OnImGuiRender();
+		forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnImGuiRender(); });
 		m_imGuiLayer->OnImGuiRender();
 	}
 }

@@ -63,8 +63,7 @@ namespace Vectrix {
 	private:
 		friend class Application;
 
-		[[nodiscard]] std::pair<VectrixResult, std::string> loadInto(JsonObject& target,
-		                                                             const std::filesystem::path& file);
+		[[nodiscard]] std::pair<VectrixResult, std::string> loadInto(JsonObject& target, const std::filesystem::path& file);
 		void rebuildEffective() const;
 
 		JsonObject m_global;

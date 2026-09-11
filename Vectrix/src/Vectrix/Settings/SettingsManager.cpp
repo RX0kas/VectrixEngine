@@ -4,8 +4,6 @@
 
 namespace Vectrix {
 	namespace {
-		// Recursive object merge: for a key present in both, if both sides are objects
-		// merge them; otherwise the overlay value replaces the base value.
 		void mergeInto(JsonObject& base, const JsonObject& overlay) {
 			for (const auto& [key, overlayValue] : overlay) {
 				const auto baseIt = base.find(key);
@@ -46,8 +44,7 @@ namespace Vectrix {
 		m_effectiveDirty = false;
 	}
 
-	std::pair<VectrixResult, std::string> SettingsManager::loadInto(JsonObject& target,
-	                                                                const std::filesystem::path& file) {
+	std::pair<VectrixResult, std::string> SettingsManager::loadInto(JsonObject& target, const std::filesystem::path& file) {
 		if (!std::filesystem::exists(file)) {
 			target.clear();
 			return {SUCCESS, ""};
