@@ -2,6 +2,7 @@
 
 #include "Vectrix/Core/Core.h"
 #include "Layer.h"
+#include "Vectrix/Utils/Memory.h"
 
 /**
  * @file LayerStack.h
@@ -32,40 +33,43 @@ namespace Vectrix {
 		 * @param layer The layer to add, the stack shares its ownership
 		 * @note Layer::OnAttach is called by the Application, not by the stack
 		 */
-		void PushLayer(std::shared_ptr<Layer> layer);
+		void PushLayer(const std::shared_ptr<Layer>& layer);
 
 		/**
 		 * @brief Add an overlay, on top of everything else
 		 * @param overlay The overlay to add, the stack shares its ownership
 		 * @see PushLayer
 		 */
-		void PushOverlay(std::shared_ptr<Layer> overlay);
+		void PushOverlay(const std::shared_ptr<Layer>& overlay);
 
 		/**
 		 * @brief Take a layer out of the stack
 		 * @param layer The layer to remove
 		 * @note Does nothing when the layer is not in the stack
 		 */
-		void PopLayer(std::shared_ptr<Layer> layer);
+		void PopLayer(const std::shared_ptr<Layer>& layer);
+
+		/**
+		 * @brief Take a layer out of the stack
+		 * @param layer The layer to remove
+		 * @note Does nothing when the layer is not in the stack
+		 */
+		void PopLayer(const std::string& layer);
 
 		/**
 		 * @brief Take an overlay out of the stack
 		 * @param overlay The overlay to remove
 		 * @note Does nothing when the overlay is not in the stack
 		 */
-		void PopOverlay(std::shared_ptr<Layer> overlay);
+		void PopOverlay(const std::shared_ptr<Layer>& overlay);
 
-		/**
-		 * @brief Return an iterator on the first layer, so the stack can be walked
-		 * @return An iterator to the beginning of the stack
-		 */
-		std::vector<std::shared_ptr<Layer>>::iterator begin() { return m_layers.begin(); }
+		using iterator = Cache<std::string, std::shared_ptr<Layer>>::iterator;
 
-		/**
-		 * @brief Return an iterator past the last overlay
-		 * @return An iterator to the end of the stack
-		 */
-		std::vector<std::shared_ptr<Layer>>::iterator end() { return m_layers.end(); }
+		iterator beginLayers() { return m_layers.begin(); }
+		iterator endLayers() { return m_layers.end(); }
+
+		iterator beginOverlays() { return m_overlays.begin(); }
+		iterator endOverlays() { return m_overlays.end(); }
 
 		/**
 		 * @brief Detach and drop every layer of the stack
@@ -73,7 +77,7 @@ namespace Vectrix {
 		 */
 		void destroy();
 	private:
-		std::vector<std::shared_ptr<Layer>> m_layers;
-		unsigned int m_layerInsertIndex = 0;
+		Cache<std::string,std::shared_ptr<Layer>> m_layers;
+		Cache<std::string,std::shared_ptr<Layer>> m_overlays;
 	};
 }

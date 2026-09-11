@@ -5,13 +5,9 @@
 namespace Vectrix {
 
     VectrixEditor::VectrixEditor() {
-        s_instance = this;
-        m_editorLayer = std::make_shared<EditorLayer>();
-        PushLayer(m_editorLayer);
+        //PushLayer<EditorLayer>();
+        PushLayer<StartupLayer>();
     }
-
-
-    VectrixEditor* VectrixEditor::s_instance = nullptr;
 
     Application* createApplication() {
         return new VectrixEditor();

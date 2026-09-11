@@ -7,12 +7,9 @@
 class Sandbox : public Vectrix::Application {
 public:
 	Sandbox() {
-		m_exampleLayer = std::make_shared<ExampleLayer>();
-		PushLayer(m_exampleLayer);
+		PushLayer<ExampleLayer>();
 	}
 	~Sandbox() override = default;
-private:
-	std::shared_ptr<ExampleLayer> m_exampleLayer;
 };
 
 Vectrix::Application* Vectrix::createApplication() {

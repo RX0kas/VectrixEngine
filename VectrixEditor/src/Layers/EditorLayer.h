@@ -58,9 +58,9 @@ namespace Vectrix {
     	int m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 
     	// Panels
-    	SceneHierarchyPanel m_sceneHierarchyPanel;
-    	ContentBrowserPanel m_contentBrowserPanel;
-    	SettingsPanel m_settingPanel;
+    	std::unique_ptr<SceneHierarchyPanel> m_sceneHierarchyPanel;
+    	std::unique_ptr<ContentBrowserPanel> m_contentBrowserPanel;
+    	std::unique_ptr<SettingsPanel> m_settingPanel;
     	bool m_graphicDebugWidgetEnable = false;
     };
 } // Vectrix

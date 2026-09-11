@@ -11,6 +11,7 @@
 
 #include <nfd.h>
 
+#include "StartupLayer.h"
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "Vectrix/Events/EditorEvent.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
@@ -53,23 +54,26 @@ namespace Vectrix {
 
     	m_activeScene = std::make_shared<Scene>("EditorScene");
 
-    	// Field of view and clip planes are fixed at construction (not live).
+    	// Field of view and clip planes are fixed at construction (not live)
     	m_camera = std::make_unique<EditorCamera>(
     		static_cast<float>(settingNum({"editor", "camera", "fov"}, 50.0)),
     		static_cast<float>(settingNum({"editor", "camera", "near"}, 0.1)),
     		static_cast<float>(settingNum({"editor", "camera", "far"}, 1000.0)));
-    	m_sceneHierarchyPanel.setContext(m_activeScene);
+    	m_sceneHierarchyPanel = std::make_unique<SceneHierarchyPanel>();
+    	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>();
+    	m_settingPanel = std::make_unique<SettingsPanel>();
+    	m_sceneHierarchyPanel->setContext(m_activeScene);
 
     	applyLiveSettings();
 
-    	m_settingPanel.disable(); // opt-in via the Window menu
+    	m_settingPanel->disable(); // opt-in via the Window menu
     }
 
 	void EditorLayer::applyLiveSettings() {
-    	m_cameraMoveSpeed      = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
-    	m_cameraRotationSpeed  = static_cast<float>(settingNum({"editor", "camera", "rotationSpeed"}, 50.0));
+    	m_cameraMoveSpeed = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
+    	m_cameraRotationSpeed = static_cast<float>(settingNum({"editor", "camera", "rotationSpeed"}, 50.0));
     	m_gizmoTranslationSnap = static_cast<float>(settingNum({"editor", "gizmo", "translationSnap"}, 0.5));
-    	m_gizmoRotationSnap    = static_cast<float>(settingNum({"editor", "gizmo", "rotationSnap"}, 45.0));
+    	m_gizmoRotationSnap = static_cast<float>(settingNum({"editor", "gizmo", "rotationSnap"}, 45.0));
 
     	glm::vec4 clearColor{0.0f, 0.0f, 0.0f, 1.0f};
     	if (const JsonObject& s = SettingsManager::getSettings(); s.contains("engine")) {
@@ -115,7 +119,7 @@ namespace Vectrix {
     	m_activeScene = newScene.second;
     	m_activeScene->m_projectDirectory = path.parent_path();
     	m_activeScene->m_fileName = path.filename();
-    	m_sceneHierarchyPanel.setContext(m_activeScene);
+    	m_sceneHierarchyPanel->setContext(m_activeScene);
 
     	const std::filesystem::path settingsPath =
     		std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
@@ -249,7 +253,7 @@ namespace Vectrix {
 			}
 			if (ImGui::BeginMenu("Window")) {
 				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
-				ImGui::MenuItem("Settings (WIP)", nullptr, &m_settingPanel.getEnable());
+				ImGui::MenuItem("Settings (WIP)", nullptr, &m_settingPanel->getEnable());
 
 				ImGui::EndMenu();
 			}
@@ -278,7 +282,7 @@ namespace Vectrix {
 			}
 			ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
 			m_viewportPos = changeVecType<glm::vec2,ImVec2,2>(ImGui::GetItemRectMin());
-			useGizmo(m_sceneHierarchyPanel.getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_gizmoTranslationSnap,m_gizmoRotationSnap);
+			useGizmo(m_sceneHierarchyPanel->getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_gizmoTranslationSnap,m_gizmoRotationSnap);
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
 #ifdef VC_PLATFORM_LINUX
@@ -298,9 +302,9 @@ namespace Vectrix {
 			auto [mx, my] = ImGui::GetMousePos();
 			std::shared_ptr<Entity> picked = pickEntity({ mx, my });
 			if (picked)
-				m_sceneHierarchyPanel.setSelectedEntity(picked);
+				m_sceneHierarchyPanel->setSelectedEntity(picked);
 			else
-				m_sceneHierarchyPanel.resetSelectedEntity();
+				m_sceneHierarchyPanel->resetSelectedEntity();
 		}
 
     	if (m_graphicDebugWidgetEnable) {
@@ -319,7 +323,7 @@ namespace Vectrix {
     	m_activeScene->OnRender();
     	Renderer::endScene();
         m_framebuffer->unbind();
-    	Renderer::renderOutline(m_sceneHierarchyPanel.getSelectedEntity(), m_framebuffer);
+    	Renderer::renderOutline(m_sceneHierarchyPanel->getSelectedEntity(), m_framebuffer);
     }
 
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
@@ -361,7 +365,7 @@ namespace Vectrix {
     		}
 
     		if (Input::isKeyPressed(VC_KEY_F)) {
-    			auto e = m_sceneHierarchyPanel.getSelectedEntity();
+    			auto e = m_sceneHierarchyPanel->getSelectedEntity();
     			if (e) {
     				m_camera->setViewTarget(e->getComponent<TransformComponent>().position);
     			}

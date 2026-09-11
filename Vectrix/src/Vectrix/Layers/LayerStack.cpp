@@ -10,36 +10,28 @@ namespace Vectrix {
 
 	}
 
-	void LayerStack::PushLayer(std::shared_ptr<Layer> layer)
-	{
-		m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer);
-		m_layerInsertIndex++;
+	void LayerStack::PushLayer(const std::shared_ptr<Layer>& layer) {
+		m_layers.emplace(layer->getName(), layer);
 	}
 
-	void LayerStack::PushOverlay(std::shared_ptr<Layer> overlay)
+	void LayerStack::PushOverlay(const std::shared_ptr<Layer>& overlay)
 	{
-		m_layers.emplace_back(overlay);
+		m_overlays.emplace(overlay->getName(),overlay);
 	}
 
-	void LayerStack::PopLayer(std::shared_ptr<Layer> layer)
-	{
-		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
-		if (it != m_layers.end())
-		{
-			m_layers.erase(it);
-			m_layerInsertIndex--;
-		}
+	void LayerStack::PopLayer(const std::shared_ptr<Layer>& layer) {
+		m_layers.erase(layer->getName());
 	}
 
-	void LayerStack::PopOverlay(std::shared_ptr<Layer> overlay)
-	{
-		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-		if (it != m_layers.end())
-			m_layers.erase(it);
+	void LayerStack::PopLayer(const std::string& layer) {
+		m_layers.erase(layer);
+	}
+
+	void LayerStack::PopOverlay(const std::shared_ptr<Layer>& overlay) {
+		m_overlays.erase(overlay->getName());
 	}
 
 	void LayerStack::destroy() {
 		m_layers.clear();
-		m_layers.shrink_to_fit();
 	}
 }
