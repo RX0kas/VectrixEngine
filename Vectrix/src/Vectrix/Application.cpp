@@ -13,6 +13,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Textures/TextureManager.h"
 #include "Settings/SettingsManager.h"
+#include "Utils/Folders.h"
 
 
 namespace Vectrix {
@@ -43,7 +44,11 @@ namespace Vectrix {
 		// during init(). A per-project load layers on top of this later (openScene).
 		m_settingsManager = std::shared_ptr<SettingsManager>(new SettingsManager());
 		{
-			const auto globalPath = std::filesystem::current_path() / settingsFileName;
+			const std::filesystem::path configFolder = getConfigFolder();
+			std::error_code ec;
+			std::filesystem::create_directories(configFolder, ec); // loadGlobal tolerates a missing file, but save() needs the folder to exist
+
+			const auto globalPath = configFolder / settingsFileName;
 			if (const auto [result, message] = m_settingsManager->loadGlobal(globalPath); result != SUCCESS)
 				VC_CORE_WARN("Global settings not loaded ({}): {}", globalPath.string(), message);
 		}
@@ -119,10 +124,12 @@ namespace Vectrix {
 			if (m_hasToSwitch) {
 				m_layerStack.PopLayer(m_oldLayerDebugName);
 				m_layerStack.PushLayer(m_nextLayer);
-				m_nextLayer->OnAttach();
+				if (m_dataToNextLayer.empty()) m_nextLayer->OnAttach();
+				else m_nextLayer->OnAttach(m_dataToNextLayer);
 
 				m_oldLayerDebugName.clear();
 				m_nextLayer.reset();
+				m_dataToNextLayer = JsonObject();
 				m_hasToSwitch = false;
 			}
 

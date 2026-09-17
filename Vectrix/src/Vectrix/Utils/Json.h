@@ -93,7 +93,7 @@ namespace Vectrix {
         [[nodiscard]] std::string getString() const {
             if (std::holds_alternative<std::string>(m_data))
                 return std::get<std::string>(m_data);
-            VC_CORE_ERROR("JsonValue is not a string");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not a string");
             return {};
         }
 
@@ -115,7 +115,7 @@ namespace Vectrix {
         [[nodiscard]] double getDouble() const {
             if (std::holds_alternative<double>(m_data))
                 return std::get<double>(m_data);
-            VC_CORE_ERROR("JsonValue is not a double");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not a double");
             return 0.0;
         }
 
@@ -127,7 +127,7 @@ namespace Vectrix {
         [[nodiscard]] bool getBool() const {
             if (std::holds_alternative<bool>(m_data))
                 return std::get<bool>(m_data);
-            VC_CORE_ERROR("JsonValue is not a boolean");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not a boolean");
             return false;
         }
 
@@ -185,7 +185,7 @@ namespace Vectrix {
                 m_data = JsonObject{};
             if (auto* object = std::get_if<JsonObject>(&m_data))
                 return (*object)[key];
-            VC_CORE_ERROR("JsonValue is not an object");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an object");
             return nullSink();
         }
 
@@ -214,10 +214,10 @@ namespace Vectrix {
             if (auto* array = std::get_if<JsonArray>(&m_data)) {
                 if (index < array->size())
                     return (*array)[index];
-                VC_CORE_ERROR("JsonValue array index {} is out of range", index);
+                VC_CORE_ERROR_NO_EXIT("JsonValue array index {} is out of range", index);
                 return nullSink();
             }
-            VC_CORE_ERROR("JsonValue is not an array");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an array");
             return nullSink();
         }
 
@@ -257,7 +257,7 @@ namespace Vectrix {
                 array->push_back(std::move(value));
                 return;
             }
-            VC_CORE_ERROR("JsonValue is not an array");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an array");
         }
 
         /**
@@ -271,7 +271,7 @@ namespace Vectrix {
                 const auto& o = std::get<JsonObject>(m_data);
                 return o.contains(name);
             }
-            VC_CORE_ERROR("JsonValue is not an object");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an object");
             return false;
         }
 
@@ -279,7 +279,7 @@ namespace Vectrix {
             if (std::holds_alternative<JsonObject>(m_data)) {
                 return std::get<JsonObject>(m_data);
             }
-            VC_CORE_ERROR("JsonValue is not an object");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an object");
             return {};
         }
 
@@ -293,7 +293,7 @@ namespace Vectrix {
                 m_data = JsonObject{};
             if (auto* object = std::get_if<JsonObject>(&m_data))
                 return *object;
-            VC_CORE_ERROR("JsonValue is not an object");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an object");
             static JsonObject s_discard;
             s_discard.clear();
             return s_discard;
@@ -309,10 +309,14 @@ namespace Vectrix {
                 m_data = JsonArray{};
             if (auto* array = std::get_if<JsonArray>(&m_data))
                 return *array;
-            VC_CORE_ERROR("JsonValue is not an array");
+            VC_CORE_ERROR_NO_EXIT("JsonValue is not an array");
             static JsonArray s_discard;
             s_discard.clear();
             return s_discard;
+        }
+
+        bool isArray() {
+            return std::holds_alternative<std::nullptr_t>(m_data) || std::get_if<JsonArray>(&m_data);
         }
 
     private:

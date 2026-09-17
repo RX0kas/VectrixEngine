@@ -136,9 +136,16 @@ namespace Vectrix {
     }
 
     std::string Json::parseString(const std::string& src, size_t& pos) {
+        // parseObject calls this directly for keys, without skipping the whitespace/newline
+        // that Json::save's pretty-printer puts before each key - skip it here so the
+        // consume() below actually eats the opening quote instead of that whitespace.
+        while (pos < src.size() && std::isspace(static_cast<unsigned char>(src[pos]))) pos++;
+
         std::string content;
         consume(src,pos);
-        while (peek(src,pos) != '"') {
+        // Raw indexing here on purpose: peek() would skip whitespace that is meaningful
+        // content inside the string (e.g. a space in a project name).
+        while (src[pos] != '"') {
             content += consume(src,pos);
         }
         consume(src,pos);
@@ -168,12 +175,18 @@ namespace Vectrix {
             pos+=5;
             return false;
         }
-        VC_CORE_ERROR("Unexpected token at pos {}",pos);
+        VC_CORE_ERROR_NO_EXIT("Unexpected token at pos {}",pos);
+        return nullptr;
     }
 
     JsonArray Json::parseArray(const std::string& src, size_t& pos) {
         JsonArray arr{};
         consume(src,pos);
+
+        if (peek(src,pos) == ']') {
+            consume(src,pos);
+            return arr;
+        }
 
         bool done = false;
         while (!done) {
@@ -195,6 +208,11 @@ namespace Vectrix {
         JsonObject obj{};
 
         consume(src,pos);
+
+        if (peek(src,pos) == '}') {
+            consume(src,pos);
+            return obj;
+        }
 
         bool done = false;
         while (!done) {

@@ -69,6 +69,14 @@ namespace Vectrix {
     	m_settingPanel->disable(); // opt-in via the Window menu
     }
 
+	void EditorLayer::OnAttach(const JsonObject& data) {
+    	OnAttach();
+    	if (data.contains("scenePath")) {
+    		if (const auto scenePath = data.at("scenePath").getAs<std::string>())
+    			openScene(*scenePath);
+    	}
+    }
+
 	void EditorLayer::applyLiveSettings() {
     	m_cameraMoveSpeed = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
     	m_cameraRotationSpeed = static_cast<float>(settingNum({"editor", "camera", "rotationSpeed"}, 50.0));
@@ -157,7 +165,7 @@ namespace Vectrix {
     	} else if (result == NFD_CANCEL) {
     		VC_CORE_INFO("User cancelled");
     	} else {
-    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
+    		VC_CORE_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -190,7 +198,7 @@ namespace Vectrix {
     	} else if (result == NFD_CANCEL) {
     		VC_CORE_INFO("User cancelled");
     	} else {
-    		VC_CORE_CRITICAL("NFD Error: {}", NFD_GetError());
+    		VC_CORE_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -237,7 +245,7 @@ namespace Vectrix {
 				if (ImGui::MenuItem("Open")) {
 					showOpenDialog();
 				}
-				if (ImGui::MenuItem("Save")) {
+				if (ImGui::MenuItem("Save Scene")) {
 					if (m_activeScene->getFileName().empty()) {
 						showSaveDialog();
 					} else {
@@ -246,7 +254,31 @@ namespace Vectrix {
 						SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
 					}
 				}
-				if (ImGui::MenuItem("Save As")) showSaveDialog();
+				if (ImGui::MenuItem("Save Scene As")) showSaveDialog();
+
+				if (ImGui::MenuItem("Open Project")) {
+
+				}
+
+				if (ImGui::BeginMenu("Open recent project")) {
+					if (!m_projectsHasBeenLoaded) {
+						m_recentProjects = StartupLayer::loadRecentProject();
+					}
+					// TODO: verify cache from StartupLayer
+					for (const auto&[name, path] : m_recentProjects) {
+						if (ImGui::Button(name.c_str())) {
+							JsonObject data;
+							data["openProject"] = path.c_str();
+							Application::instance().switchToLayer<StartupLayer>(this, data);
+						}
+					}
+					ImGui::EndMenu();
+				}
+
+				if (ImGui::MenuItem("Close Project")) {
+					Application::instance().switchToLayer<StartupLayer>(this);
+				}
+
 
 				if (ImGui::MenuItem("Exit")) Application::instance().close();
 				ImGui::EndMenu();

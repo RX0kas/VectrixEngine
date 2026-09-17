@@ -208,9 +208,11 @@ namespace Vectrix {
 
 			if (type == "x11") return X11;
 
-			VC_CORE_ERROR("Unknown XDG_SESSION_TYPE variable : {}", sessionType);
+			VC_CORE_ERROR_NO_EXIT("Unknown XDG_SESSION_TYPE variable : {}", sessionType);
+			return UNKNOWN_DISPLAY_SERVER;
 		}
 
-		VC_CORE_CRITICAL("Undefined XDG_SESSION_TYPE variable");
+		VC_CORE_ERROR_NO_EXIT("Undefined XDG_SESSION_TYPE variable");
+		return UNKNOWN_DISPLAY_SERVER;
 	}
 }

@@ -32,13 +32,13 @@ namespace Vectrix {
      */
     static Version makeVersion(const std::uint32_t major, const std::uint32_t minor, const std::uint32_t patch) {
         if (major>8U) {
-            VC_CORE_ERROR("Major is too high to be fully registered");
+            VC_CORE_ERROR_NO_EXIT("Major is too high to be fully registered");
         }
         if (minor>12U) {
-            VC_CORE_ERROR("Minor is too high to be fully registered");
+            VC_CORE_ERROR_NO_EXIT("Minor is too high to be fully registered");
         }
         if (patch>12U) {
-            VC_CORE_ERROR("Patch is too high to be fully registered");
+            VC_CORE_ERROR_NO_EXIT("Patch is too high to be fully registered");
         }
         return static_cast<uint32_t>(VC_PLATFORM_ID)<< 31U | major << 24U | minor << 12U | patch;
     }

@@ -15,4 +15,4 @@ namespace Vectrix {
 }
 
 
-VC_SET_APP_INFO("VectrixEditor",0,2,0);
+VC_SET_APP_INFO("VectrixEditor",0,3,0);
