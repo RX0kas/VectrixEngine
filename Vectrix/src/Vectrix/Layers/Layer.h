@@ -2,6 +2,7 @@
 
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Events/Event.h"
+#include "Vectrix/Utils/Json.h"
 
 /**
  * @file Layer.h
@@ -32,6 +33,9 @@ namespace Vectrix {
 		 * @brief The function called when the Layer is added to the layer stack
 		 */
 		virtual void OnAttach() {}
+
+
+		virtual void OnAttach(const JsonObject& data) { OnAttach(); }
 
 		/**
 		 * @brief The function called when the layer is removed from the layer stack

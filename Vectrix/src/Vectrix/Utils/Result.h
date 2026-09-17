@@ -26,7 +26,8 @@ namespace Vectrix {
         WRONG_TYPE,       ///< What was found is not of the expected type
         WRONG_FILE,       ///< The file is not what it claims to be
         OUTDATED,         ///< The file was written by a version that is no longer supported
-        FORMATING_ERROR   ///< The content is of the right kind but is malformed
+        FORMATING_ERROR,  ///< The content is of the right kind but is malformed
+        ALREADY_EXISTS    ///< Something is already there where a new one was about to be made
     };
 
     /**
@@ -45,6 +46,7 @@ namespace Vectrix {
             case WRONG_FILE: return "WRONG_FILE";
             case OUTDATED: return "OUTDATED";
             case FORMATING_ERROR: return "FORMATING_ERROR";
+            case ALREADY_EXISTS: return "ALREADY_EXISTS";
         }
         return "UNKNOWN_RESULT_ASSET_LOADING";
     }

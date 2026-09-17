@@ -46,3 +46,6 @@
 [submodule "Vectrix/extern/NativeFileDialog"]
 	path = Vectrix/extern/NativeFileDialog
 	url = https://github.com/btzy/nativefiledialog-extended.git
+[submodule "Vectrix/extern/PlatformFolders"]
+	path = Vectrix/extern/PlatformFolders
+	url = https://github.com/sago007/PlatformFolders.git

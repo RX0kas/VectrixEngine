@@ -168,13 +168,13 @@ namespace Vectrix {
 
         auto d = AssetsManager::load<Texture>("icons/ContentBrowser/directory.png");
         if (d.first != SUCCESS) {
-            VC_ERROR("Can't load directory icon: {}", toString(d.first));
+            VC_ERROR_NO_EXIT("Can't load directory icon: {}", toString(d.first));
         }
         m_directoryIcon = d.second;
 
         auto f = AssetsManager::load<Texture>("icons/ContentBrowser/file.png");
         if (f.first != SUCCESS) {
-            VC_ERROR("Can't load file icon: {}", toString(f.first));
+            VC_ERROR_NO_EXIT("Can't load file icon: {}", toString(f.first));
         }
         m_fileIcon = f.second;
 
@@ -450,7 +450,7 @@ namespace Vectrix {
         }
 
         if (ec) {
-            VC_ERROR("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy",
+            VC_ERROR_NO_EXIT("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy",
                      source.string(), destination.string(), ec.message());
             return;
         }
@@ -483,7 +483,7 @@ namespace Vectrix {
             std::filesystem::remove(path, ec);
 
         if (ec) {
-            VC_ERROR("Failed to delete '{}': {}", path.string(), ec.message());
+            VC_ERROR_NO_EXIT("Failed to delete '{}': {}", path.string(), ec.message());
             return;
         }
 
@@ -566,7 +566,7 @@ namespace Vectrix {
         std::error_code ec;
         std::filesystem::rename(source, destination, ec);
         if (ec) {
-            VC_ERROR("Failed to move '{}' to '{}': {}", source.string(), destination.string(), ec.message());
+            VC_ERROR_NO_EXIT("Failed to move '{}' to '{}': {}", source.string(), destination.string(), ec.message());
             return;
         }
 

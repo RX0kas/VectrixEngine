@@ -7,7 +7,7 @@ namespace Vectrix {
     GraphicsContext *GraphicsContext::create(GLFWwindow *windowHandle) {
         switch (Renderer::getAPI())
         {
-            case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!");
+            case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!"); return nullptr;
             case RendererAPI::API::Vulkan:  return new VulkanContext(windowHandle);
         }
 

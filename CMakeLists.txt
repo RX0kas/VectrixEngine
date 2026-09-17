@@ -115,6 +115,10 @@ if (UNIX AND NOT APPLE)
 endif()
 add_subdirectory(Vectrix/extern/NativeFileDialog)
 
+# PlatformFolders
+message(VERBOSE "Initialising PlatformFolders")
+add_subdirectory(Vectrix/extern/PlatformFolders)
+
 # Vectrix
 message(STATUS "Initializing Vectrix")
 
@@ -202,6 +206,7 @@ if (UNIX AND NOT APPLE)
             EnTT::EnTT
             imguizmo
             nfd
+            sago::platform_folders
     )
 else()
   target_link_libraries(Vectrix
@@ -213,6 +218,7 @@ else()
         EnTT::EnTT
         imguizmo
         nfd
+        sago::platform_folders
 )
 endif()
 

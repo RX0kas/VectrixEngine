@@ -10,6 +10,7 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
+#include "Utils/Json.h"
 
 
 /**
@@ -80,9 +81,11 @@ namespace Vectrix {
 		 * @tparam T New layer class
 		 */
 		template<std::derived_from<Layer> T>
-		void switchToLayer(Layer* oldLayer) {
+		void switchToLayer(Layer* oldLayer, const JsonObject& data = JsonObject()) {
 			m_nextLayer = std::make_shared<T>();
 			m_oldLayerDebugName = oldLayer->getName();
+			if (!data.empty()) m_dataToNextLayer = data;
+
 			m_hasToSwitch = true;
 		}
 
@@ -147,6 +150,8 @@ namespace Vectrix {
 		bool m_hasToSwitch = false;
 		std::shared_ptr<Layer> m_nextLayer;
 		std::string m_oldLayerDebugName;
+		JsonObject m_dataToNextLayer;
+
 
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;

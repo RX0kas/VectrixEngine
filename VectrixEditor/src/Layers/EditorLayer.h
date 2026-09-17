@@ -3,6 +3,7 @@
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "imgui.h"
 #include "ImGuizmo.h"
+#include "StartupLayer.h"
 #include "Vectrix.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
@@ -24,6 +25,7 @@ namespace Vectrix {
 		void OnImGuiRender() override;
 
     	void OnAttach() override;
+    	void OnAttach(const JsonObject& data) override;
     	void openScene(const std::filesystem::path& path);
     	std::shared_ptr<Scene> getActiveScene() { return m_activeScene; }
 	private:
@@ -46,6 +48,9 @@ namespace Vectrix {
 
     	std::shared_ptr<Scene> m_activeScene;
     	std::string m_pendingScenePath{};
+
+    	bool m_projectsHasBeenLoaded = false;
+    	std::vector<RecentProject> m_recentProjects;
 
     	std::shared_ptr<Entity> m_foxEntity;
     	float m_cameraRotationSpeed = 50.0f;
