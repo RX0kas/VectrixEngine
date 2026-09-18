@@ -4,13 +4,16 @@
 
 namespace Vectrix {
 
-    VectrixEditor::VectrixEditor() {
+    VectrixEditor::VectrixEditor(const std::filesystem::path& launchFile) {
         //PushLayer<EditorLayer>();
-        PushLayer<StartupLayer>();
+        PushLayer(std::make_shared<StartupLayer>(launchFile));
     }
 
-    Application* createApplication() {
-        return new VectrixEditor();
+    Application* createApplication(int argc, char** argv) {
+        // argv[1] is the file the OS was told to open us
+        // on a .vcproj/.vctx file association
+        const std::filesystem::path launchFile = argc > 1 ? std::filesystem::path(argv[1]) : std::filesystem::path{};
+        return new VectrixEditor(launchFile);
     }
 }
 

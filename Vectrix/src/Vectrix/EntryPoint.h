@@ -14,7 +14,7 @@
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 
 
-extern Vectrix::Application* Vectrix::createApplication();
+extern Vectrix::Application* Vectrix::createApplication(int argc, char** argv);
 
 /**
  * @brief Start the engine, run the application, then tear it down
@@ -23,14 +23,15 @@ extern Vectrix::Application* Vectrix::createApplication();
  * that gets run here. Startup, runtime and shutdown are each profiled into their own
  * session file.
  * @param argc The number of command line arguments
- * @param argv The command line arguments
+ * @param argv The command line arguments, e.g. a project/scene file path passed by the OS
+ *             when the application is launched via a file association
  * @return 0 once the application stopped
  * @ingroup core
  */
 int main(int argc, char** argv) {
 	VC_PROFILER_BEGIN_SESSION("Startup","Profile-Startup.json");
 	Vectrix::Log::init();
-	const auto app = Vectrix::createApplication();
+	const auto app = Vectrix::createApplication(argc, argv);
 	VC_PROFILER_END_SESSION();
 
 	VC_PROFILER_BEGIN_SESSION("Runtime","Profile-Runtime.json");

@@ -19,16 +19,16 @@ namespace Vectrix {
         // by render()'s switch and by the persisted "settingsCategory" — do not renumber.
         struct Leaf { int id; const char* label; };
         constexpr Leaf kEditorLeaves[] = {
-            {0, "Outline"}, {1, "Camera"}, {2, "Gizmo"}, {3, "Content Browser"}, {4, "Editor UI"}
+            {0, "General"},{1, "Outline"}, {2, "Camera"}, {3, "Gizmo"}, {4, "Content Browser"}, {5, "Editor UI"}
         };
         constexpr Leaf kEngineLeaves[] = {
-            {5, "Rendering"}, {6, "Window"}, {7, "Logging"}
+            {6, "Rendering"}, {7, "Window"}, {8, "Logging"}
         };
         constexpr Leaf kVulkanLeaves[] = {
-            {8, "Swapchain"}, {9, "Device"}, {10, "Textures"}, {11, "Shaders"}, {12, "Pipeline"}
+            {9, "Swapchain"}, {10, "Device"}, {11, "Textures"}, {12, "Shaders"}, {13, "Pipeline"}
         };
         constexpr int kCategoryCount =
-            IM_ARRAYSIZE(kEditorLeaves) + IM_ARRAYSIZE(kEngineLeaves) + IM_ARRAYSIZE(kVulkanLeaves);
+            IM_COUNTOF(kEditorLeaves) + IM_COUNTOF(kEngineLeaves) + IM_COUNTOF(kVulkanLeaves);
 
         // Option lists and defaults mirror the engine defaults in
         // Vectrix/src/GraphicAPI/Vulkan/VulkanSettings.h and the hardcoded values they
@@ -166,6 +166,20 @@ namespace Vectrix {
         }
 
         // ---- sections -------------------------------------------------------------------
+        bool drawGeneral(const JsonObject& r, JsonObject& w) {
+            ImGui::SeparatorText("General");
+            const std::vector<const char*> base = {"editor", "general"};
+            bool changed = false;
+
+            changed |= checkbox(r, w, keyPath(base, "autoProjectRemove"), "Automatically remove non existing project from recent project", false);
+            ImGui::Spacing();
+
+            if (ImGui::SmallButton("Reset to defaults##general")) {
+                writeAt(w, keyPath(base, "autoProjectRemove")) = false;
+                changed = true;
+            }
+            return changed;
+        }
 
         bool drawOutline(JsonObject& write) {
             ImGui::SeparatorText("Outline");
@@ -518,19 +532,20 @@ namespace Vectrix {
         ImGui::BeginChild("##settingsContent", ImVec2(0.0f, 0.0f), true);
         bool dirty = false;
         switch (m_selectedCategory) {
-            case 0:  dirty = drawOutline(target);              break;
-            case 1:  dirty = drawCamera(effective, target);    break;
-            case 2:  dirty = drawGizmo(effective, target);     break;
-            case 3:  dirty = drawContentBrowser(effective, target); break;
-            case 4:  dirty = drawEditorUi(effective, target);  break;
-            case 5:  dirty = drawRendering(effective, target); break;
-            case 6:  dirty = drawWindow(effective, target);    break;
-            case 7:  dirty = drawLogging(effective, target);   break;
-            case 8:  dirty = drawSwapchain(effective, target); break;
-            case 9:  dirty = drawDevice(effective, target);    break;
-            case 10: dirty = drawTextures(effective, target);  break;
-            case 11: dirty = drawShaders(effective, target);   break;
-            case 12: dirty = drawPipeline(effective, target);  break;
+            case 0: dirty = drawGeneral(effective,target); break;
+            case 1: dirty = drawOutline(target); break;
+            case 2: dirty = drawCamera(effective, target); break;
+            case 3: dirty = drawGizmo(effective, target); break;
+            case 4: dirty = drawContentBrowser(effective, target); break;
+            case 5: dirty = drawEditorUi(effective, target); break;
+            case 6: dirty = drawRendering(effective, target); break;
+            case 7: dirty = drawWindow(effective, target); break;
+            case 8: dirty = drawLogging(effective, target); break;
+            case 9: dirty = drawSwapchain(effective, target); break;
+            case 10: dirty = drawDevice(effective, target); break;
+            case 11: dirty = drawTextures(effective, target); break;
+            case 12: dirty = drawShaders(effective, target); break;
+            case 13: dirty = drawPipeline(effective, target); break;
             default: break;
         }
         ImGui::EndChild();

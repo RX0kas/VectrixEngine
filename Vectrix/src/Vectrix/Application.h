@@ -172,10 +172,13 @@ namespace Vectrix {
 	 *
 	 * The application has to define it, it is what the entry point calls to get the
 	 * instance to run.
+	 * @param argc The number of command line arguments
+	 * @param argv The command line arguments, e.g. a project/scene file path passed by
+	 *             the OS when the application is launched via a file association
 	 * @return The application, which the engine takes ownership of
 	 * @see EntryPoint.h
 	 * @ingroup core
 	 */
-	Application* createApplication();
+	Application* createApplication(int argc, char** argv);
 
 }

@@ -8,7 +8,7 @@
 namespace Vectrix {
 	class VectrixEditor : public Application {
 	public:
-		VectrixEditor();
+		explicit VectrixEditor(const std::filesystem::path& launchFile = {});
 		~VectrixEditor() override = default;
 	private:
 	};

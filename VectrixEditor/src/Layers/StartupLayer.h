@@ -19,7 +19,11 @@ namespace Vectrix {
 
 	class StartupLayer : public Layer {
 	public:
-		StartupLayer();
+		/**
+		 * @param launchFile A .vcproj or .vctx path the OS was told to open us with
+		 *                   (e.g. via a double-click file association), or empty
+		 */
+		explicit StartupLayer(const std::filesystem::path& launchFile = {});
 		~StartupLayer() override;
 		void OnImGuiRender() override;
 		void OnAttach() override;
@@ -28,6 +32,7 @@ namespace Vectrix {
 		static std::vector<RecentProject> loadRecentProject();
 	private:
 		std::string m_pendingOpenProjectPath;
+		std::filesystem::path m_pendingOpenScenePath;
 		std::string m_newProjectName = "Project";
 		std::filesystem::path m_projectDirectory;
 		std::string m_lastError;
@@ -42,6 +47,7 @@ namespace Vectrix {
 		void switchToEditor(const std::filesystem::path& projectDirectory, const std::filesystem::path& startScenePath);
 		void openRecentProject(const RecentProject& project);
 		void addRecentProject(RecentProject project);
+		void launchFromFile(const std::filesystem::path& file);
 	};
 } // Vectrix
 
