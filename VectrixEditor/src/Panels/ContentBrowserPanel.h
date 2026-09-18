@@ -13,7 +13,10 @@ namespace Vectrix {
 
     class ContentBrowserPanel : public ImGuiWidget {
     public:
-        ContentBrowserPanel();
+        /**
+         * @param assetRoot The folder to browse, e.g. the open project's `Assets` folder
+         */
+        explicit ContentBrowserPanel(const std::filesystem::path& assetRoot);
 
         void render() override;
 

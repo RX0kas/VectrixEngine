@@ -152,27 +152,29 @@ namespace Vectrix {
         return candidate;
     }
 
-    ContentBrowserPanel::ContentBrowserPanel() : ImGuiWidget("ContentBrowserPanel") {
+    ContentBrowserPanel::ContentBrowserPanel(const std::filesystem::path& assetRoot) : ImGuiWidget("ContentBrowserPanel") {
         if (const JsonObject& s = SettingsManager::getSettings(); s.contains("editor")) {
             const JsonValue& cb = s.at("editor")["contentBrowser"];
             m_thumbnailSize = static_cast<float>(cb["thumbnailSize"].getAs<double>().value_or(m_thumbnailSize));
             m_padding = static_cast<float>(cb["padding"].getAs<double>().value_or(m_padding));
         }
 
-        m_assetRoot = std::filesystem::path("assets");
+        m_assetRoot = assetRoot;
         if (!std::filesystem::exists(m_assetRoot)) {
             VC_WARN("Asset path '{}' does not exist, falling back to current directory", m_assetRoot.string());
             m_assetRoot = std::filesystem::current_path();
         }
         m_currentDirectory = m_assetRoot;
 
-        auto d = AssetsManager::load<Texture>("icons/ContentBrowser/directory.png");
+        // These are editor built-ins, not project content, so they're taken from the
+        // engine's own assets folder rather than m_assetRoot.
+        auto d = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/directory.png").string());
         if (d.first != SUCCESS) {
             VC_ERROR_NO_EXIT("Can't load directory icon: {}", toString(d.first));
         }
         m_directoryIcon = d.second;
 
-        auto f = AssetsManager::load<Texture>("icons/ContentBrowser/file.png");
+        auto f = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/file.png").string());
         if (f.first != SUCCESS) {
             VC_ERROR_NO_EXIT("Can't load file icon: {}", toString(f.first));
         }

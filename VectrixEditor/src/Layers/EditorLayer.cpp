@@ -60,7 +60,7 @@ namespace Vectrix {
     		static_cast<float>(settingNum({"editor", "camera", "near"}, 0.1)),
     		static_cast<float>(settingNum({"editor", "camera", "far"}, 1000.0)));
     	m_sceneHierarchyPanel = std::make_unique<SceneHierarchyPanel>();
-    	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>();
+    	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>(AssetsManager::getAssetsPath());
     	m_settingPanel = std::make_unique<SettingsPanel>();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
 
@@ -70,6 +70,10 @@ namespace Vectrix {
     }
 
 	void EditorLayer::OnAttach(const JsonObject& data) {
+    	if (data.contains("projectDirectory")) {
+    		if (const auto projectDirectory = data.at("projectDirectory").getAs<std::string>())
+    			AssetsManager::setAssetsPath(std::filesystem::path(*projectDirectory) / "Assets");
+    	}
     	OnAttach();
     	if (data.contains("scenePath")) {
     		if (const auto scenePath = data.at("scenePath").getAs<std::string>())
@@ -109,13 +113,13 @@ namespace Vectrix {
 	void EditorLayer::openScene(const std::filesystem::path& path) {
     	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path.string());
     	if (sceneCreationData.result != SUCCESS) {
-    		VC_CORE_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
+    		VC_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
     		return;
     	}
 
     	auto newScene = Scene::loadScene(sceneCreationData);
     	if (newScene.first != SUCCESS) {
-    		VC_CORE_ERROR_NO_EXIT("Error while loading scene {}: {}",m_pendingScenePath,toString(newScene.first));
+    		VC_ERROR_NO_EXIT("Error while loading scene {}: {}",m_pendingScenePath,toString(newScene.first));
     		return;
     	}
 
@@ -129,11 +133,9 @@ namespace Vectrix {
     	m_activeScene->m_fileName = path.filename();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
 
-    	const std::filesystem::path settingsPath =
-    		std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
-    	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath);
-    		settingsResult != SUCCESS)
-    		VC_CORE_WARN("Project settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
+    	const std::filesystem::path settingsPath = std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
+    	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath); settingsResult != SUCCESS)
+    		VC_WARN("Project settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
 
     	const JsonObject& settings = SettingsManager::getSettings();
     	if (const auto editorNode = settings.find("editor"); editorNode != settings.end())
@@ -163,9 +165,9 @@ namespace Vectrix {
     		m_pendingScenePath = std::string(outPath);
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {
-    		VC_CORE_INFO("User cancelled");
+    		VC_INFO("User cancelled");
     	} else {
-    		VC_CORE_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -196,9 +198,9 @@ namespace Vectrix {
     		SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {
-    		VC_CORE_INFO("User cancelled");
+    		VC_INFO("User cancelled");
     	} else {
-    		VC_CORE_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -349,12 +351,14 @@ namespace Vectrix {
     }
 
     void EditorLayer::OnRenderOffscreen() {
-        m_framebuffer->bind();
+    	m_framebuffer->bind();
 
     	Renderer::beginScene(*m_camera);
     	m_activeScene->OnRender();
     	Renderer::endScene();
-        m_framebuffer->unbind();
+
+    	m_framebuffer->unbind();
+
     	Renderer::renderOutline(m_sceneHierarchyPanel->getSelectedEntity(), m_framebuffer);
     }
 

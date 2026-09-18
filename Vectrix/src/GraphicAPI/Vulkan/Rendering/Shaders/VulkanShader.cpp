@@ -223,7 +223,7 @@ namespace Vectrix {
 		}
 
 		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
-		const bool optimize = VulkanContext::instance().settings().shaders.optimize;
+		const bool optimize = VulkanContext::settings().shaders.optimize;
 		auto vertCode = compiler.compile_file(m_name.c_str(),VertexShader,m_vertSRC.c_str(),optimize);
 		auto fragCode = compiler.compile_file(m_name.c_str(),FragmentShader,m_fragSRC.c_str(),optimize);
 

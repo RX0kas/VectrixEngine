@@ -107,11 +107,42 @@ namespace Vectrix {
         MeshManager& getMeshManager() const { return *m_meshManager; }
 
         /**
-         * @brief Return the folder every relative asset path is taken from
-         * @return The assets folder
+         * @brief Return the folder every relative project asset path is taken from
+         *
+         * Set to `<project>/Assets` once a project is open. Before that (e.g. while
+         * StartupLayer is showing) it falls back to #getEngineAssetsPath.
+         * @return The project's assets folder
+         * @see setAssetsPath
          */
         static std::filesystem::path getAssetsPath() {
             return s_assetsPath;
+        }
+
+        /**
+         * @brief Set the folder every relative project asset path is taken from
+         * @param path The project's assets folder, e.g. `<project>/Assets`
+         * @note Does not affect #getEngineAssetsPath, which stays fixed: editor/engine
+         *       built-in assets (icons, the ImGui shader, ...) never live in a project
+         * @see getAssetsPath
+         */
+        static void setAssetsPath(const std::filesystem::path& path) {
+            s_assetsPath = path;
+        }
+
+        /**
+         * @brief Return the folder the engine's own built-in assets are taken from
+         *
+         * Used for assets that ship with the engine/editor itself (the ImGui shader,
+         * content browser icons, ...), never for project content, so it is not affected
+         * by #setAssetsPath.
+         * @return The engine's assets folder, as an absolute path
+         * @note Returned absolute so callers can join it with a sub-path and pass the
+         *       result straight to #load: load()'s relative-path handling would
+         *       otherwise re-root a relative engine path under the project's assets
+         *       folder (see #setAssetsPath) instead of leaving it alone.
+         */
+        static std::filesystem::path getEngineAssetsPath() {
+            return std::filesystem::absolute(s_engineAssetsPath);
         }
 
         /**
@@ -129,6 +160,7 @@ namespace Vectrix {
         std::unique_ptr<ShaderManager> m_shaderManager;
         std::unique_ptr<MeshManager> m_meshManager;
         static std::filesystem::path s_assetsPath;
+        static std::filesystem::path s_engineAssetsPath;
 
         static AssetsManager* s_instance;
     };

@@ -29,11 +29,10 @@ mkdir build
 cmake -S . -B ./build
 cmake --build ./build
 cd run
-..\build\bin\Your_Platform\Debug\Sandbox.exe
+..\build\bin\Your_Platform\Debug\VectrixEditor.exe
 ```
 
 ## How to use
-You can see the [Sandbox](https://github.com/RX0kas/VectrixEngine/tree/master/Sandbox/src) to better understand
 #### CMakeLists.txt
 ```cmake
 # Include your source
