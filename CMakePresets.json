@@ -1,0 +1,35 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "VECTRIX_BUILD_EDITOR": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "VECTRIX_BUILD_EDITOR": "ON"
+      }
+    },
+    {
+      "name": "dist",
+      "displayName": "Dist",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/cmake-build-dist",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "VECTRIX_BUILD_EDITOR": "ON"
+      }
+    }
+  ]
+}
