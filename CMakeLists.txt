@@ -21,6 +21,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+# Options
+option(VECTRIX_BUILD_EDITOR "Build VectrixEditor" OFF)
 
 message(STATUS "Initializing Vectrix dependencies")
 
@@ -245,50 +247,29 @@ endif()
 ##########
 # Editor #
 ##########
+if (${VECTRIX_BUILD_EDITOR})
+  message(STATUS "Creating VectrixEditor project")
+  file(GLOB_RECURSE EDITOR_SOURCES
+          VectrixEditor/src/*.cpp
+          VectrixEditor/src/*.h
+  )
 
-file(GLOB_RECURSE EDITOR_SOURCES
-        VectrixEditor/src/*.cpp
-        VectrixEditor/src/*.h
-)
+  add_executable(VectrixEditor ${EDITOR_SOURCES})
 
-add_executable(VectrixEditor ${EDITOR_SOURCES})
+  target_link_libraries(VectrixEditor PRIVATE Vectrix)
 
-target_link_libraries(VectrixEditor PRIVATE Vectrix)
+  target_include_directories(VectrixEditor PRIVATE
+          $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
+          VectrixEditor/src/
+  )
 
-target_include_directories(VectrixEditor PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
-        VectrixEditor/src/
-)
+  target_compile_definitions(VectrixEditor PRIVATE
+          $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
+  )
 
-target_compile_definitions(VectrixEditor PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
-)
-
-if(MSVC)
-  target_compile_options(VectrixEditor PRIVATE /utf-8)
-endif()
-
-
-###########
-# Sandbox #
-###########
-file(GLOB_RECURSE SANDBOX_SOURCES
-        Sandbox/src/*.cpp
-        Sandbox/src/*.h
-)
-
-add_executable(Sandbox ${SANDBOX_SOURCES})
-
-target_link_libraries(Sandbox PRIVATE Vectrix)
-
-target_include_directories(Sandbox PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
-)
-
-target_compile_definitions(Sandbox PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
-)
-
-if(MSVC)
-  target_compile_options(Sandbox PRIVATE /utf-8)
+  if(MSVC)
+    target_compile_options(VectrixEditor PRIVATE /utf-8)
+  endif()
+else ()
+  message(STATUS "Skipping VectrixEditor")
 endif()
