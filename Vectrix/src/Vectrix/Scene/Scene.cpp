@@ -142,7 +142,8 @@ namespace Vectrix {
         return entity;
     }
 
-    void Scene::destroyEntity(Entity entity) {
+    void Scene::destroyEntity(entt::entity entity) {
+        m_entities.erase(entity);
         m_registry.destroy(entity);
     }
 

@@ -3,6 +3,8 @@
 #include "imgui.h"
 #include "Vectrix/Scene/Components/CameraComponent.h"
 #include "Utils/Gizmo.h"
+#include "Undo/Commands.h"
+#include "Undo/EntityHandleCommand.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_RADIANS
@@ -63,6 +65,7 @@ namespace Vectrix {
     	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>(AssetsManager::getAssetsPath());
     	m_settingPanel = std::make_unique<SettingsPanel>();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
+    	m_sceneHierarchyPanel->setUndoHistory(&m_undoHistory);
 
     	applyLiveSettings();
 
@@ -81,8 +84,13 @@ namespace Vectrix {
     	}
     }
 
+	void EditorLayer::refreshSelectionAfter(Command* command) {
+    		if (auto* entityHandle = dynamic_cast<EntityHandleCommand*>(command))
+    			m_sceneHierarchyPanel->setSelectedEntity(entityHandle->currentHandle());
+    	}
+
 	void EditorLayer::applyLiveSettings() {
-    	m_cameraMoveSpeed = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
+		m_cameraMoveSpeed = static_cast<float>(settingNum({"editor", "camera", "moveSpeed"}, 1.5));
     	m_cameraRotationSpeed = static_cast<float>(settingNum({"editor", "camera", "rotationSpeed"}, 50.0));
     	m_gizmoTranslationSnap = static_cast<float>(settingNum({"editor", "gizmo", "translationSnap"}, 0.5));
     	m_gizmoRotationSnap = static_cast<float>(settingNum({"editor", "gizmo", "rotationSnap"}, 45.0));
@@ -91,8 +99,7 @@ namespace Vectrix {
     	if (const JsonObject& s = SettingsManager::getSettings(); s.contains("engine")) {
     		const JsonValue& c = s.at("engine")["rendering"]["clearColor"];
     		for (std::size_t i = 0; i < 4 && i < c.size(); ++i)
-    			clearColor[static_cast<glm::length_t>(i)] =
-    				static_cast<float>(c[i].getAs<double>().value_or(clearColor[static_cast<glm::length_t>(i)]));
+    			clearColor[static_cast<glm::length_t>(i)] = static_cast<float>(c[i].getAs<double>().value_or(clearColor[static_cast<glm::length_t>(i)]));
     	}
     	if (clearColor != m_appliedClearColor) {
     		m_appliedClearColor = clearColor;
@@ -132,6 +139,7 @@ namespace Vectrix {
     	m_activeScene->m_projectDirectory = path.parent_path();
     	m_activeScene->m_fileName = path.filename();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
+    	m_undoHistory.clear();
 
     	const std::filesystem::path settingsPath = std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
     	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath); settingsResult != SUCCESS)
@@ -172,6 +180,25 @@ namespace Vectrix {
 
     	NFD_Quit();
     }
+	void EditorLayer::showOpenProjectDialog() {
+	    NFD_Init();
+
+    	nfdchar_t* outPath;
+    	nfdfilteritem_t filters[] = { { "Vectrix Project", "vcproj" } };
+
+    	nfdresult_t result = NFD_OpenDialog(&outPath, filters, 1, nullptr);
+
+    	if (result == NFD_OKAY) {
+    		m_pendingProjectPath = std::string(outPath);
+    		NFD_FreePath(outPath);
+    	} else if (result == NFD_CANCEL) {
+    		VC_INFO("User cancelled");
+    	} else {
+    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    	}
+
+    	NFD_Quit();
+    }
 
 	void EditorLayer::processPendingSceneLoad() {
     	if (m_pendingScenePath.empty())
@@ -182,6 +209,17 @@ namespace Vectrix {
 
     	openScene(path);
 	}
+
+	void EditorLayer::processPendingProjectLoad() {
+    	if (m_pendingProjectPath.empty())
+    		return;
+
+    	std::string path = m_pendingProjectPath;
+    	m_pendingProjectPath.clear();
+		JsonObject data;
+    	data.emplace("path",path);
+    	Application::instance().switchToLayer<StartupLayer>(this,data);
+    }
 
 	void EditorLayer::showSaveDialog() {
     	NFD_Init();
@@ -259,7 +297,7 @@ namespace Vectrix {
 				if (ImGui::MenuItem("Save Scene As")) showSaveDialog();
 
 				if (ImGui::MenuItem("Open Project")) {
-
+					showOpenProjectDialog();
 				}
 
 				if (ImGui::BeginMenu("Open recent project")) {
@@ -285,9 +323,16 @@ namespace Vectrix {
 				if (ImGui::MenuItem("Exit")) Application::instance().close();
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Edit")) {
+				if (ImGui::MenuItem("Undo", "Ctrl+Z", false, m_undoHistory.canUndo()))
+					refreshSelectionAfter(m_undoHistory.undo());
+				if (ImGui::MenuItem("Redo", "Ctrl+Y", false, m_undoHistory.canRedo()))
+					refreshSelectionAfter(m_undoHistory.redo());
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("Window")) {
 				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
-				ImGui::MenuItem("Settings (WIP)", nullptr, &m_settingPanel->getEnable());
+				ImGui::MenuItem("Settings", nullptr, &m_settingPanel->getEnable());
 
 				ImGui::EndMenu();
 			}
@@ -316,7 +361,7 @@ namespace Vectrix {
 			}
 			ImGui::Image(m_framebuffer->getTextureID(),{m_viewportSize.x,m_viewportSize.y});
 			m_viewportPos = changeVecType<glm::vec2,ImVec2,2>(ImGui::GetItemRectMin());
-			useGizmo(m_sceneHierarchyPanel->getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_gizmoTranslationSnap,m_gizmoRotationSnap);
+			useGizmo(m_sceneHierarchyPanel->getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_undoHistory,m_gizmoTranslationSnap,m_gizmoRotationSnap);
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
 #ifdef VC_PLATFORM_LINUX
@@ -365,6 +410,7 @@ namespace Vectrix {
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
     	applyLiveSettings();
     	processPendingSceneLoad();
+    	processPendingProjectLoad();
 
     	if (m_viewportFocused || m_viewportHovered) {
     		glm::vec3 cameraRot = m_camera->getRotationDeg();
@@ -417,7 +463,19 @@ namespace Vectrix {
     	m_activeScene->OnUpdate(dt);
 
 
-    	if (Input::isKeyPressed(VC_KEY_Z))
+    	bool ctrlDown = Input::isKeyPressed(VC_KEY_LEFT_CONTROL) || Input::isKeyPressed(VC_KEY_RIGHT_CONTROL);
+    	bool zDown = Input::isKeyPressed(VC_KEY_Z);
+    	bool yDown = Input::isKeyPressed(VC_KEY_Y);
+
+    	if (ctrlDown && zDown && !m_ctrlUndoWasDown && m_undoHistory.canUndo())
+    		refreshSelectionAfter(m_undoHistory.undo());
+    	m_ctrlUndoWasDown = ctrlDown && zDown;
+
+    	if (ctrlDown && yDown && !m_ctrlRedoWasDown && m_undoHistory.canRedo())
+    		refreshSelectionAfter(m_undoHistory.redo());
+    	m_ctrlRedoWasDown = ctrlDown && yDown;
+
+    	if (!ctrlDown && zDown)
     		m_gizmoType = -1;
     	if (Input::isKeyPressed(VC_KEY_X))
     		m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;

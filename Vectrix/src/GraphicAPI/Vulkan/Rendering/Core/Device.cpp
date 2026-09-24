@@ -397,21 +397,28 @@ namespace Vectrix {
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
-        VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeature{};
-        dynamicRenderingFeature.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR;
-        dynamicRenderingFeature.dynamicRendering = VK_TRUE;
+        // The app targets Vulkan 1.3, so the promoted-into-core feature structs
+        // (VkPhysicalDeviceVulkan12Features/13Features) must be used instead of their
+        // individual extension-era equivalents (VkPhysicalDeviceDescriptorIndexingFeatures,
+        // VkPhysicalDeviceDynamicRenderingFeaturesKHR) — mixing both forms in the same
+        // pNext chain violates VUID-VkDeviceCreateInfo-pNext-02830, which graphics
+        // debuggers that inject their own Vulkan12Features/13Features (e.g. Nsight
+        // Graphics) will trip on.
+        VkPhysicalDeviceVulkan13Features vulkan13Features{};
+        vulkan13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
 
-        VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures{};
-        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-        indexingFeatures.pNext = &dynamicRenderingFeature;
+        VkPhysicalDeviceVulkan12Features vulkan12Features{};
+        vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        vulkan12Features.pNext = &vulkan13Features;
 
         // Get supported feature of the GPU
         VkPhysicalDeviceFeatures2 deviceFeatures2{};
         deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        deviceFeatures2.pNext = &indexingFeatures;
+        deviceFeatures2.pNext = &vulkan12Features;
         vkGetPhysicalDeviceFeatures2(m_physicalDevice, &deviceFeatures2);
 
-        indexingFeatures.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+        vulkan12Features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+        vulkan13Features.dynamicRendering = VK_TRUE;
 
         VkPhysicalDeviceFeatures supportedBaseFeatures{};
         vkGetPhysicalDeviceFeatures(m_physicalDevice, &supportedBaseFeatures);
@@ -433,7 +440,7 @@ namespace Vectrix {
 
         createInfo.enabledLayerCount = 0;
         createInfo.ppEnabledLayerNames = nullptr;
-        createInfo.pNext = &indexingFeatures;
+        createInfo.pNext = &vulkan12Features;
 
 
         if (vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_device) != VK_SUCCESS) {

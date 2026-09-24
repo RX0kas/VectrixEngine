@@ -17,6 +17,8 @@
 #include "Vectrix/Rendering/Mesh/MeshHandle.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
+#include "Vectrix/Rendering/Shaders/MaskShader.h"
+#include "Vectrix/Rendering/Shaders/OutlineShader.h"
 #include "Vectrix/Scene/Entity.h"
 
 namespace Vectrix {
@@ -451,12 +453,10 @@ namespace Vectrix {
 		VC_CORE_ASSERT(f!=VK_FORMAT_UNDEFINED,"SwapChain image format is undefined");
 		m_device.setImageFormat(f);
 
-		std::shared_ptr<Shader> ms;
-		VC_LOAD_ASSET(ms,Shader,"shaders/mask.vcshader")
+		std::shared_ptr<Shader> ms = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/mask.vcshader", EmbeddedShaders::k_MaskShader);
 		m_maskShader = std::static_pointer_cast<VulkanShader>(ms);
 
-		std::shared_ptr<Shader> os;
-		VC_LOAD_ASSET(os,Shader,"shaders/outline.vcshader")
+		std::shared_ptr<Shader> os = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/outline.vcshader", EmbeddedShaders::k_OutlineShader);
 		m_outlineShader = std::static_pointer_cast<VulkanShader>(os);
 
 		FramebufferSpecification spec;

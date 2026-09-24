@@ -59,10 +59,10 @@ namespace Vectrix {
 
         /**
          * @brief Remove an entity and everything it owns from the scene
-         * @param entity The entity to destroy
+         * @param entity The entity to destroy (an Entity converts to this implicitly)
          * @warning Every reference to that entity becomes invalid
          */
-        void destroyEntity(Entity entity);
+        void destroyEntity(entt::entity entity);
 
         /**
          * @brief Return the name of the scene

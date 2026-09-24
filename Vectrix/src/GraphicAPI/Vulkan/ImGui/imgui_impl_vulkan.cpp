@@ -109,6 +109,7 @@
 #include "imgui.h"
 #ifndef IMGUI_DISABLE
 #include "imgui_impl_vulkan.h"
+#include "Vectrix/Rendering/Shaders/ImguiShader.h"
 
 #include <filesystem>
 #include <stdio.h>
@@ -821,10 +822,8 @@ void ImGui_ImplVulkan_UpdateTexture(ImTextureData* tex)
         ImGui_ImplVulkan_DestroyTexture(tex);
 }
 
-std::pair<std::string, std::string> parse(const std::string &path) {
-    std::filesystem::path p = std::filesystem::path(path);
-    if (p.empty() || !std::filesystem::exists(p)) { VC_CORE_ERROR("Shader {} does not exist",path); }
-    std::ifstream file(p);
+std::pair<std::string, std::string> parse(const std::string &source) {
+    std::istringstream file(source);
     std::stringstream vertex, fragment;
     std::stringstream* current = nullptr;
 
@@ -842,9 +841,7 @@ std::pair<std::string, std::string> parse(const std::string &path) {
 }
 
 static std::pair<std::vector<uint32_t>,std::vector<uint32_t>> CompileImGuiShader() {
-    ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
-    ImGui_ImplVulkan_InitInfo* v = &bd->VulkanInitInfo;
-    auto src = parse(v->ShaderPath);
+    auto src = parse(Vectrix::EmbeddedShaders::k_ImguiShader);
     Vectrix::VulkanShaderCompiler &compiler = Vectrix::VulkanContext::instance().getCompiler();
     auto vert = compiler.compile_file("vc_imgui_vert", Vectrix::VertexShader,src.first.c_str(),true);
     auto frag = compiler.compile_file("vc_imgui_frag", Vectrix::FragmentShader,src.second.c_str(),true);

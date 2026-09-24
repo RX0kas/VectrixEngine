@@ -165,7 +165,33 @@ file(GLOB_RECURSE GRAPHICS_API_SOURCES
 list(APPEND Vectrix_SOURCES ${PLATFORM_SOURCES})
 list(APPEND Vectrix_SOURCES ${GRAPHICS_API_SOURCES})
 
+# Embedded shaders: generate headers holding the engine's built-in .vcshader files as
+# string literals, so they compile into the binary instead of being read from disk.
+set(EMBEDDED_SHADER_DIR ${CMAKE_BINARY_DIR}/generated/Vectrix/Rendering/Shaders)
+file(MAKE_DIRECTORY ${EMBEDDED_SHADER_DIR})
+
+function(vectrix_embed_shader NAME SOURCE_FILE IDENTIFIER)
+  add_custom_command(
+          OUTPUT ${EMBEDDED_SHADER_DIR}/${NAME}.h
+          COMMAND Python3::Interpreter ${PROJECT_SOURCE_DIR}/Vectrix/scripts/embed_shader.py
+                  ${SOURCE_FILE} ${EMBEDDED_SHADER_DIR}/${NAME}.h ${IDENTIFIER}
+          DEPENDS ${SOURCE_FILE} ${PROJECT_SOURCE_DIR}/Vectrix/scripts/embed_shader.py
+          COMMENT "Embedding shader ${NAME}"
+  )
+endfunction()
+
+vectrix_embed_shader(ImguiShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/imgui.vcshader k_ImguiShader)
+vectrix_embed_shader(MaskShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/mask.vcshader k_MaskShader)
+vectrix_embed_shader(OutlineShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/outline.vcshader k_OutlineShader)
+
+add_custom_target(VectrixEmbeddedShaders DEPENDS
+        ${EMBEDDED_SHADER_DIR}/ImguiShader.h
+        ${EMBEDDED_SHADER_DIR}/MaskShader.h
+        ${EMBEDDED_SHADER_DIR}/OutlineShader.h
+)
+
 add_library(Vectrix STATIC ${Vectrix_SOURCES})
+add_dependencies(Vectrix VectrixEmbeddedShaders)
 
 if(MSVC)
   target_precompile_headers(Vectrix PRIVATE
@@ -181,6 +207,7 @@ target_include_directories(Vectrix PUBLIC
         Vectrix/extern/imgui
         Vectrix/extern/include
         Vectrix/extern/ImGuizmo/src
+        ${CMAKE_BINARY_DIR}/generated
         ${Vulkan_INCLUDE_DIRS}
 )
 
