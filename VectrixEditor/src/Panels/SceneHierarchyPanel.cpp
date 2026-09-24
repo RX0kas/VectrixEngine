@@ -7,6 +7,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Vectrix/Assets/AssetsManager.h"
+#include "Undo/Commands.h"
+#include "Utils/Error.h"
 
 namespace Vectrix {
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) : ImGuiWidget("SceneHierarchyPanel") {
@@ -18,6 +20,18 @@ namespace Vectrix {
         resetSelectedEntity();
     }
 
+    void SceneHierarchyPanel::pushAndRefreshSelection(std::unique_ptr<Command> command) {
+        if (!m_undoHistory) return;
+        Command* raw = m_undoHistory->push(std::move(command));
+        if (auto* entityHandle = dynamic_cast<EntityHandleCommand*>(raw))
+            m_selectionContext = entityHandle->currentHandle();
+    }
+
+    void SceneHierarchyPanel::deleteSelectedEntity() {
+        if (!m_selectionContext) return;
+        pushAndRefreshSelection(std::make_unique<DeleteEntityCommand>(m_context, m_selectionContext));
+    }
+
     void SceneHierarchyPanel::render() {
         ImGui::Begin("Scene Hierarchy");
         for (const auto& e : m_context->m_entities) {
@@ -27,9 +41,12 @@ namespace Vectrix {
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_selectionContext = {};
 
+        if (ImGui::IsWindowFocused() && m_selectionContext && ImGui::IsKeyPressed(ImGuiKey_Delete))
+            deleteSelectedEntity();
+
         if (ImGui::BeginPopupContextWindow(nullptr, 1)) {
             if (ImGui::MenuItem("Create Empty Entity"))
-                m_context->createEntity("Empty Entity");
+                pushAndRefreshSelection(std::make_unique<CreateEntityCommand>(m_context, "Empty Entity"));
 
             ImGui::EndPopup();
         }
@@ -49,7 +66,7 @@ namespace Vectrix {
             if (!m_selectionContext->hasComponent<CameraComponent>()) {
                 hasOneComponent = true;
                 if (ImGui::MenuItem("Camera")) {
-                    m_selectionContext->addComponent<CameraComponent>();
+                    pushAndRefreshSelection(std::make_unique<AddComponentCommand<CameraComponent>>(m_selectionContext));
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -57,7 +74,7 @@ namespace Vectrix {
             if (!m_selectionContext->hasComponent<MeshRendererComponent>()) {
                 hasOneComponent = true;
                 if (ImGui::MenuItem("MeshRenderer")) {
-                    m_selectionContext->addComponent<MeshRendererComponent>();
+                    pushAndRefreshSelection(std::make_unique<AddComponentCommand<MeshRendererComponent>>(m_selectionContext));
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -78,10 +95,17 @@ namespace Vectrix {
         if (ImGui::Selectable(name.empty() ? "##" : name.c_str(), m_selectionContext && entity->getID()==m_selectionContext->getID())) {
             m_selectionContext = entity;
         }
+
+        if (ImGui::BeginPopupContextItem()) {
+            m_selectionContext = entity;
+            if (ImGui::MenuItem("Delete Entity"))
+                deleteSelectedEntity();
+            ImGui::EndPopup();
+        }
     }
 
     template<typename T>
-    static bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText) {
+    static bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc) {
         bool changed = false;
 
         ImGui::PushID(label);
@@ -177,6 +201,7 @@ namespace Vectrix {
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.45f, 0.12f, 0.12f, 1.0f));
 
             if (ImGui::Button("x", ImVec2(clearButtonSize, clearButtonSize))) {
+                mc.disable();
                 asset.reset();
                 changed = true;
             }
@@ -206,8 +231,16 @@ namespace Vectrix {
             auto& ic = entity->getComponent<InformationComponent>();
             char buffer[256] = {};
             strcpy(buffer,ic.name.c_str());
-            if (ImGui::InputText("Name",buffer,sizeof(buffer)))
+            bool edited = ImGui::InputText("Name",buffer,sizeof(buffer));
+            if (ImGui::IsItemActivated())
+                m_nameEditBefore = ic.name;
+            if (edited)
                 ic.name = std::string(buffer);
+            if (ImGui::IsItemDeactivatedAfterEdit() && m_nameEditBefore != ic.name) {
+                pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::string>>(
+                    "Rename", m_nameEditBefore, ic.name,
+                    [entity](const std::string& v) { entity->getComponent<InformationComponent>().name = v; }));
+            }
         }
 
         // TransformComponent
@@ -217,18 +250,39 @@ namespace Vectrix {
             if (drawTreeNodeComponent("Transform",mustBeRemoved,false)) {
                 // Position
                 float p[3] = {tc.position.x,tc.position.y,tc.position.z};
-                if (ImGui::DragFloat3("Position",p,0.1))
+                bool posChanged = ImGui::DragFloat3("Position",p,0.1);
+                if (ImGui::IsItemActivated())
+                    m_transformDragBefore = {tc.position, tc.scale, tc.rotation};
+                if (posChanged)
                     tc.position = {p[0],p[1],p[2]};
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<TransformChangeCommand>(
+                        entity, m_transformDragBefore, TransformSnapshot{tc.position, tc.scale, tc.rotation}));
+                }
 
                 // Rotation
                 glm::vec3 r = tc.getRotationDeg();
-                if (ImGui::DragFloat3("Rotation",glm::value_ptr(r),0.1))
+                bool rotChanged = ImGui::DragFloat3("Rotation",glm::value_ptr(r),0.1);
+                if (ImGui::IsItemActivated())
+                    m_transformDragBefore = {tc.position, tc.scale, tc.rotation};
+                if (rotChanged)
                     tc.setRotationDeg(r);
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<TransformChangeCommand>(
+                        entity, m_transformDragBefore, TransformSnapshot{tc.position, tc.scale, tc.rotation}));
+                }
 
                 // Scale
                 float s[3] = {tc.scale.x,tc.scale.y,tc.scale.z};
-                if (ImGui::DragFloat3("Scale",s,0.1))
+                bool scaleChanged = ImGui::DragFloat3("Scale",s,0.1);
+                if (ImGui::IsItemActivated())
+                    m_transformDragBefore = {tc.position, tc.scale, tc.rotation};
+                if (scaleChanged)
                     tc.scale = {s[0],s[1],s[2]};
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<TransformChangeCommand>(
+                        entity, m_transformDragBefore, TransformSnapshot{tc.position, tc.scale, tc.rotation}));
+                }
 
                 ImGui::TreePop();
             }
@@ -242,36 +296,62 @@ namespace Vectrix {
                 bool isEnable = mc.isEnable();
 
                 if (ImGui::Checkbox("Enable", &isEnable)) {
+                    bool before = mc.isEnable();
                     if (isEnable) {
                         if (!mc.tryEnabling()) {
                             isEnable = false;
-                            ImGui::OpenPopup("MeshRendererEnableError");
+                            showErrorMessage("MeshRendererEnableError");
                         }
                     } else {
                         mc.disable();
                     }
+                    if (mc.isEnable() != before) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<bool>>(
+                            "Toggle Mesh Enabled", before, mc.isEnable(),
+                            [entity](const bool& v) {
+                                auto& c = entity->getComponent<MeshRendererComponent>();
+                                if (v) c.tryEnabling(); else c.disable();
+                            }));
+                    }
                 }
 
-                if (ImGui::BeginPopup("MeshRendererEnableError")) { // TODO: make an error popup
-                    ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1), "Cannot enable Mesh Renderer");
-                    ImGui::Separator();
+                renderErrorMessage("MeshRendererEnableError","Cannot enable Mesh Renderer", [&mc]{
                     ImGui::Text("Missing required data:");
                     if (mc.shader == nullptr)  ImGui::BulletText("Shader is not set");
                     if (mc.texture == nullptr) ImGui::BulletText("Texture is not set");
                     if (mc.mesh == nullptr) ImGui::BulletText("Mesh is not set");
-                    if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
-                    ImGui::EndPopup();
-                }
+                });
 
-                drawAssetDropField("Shader",mc.shader,"CONTENT_BROWSER_SHADER","Drop Shader here");
-                drawAssetDropField("Texture",mc.texture,"CONTENT_BROWSER_TEXTURE","Drop texture here");
-                drawAssetDropField("Mesh",mc.mesh,"CONTENT_BROWSER_MESH","Drop mesh here");
+                {
+                    auto before = mc.shader;
+                    if (drawAssetDropField("Shader",mc.shader,"CONTENT_BROWSER_SHADER","Drop Shader here",mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Shader>>>(
+                            "Set Shader", before, mc.shader,
+                            [entity](const std::shared_ptr<Shader>& v) { entity->getComponent<MeshRendererComponent>().shader = v; }));
+                    }
+                }
+                {
+                    auto before = mc.texture;
+                    if (drawAssetDropField("Texture",mc.texture,"CONTENT_BROWSER_TEXTURE","Drop texture here", mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Texture>>>(
+                            "Set Texture", before, mc.texture,
+                            [entity](const std::shared_ptr<Texture>& v) { entity->getComponent<MeshRendererComponent>().texture = v; }));
+                    }
+                }
+                {
+                    auto before = mc.mesh;
+                    if (drawAssetDropField("Mesh",mc.mesh,"CONTENT_BROWSER_MESH","Drop mesh here", mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Mesh>>>(
+                            "Set Mesh", before, mc.mesh,
+                            [entity](const std::shared_ptr<Mesh>& v) { entity->getComponent<MeshRendererComponent>().mesh = v; }));
+                    }
+                }
 
                 ImGui::TreePop();
             }
 
             if (mustBeRemoved)
-                entity->deleteComponent<MeshRendererComponent>();
+                pushAndRefreshSelection(std::make_unique<RemoveMeshRendererComponentCommand>(entity));
         }
 
         // CameraComponent
@@ -284,18 +364,34 @@ namespace Vectrix {
                 float fov = camera.getFOV();
                 float camNear = camera.getCamNear();
                 float camFar = camera.getCamFar();
-                if (ImGui::DragFloat("FOV",&fov,0.01,0.01)) {
-                    camera.setFOV(fov);
-                    changed = true;
+
+                bool fovChanged = ImGui::DragFloat("FOV",&fov,0.01,0.01);
+                if (ImGui::IsItemActivated()) m_floatDragBefore = camera.getFOV();
+                if (fovChanged) { camera.setFOV(fov); changed = true; }
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<float>>(
+                        "Set FOV", m_floatDragBefore, camera.getFOV(),
+                        [entity](const float& v) { entity->getComponent<CameraComponent>().camera.setFOV(v); }));
                 }
-                if (ImGui::DragFloat("camNear",&camNear,0.01,0)) {
-                    camera.setCamNear(camNear);
-                    changed = true;
+
+                bool nearChanged = ImGui::DragFloat("camNear",&camNear,0.01,0);
+                if (ImGui::IsItemActivated()) m_floatDragBefore = camera.getCamNear();
+                if (nearChanged) { camera.setCamNear(camNear); changed = true; }
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<float>>(
+                        "Set Near Plane", m_floatDragBefore, camera.getCamNear(),
+                        [entity](const float& v) { entity->getComponent<CameraComponent>().camera.setCamNear(v); }));
                 }
-                if (ImGui::DragFloat("camFar",&camFar,1,0,INTMAX_MAX,"%.1f")) {
-                    camera.setCamFar(camFar);
-                    changed = true;
+
+                bool farChanged = ImGui::DragFloat("camFar",&camFar,1,0,INTMAX_MAX,"%.1f");
+                if (ImGui::IsItemActivated()) m_floatDragBefore = camera.getCamFar();
+                if (farChanged) { camera.setCamFar(camFar); changed = true; }
+                if (ImGui::IsItemDeactivatedAfterEdit()) {
+                    pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<float>>(
+                        "Set Far Plane", m_floatDragBefore, camera.getCamFar(),
+                        [entity](const float& v) { entity->getComponent<CameraComponent>().camera.setCamFar(v); }));
                 }
+
                 ImGui::Separator();
 
                 ImGui::Text("Active:");
@@ -306,7 +402,7 @@ namespace Vectrix {
                     ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1), "False");
 
                 if (ImGui::Button("Set as current")) {
-                    cc.camera.setAsCurrent();
+                    pushAndRefreshSelection(std::make_unique<SetCurrentCameraCommand>(entity, Camera::getCurrentCamera()));
                 }
 
                 if (changed)
@@ -316,7 +412,7 @@ namespace Vectrix {
             }
 
             if (mustBeRemoved) {
-                entity->deleteComponent<CameraComponent>();
+                pushAndRefreshSelection(std::make_unique<RemoveCameraComponentCommand>(entity));
             }
         }
     }

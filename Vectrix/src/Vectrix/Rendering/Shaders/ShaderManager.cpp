@@ -20,6 +20,13 @@ namespace Vectrix {
         return shader;
     }
 
+    std::shared_ptr<Shader> ShaderManager::createShaderFromSource(const std::string &name, const std::string &source, const bool affectedByCamera) {
+        VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
+        std::shared_ptr<Shader> shader(Shader::createFromSource(name, source, getTinyObjLayout()));
+        add(name,shader);
+        return shader;
+    }
+
     ShaderManager::~ShaderManager() {
         VC_CORE_INFO("Destroying ShaderManager");
         m_cache.clear();

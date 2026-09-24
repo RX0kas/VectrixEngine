@@ -2,17 +2,22 @@
 
 #include "Vectrix/Rendering/Renderer.h"
 #include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
+#include "Vectrix/Utils/Memory.h"
 
 #include <filesystem>
 
 namespace Vectrix {
     std::shared_ptr<Shader> Shader::create(const std::string& name, const std::string& path, const BufferLayout& bufferLayout) {
+        return createFromSource(name, readUTF8(path), bufferLayout);
+    }
+
+    std::shared_ptr<Shader> Shader::createFromSource(const std::string& name, const std::string& source, const BufferLayout& bufferLayout) {
         bool affectedByCamera;
-        ShaderUniformLayout layout = findShaderUniformLayout(path,affectedByCamera);
+        ShaderUniformLayout layout = findShaderUniformLayoutFromSource(source,affectedByCamera);
 
         switch (Renderer::getAPI()) {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::Vulkan:  return std::make_shared<VulkanShader>(name, path, layout, bufferLayout, affectedByCamera);
+            case RendererAPI::API::Vulkan:  return std::make_shared<VulkanShader>(name, source, layout, bufferLayout, affectedByCamera);
         }
 
         VC_CORE_ERROR("Unknown RendererAPI!");
@@ -54,11 +59,8 @@ namespace Vectrix {
     float time;
     } frame;
     */
-    ShaderUniformLayout Shader::findShaderUniformLayout(const std::string &path, bool &isAffectedByCamera) {
-        std::filesystem::path p(path);
-        if (p.empty() || !std::filesystem::exists(p)) { VC_CORE_ERROR("Shader {} does not exist", path); }
-
-        std::ifstream file(p);
+    ShaderUniformLayout Shader::findShaderUniformLayoutFromSource(const std::string &source, bool &isAffectedByCamera) {
+        std::istringstream file(source);
         ShaderUniformLayout layout;
         std::string line;
         std::stringstream contentStream;
@@ -159,10 +161,8 @@ namespace Vectrix {
         return layout;
     }
 
-    std::pair<std::string, std::string> Shader::parse(const std::string &path) {
-        std::filesystem::path p = std::filesystem::path(path);
-        if (p.empty() || !std::filesystem::exists(p)) { VC_CORE_ERROR("Shader {} does not exist",path); }
-        std::ifstream file(p);
+    std::pair<std::string, std::string> Shader::parseSource(const std::string &source) {
+        std::istringstream file(source);
         std::stringstream vertex, fragment;
         std::stringstream* current = nullptr;
 

@@ -353,7 +353,6 @@ namespace Vectrix {
     	init_info.ImageCount = m_renderer->getSwapChainImageCount();
     	init_info.Allocator = nullptr;
     	init_info.CheckVkResultFn = VulkanContext::check_vk_result;
-    	init_info.ShaderPath = AssetsManager::getEngineAssetsPath().string()+"/shaders/imgui.vcshader";
 
     	init_info.UseDynamicRendering = true;
     	init_info.PipelineInfoMain.RenderPass = VK_NULL_HANDLE;

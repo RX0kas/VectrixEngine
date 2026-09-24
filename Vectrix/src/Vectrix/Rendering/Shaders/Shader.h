@@ -356,14 +356,15 @@ namespace Vectrix {
 		static void finalize(ShaderUniformLayout* s) {
 			s->finalize();
 		}
-		// VertexSRC, FragmentSRC
-		static std::pair<std::string, std::string> parse(const std::string& path);
+		// VertexSRC, FragmentSRC — `source` is the whole .vcshader file's text, already in memory
+		static std::pair<std::string, std::string> parseSource(const std::string& source);
 		///  @endcond
 	private:
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
 		friend class ShaderManager;
 		friend class Renderer;
 		static std::shared_ptr<Shader> create(const std::string& name, const std::string& path,const BufferLayout& bufferLayout);
-		static ShaderUniformLayout findShaderUniformLayout(const std::string& path,bool& isAffectedByCamera);
+		static std::shared_ptr<Shader> createFromSource(const std::string& name, const std::string& source,const BufferLayout& bufferLayout);
+		static ShaderUniformLayout findShaderUniformLayoutFromSource(const std::string& source,bool& isAffectedByCamera);
 	};
 }

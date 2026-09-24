@@ -134,6 +134,12 @@ namespace Vectrix {
 		void setAsCurrent();
 
 		/**
+		 * @brief Clear the active camera, so no camera is current
+		 * @see setAsCurrent
+		 */
+		static void clearCurrent() { s_currentCamera = nullptr; }
+
+		/**
 		 * @brief This function returns true if this camera is the current camera used
 		 */
 		[[nodiscard]] bool isCurrent() const;

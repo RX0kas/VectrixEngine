@@ -9,7 +9,7 @@
 #include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
-	VulkanShader::VulkanShader(std::string name, const std::string& path,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
+	VulkanShader::VulkanShader(std::string name, const std::string& source,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera)
 		: m_device(VulkanContext::instance().getDevice()), m_renderer(VulkanContext::instance().getRenderer()), m_layout(std::make_unique<ShaderUniformLayout>(layout)), m_affectedByCamera(affectedByCamera),m_name{std::move(name)}
 	{
 		VC_PROFILER_FUNCTION();
@@ -18,7 +18,7 @@ namespace Vectrix {
 		vkDeviceWaitIdle(m_device.device());
 		createPipelineLayout();
 		vkDeviceWaitIdle(m_device.device());
-		auto src = parse(path);
+		auto src = parseSource(source);
 		m_vertSRC = src.first;
 		m_fragSRC = src.second;
 		createPipeline(m_renderer.getSwapChainRenderPass(),  std::move(buffer_layout));

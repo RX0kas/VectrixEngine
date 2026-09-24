@@ -7,10 +7,15 @@
 #include "Vectrix/Input/Input.h"
 #include "Vectrix/Input/KeyCodes.h"
 #include "Vectrix/Scene/Entity.h"
+#include "Undo/Commands.h"
+#include "Undo/UndoHistory.h"
 
 namespace Vectrix {
     inline void useGizmo(const std::shared_ptr<Entity>& selectedEntity, const EditorCamera& camera, int gizmoType,ImVec2 windowPos,ImVec2 windowSize,
-                         float translationSnap = 0.5f, float rotationSnap = 45.0f) {
+                         UndoHistory& undoHistory, float translationSnap = 0.5f, float rotationSnap = 45.0f) {
+        static bool s_wasUsing = false;
+        static TransformSnapshot s_dragBefore;
+
         if (selectedEntity && gizmoType != -1) {
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
@@ -39,6 +44,9 @@ namespace Vectrix {
                 nullptr, snap ? snapValues : nullptr);
 
             if (ImGuizmo::IsUsing()) {
+                if (!s_wasUsing)
+                    s_dragBefore = {tc.position, tc.scale, tc.rotation};
+
                 glm::vec3 position, scale;
                 glm::quat rotation;
                 glm::vec3 skew;
@@ -48,6 +56,13 @@ namespace Vectrix {
                 tc.position = position;
                 tc.rotation = rotation;
                 tc.scale = scale;
+
+                s_wasUsing = true;
+            } else if (s_wasUsing) {
+                // Drag just ended: commit the whole gesture as one undo step.
+                undoHistory.push(std::make_unique<TransformChangeCommand>(
+                    selectedEntity, s_dragBefore, TransformSnapshot{tc.position, tc.scale, tc.rotation}));
+                s_wasUsing = false;
             }
         }
     }

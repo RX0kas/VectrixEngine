@@ -10,7 +10,7 @@ namespace Vectrix {
 
     class VulkanShader final : public Shader {
     public:
-        VulkanShader(std::string name, const std::string& path,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera);
+        VulkanShader(std::string name, const std::string& source,const ShaderUniformLayout& layout, BufferLayout buffer_layout,bool affectedByCamera);
         ~VulkanShader() override;
         void bind() const override;
         void setUniformBool(const std::string& name,bool value) const override;

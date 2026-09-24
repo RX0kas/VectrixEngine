@@ -114,7 +114,6 @@ struct ImGui_ImplVulkan_InitInfo
     uint32_t                        DescriptorPoolSize;         // Optional: set to create internal descriptor pool automatically instead of using DescriptorPool.
     uint32_t                        MinImageCount;              // >= 2
     uint32_t                        ImageCount;                 // >= MinImageCount
-    std::string                     ShaderPath;
     VkPipelineCache                 PipelineCache;              // Optional
 
     // Pipeline

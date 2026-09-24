@@ -8,6 +8,7 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SettingsPanel.h"
+#include "Undo/UndoHistory.h"
 
 namespace Vectrix {
     class EditorLayer : public Layer {
@@ -31,7 +32,9 @@ namespace Vectrix {
 	private:
     	void showSaveDialog();
     	void showOpenDialog();
+    	void showOpenProjectDialog();
     	void processPendingSceneLoad();
+    	void processPendingProjectLoad();
     	void applyLiveSettings(); // re-reads the settings that take effect without a relaunch
     	std::shared_ptr<Entity> pickEntity(glm::vec2 mousePos);
     	glm::vec3 screenToWorldRay(glm::vec2 mousePos);
@@ -48,6 +51,7 @@ namespace Vectrix {
 
     	std::shared_ptr<Scene> m_activeScene;
     	std::string m_pendingScenePath{};
+    	std::string m_pendingProjectPath{};
 
     	bool m_projectsHasBeenLoaded = false;
     	std::vector<RecentProject> m_recentProjects;
@@ -67,6 +71,12 @@ namespace Vectrix {
     	std::unique_ptr<ContentBrowserPanel> m_contentBrowserPanel;
     	std::unique_ptr<SettingsPanel> m_settingPanel;
     	bool m_graphicDebugWidgetEnable = false;
+
+    	UndoHistory m_undoHistory;
+    	bool m_ctrlUndoWasDown = false;
+    	bool m_ctrlRedoWasDown = false;
+
+    	void refreshSelectionAfter(Command* command);
     };
 } // Vectrix
 
