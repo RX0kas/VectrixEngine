@@ -103,6 +103,8 @@ namespace Vectrix {
         bool lastWasSpace = false;
 
         for (char c : content) {
+            if (c == '\r') { continue; }
+
             if (c == ';') {
                 std::string name = layoutStream.str();
                 replaceAll(name, " ", "");

@@ -100,7 +100,7 @@ namespace Vectrix {
 		NFD_Init();
 
 		nfdchar_t* outPath;
-		nfdresult_t result = NFD_PickFolder(&outPath,DefaultVectrixProjectPath.c_str());
+		nfdresult_t result = NFD_PickFolder(&outPath,DefaultVectrixProjectPath.string().c_str());
 
 		if (result == NFD_OKAY) {
 			const std::filesystem::path scenePath(outPath);
@@ -126,7 +126,7 @@ namespace Vectrix {
 			loadRecentProject();
 			for (const auto&[name,path] : m_recentProjects) {
 				if (path == data.at("openProject").getString()) {
-					m_pendingOpenProjectPath = path;
+					m_pendingOpenProjectPath = path.string();
 				}
 			}
 		}
@@ -208,7 +208,7 @@ namespace Vectrix {
 		std::vector<RecentProject> recentProjects = {};
 		if (std::filesystem::exists(recentProjectsFile)) {
 			VC_INFO("Recent project file found, loading recent projects");
-			auto result = Json::load(recentProjectsFile);
+			auto result = Json::load(recentProjectsFile.string());
 			if (result.first!=SUCCESS) {
 				VC_ERROR_NO_EXIT("Can't load recent projects, JSON error : {}",toString(result.first ));
 				return {};
@@ -247,7 +247,7 @@ namespace Vectrix {
 					}
 
 					const JsonObject recentProjectsObj = { {"projects", arr} };
-					auto resultSaving = Json::save(recentProjectsFile, recentProjectsObj);
+					auto resultSaving = Json::save(recentProjectsFile.string(), recentProjectsObj);
 					if (resultSaving!=SUCCESS) {
 						VC_ERROR_NO_EXIT("Failed to overwrite recent projects file: {}", toString(resultSaving));
 					}
@@ -257,7 +257,7 @@ namespace Vectrix {
 			}
 		} else {
 			const JsonObject recentProjectsObj = { {"projects", JsonArray{}} };
-			auto result = Json::save(recentProjectsFile, recentProjectsObj);
+			auto result = Json::save(recentProjectsFile.string(), recentProjectsObj);
 			if (result!=SUCCESS) {
 				VC_ERROR_NO_EXIT("Error while saving recent project file: {}",toString(result));
 				return {};
@@ -302,7 +302,7 @@ namespace Vectrix {
 		if (std::filesystem::exists(recentProjectsFile)) {
 			VC_INFO("Adding project {} to recent projects file", project.name);
 
-			auto result = Json::load(recentProjectsFile);
+			auto result = Json::load(recentProjectsFile.string());
 			if (result.first!=SUCCESS) {
 				VC_ERROR_NO_EXIT("Can't load recent projects, JSON error : {}",toString(result.first));
 				return;
@@ -332,7 +332,7 @@ namespace Vectrix {
 		entry.emplace("path", pathString);
 		projects.emplace_back(entry);
 
-		const VectrixResult result = Json::save(recentProjectsFile, root.asObject());
+		const VectrixResult result = Json::save(recentProjectsFile.string(), root.asObject());
 		if (result!=SUCCESS) {
 			VC_ERROR_NO_EXIT("Can't add project {} to recent projects file: {}",project.name, toString(result));
 			return;
