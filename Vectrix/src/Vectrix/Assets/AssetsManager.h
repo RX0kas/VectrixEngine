@@ -80,6 +80,12 @@ namespace Vectrix {
         template<typename T>
         static std::pair<VectrixResult, std::shared_ptr<T>> load(const std::string& path);
 
+        template<typename T>
+        static std::pair<VectrixResult, std::shared_ptr<T>> load(const std::filesystem::path& path)
+        {
+            return load<T>(path.string());
+        }
+
 
 
         /**

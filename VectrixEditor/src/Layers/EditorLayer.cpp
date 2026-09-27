@@ -137,7 +137,7 @@ namespace Vectrix {
 
     	m_activeScene = newScene.second;
     	m_activeScene->m_projectDirectory = path.parent_path();
-    	m_activeScene->m_fileName = path.filename();
+    	m_activeScene->m_fileName = path.filename().string();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
     	m_undoHistory.clear();
 
@@ -232,7 +232,7 @@ namespace Vectrix {
     	if (result == NFD_OKAY) {
     		const std::filesystem::path scenePath(outPath);
     		m_activeScene->m_projectDirectory = scenePath.parent_path();
-    		m_activeScene->m_fileName = scenePath.filename();
+    		m_activeScene->m_fileName = scenePath.filename().string();
     		SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {

@@ -74,7 +74,7 @@ namespace Vectrix {
          * @brief Return the folder of the project the scene belongs to
          * @return The project directory, which the asset paths are relative to
          */
-        [[nodiscard]] std::string getProjectDirectory() const { return m_projectDirectory; }
+        [[nodiscard]] std::string getProjectDirectory() const { return m_projectDirectory.string(); }
 
         /**
          * @brief Return the name of the file the scene was loaded from
