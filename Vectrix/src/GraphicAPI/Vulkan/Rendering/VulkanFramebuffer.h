@@ -26,22 +26,20 @@ namespace Vectrix {
 
         [[nodiscard]] const FramebufferSpecification& getSpecification() const override { return m_specification; }
         [[nodiscard]] VkExtent2D getExtent() const { return {m_specification.width, m_specification.height}; }
-        [[nodiscard]] VkImage getImage() const { return m_image; }
         [[nodiscard]] VkImageLayout getImageLayout() const { return m_currentLayout; }
         [[nodiscard]] VkSampler getSampler() const { return m_sampler; }
         [[nodiscard]] VkImageView getImageView() const { return m_imageView; }
-        [[nodiscard]] VkDescriptorSet getDescriptorSet() const { return m_descriptorSet; }
         [[nodiscard]] VectrixImageFormat getImageFormat() const override { return m_specification.imageFormat; }
         [[nodiscard]] VectrixImageFormat getDepthFormat() const override { return m_specification.depthFormat; }
         [[nodiscard]] bool isBound() const override { return m_bind; }
         [[nodiscard]] float getAspectRatio() const override { return static_cast<float>(m_specification.width)/static_cast<float>(m_specification.height);}
-        void updateSpecification(FramebufferSpecification &spec) override {
-            m_specification = spec;
-            resize({spec.width,spec.height});
-        }
+        void updateSpecification(FramebufferSpecification &spec) override;
 
     private:
-        static void transitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
+        /// Creates the images, views, sampler and ImGui descriptor described by m_specification
+        void createResources();
+        /// Destroys what createResources made
+        void destroyResources();
 
         Device& m_device;
 
@@ -53,11 +51,11 @@ namespace Vectrix {
         VkImage m_depthImage = VK_NULL_HANDLE;
         VkImageView m_depthImageView = VK_NULL_HANDLE;
         VmaAllocation  m_depthAllocation = VK_NULL_HANDLE;
-        VkImageLayout m_currentLayout;
+        VkImageLayout m_currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         VkSampler m_sampler = VK_NULL_HANDLE;
-        VkDescriptorSet m_descriptorSet;
-        VkImageLayout m_currentDepthLayout;
+        VkDescriptorSet m_descriptorSet = VK_NULL_HANDLE;
+        VkImageLayout m_currentDepthLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         bool m_bind = false;
     };

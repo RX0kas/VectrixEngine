@@ -36,6 +36,7 @@ namespace Vectrix {
         const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Texture with the name \"{}\" doesn't exist", name);
+            return nullptr;
         }
         return it->second;
     }

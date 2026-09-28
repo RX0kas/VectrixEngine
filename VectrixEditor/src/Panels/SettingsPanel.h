@@ -19,6 +19,7 @@ namespace Vectrix {
         int m_selectedCategory = -1; ///< -1 until seeded from the settings file on the first render
         int m_saveScope = 0;         ///< 0 = Project tier, 1 = Global tier
         char m_search[64] = {};
+        std::string m_lastSaveSettingsError;
     };
 } // Vectrix
 

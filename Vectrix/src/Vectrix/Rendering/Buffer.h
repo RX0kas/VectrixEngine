@@ -26,15 +26,15 @@ namespace Vectrix {
 	};
 
 	/// @cond INTERNAL
-	static uint32_t ShaderDataTypeSize(ShaderDataType type) {
+	inline uint32_t ShaderDataTypeSize(ShaderDataType type) {
 		switch (type) {
 			case ShaderDataType::Float:  return 4;
 			case ShaderDataType::Float2: return 8;
 			case ShaderDataType::Float3: return 12;
-			case ShaderDataType::Float4:
-			default: return 16;
+			case ShaderDataType::Float4: return 16;
+			case ShaderDataType::None:   return 0;
 		}
-		VC_CORE_ERROR("Unknown ShaderDataType");
+		return 0;
 	}
 	/// @endcond
 
@@ -142,68 +142,6 @@ namespace Vectrix {
 	private:
 		std::vector<BufferElement> m_elements;
 		uint32_t m_stride = 0;
-	};
-
-
-	/**
- 	* @brief Abstract interface for a GPU vertex buffer
- 	*/
-	class VertexBuffer
-	{
-	public:
-		virtual ~VertexBuffer() = default;
-
-		/**
-		 * @brief Binds the vertex buffer for use in the current draw call
-		 **/
-		virtual void bind() = 0;
-
-		/**
-		 * @brief Returns the buffer layout describing the vertex attributes
-		 **/
-		[[nodiscard]] virtual const BufferLayout& getLayout() const = 0;
-
-		/**
-	     * @brief Set the buffer layout describing the vertex attributes
-	     * @param layout The layout to assign to this buffer
-	     */
-		virtual void setLayout(const BufferLayout& layout) = 0;
-
-		/**
-	 	* @brief Function to create a new VertexBuffer
-	 	* @param vertices List of vertices to upload to the GPU
-	 	* @param size Total size in bytes of the vertex data
-	 	* @return A shared pointer to the created vertex buffer
-	 	*/
-		static std::shared_ptr<VertexBuffer> create(const std::vector<Vertex>& vertices, uint32_t size);
-	};
-
-
-	/**
- 	* @brief Abstract interface for a GPU index buffer
- 	*/
-	class IndexBuffer
-	{
-	public:
-		virtual ~IndexBuffer() = default;
-
-		/**
-		 * @brief Binds the index buffer for use in the current draw call
-		 **/
-		virtual void bind() = 0;
-
-		/**
-		 * @brief Returns the number of indices stored in this buffer
-		 **/
-		[[nodiscard]] virtual uint32_t getCount() const = 0;
-
-		/**
-		 * @brief Function to create a new IndexBuffer
-		 * @param indices Pointer to the array of indices
-	 	 * @param size Number of indices in the array
-	 	 * @return A shared pointer to the created index buffer
-		 */
-		static std::shared_ptr<IndexBuffer> create(uint32_t* indices, uint32_t size);
 	};
 
 

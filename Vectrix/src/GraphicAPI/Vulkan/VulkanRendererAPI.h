@@ -12,11 +12,6 @@ namespace Vectrix {
 		void beginFrame() override;
 		void endFrame() override;
 		void sendFrame() override;
-		void drawIndexed(const VertexArray& vertexArray) override;
-	private:
-		friend class VulkanRenderer;
-		static uint32_t getDrawCalls() { return s_drawCalls; }
-		static uint32_t s_drawCalls;
 	};
 
 

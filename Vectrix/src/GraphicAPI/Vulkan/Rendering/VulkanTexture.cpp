@@ -40,13 +40,16 @@ namespace Vectrix {
     VulkanTexture::VulkanTexture(const std::string &name, const std::string &path) : m_device(VulkanContext::instance().getDevice()),m_name(name) {
         VC_PROFILER_FUNCTION();
         stbi_uc* pixels = stbi_load(path.c_str(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
-        m_imageSize = m_width * m_height * 4;
 
         if (!pixels) {
-            VC_CORE_ERROR("Failed to load texture image");
+            // A corrupt/unsupported image must not take the app down: show the not_found image instead,
+            // like Texture::create already does for a missing file
+            VC_CORE_ERROR_NO_EXIT("Failed to load texture image {}: {}, using default Texture instead", path, stbi_failure_reason());
+            pixels = stbi_load_from_memory(getNotFoundTextureData(), getNotFoundTextureSize(), &m_width, &m_height, &m_channel, STBI_rgb_alpha);
+            VC_CORE_ASSERT(pixels, "Failed to load embedded not_found texture");
         }
+        m_imageSize = m_width * m_height * 4;
         createTexture(pixels,STBI_rgb_alpha);
-        m_descriptorSet = createImGuiTextureDescriptor(m_device,m_sampler,m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         m_id = s_numberTexture++;
     }
@@ -97,11 +100,12 @@ namespace Vectrix {
             stagingBuffer,
             stagingAllocation
         );
-        // copy to staging buffer
+        // copy to staging buffer. It was allocated by the buffer allocator (createBuffer's default): mapping
+        // it through another VmaAllocator is undefined behaviour
         void* data;
-        vmaMapMemory(m_device.getTextureAllocator(), stagingAllocation, &data);
+        vmaMapMemory(m_device.getBufferAllocator(), stagingAllocation, &data);
         memcpy(data, pixels, m_imageSize);
-        vmaUnmapMemory(m_device.getTextureAllocator(), stagingAllocation);
+        vmaUnmapMemory(m_device.getBufferAllocator(), stagingAllocation);
         stbi_image_free(pixels);
 
         VkImageCreateInfo imageInfo{};
@@ -120,19 +124,15 @@ namespace Vectrix {
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = 0; // Optional
 
+        // No dedicated memory per texture: VMA already gives large images their own block, and one
+        // VkDeviceMemory per texture runs into maxMemoryAllocationCount (often 4096)
         VmaAllocationCreateInfo allocationCreateInfo{};
         allocationCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
-        allocationCreateInfo.flags = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
-        vmaCreateImage(VulkanContext::instance().getTextureAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr);
+        if (vmaCreateImage(VulkanContext::instance().getTextureAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr) != VK_SUCCESS) {
+            VC_CORE_CRITICAL("Failed to create texture image");
+        }
 
-        // transition to TRANSFER_DST_OPTIMAL
-        transitionImageLayout(m_image, f,VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-        // staging buffer to image
-        m_device.copyBufferToImage(stagingBuffer, m_image, static_cast<uint32_t>(m_width), static_cast<uint32_t>(m_height),1);
-
-        // transition to READ_ONLY_OPTIMAL
-        transitionImageLayout(m_image, f,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        uploadPixels(stagingBuffer);
 
         m_device.destroyBuffer(stagingBuffer, stagingAllocation);
 
@@ -179,49 +179,52 @@ namespace Vectrix {
         }
     }
 
-    void VulkanTexture::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
+    void VulkanTexture::uploadPixels(VkBuffer stagingBuffer) {
         VC_PROFILER_FUNCTION();
-        VkCommandBuffer commandBuffer = m_device.beginSingleTimeCommands();
+        // The two layout transitions and the copy share one command buffer, so a texture load waits
+        // on the GPU once instead of three times
+        VkCommandBuffer cmd = m_device.beginSingleTimeCommands();
 
-        VkImageMemoryBarrier barrier{};
-        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.oldLayout = oldLayout;
-        barrier.newLayout = newLayout;
+        VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
         barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.image = image;
-        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        barrier.subresourceRange.baseMipLevel = 0;
-        barrier.subresourceRange.levelCount = 1;
-        barrier.subresourceRange.baseArrayLayer = 0;
-        barrier.subresourceRange.layerCount = 1;
+        barrier.image = m_image;
+        barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
 
-        VkPipelineStageFlags sourceStage;
-        VkPipelineStageFlags destinationStage;
+        barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        barrier.srcAccessMask = 0;
+        barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-        if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
-            barrier.srcAccessMask = 0;
-            barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-            sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
-            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        } else {
-            VC_CORE_ERROR("Unsupported layout transition");
-        }
+        VkBufferImageCopy region{};
+        region.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+        region.imageExtent = { static_cast<uint32_t>(m_width), static_cast<uint32_t>(m_height), 1 };
+        vkCmdCopyBufferToImage(cmd, stagingBuffer, m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
-        vkCmdPipelineBarrier(commandBuffer,sourceStage, destinationStage,0,
-            0, nullptr, 0, nullptr,1, &barrier);
+        barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
-        m_device.endSingleTimeCommands(commandBuffer);
-        m_layout = newLayout;
+        m_device.endSingleTimeCommands(cmd);
+        m_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    }
+
+    ImTextureID VulkanTexture::getImGuiTextureID() const {
+        // Created on first use: most textures are never shown by ImGui, and the not_found texture is built
+        // before ImGui is initialised (ImGui_ImplVulkan_GetTextureDescriptorSetLayout isn't available yet)
+        if (m_descriptorSet == VK_NULL_HANDLE)
+            m_descriptorSet = createImGuiTextureDescriptor(m_device, m_sampler, m_imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        return reinterpret_cast<ImTextureID>(m_descriptorSet);
     }
 
     VulkanTexture::~VulkanTexture() {
         VC_PROFILER_FUNCTION();
+        // Wait before freeing anything: a frame still in flight may sample this texture or draw it through ImGui
+        // (destroyImage waits too, but only after the descriptor, sampler and view would already be gone)
+        vkDeviceWaitIdle(m_device.device());
         destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
         if (m_sampler != VK_NULL_HANDLE)
             vkDestroySampler(m_device.device(), m_sampler, nullptr);

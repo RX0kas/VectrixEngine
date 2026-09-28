@@ -41,10 +41,14 @@ namespace Vectrix {
 
 		m_vkSettings = VulkanSettings::load();
 
-		bool resizable = false;
+		// Defaults to resizable: that's GLFW's default, and how the window always behaved while this setting was
+		// (wrongly) applied as a hint after the window had been created
+		bool resizable = true;
 		if (const JsonObject& s = SettingsManager::getSettings(); s.contains("window"))
-			resizable = s.at("window")["resizable"].getAs<bool>().value_or(false);
-		glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+			resizable = s.at("window")["resizable"].getAs<bool>().value_or(true);
+		// The window already exists at this point (Window::init creates the context last): a
+		// glfwWindowHint would only apply to windows created later, e.g. ImGui's platform windows
+		glfwSetWindowAttrib(m_WindowHandle, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 
 		// TODO: Change make it double the size once there is no space left
 		const DescriptorPoolConfig cfg {

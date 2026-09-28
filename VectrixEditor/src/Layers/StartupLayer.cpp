@@ -1,10 +1,9 @@
 #include "StartupLayer.h"
 
-#include <complex>
-
 #include "EditorLayer.h"
 #include "imgui.h"
 #include "nfd.h"
+#include "Utils/Error.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Project/ProjectSerializer.h"
 #include "Vectrix/Settings/SettingsManager.h"
@@ -12,7 +11,6 @@
 
 namespace Vectrix {
 	StartupLayer::StartupLayer(const std::filesystem::path& launchFile) : Layer("StartupLayer") {
-		m_recentProjects = loadRecentProject();
 		launchFromFile(launchFile);
 	}
 
@@ -27,8 +25,8 @@ namespace Vectrix {
 			VC_INFO("Create project requested: \"{}\" in {}", m_newProjectName.c_str(), target.string().c_str());
 			const auto [result, message] = ProjectSerializer::createProject(target, m_newProjectName);
 			if (result != SUCCESS) {
-				VC_ERROR_NO_EXIT("Can't create project: {}", message.c_str());
-				m_lastError = message;
+				showErrorMessage("ERROR_CREATING_PROJECT");
+				m_lastCreateProjectErrorMessage = std::format("Can't create project: {}", message);
 				return;
 			}
 
@@ -43,8 +41,8 @@ namespace Vectrix {
 			VC_INFO("Open project requested: {}", projectFile.string().c_str());
 			const ProjectLoadResult loaded = ProjectSerializer::loadProject(projectFile);
 			if (loaded.result != SUCCESS) {
-				VC_ERROR_NO_EXIT("Can't open project: {}", toString(loaded.result).c_str());
-				m_lastError = "Can't open project: " + toString(loaded.result);
+				showErrorMessage("ERROR_LOADING_PROJECT");
+				m_lastLoadProjectErrorMessage = std::format("Can't open project: {}", toString(loaded.result));
 				return;
 			}
 
@@ -90,7 +88,8 @@ namespace Vectrix {
 		} else if (result == NFD_CANCEL) {
 			VC_INFO("User cancelled");
 		} else {
-			VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+			showErrorMessage("OPEN_NFD_ERROR");
+			m_lastOpenNFDErrorMessage = std::format("NFD Error: {}", NFD_GetError());
 		}
 
 		NFD_Quit();
@@ -111,7 +110,8 @@ namespace Vectrix {
 		} else if (result == NFD_CANCEL) {
 			VC_INFO("User cancelled");
 		} else {
-			VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+			showErrorMessage("OPEN_FOLDER_NFD_ERROR");
+			m_lastOpenFolderNFDErrorMessage = std::format("NFD Error: {}", NFD_GetError());
 		}
 
 		NFD_Quit();
@@ -123,25 +123,23 @@ namespace Vectrix {
 
 	void StartupLayer::OnAttach(const JsonObject &data) {
 		if (data.contains("openProject")) {
-			loadRecentProject();
-			for (const auto&[name,path] : m_recentProjects) {
-				if (path == data.at("openProject").getString()) {
-					m_pendingOpenProjectPath = path.string();
-				}
-			}
+			// Loading a missing/invalid project is already reported by OnUpdate, no need to check it against the recent list
+			m_pendingOpenProjectPath = data.at("openProject").getString();
 		}
 	}
 
 	void StartupLayer::OnImGuiRender() {
+		const std::vector<RecentProject>& recentProjects = loadRecentProject();
+
 		ImGui::Begin("Vectrix", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 		ImGui::BeginChild("##recentProjects", ImVec2(220.0f, 260.0f), true);
 		ImGui::TextDisabled("Recent projects");
 		ImGui::Separator();
-		if (m_recentProjects.empty()) {
+		if (recentProjects.empty()) {
 			ImGui::TextWrapped("No recent projects yet.");
 		} else {
-			for (const RecentProject& project : m_recentProjects) {
+			for (const RecentProject& project : recentProjects) {
 				ImGui::PushID(&project);
 				if (ImGui::Selectable(project.name.c_str())) {
 					openRecentProject(project);
@@ -176,18 +174,12 @@ namespace Vectrix {
 				pickFolder();
 			}
 
-			if (!m_lastError.empty()) {
-				ImGui::TextColored(ImVec4(1, 0.3f, 0.3f, 1), "%s", m_lastError.c_str());
-			}
-
 			if (ImGui::Button("Create")) {
 				m_newProjectName = name;
-				m_lastError.clear();
 				m_loadNewProject = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel")) {
-				m_lastError.clear();
 				strcpy(name, "Project");
 				m_newProjectName = "Project";
 				m_hasCustomPath = false;
@@ -199,23 +191,73 @@ namespace Vectrix {
 		ImGui::EndChild();
 
 		ImGui::End();
+
+		renderErrorMessage("ERROR_CREATING_PROJECT", m_lastCreateProjectErrorMessage);
+		renderErrorMessage("ERROR_LOADING_PROJECT",m_lastLoadProjectErrorMessage);
+		renderErrorMessage("OPEN_FOLDER_NFD_ERROR",m_lastOpenFolderNFDErrorMessage);
+		renderErrorMessage("OPEN_NFD_ERROR",m_lastOpenNFDErrorMessage);
+		renderErrorMessage("LAUNCH_FROM_FILE_ERROR", m_lastLaunchFromFileErrorMessage);
+		renderErrorMessage("ADD_RECENT_PROJECT_ERROR", m_lastAddRecentProjectErrorMessage);
+		renderErrorMessage("SAVE_RECENT_PROJECT_ERROR", m_lastSaveRecentProjectErrorMessage);
+		renderErrorMessage("LOAD_RECENT_PROJECTS_ERROR", lastLoadRecentProjectsError());
 	}
 
-	// TODO: add cache
-	std::vector<RecentProject> StartupLayer::loadRecentProject() {
+	namespace {
+		/// In-memory copy of recentProjects.json, shared by StartupLayer and EditorLayer
+		struct RecentProjectsCache {
+			std::vector<RecentProject> projects;
+			std::filesystem::file_time_type lastWriteTime;
+			bool loaded = false;
+		};
+
+		RecentProjectsCache& recentProjectsCache() {
+			static RecentProjectsCache cache;
+			return cache;
+		}
+
+		/// Computed once: loadRecentProject() runs every frame on the startup screen
+		const std::filesystem::path& recentProjectsFilePath() {
+			static const std::filesystem::path path = getVectrixStateFolder() / "recentProjects.json";
+			return path;
+		}
+
+		std::filesystem::file_time_type lastWriteTimeOf(const std::filesystem::path& file) {
+			std::error_code error;
+			const std::filesystem::file_time_type time = std::filesystem::last_write_time(file, error);
+			return error ? std::filesystem::file_time_type::min() : time;
+		}
+	}
+
+	const std::vector<RecentProject>& StartupLayer::loadRecentProject() {
+		const std::filesystem::path& recentProjectsFile = recentProjectsFilePath();
+		RecentProjectsCache& cache = recentProjectsCache();
+		if (cache.loaded && lastWriteTimeOf(recentProjectsFile) == cache.lastWriteTime) {
+			return cache.projects;
+		}
+
+		cache.projects = readRecentProjectsFile(recentProjectsFile);
+		// Taken after reading so a rewrite made by readRecentProjectsFile itself doesn't trigger a reload.
+		// On error the empty list is cached too: a broken file is reported once, then again only after it changes.
+		cache.lastWriteTime = lastWriteTimeOf(recentProjectsFile);
+		cache.loaded = true;
+		return cache.projects;
+	}
+
+	std::vector<RecentProject> StartupLayer::readRecentProjectsFile(const std::filesystem::path& recentProjectsFile) {
 		std::filesystem::create_directories(getVectrixStateFolder());
-		std::filesystem::path recentProjectsFile = getVectrixStateFolder() /  "recentProjects.json";
 		std::vector<RecentProject> recentProjects = {};
 		if (std::filesystem::exists(recentProjectsFile)) {
 			VC_INFO("Recent project file found, loading recent projects");
 			auto result = Json::load(recentProjectsFile.string());
 			if (result.first!=SUCCESS) {
-				VC_ERROR_NO_EXIT("Can't load recent projects, JSON error : {}",toString(result.first ));
+				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
+				lastLoadRecentProjectsError() = std::format("Can't load recent projects, JSON error : {}",toString(result.first));
 				return {};
 			}
 
 			if (!result.second.isType<JsonObject>()) {
-				VC_ERROR_NO_EXIT("Wrong formating in recent project file");
+				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
+				lastLoadRecentProjectsError() = "Wrong formating in recent project file";
 				return {};
 			}
 			try {
@@ -249,21 +291,29 @@ namespace Vectrix {
 					const JsonObject recentProjectsObj = { {"projects", arr} };
 					auto resultSaving = Json::save(recentProjectsFile.string(), recentProjectsObj);
 					if (resultSaving!=SUCCESS) {
-						VC_ERROR_NO_EXIT("Failed to overwrite recent projects file: {}", toString(resultSaving));
+						showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
+						lastLoadRecentProjectsError() = std::format("Failed to overwrite recent projects file: {}", toString(resultSaving));
 					}
 				}
 			} catch (const std::exception& e) {
-				VC_ERROR_NO_EXIT("Error while loading recent project file: {}",e.what());
+				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
+				lastLoadRecentProjectsError() = std::format("Error while loading recent project file: {}",e.what());
 			}
 		} else {
 			const JsonObject recentProjectsObj = { {"projects", JsonArray{}} };
 			auto result = Json::save(recentProjectsFile.string(), recentProjectsObj);
 			if (result!=SUCCESS) {
-				VC_ERROR_NO_EXIT("Error while saving recent project file: {}",toString(result));
+				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
+				lastLoadRecentProjectsError() = std::format("Error while saving recent project file: {}",toString(result));
 				return {};
 			}
 		}
 		return recentProjects;
+	}
+
+	std::string& StartupLayer::lastLoadRecentProjectsError() {
+		static std::string message;
+		return message;
 	}
 
 	void StartupLayer::launchFromFile(const std::filesystem::path& file) {
@@ -287,16 +337,18 @@ namespace Vectrix {
 					}
 				}
 			}
-			VC_ERROR_NO_EXIT("Can't find a .vcproj next to scene: {}", file.string());
+			showErrorMessage("LAUNCH_FROM_FILE_ERROR");
+			m_lastLaunchFromFileErrorMessage = std::format("Can't find a .vcproj next to scene: {}", file.string());
 			return;
 		}
 
-		VC_ERROR_NO_EXIT("Don't know how to open file: {}", file.string());
+		showErrorMessage("LAUNCH_FROM_FILE_ERROR");
+		m_lastLaunchFromFileErrorMessage = std::format("Don't know how to open file: {}", file.string());
 	}
 
-	void StartupLayer::addRecentProject(RecentProject project) {
+	void StartupLayer::addRecentProject(const RecentProject& project) {
 		std::filesystem::create_directories(getVectrixStateFolder());
-		std::filesystem::path recentProjectsFile = getVectrixStateFolder() / "recentProjects.json";
+		const std::filesystem::path& recentProjectsFile = recentProjectsFilePath();
 
 		JsonValue root;
 		if (std::filesystem::exists(recentProjectsFile)) {
@@ -304,12 +356,14 @@ namespace Vectrix {
 
 			auto result = Json::load(recentProjectsFile.string());
 			if (result.first!=SUCCESS) {
-				VC_ERROR_NO_EXIT("Can't load recent projects, JSON error : {}",toString(result.first));
+				showErrorMessage("ADD_RECENT_PROJECT_ERROR");
+				m_lastAddRecentProjectErrorMessage = std::format("Can't load recent projects, JSON error : {}",toString(result.first));
 				return;
 			}
 
 			if (!result.second.isType<JsonObject>()) {
-				VC_ERROR_NO_EXIT("Wrong formating in recent project file");
+				showErrorMessage("ADD_RECENT_PROJECT_ERROR");
+				m_lastAddRecentProjectErrorMessage = "Wrong formating in recent project file";
 				return;
 			}
 
@@ -334,11 +388,13 @@ namespace Vectrix {
 
 		const VectrixResult result = Json::save(recentProjectsFile.string(), root.asObject());
 		if (result!=SUCCESS) {
-			VC_ERROR_NO_EXIT("Can't add project {} to recent projects file: {}",project.name, toString(result));
+			showErrorMessage("SAVE_RECENT_PROJECT_ERROR");
+			m_lastSaveRecentProjectErrorMessage = std::format("Can't add project {} to recent projects file: {}",project.name, toString(result));
 			return;
 		}
 
 		VC_INFO("Project {} added to recent projects file", project.name);
-		m_recentProjects.push_back(std::move(project));
+		// The file was re-read above and may hold entries the cache doesn't have yet, so reload it on next access
+		recentProjectsCache().loaded = false;
 	}
 } // Vectrix

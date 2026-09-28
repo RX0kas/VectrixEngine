@@ -1,7 +1,6 @@
 #include "VulkanFramebuffer.h"
 
 #include "volk.h"
-
 #include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
@@ -29,21 +28,31 @@ namespace Vectrix {
         vkFreeDescriptorSets(device.device(), device.descriptorPool(), 1, &descriptorSet);
     }
 
-    VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification &spec) : m_device(VulkanContext::instance().getDevice()), m_specification(spec), m_currentLayout(VK_IMAGE_LAYOUT_UNDEFINED), m_currentDepthLayout(VK_IMAGE_LAYOUT_UNDEFINED)  {
-        VkFormat format = spec.imageFormat != UNDEFINED ? toVulkanFormat(spec.imageFormat) : VulkanContext::instance().getRenderer().getImageFormat();
+    VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification &spec) : m_device(VulkanContext::instance().getDevice()), m_specification(spec) {
+        createResources();
+    }
+
+    VulkanFramebuffer::~VulkanFramebuffer() {
+        // A frame still in flight may render into it or show it through ImGui (resize/updateSpecification wait too)
+        vkDeviceWaitIdle(m_device.device());
+        destroyResources();
+    }
+
+    void VulkanFramebuffer::createResources() {
+        // Formats left undefined follow the swap chain, and are written back so resize() reuses them
+        const VkFormat format = m_specification.imageFormat != UNDEFINED ? toVulkanFormat(m_specification.imageFormat) : VulkanContext::instance().getRenderer().getImageFormat();
         m_specification.imageFormat = toVectrixFormat(format);
 
         // Color
         VkImageCreateInfo imageInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO};
         imageInfo.imageType = VK_IMAGE_TYPE_2D;
         imageInfo.format = format;
-        imageInfo.extent = {spec.width,spec.height,1};
+        imageInfo.extent = {m_specification.width,m_specification.height,1};
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-
         m_device.createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,m_image, m_allocation);
 
         VkImageViewCreateInfo viewInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
@@ -53,14 +62,15 @@ namespace Vectrix {
         viewInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
         vkCreateImageView(m_device.device(), &viewInfo, nullptr, &m_imageView);
 
-        if (spec.hasDepth) {
-            VkFormat depthFormat = spec.depthFormat != UNDEFINED ? toVulkanFormat(spec.depthFormat) : VulkanContext::instance().getRenderer().findDepthFormat();
+        // Depth
+        if (m_specification.hasDepth) {
+            const VkFormat depthFormat = m_specification.depthFormat != UNDEFINED ? toVulkanFormat(m_specification.depthFormat) : VulkanContext::instance().getRenderer().findDepthFormat();
             m_specification.depthFormat = toVectrixFormat(depthFormat);
 
             VkImageCreateInfo depthImageInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
             depthImageInfo.imageType = VK_IMAGE_TYPE_2D;
             depthImageInfo.format = depthFormat;
-            depthImageInfo.extent = { spec.width, spec.height, 1 };
+            depthImageInfo.extent = { m_specification.width, m_specification.height, 1 };
             depthImageInfo.mipLevels = 1;
             depthImageInfo.arrayLayers = 1;
             depthImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -84,41 +94,24 @@ namespace Vectrix {
         vkCreateSampler(m_device.device(), &samplerInfo, nullptr, &m_sampler);
 
         m_descriptorSet = createImGuiTextureDescriptor(m_device, m_sampler, m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+        m_currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        m_currentDepthLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     }
 
-    VulkanFramebuffer::~VulkanFramebuffer() {
+    void VulkanFramebuffer::destroyResources() {
         destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
+        m_descriptorSet = VK_NULL_HANDLE;
         vkDestroySampler(m_device.device(),m_sampler,nullptr);
         vkDestroyImageView(m_device.device(),m_imageView,nullptr);
-        if (m_specification.hasDepth) {
+        if (m_depthImage != VK_NULL_HANDLE) {
             vkDestroyImageView(m_device.device(),m_depthImageView,nullptr);
             m_device.destroyImage(m_depthImage,m_depthAllocation);
+            m_depthImage = VK_NULL_HANDLE;
+            m_depthImageView = VK_NULL_HANDLE;
         }
         m_device.destroyImage(m_image,m_allocation);
-    }
-
-    void VulkanFramebuffer::transitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout) {
-        VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
-        barrier.oldLayout = oldLayout;
-        barrier.newLayout = newLayout;
-        barrier.image = image;
-        barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-
-        VkPipelineStageFlags srcStage = 0, dstStage = 0;
-
-        if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
-            barrier.srcAccessMask = 0;
-            barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            srcStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            dstStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        } else if (oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-            barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-            srcStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-            dstStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        }
-
-        vkCmdPipelineBarrier(cmd, srcStage, dstStage, 0,0, nullptr, 0, nullptr, 1, &barrier);
+        m_image = VK_NULL_HANDLE;
     }
 
     void VulkanFramebuffer::bind(bool clear) {
@@ -127,9 +120,10 @@ namespace Vectrix {
 
     void VulkanFramebuffer::bind(VkAttachmentLoadOp loadOp) {
         VC_CORE_ASSERT(!m_bind,"Framebuffer already bound");
-        VC_CORE_ASSERT(s_currentFramebuffer==nullptr,"Another framebuffer is already bound")
+        VC_CORE_ASSERT(s_currentFramebuffer==nullptr,"Another framebuffer is already bound");
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
         VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "No active command buffer!");
+
         s_currentFramebuffer = this;
 
         VkImageMemoryBarrier preBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
@@ -146,20 +140,22 @@ namespace Vectrix {
             preBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
             srcStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         }
-        preBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        VkPipelineStageFlags dstStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        preBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        vkCmdPipelineBarrier(cmd, srcStage, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, 0,0, nullptr, 0, nullptr, 1, &preBarrier);
 
-        vkCmdPipelineBarrier(cmd, srcStage, dstStage, 0,0, nullptr, 0, nullptr, 1, &preBarrier);
         if (m_specification.hasDepth) {
+            // Once used, the depth image still holds the previous pass' writes: order them before this
+            // pass' clear/writes (a TOP_OF_PIPE/no-access source would leave a write-after-write hazard)
+            const bool firstUse = m_currentDepthLayout == VK_IMAGE_LAYOUT_UNDEFINED;
             VkImageMemoryBarrier depthBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
             depthBarrier.image = m_depthImage;
             depthBarrier.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
             depthBarrier.oldLayout = m_currentDepthLayout;
             depthBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-            depthBarrier.srcAccessMask = 0;
-            depthBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-
-            vkCmdPipelineBarrier(cmd, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+            depthBarrier.srcAccessMask = firstUse ? 0 : VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+            depthBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+            const VkPipelineStageFlags depthStages = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+            vkCmdPipelineBarrier(cmd, firstUse ? VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT : depthStages, depthStages,
                                  0, 0, nullptr, 0, nullptr, 1, &depthBarrier);
             m_currentDepthLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
         }
@@ -169,35 +165,29 @@ namespace Vectrix {
         colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         colorAttachment.loadOp = loadOp;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        colorAttachment.clearValue.color = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-        if (m_specification.hasDepth) {
-            VkRenderingAttachmentInfoKHR depthAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
-            depthAttachment.imageView = m_depthImageView;
-            depthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-            depthAttachment.loadOp = loadOp;
-            depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            depthAttachment.clearValue.depthStencil.depth = 1.0f;
-            depthAttachment.clearValue.depthStencil.stencil = 0;
-
-            VkRenderingInfoKHR renderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO_KHR };
-            renderingInfo.renderArea = { {0,0}, {m_specification.width, m_specification.height} };
-            renderingInfo.layerCount = 1;
-            renderingInfo.colorAttachmentCount = 1;
-            renderingInfo.pColorAttachments = &colorAttachment;
-            renderingInfo.pDepthAttachment = &depthAttachment;
-
-            vkCmdBeginRenderingKHR(cmd, &renderingInfo);
+        if (m_specification.clearColor) {
+            const glm::vec4& c = *m_specification.clearColor;
+            colorAttachment.clearValue.color = { { c.r, c.g, c.b, c.a } };
         } else {
-            VkRenderingInfoKHR renderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO_KHR };
-            renderingInfo.renderArea = { {0,0}, {m_specification.width, m_specification.height} };
-            renderingInfo.layerCount = 1;
-            renderingInfo.colorAttachmentCount = 1;
-            renderingInfo.pColorAttachments = &colorAttachment;
-            renderingInfo.pDepthAttachment = nullptr;
-
-            vkCmdBeginRenderingKHR(cmd, &renderingInfo);
+            colorAttachment.clearValue = VulkanContext::instance().getRenderer().getClearValue();
         }
+
+        VkRenderingAttachmentInfoKHR depthAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
+        depthAttachment.imageView = m_depthImageView;
+        depthAttachment.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        depthAttachment.loadOp = loadOp;
+        depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        depthAttachment.clearValue.depthStencil.depth = 1.0f;
+        depthAttachment.clearValue.depthStencil.stencil = 0;
+
+        VkRenderingInfoKHR renderingInfo{ VK_STRUCTURE_TYPE_RENDERING_INFO_KHR };
+        renderingInfo.renderArea = { {0,0}, {m_specification.width, m_specification.height} };
+        renderingInfo.layerCount = 1;
+        renderingInfo.colorAttachmentCount = 1;
+        renderingInfo.pColorAttachments = &colorAttachment;
+        renderingInfo.pDepthAttachment = m_specification.hasDepth ? &depthAttachment : nullptr;
+        vkCmdBeginRenderingKHR(cmd, &renderingInfo);
+
         m_bind = true;
         m_currentLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     }
@@ -210,7 +200,6 @@ namespace Vectrix {
             VC_CORE_ERROR("Can't unbind a framebuffer because another is bound");
         }
         s_currentFramebuffer = nullptr;
-
         VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
         VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "No active command buffer!");
 
@@ -235,77 +224,25 @@ namespace Vectrix {
 
     void VulkanFramebuffer::resize(glm::vec2 size) {
         VC_CORE_ASSERT(!m_bind, "Cannot resize a bound framebuffer, call unbind() first!");
-
-        auto newWidth  = static_cast<uint32_t>(size.x);
-        auto newHeight = static_cast<uint32_t>(size.y);
+        const auto newWidth  = static_cast<uint32_t>(size.x);
+        const auto newHeight = static_cast<uint32_t>(size.y);
 
         if (m_specification.width == newWidth && m_specification.height == newHeight) return;
-
         VC_CORE_ASSERT(newWidth > 0 && newHeight > 0, "Framebuffer size must be greater than 0!");
 
         vkDeviceWaitIdle(m_device.device());
-
-        destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
-        vkDestroySampler(m_device.device(), m_sampler, nullptr);
-        vkDestroyImageView(m_device.device(), m_imageView, nullptr);
-        if (m_specification.hasDepth) {
-            vkDestroyImageView(m_device.device(), m_depthImageView, nullptr);
-            m_device.destroyImage(m_depthImage, m_depthAllocation);
-        }
-        m_device.destroyImage(m_image, m_allocation);
-
+        destroyResources();
         m_specification.width  = newWidth;
         m_specification.height = newHeight;
-        m_currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        m_currentDepthLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        createResources();
+    }
 
-        // Color
-        VkImageCreateInfo imageInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
-        imageInfo.imageType = VK_IMAGE_TYPE_2D;
-        imageInfo.format = toVulkanFormat(m_specification.imageFormat);
-        imageInfo.extent = { newWidth, newHeight, 1 };
-        imageInfo.mipLevels = 1;
-        imageInfo.arrayLayers = 1;
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-        imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-        imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-        m_device.createImageWithInfo(imageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_image, m_allocation);
-
-        VkImageViewCreateInfo viewInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
-        viewInfo.image = m_image;
-        viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        viewInfo.format = toVulkanFormat(m_specification.imageFormat);
-        viewInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-        vkCreateImageView(m_device.device(), &viewInfo, nullptr, &m_imageView);
-
-        // Depth
-        if (m_specification.hasDepth) {
-            VkImageCreateInfo depthImageInfo{ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
-            depthImageInfo.imageType = VK_IMAGE_TYPE_2D;
-            depthImageInfo.format = toVulkanFormat(m_specification.depthFormat);
-            depthImageInfo.extent = { m_specification.width, m_specification.height, 1 };
-            depthImageInfo.mipLevels = 1;
-            depthImageInfo.arrayLayers = 1;
-            depthImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-            depthImageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-            depthImageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-            m_device.createImageWithInfo(depthImageInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_depthImage, m_depthAllocation);
-
-            VkImageViewCreateInfo depthViewInfo{ VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
-            depthViewInfo.image = m_depthImage;
-            depthViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            depthViewInfo.format = toVulkanFormat(m_specification.depthFormat);
-            depthViewInfo.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
-            vkCreateImageView(m_device.device(), &depthViewInfo, nullptr, &m_depthImageView);
-        }
-
-        VkSamplerCreateInfo samplerInfo{ VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
-        samplerInfo.magFilter = VK_FILTER_LINEAR;
-        samplerInfo.minFilter = VK_FILTER_LINEAR;
-        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-        vkCreateSampler(m_device.device(), &samplerInfo, nullptr, &m_sampler);
-
-        m_descriptorSet = createImGuiTextureDescriptor(m_device, m_sampler, m_imageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    void VulkanFramebuffer::updateSpecification(FramebufferSpecification &spec) {
+        VC_CORE_ASSERT(!m_bind, "Cannot update a bound framebuffer, call unbind() first!");
+        // Everything is rebuilt: the formats or the depth attachment may change, not only the size
+        vkDeviceWaitIdle(m_device.device());
+        destroyResources();
+        m_specification = spec;
+        createResources();
     }
 } // Vectrix

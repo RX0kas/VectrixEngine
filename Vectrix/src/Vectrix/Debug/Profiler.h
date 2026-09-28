@@ -15,7 +15,6 @@
  * @brief The version of the profiler data format
  *
  * Written into every profile file, so an old one can be told apart from a current one.
- * @see Vectrix::Profiler::isCompatible
  * @ingroup debugtools
  */
 #define VC_PROFILER_VERSION "1.1"
@@ -88,6 +87,8 @@ namespace Vectrix {
 
         /// @cond INTERNAL
         void beginSession(const char* name, const char* filepath = "results.json") {
+            if (m_currentSession)
+                endSession(); // otherwise the previous session leaks and its file is never closed
             m_outputStream.open(filepath);
             writeHeader();
             m_currentSession = new ProfilerSession{ name };
@@ -119,70 +120,6 @@ namespace Vectrix {
         {
             static Profiler instance;
             return instance;
-        }
-
-        /**
-         * @brief This function return true if the file given is compatible with the current version of the profiler
-         * @param filePath path of a profiler data file
-         * @return true if the file is compatible
-         */
-        static bool isCompatible(const std::string &filePath) {
-            if (!isValidFormat(filePath)) return false;
-            std::pair<VectrixResult, JsonValue> file = Json::load(filePath);
-
-            if (file.first!=SUCCESS) {
-                return false;
-            }
-
-            JsonValue root = file.second;
-            std::string profiler_version = root["data"]["profiler_version"].getString();
-            const size_t pointPos = profiler_version.find('.');
-            const std::string majorStr = profiler_version.substr(0, pointPos);
-            const std::string minorStr = profiler_version.substr(pointPos + 1);
-            const std::string currentMajorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(0,pointPos);
-            const std::string currentMinorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(pointPos+1,static_cast<std::string>(VC_PROFILER_VERSION).size()-pointPos);
-
-
-            if (std::stoi(majorStr)!=std::stoi(currentMajorStr)) return false;
-
-            if (std::stoi(currentMinorStr) < std::stoi(minorStr)) return false;
-
-            return true;
-        }
-
-        /**
-         * @brief Tell if a file is shaped like a profiler data file at all
-         * @param filePath The path of the file to check
-         * @return true when the file has the expected structure
-         * @note Being valid does not mean being compatible, see isCompatible
-         * @see isCompatible
-         */
-        static bool isValidFormat(const std::string &filePath) {
-            std::pair<VectrixResult, JsonValue> file = Json::load(filePath);
-
-            if (file.first!=SUCCESS) {
-                return false;
-            }
-
-            JsonValue root = file.second;
-            if (!root.contains("data")) {
-                return false;
-            }
-            JsonValue data = root["data"];
-            if (!data.isType<JsonObject>()) {
-                return false;
-            }
-
-            if (!root.contains("traceEvents")) {
-                return false;
-            }
-
-            JsonValue traceEvents = root["traceEvents"];
-            if (!traceEvents.isType<JsonArray>()) {
-                return false;
-            }
-
-            return true;
         }
     private:
         Profiler() : m_currentSession(nullptr), m_profileCount(0) {}
@@ -283,7 +220,10 @@ namespace Vectrix {
  * @see VC_PROFILER_FUNCTION
  * @ingroup debugtools
  */
-#define VC_PROFILER_SCOPE(name) ::Vectrix::Timer timer##__LINE__(name);
+// Two levels so __LINE__ is expanded before pasting: timer##__LINE__ would name every timer "timer__LINE__"
+#define VC_PROFILER_CONCAT_IMPL(a, b) a##b
+#define VC_PROFILER_CONCAT(a, b) VC_PROFILER_CONCAT_IMPL(a, b)
+#define VC_PROFILER_SCOPE(name) ::Vectrix::Timer VC_PROFILER_CONCAT(vcProfilerTimer, __LINE__)(name);
 
 /**
  * @brief Measure how long the enclosing function takes, under its own name

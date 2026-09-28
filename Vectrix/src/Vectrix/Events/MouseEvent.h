@@ -103,7 +103,7 @@ namespace Vectrix {
 		 */
 		int getMouseButton() const { return m_Button; }
 
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryMouseButton | EventCategoryInput)
 	protected:
 		/**
 		 * @brief Build a mouse button event for a given button

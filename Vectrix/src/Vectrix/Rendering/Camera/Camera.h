@@ -106,6 +106,7 @@ namespace Vectrix {
 		 */
 		void setCustomAspect(float aspect) {
 			m_customAspect = aspect;
+			recalculateMatrices();
 		}
 
 		/**
@@ -147,6 +148,9 @@ namespace Vectrix {
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
 		void recalculateTransformationMatrix();
+		/// Looked up each time rather than kept as a reference: EnTT moves components around when
+		/// others of the same type are removed, which would leave a stored reference on another entity
+		[[nodiscard]] TransformComponent& transform() const;
 	private:
 		friend class Renderer;
 
@@ -155,7 +159,6 @@ namespace Vectrix {
 		glm::mat4 m_projectionMatrix{};
 		glm::mat4 m_viewMatrix;
 		glm::mat4 m_transformationMatrix{};
-		TransformComponent& m_transform;
 
 		float m_customAspect = -1;
 		std::shared_ptr<Entity> m_entity;

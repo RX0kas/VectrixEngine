@@ -20,10 +20,11 @@ namespace Vectrix {
         std::vector<uint32_t> indices;
 
         if (!loadOBJ(path, vertices, indices)) {
-            VC_CORE_CRITICAL("Failed to load OBJ");
+            return nullptr;
         }
         auto mesh = std::make_shared<Mesh>(vertices,indices);
         mesh->m_id = name;
+        add(name, mesh);
 
         return mesh;
     }
@@ -46,6 +47,7 @@ namespace Vectrix {
         const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Mesh with the name \"{}\" doesn't exist", name);
+            return nullptr;
         }
         return it->second;
 

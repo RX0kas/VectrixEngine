@@ -231,6 +231,8 @@ namespace Vectrix {
         }
 
         auto shader = s_instance->m_shaderManager->createShader(path, p.string());
+        if (!shader)
+            return {VectrixResult::FORMATING_ERROR, nullptr}; // Doesn't compile. Not cached, so a fixed file can be loaded again
         s_instance->m_cache.emplace(cacheKey, shader);
         return {VectrixResult::SUCCESS, shader};
     }
@@ -263,6 +265,8 @@ namespace Vectrix {
         }
 
         auto mesh = s_instance->m_meshManager->createMesh(path, p.string());
+        if (!mesh)
+            return {VectrixResult::FORMATING_ERROR, nullptr}; // Not cached, so a fixed file can be loaded again
         s_instance->m_cache.emplace(cacheKey, mesh);
         return {VectrixResult::SUCCESS, mesh};
     }

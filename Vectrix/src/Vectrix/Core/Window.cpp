@@ -18,14 +18,14 @@ namespace Vectrix {
 	void Window::shutdown() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Window");
+		// The graphics context owns the window's Vulkan surface, which has to go before the window itself
+		m_context.reset();
 		glfwDestroyWindow(m_window);
 
-		if (s_GLFWWindowCount-- == 0) {
+		if (--s_GLFWWindowCount == 0) {
 			VC_CORE_INFO("Terminating GLFW");
 			glfwTerminate();
 		}
-
-		m_context.reset();
 	}
 
 	Window::Window() : m_window(nullptr), m_data() {
@@ -49,10 +49,8 @@ namespace Vectrix {
 
 	void Window::init(const WindowAttributes& attributes) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::instance().getAppInfo().getAppName(), attributes.width, attributes.height);
+		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::getAppInfo().getAppName(), attributes.width, attributes.height);
 
-		m_data.width = attributes.width;
-		m_data.height = attributes.height;
 		m_data.title = Application::getAppInfo().getAppName();
 		m_data.visible = false;
 #ifdef VC_PLATFORM_WINDOWS
@@ -65,16 +63,24 @@ namespace Vectrix {
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
 		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), m_data.title.c_str(), nullptr, nullptr);
+		if (m_window == nullptr) {
+			VC_CORE_CRITICAL("Failed to create the GLFW window");
+			return;
+		}
 		glfwSetWindowUserPointer(m_window, &m_data);
 
+		// width/height track the framebuffer in pixels, which the swap chain has to match. On a scaled
+		// display (HiDPI, Wayland scale factor) it differs from the window size in screen coordinates.
+		int framebufferWidth = 0, framebufferHeight = 0;
+		glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
+		m_data.width = static_cast<unsigned int>(framebufferWidth);
+		m_data.height = static_cast<unsigned int>(framebufferHeight);
 
 		// Set some callbacks
 		glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-			data.width = width;
-			data.height = height;
 
 			WindowResizeEvent event(width, height);
 			data.eventCallback(event);
@@ -162,8 +168,7 @@ namespace Vectrix {
 		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 		data.width = width;
 		data.height = height;
-		data.windowResized = true;
-		// TODO: implement that
+		data.windowResized = true; // VulkanRenderer::endFrame recreates the swap chain on it
 	}
 
 	Window* Window::create() {
@@ -174,16 +179,6 @@ namespace Vectrix {
 	void Window::onUpdate() const {
 		VC_PROFILER_FUNCTION();
 		m_context->swapBuffers();
-	}
-
-	void Window::setVSync(bool enabled)	{
-		VC_PROFILER_FUNCTION();
-		// TODO: Changer la swapchain pour appliquer l'effet
-		m_data.vSync = enabled;
-	}
-
-	bool Window::isVSync() const {
-		return m_data.vSync;
 	}
 
 	GraphicsContext* Window::createGraphicContext(GLFWwindow* window) {

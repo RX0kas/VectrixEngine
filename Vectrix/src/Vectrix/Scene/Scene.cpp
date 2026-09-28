@@ -8,37 +8,62 @@
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
-    /// @cond INTERNAL
-    std::string getString(const std::vector<std::byte>& bytes, uint32_t& offset) {
-        auto startByte = bytes.begin() + offset;
-        std::vector<std::byte> lenData = {startByte, startByte + sizeof(uint16_t)};
-        auto* idLen = reinterpret_cast<uint16_t*>(lenData.data());
-        auto startId = startByte + sizeof(uint16_t);
-        std::vector<std::byte> idData = {startId, startId + *idLen};
-        char* idPtr = reinterpret_cast<char*>(idData.data());
-        std::string id = {idPtr, idPtr + *idLen};
-        offset += sizeof(uint16_t) + *idLen;
-        return id;
+    namespace {
+        /// Reads the serialized fields of one component, refusing to read past its end (a truncated or
+        /// corrupt scene file must fail to load, not read out of bounds)
+        class ComponentReader {
+        public:
+            explicit ComponentReader(const std::vector<std::byte>& bytes) : m_bytes(bytes) {}
+
+            bool read(void* out, const size_t size) {
+                if (m_bytes.size() - m_offset < size) return false;
+                std::memcpy(out, m_bytes.data() + m_offset, size);
+                m_offset += size;
+                return true;
+            }
+
+            bool readFloat(float& out) { return read(&out, sizeof(float)); }
+
+            bool readBool(bool& out) {
+                std::uint8_t byte = 0; // read as a byte: a value other than 0/1 read straight into a bool is UB
+                if (!read(&byte, sizeof(byte))) return false;
+                out = byte != 0;
+                return true;
+            }
+
+            bool readString(std::string& out) {
+                std::uint16_t length = 0;
+                if (!read(&length, sizeof(length))) return false;
+                if (m_bytes.size() - m_offset < length) return false;
+                out.assign(reinterpret_cast<const char*>(m_bytes.data() + m_offset), length);
+                m_offset += length;
+                return true;
+            }
+
+        private:
+            const std::vector<std::byte>& m_bytes;
+            size_t m_offset = 0;
+        };
+
+        std::pair<VectrixResult, std::shared_ptr<Scene>> malformed(const std::string& sceneName, const std::string& entityName) {
+            VC_CORE_ERROR_NO_EXIT("Malformed component data for entity {} in scene {}", entityName, sceneName);
+            return {FORMATING_ERROR, nullptr};
+        }
+
+        /// Loads the asset a MeshRendererComponent refers to. An empty id is an asset that was never set
+        /// (the component was saved half configured): it stays null
+        template<typename T>
+        VectrixResult loadComponentAsset(const std::string& id, std::shared_ptr<T>& out, const std::string& sceneName) {
+            if (id.empty()) return SUCCESS;
+            auto [result, asset] = AssetsManager::load<T>(id);
+            if (result != SUCCESS) {
+                VC_CORE_ERROR_NO_EXIT("Can't load {} from scene {}: {}", id, sceneName, toString(result));
+                return result;
+            }
+            out = asset;
+            return SUCCESS;
+        }
     }
-
-    uint32_t getUInt(const std::vector<std::byte>& bytes, uint32_t& offset) {
-        auto startByte = bytes.begin() + offset;
-
-        std::vector<std::byte> data = {startByte, startByte + sizeof(uint32_t)};
-
-        offset += sizeof(uint32_t);
-        return *reinterpret_cast<uint32_t*>(data.data());
-    }
-
-    float getFloat(const std::vector<std::byte>& bytes, uint32_t& offset) {
-        auto startByte = bytes.begin() + offset;
-
-        std::vector<std::byte> data = {startByte, startByte + sizeof(float)};
-
-        offset += sizeof(uint32_t);
-        return *reinterpret_cast<float*>(data.data());
-    }
-    /// @endcond
 
     std::pair<VectrixResult, std::shared_ptr<Scene>> Scene::loadScene(SceneCreationData &creationData) {
         if (creationData.result!=SUCCESS) {
@@ -49,56 +74,38 @@ namespace Vectrix {
         for (const auto& entityData : creationData.entities) {
             auto entity = scene->createEntity(entityData.name);
             for (const auto& componentData : entityData.components) {
+                ComponentReader reader(componentData.data);
+
                 if (entt::type_hash<TransformComponent>::value()==componentData.type_id) {
+                    if (componentData.data.size() != sizeof(TransformComponent))
+                        return malformed(creationData.name, entityData.name);
                     auto& t = entity->getComponent<TransformComponent>();
                     std::memcpy(&t, componentData.data.data(), sizeof(TransformComponent));
                 } else if (entt::type_hash<MeshRendererComponent>::value() == componentData.type_id) {
+                    std::string meshId, textureId, shaderId;
+                    bool enable = false;
+                    if (!reader.readString(meshId) || !reader.readString(textureId) || !reader.readString(shaderId) || !reader.readBool(enable))
+                        return malformed(creationData.name, entityData.name);
+
                     auto& m = entity->addComponent<MeshRendererComponent>();
-                    uint32_t offset = 0;
-                    // Mesh
-                    auto resultMesh = AssetsManager::load<Mesh>(getString(componentData.data,offset));
-                    if (resultMesh.first!=SUCCESS) {
-                        VC_CORE_ERROR_NO_EXIT("Can't load mesh from scene {}: {}",creationData.name,toString(resultMesh.first));
-                        return {resultMesh.first,nullptr};
-                    }
-                    m.mesh = resultMesh.second;
-                    // Texture
-                    auto resultTexture = AssetsManager::load<Texture>(getString(componentData.data,offset));
-                    if (resultTexture.first!=SUCCESS) {
-                        VC_CORE_ERROR_NO_EXIT("Can't load texture from scene {}: {}",creationData.name,toString(resultTexture.first));
-                        return {resultTexture.first,nullptr};
-                    }
-                    m.texture = resultTexture.second;
-                    // Shader
-                    auto resultShader = AssetsManager::load<Shader>(getString(componentData.data,offset));
-                    if (resultShader.first!=SUCCESS) {
-                        VC_CORE_ERROR_NO_EXIT("Can't load shader from scene {}: {}",creationData.name,toString(resultShader.first));
-                        return {resultShader.first,nullptr};
-                    }
-                    m.shader = resultShader.second;
-                    auto startEnableData = componentData.data.begin() + offset;
-                    std::vector<std::byte> enableData = {startEnableData,startEnableData + sizeof(bool)};
-                    bool* enable = reinterpret_cast<bool*>(enableData.data());
-                    if (*enable) {
-                        if (!m.tryEnabling()) {
-                            VC_CORE_ERROR_NO_EXIT("Can't enable the entity {}, from scene {}",entityData.name,creationData.name);
-                            return {UNKNOWN_ERROR,nullptr};
-                        }
+                    if (const VectrixResult r = loadComponentAsset(meshId, m.mesh, creationData.name); r != SUCCESS) return {r, nullptr};
+                    if (const VectrixResult r = loadComponentAsset(textureId, m.texture, creationData.name); r != SUCCESS) return {r, nullptr};
+                    if (const VectrixResult r = loadComponentAsset(shaderId, m.shader, creationData.name); r != SUCCESS) return {r, nullptr};
+
+                    if (enable && !m.tryEnabling()) {
+                        VC_CORE_ERROR_NO_EXIT("Can't enable the entity {}, from scene {}",entityData.name,creationData.name);
+                        return {UNKNOWN_ERROR,nullptr};
                     }
                 } else if (entt::type_hash<CameraComponent>::value()==componentData.type_id) {
+                    float fov = 0.0f, camNear = 0.0f, camFar = 0.0f, aspect = -1.0f;
+                    if (!reader.readFloat(fov) || !reader.readFloat(camNear) || !reader.readFloat(camFar) || !reader.readFloat(aspect))
+                        return malformed(creationData.name, entityData.name);
+
                     auto& c = entity->addComponent<CameraComponent>();
-                    uint32_t offset = 0;
-                    float fov = getFloat(componentData.data,offset);
                     c.camera.setFOV(fov);
-
-                    float camNear = getFloat(componentData.data,offset);
                     c.camera.setCamNear(camNear);
-
-                    float camFar = getFloat(componentData.data,offset);
                     c.camera.setCamFar(camFar);
-
-                    float aspect = getFloat(componentData.data,offset);
-                    if (aspect!=-1) {
+                    if (aspect > 0.0f) {
                         c.camera.setCustomAspect(aspect);
                     }
                 }
@@ -112,7 +119,11 @@ namespace Vectrix {
         m_entities.reserve(256);
     }
 
-    Scene::~Scene() = default;
+    Scene::~Scene() {
+        // Camera's current camera is static and would otherwise keep an Entity pointing at this destroyed scene
+        if (const std::shared_ptr<Entity> current = Camera::getCurrentCamera(); current && current->m_scene == this)
+            Camera::clearCurrent();
+    }
 
     void Scene::OnUpdate(DeltaTime dt) {
 

@@ -53,6 +53,12 @@ namespace Vectrix {
 	std::pair<VectrixResult, std::string> ProjectSerializer::createProject(const std::filesystem::path& directory, const std::string& name) {
 		VC_CORE_INFO("Creating project \"{}\" in {}", name.c_str(), directory.string().c_str());
 
+		// The name becomes the .vcproj and starting scene file names: it must not be empty or leave the project folder
+		if (name.empty() || name == "." || name == ".." || name.find_first_of("/\\") != std::string::npos) {
+			VC_CORE_ERROR_NO_EXIT("Invalid project name \"{}\"", name.c_str());
+			return {WRONG_FILE, "The project name can't be empty or contain '/' or '\\'"};
+		}
+
 		std::error_code ec;
 		if (std::filesystem::exists(directory, ec) && !std::filesystem::is_empty(directory, ec)) {
 			VC_CORE_WARN("Can't create project \"{}\": a project already exists at {}", name.c_str(), directory.string().c_str());
@@ -74,7 +80,7 @@ namespace Vectrix {
 
 		std::ofstream file(directory / (name + ".vcproj"), std::ios::binary);
 		if (!file) {
-		VC_CORE_ERROR_NO_EXIT("Can't create project file in: {}", directory.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't create project file in: {}", directory.string().c_str());
 			return {UNKNOWN_ERROR, "Can't create the .vcProj file"};
 		}
 
@@ -85,6 +91,10 @@ namespace Vectrix {
 		writeString(file, name);
 		writeString(file, startScene.generic_string());
 		file.close();
+		if (!file) {
+			VC_CORE_ERROR_NO_EXIT("Failed while writing the project file in: {}", directory.string().c_str());
+			return {UNKNOWN_ERROR, "Can't write the .vcProj file"};
+		}
 
 		if (Json::save((directory / settingsFileName).string(), JsonObject{}) != SUCCESS) {
 			return {UNKNOWN_ERROR, "Can't create the project settings file"};

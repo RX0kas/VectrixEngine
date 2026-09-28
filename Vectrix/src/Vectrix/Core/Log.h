@@ -61,7 +61,9 @@ namespace Vectrix {
  * @warning This breaks into the debugger and aborts
  * @ingroup core
  */
-#define VC_CORE_CRITICAL(...)   ::Vectrix::Log::getCoreLogger()->critical(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error from library
+// The aborting macros are wrapped in do/while so they stay a single statement: an unbraced
+// `if (x) VC_CORE_ERROR(...);` must only abort when x holds, not unconditionally.
+#define VC_CORE_CRITICAL(...)   do { ::Vectrix::Log::getCoreLogger()->critical(__VA_ARGS__); VC_DEBUGBREAK(); abort(); } while (0) // An error from library
 
 /**
  * @brief Report an engine error caused by the calling code, then stop the program
@@ -70,14 +72,14 @@ namespace Vectrix {
  * @see VC_CORE_ERROR_NO_EXIT
  * @ingroup core
  */
-#define VC_CORE_ERROR(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__);VC_DEBUGBREAK();abort() // An error caused by the user/dev
+#define VC_CORE_ERROR(...)   do { ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__); VC_DEBUGBREAK(); abort(); } while (0) // An error caused by the user/dev
 
 /**
  * @brief Report an engine error the application can recover from
  * @param ... The format string and its arguments, in the fmt style
  * @ingroup core
  */
-#define VC_CORE_ERROR_NO_EXIT(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__); // An error caused by the user/dev by the app can continue running
+#define VC_CORE_ERROR_NO_EXIT(...)   ::Vectrix::Log::getCoreLogger()->error(__VA_ARGS__) // An error caused by the user/dev by the app can continue running
 
 /**
  * @brief Report something suspicious happening inside the engine
@@ -106,7 +108,7 @@ namespace Vectrix {
  * @warning This breaks into the debugger and aborts
  * @ingroup core
  */
-#define VC_CRITICAL(...)   ::Vectrix::Log::getClientLogger()->critical(__VA_ARGS__);VC_DEBUGBREAK();abort()
+#define VC_CRITICAL(...)   do { ::Vectrix::Log::getClientLogger()->critical(__VA_ARGS__); VC_DEBUGBREAK(); abort(); } while (0)
 
 /**
  * @brief Report an application error it can recover from
@@ -122,7 +124,7 @@ namespace Vectrix {
  * @see VC_ERROR_NO_EXIT
  * @ingroup core
  */
-#define VC_ERROR(...)   ::Vectrix::Log::getClientLogger()->error(__VA_ARGS__);VC_DEBUGBREAK();abort()
+#define VC_ERROR(...)   do { ::Vectrix::Log::getClientLogger()->error(__VA_ARGS__); VC_DEBUGBREAK(); abort(); } while (0)
 
 /**
  * @brief Report something suspicious happening in the application

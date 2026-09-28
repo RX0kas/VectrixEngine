@@ -27,13 +27,8 @@ namespace Vectrix {
     };
 
     struct BatchInfo {
-        VkPipeline pipeline = VK_NULL_HANDLE;
-        VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-        std::vector<VkDescriptorSet> descriptorSet{};
-
         std::vector<std::unique_ptr<VulkanBuffer>> indirectBuffers{}; // The buffer that will send the commands, not visible in the shader
 
-        std::vector<VkDrawIndexedIndirectCommand> commands{};
         DynamicSSBO objectDataSSBO; // The buffer that will send the objectDatas
 
         std::uint32_t elementCount = 0;
@@ -50,20 +45,15 @@ namespace Vectrix {
 
         ~VulkanRenderer();
 
-        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return m_swapChain->getRenderPass(); }
         [[nodiscard]] size_t getSwapChainImageCount() const { return m_swapChain->imageCount();}
         [[nodiscard]] VkFormat getImageFormat() const { return m_swapChain->getSwapChainImageFormat(); }
         [[nodiscard]] VkFormat findDepthFormat() const { return m_swapChain->findDepthFormat(); }
-        [[nodiscard]] bool isFrameInProgress() const { return m_isFrameStarted; }
         [[nodiscard]] VkImageView getSwapChainImageView(std::uint32_t i) const {return m_swapChain->getImageView(i);}
         [[nodiscard]] VkImage getSwapChainImage(std::uint32_t i) const {return m_swapChain->getSwapChainImage(i);}
 
-        [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() const { return m_swapChain->getFrameBuffer(m_swapChain->getFrameIndex()); }
-
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const {
             VC_CORE_ASSERT(m_isFrameStarted, "Frame not started: can't get command buffer");
-            VC_CORE_ASSERT(m_currentImageIndex <= m_commandBuffers.size(), "currentImageIndex out of bounds");
-            return m_commandBuffers[m_currentImageIndex];
+            return m_commandBuffers[m_swapChain->getFrameIndex()];
         }
 
         [[nodiscard]] uint32_t getCurrentImageIndex() const {return m_currentImageIndex;}
@@ -80,9 +70,7 @@ namespace Vectrix {
         [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
         void endDynamicRendering(VkCommandBuffer commandBuffer) const;
 
-        [[nodiscard]] std::vector<VkFence> getInFlightFences() const {
-            return m_swapChain->getInFlightFences();
-        }
+        [[nodiscard]] const VkClearValue& getClearValue() const { return m_clearValue; }
 
         void makeClearColor(const glm::vec4& color) {
             m_clearValue.color.float32[0] = color.r;
@@ -95,7 +83,6 @@ namespace Vectrix {
         void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
         void resizeMask(glm::vec2 size) { m_maskFramebuffer->resize(size); }
     private:
-        friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
         friend class Renderer;
         friend class VulkanContext;
@@ -110,7 +97,6 @@ namespace Vectrix {
         void resetCache() {
             for (auto& [name, batch] : m_batchCache) {
                 batch.elementCount = 0;
-                batch.commands.clear();
             }
         }
 
@@ -129,6 +115,13 @@ namespace Vectrix {
         void flushOnly(const std::shared_ptr<VulkanShader> &shader, const VulkanFramebuffer& framebuffer);
         void renderOutlineFromMask();
 
+        /// Viewport and scissor covering the whole extent
+        static void setViewportAndScissor(VkCommandBuffer cmd, VkExtent2D extent);
+        /// Binds the MeshRegistry's global vertex/index buffers every batch draws from
+        static void bindMeshBuffers(VkCommandBuffer cmd);
+        /// Records the indirect draw of every element submitted to the batch this frame
+        void drawBatch(VkCommandBuffer cmd, const VulkanShader& shader, BatchInfo& batch, uint32_t frameIndex);
+
         Window& m_window;
         Device& m_device;
         std::shared_ptr<SwapChain> m_swapChain;
@@ -136,6 +129,7 @@ namespace Vectrix {
 
         uint32_t m_currentImageIndex{ 0 };
         bool m_isFrameStarted{ false };
+        uint32_t m_drawCalls = 0; ///< Draw commands recorded since the current frame began, shown by the debug widget
 
         VkClearValue m_clearValue = { 0, 0, 0, 1.0f };
 

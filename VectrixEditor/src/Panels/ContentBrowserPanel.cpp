@@ -5,6 +5,7 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"   // for ImGui::GetWindowDrawList()
+#include "Utils/Error.h"
 #include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Settings/SettingsManager.h"
@@ -170,13 +171,15 @@ namespace Vectrix {
         // engine's own assets folder rather than m_assetRoot.
         auto d = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/directory.png").string());
         if (d.first != SUCCESS) {
-            VC_ERROR_NO_EXIT("Can't load directory icon: {}", toString(d.first));
+            showErrorMessage("ERROR_LOADING_DIR_ICON");
+            m_lastDirIconErrorMessage = std::format("Can't load directory icon: {}", toString(d.first));
         }
         m_directoryIcon = d.second;
 
         auto f = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/file.png").string());
         if (f.first != SUCCESS) {
-            VC_ERROR_NO_EXIT("Can't load file icon: {}", toString(f.first));
+            showErrorMessage("ERROR_LOADING_FILE_ICON");
+            m_lastFileIconErrorMessage = std::format("Can't load file icon: {}", toString(f.first));
         }
         m_fileIcon = f.second;
 
@@ -223,6 +226,12 @@ namespace Vectrix {
 
         flushPendingMove();
         flushPendingPaste();
+
+        renderErrorMessage("ERROR_LOADING_DIR_ICON", m_lastDirIconErrorMessage);
+        renderErrorMessage("ERROR_LOADING_FILE_ICON", m_lastFileIconErrorMessage);
+        renderErrorMessage("ERROR_FLUSH_PENDING_PASTE", m_lastFlushPendingPasteErrorMessage);
+        renderErrorMessage("FAIL_DELETE", m_lastDeleteErrorMessage);
+        renderErrorMessage("FLUSH_PENDING_MOVE",m_lastFlushPendingMoveErrorMessage);
     }
 
     void ContentBrowserPanel::drawToolbar() {
@@ -452,8 +461,8 @@ namespace Vectrix {
         }
 
         if (ec) {
-            VC_ERROR_NO_EXIT("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy",
-                     source.string(), destination.string(), ec.message());
+            showErrorMessage("ERROR_FLUSH_PENDING_PASTE");
+            m_lastFlushPendingPasteErrorMessage = std::format("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy", source.string(), destination.string(), ec.message());
             return;
         }
 
@@ -485,7 +494,8 @@ namespace Vectrix {
             std::filesystem::remove(path, ec);
 
         if (ec) {
-            VC_ERROR_NO_EXIT("Failed to delete '{}': {}", path.string(), ec.message());
+            showErrorMessage("FAIL_DELETE");
+            m_lastDeleteErrorMessage = std::format("Failed to delete '{}': {}", path.string(), ec.message());
             return;
         }
 
@@ -568,7 +578,8 @@ namespace Vectrix {
         std::error_code ec;
         std::filesystem::rename(source, destination, ec);
         if (ec) {
-            VC_ERROR_NO_EXIT("Failed to move '{}' to '{}': {}", source.string(), destination.string(), ec.message());
+            showErrorMessage("FLUSH_PENDING_MOVE");
+            m_lastFlushPendingMoveErrorMessage = std::format("Failed to move '{}' to '{}': {}", source.string(), destination.string(), ec.message());
             return;
         }
 

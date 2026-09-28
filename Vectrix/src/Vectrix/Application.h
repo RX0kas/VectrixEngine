@@ -135,12 +135,6 @@ namespace Vectrix {
 
 		template<std::derived_from<Layer> T>
 		void PushOverlay() { PushOverlay(std::make_shared<T>()); }
-
-		template<std::derived_from<Layer> T>
-		void PopLayer() { m_layerStack.PopLayer(std::make_shared<T>()); }
-
-		template<std::derived_from<Layer> T>
-		void PopOverlay() { m_layerStack.PopOverlay(std::make_shared<T>()); }
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
@@ -156,7 +150,6 @@ namespace Vectrix {
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
-		std::unique_ptr<ApplicationInfo> m_appInfo;
 		std::shared_ptr<SettingsManager> m_settingsManager;
 		bool m_running = true;
 

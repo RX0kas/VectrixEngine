@@ -8,6 +8,7 @@
 
 #include "imgui.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "Utils/Error.h"
 
 #include "Vectrix/Application.h"
 #include "Vectrix/Settings/Outline.h"
@@ -319,7 +320,7 @@ namespace Vectrix {
             const std::vector<const char*> base = {"window"};
 
             bool changed = false;
-            changed |= checkbox(r, w, keyPath(base, "resizable"), "Resizable", false);
+            changed |= checkbox(r, w, keyPath(base, "resizable"), "Resizable", true);
             changed |= dragInt(r, w, keyPath(base, "width"), "Width", 1280, 320, 7680);
             changed |= dragInt(r, w, keyPath(base, "height"), "Height", 720, 240, 4320);
             changed |= inputText(r, w, keyPath(base, "title"), "Title", "VectrixEditor");
@@ -327,7 +328,7 @@ namespace Vectrix {
 
             ImGui::Spacing();
             if (ImGui::SmallButton("Reset to defaults##window")) {
-                writeAt(w, keyPath(base, "resizable")) = false;
+                writeAt(w, keyPath(base, "resizable")) = true;
                 writeAt(w, keyPath(base, "width")) = 1280.0;
                 writeAt(w, keyPath(base, "height")) = 720.0;
                 writeAt(w, keyPath(base, "title")) = "VectrixEditor";
@@ -470,18 +471,32 @@ namespace Vectrix {
         const bool hasProject = SettingsManager::hasProject();
         if (!hasProject)
             m_saveScope = 1; // no project -> Global only
+        // Window, logging and the Vulkan pages are read once at start-up, before any project is opened:
+        // a Project value for them could never apply, so they always edit the Global tier
+        const bool startupOnly = m_selectedCategory >= 7;
+        const bool editGlobal = m_saveScope == 1 || startupOnly;
         static const char* const kScopeItems[] = { "Project", "Global" };
+        int shownScope = editGlobal ? 1 : 0;
         ImGui::SetNextItemWidth(160.0f);
-        ImGui::BeginDisabled(!hasProject);
-        ImGui::Combo("Edit tier", &m_saveScope, kScopeItems, IM_ARRAYSIZE(kScopeItems));
+        ImGui::BeginDisabled(!hasProject || startupOnly);
+        if (ImGui::Combo("Edit tier", &shownScope, kScopeItems, IM_ARRAYSIZE(kScopeItems)))
+            m_saveScope = shownScope;
         ImGui::EndDisabled();
-        ImGui::TextDisabled("%s", hasProject
-            ? "Fields left unset here fall back to Global, then the built-in default."
-            : "No project open - editing the Global settings.");
+        if (startupOnly)
+            ImGui::TextDisabled("Read at start-up, before any project is open: only the Global tier applies.");
+        else if (!hasProject)
+            ImGui::TextDisabled("No project open - editing the Global settings.");
+        else if (editGlobal)
+            ImGui::TextDisabled("Values the project sets override these while it is open.");
+        else
+            ImGui::TextDisabled("Fields left unset here fall back to Global, then the built-in default.");
 
-        const SettingsManager::Scope scope =
-            m_saveScope == 0 ? SettingsManager::Scope::Project : SettingsManager::Scope::Global;
+        const SettingsManager::Scope scope = editGlobal ? SettingsManager::Scope::Global : SettingsManager::Scope::Project;
         JsonObject& target = SettingsManager::tier(scope);
+        // The fields show the tier being edited. Editing Global used to display the merged value, where the
+        // project overrides Global, so a Global edit looked like it snapped back to the project's value.
+        // Project shows the merged value on purpose: unset fields display what they inherit from Global.
+        const JsonObject& shown = editGlobal ? target : effective;
 
         ImGui::SetNextItemWidth(-1.0f);
         ImGui::InputTextWithHint("##settingsSearch", "Search settings...", m_search, sizeof(m_search));
@@ -532,20 +547,20 @@ namespace Vectrix {
         ImGui::BeginChild("##settingsContent", ImVec2(0.0f, 0.0f), true);
         bool dirty = false;
         switch (m_selectedCategory) {
-            case 0: dirty = drawGeneral(effective,target); break;
+            case 0: dirty = drawGeneral(shown,target); break;
             case 1: dirty = drawOutline(target); break;
-            case 2: dirty = drawCamera(effective, target); break;
-            case 3: dirty = drawGizmo(effective, target); break;
-            case 4: dirty = drawContentBrowser(effective, target); break;
-            case 5: dirty = drawEditorUi(effective, target); break;
-            case 6: dirty = drawRendering(effective, target); break;
-            case 7: dirty = drawWindow(effective, target); break;
-            case 8: dirty = drawLogging(effective, target); break;
-            case 9: dirty = drawSwapchain(effective, target); break;
-            case 10: dirty = drawDevice(effective, target); break;
-            case 11: dirty = drawTextures(effective, target); break;
-            case 12: dirty = drawShaders(effective, target); break;
-            case 13: dirty = drawPipeline(effective, target); break;
+            case 2: dirty = drawCamera(shown, target); break;
+            case 3: dirty = drawGizmo(shown, target); break;
+            case 4: dirty = drawContentBrowser(shown, target); break;
+            case 5: dirty = drawEditorUi(shown, target); break;
+            case 6: dirty = drawRendering(shown, target); break;
+            case 7: dirty = drawWindow(shown, target); break;
+            case 8: dirty = drawLogging(shown, target); break;
+            case 9: dirty = drawSwapchain(shown, target); break;
+            case 10: dirty = drawDevice(shown, target); break;
+            case 11: dirty = drawTextures(shown, target); break;
+            case 12: dirty = drawShaders(shown, target); break;
+            case 13: dirty = drawPipeline(shown, target); break;
             default: break;
         }
         ImGui::EndChild();
@@ -557,10 +572,14 @@ namespace Vectrix {
                 writeAt(target, categoryKey) = static_cast<double>(m_selectedCategory);
 
             SettingsManager::markChanged();
-            if (const auto [result, message] = Application::getSettingsManager().save(scope); result != SUCCESS)
-                VC_ERROR_NO_EXIT("Could not save settings: {}", message);
+            if (const auto [result, message] = Application::getSettingsManager().save(scope); result != SUCCESS) {
+                showErrorMessage("ERROR_SETTINGS_SAVING");
+                m_lastSaveSettingsError = std::format("Could not save settings: {}", message);
+            }
         }
 
         ImGui::End();
+
+        renderErrorMessage("ERROR_SETTINGS_SAVING", m_lastSaveSettingsError);
     }
 } // Vectrix

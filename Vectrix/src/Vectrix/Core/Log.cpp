@@ -13,7 +13,8 @@ namespace Vectrix {
 
 		s_CoreLogger = spdlog::stdout_color_mt("Vectrix");
 		s_CoreLogger->set_level(spdlog::level::trace);
-		s_ClientLogger = spdlog::stdout_color_mt(Application::instance().getAppInfo().getAppName());
+		// getAppInfo is static: Log::init runs before the Application exists, so instance() would dereference null
+		s_ClientLogger = spdlog::stdout_color_mt(Application::getAppInfo().getAppName());
 		s_ClientLogger->set_level(spdlog::level::trace);
 		s_CoreLogger->info("Logger has been initialized");
 #endif

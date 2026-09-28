@@ -16,7 +16,7 @@
  * @param name The uniform name to check
  * @ingroup shaders
  */
-#define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") {VC_ERROR("The uniform name \"{}\" is reserved",name);}
+#define VC_VERIFY_UNIFORM_NAME(name) do { if ((name)=="vc_cameraTransform") { VC_CORE_ERROR("The uniform name \"{}\" is reserved",(name)); } } while (0)
 
 
 /**

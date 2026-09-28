@@ -62,6 +62,12 @@ namespace Vectrix {
 
         float m_thumbnailSize = 84.0f;
         float m_padding = 12.0f;
+
+        std::string m_lastDirIconErrorMessage;
+        std::string m_lastFileIconErrorMessage;
+        std::string m_lastFlushPendingPasteErrorMessage;
+        std::string m_lastDeleteErrorMessage;
+        std::string m_lastFlushPendingMoveErrorMessage;
     };
 
 } // namespace Vectrix

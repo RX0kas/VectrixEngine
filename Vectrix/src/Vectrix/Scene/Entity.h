@@ -32,7 +32,6 @@ namespace Vectrix {
         /**
          * @brief Build a handle pointing at nothing
          * @see nullEntity
-         * @see isValid
          */
         Entity() : m_scene(nullptr), m_entityHandle(entt::null){}
 
@@ -88,13 +87,6 @@ namespace Vectrix {
         T& getComponent() {
             VC_CORE_ASSERT(hasComponent<T>(),"Entity has not component");
             return m_scene->m_registry.get<T>(m_entityHandle);
-        }
-
-        /**
-         * @brief Checks if the entity is valid
-         */
-        [[nodiscard]] bool isValid() const {
-            return this;
         }
 
         /**

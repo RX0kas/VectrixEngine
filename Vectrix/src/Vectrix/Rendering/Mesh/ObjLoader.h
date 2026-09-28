@@ -60,13 +60,14 @@ namespace Vectrix {
         const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,filepath.c_str());
 
 
-        if (!err.empty()) {
-            VC_ERROR("OBJ error: {}",err);
+        // This tinyobjloader version reports warnings (e.g. a missing .mtl file) through err too,
+        // so only the return value tells whether the load failed
+        if (!ret) {
+            VC_CORE_ERROR_NO_EXIT("Failed to load OBJ {}: {}",filepath,err);
             return false;
         }
-
-        if (!ret) {
-            return false;
+        if (!err.empty()) {
+            VC_CORE_WARN("OBJ {}: {}",filepath,err);
         }
 
         std::unordered_map<Vertex, uint32_t> uniqueVertices{};

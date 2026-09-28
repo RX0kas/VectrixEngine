@@ -26,6 +26,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Initializing Renderer");
 		recreateSwapChain();
+		createCommandBuffers();
 	}
 
 	VulkanRenderer::~VulkanRenderer() {
@@ -59,9 +60,6 @@ namespace Vectrix {
 			oldSwapChain->cleanup();
 			oldSwapChain.reset();
 		}
-
-		freeCommandBuffers();
-		createCommandBuffers();
 	}
 
 	void VulkanRenderer::cleanupSwapChain() {
@@ -71,7 +69,11 @@ namespace Vectrix {
 
 	void VulkanRenderer::createCommandBuffers() {
 		VC_PROFILER_FUNCTION();
-		m_commandBuffers.resize(m_swapChain->imageCount());
+		// One per frame in flight, not per swap chain image: the frame's fence (waited on in acquireNextImage) then
+		// covers its command buffer. Per image, a buffer could still be executing from the other frame slot and
+		// the only fence to wait on would be one the previous frame had already reused, stalling the CPU until
+		// the GPU caught up every other frame
+		m_commandBuffers.resize(SwapChain::MAX_FRAMES_IN_FLIGHT);
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -106,6 +108,7 @@ namespace Vectrix {
 		}
 
 		m_isFrameStarted = true;
+		m_drawCalls = 0;
 
 		VkCommandBuffer commandBuffer = getCurrentCommandBuffer();
 		vkResetCommandBuffer(commandBuffer, 0);
@@ -128,22 +131,28 @@ namespace Vectrix {
 
 		VkResult result = m_swapChain->submitCommandBuffers(&commandBuffer, &m_currentImageIndex);
 
-		bool needRecreate =
-			result == VK_ERROR_OUT_OF_DATE_KHR ||
-			result == VK_SUBOPTIMAL_KHR ||
-			m_window.wasWindowResized();
+		m_isFrameStarted = false;
 
-		if (needRecreate) {
+		const bool outOfDate = result == VK_ERROR_OUT_OF_DATE_KHR;
+		const bool suboptimal = result == VK_SUBOPTIMAL_KHR;
+		const bool resized = m_window.wasWindowResized();
+		if (resized)
 			m_window.resetWindowResizedFlag();
-			m_isFrameStarted = false;
-			return;
-		}
 
-		if (result != VK_SUCCESS) {
+		// Recreated here rather than waiting for acquireNextImage to report OUT_OF_DATE: Wayland never does
+		// after a resize, so the swap chain would keep its old size. SUBOPTIMAL and the resize flag only lead
+		// to a rebuild when the size really changed: a driver can keep reporting SUBOPTIMAL for other reasons,
+		// and rebuilding on every frame costs a device wait plus a new swap chain each time
+		const VkExtent2D extent = m_swapChain->getSwapChainExtent();
+		const bool sizeChanged = extent.width != m_window.getWidth() || extent.height != m_window.getHeight();
+		if (outOfDate || ((suboptimal || resized) && sizeChanged)) {
+			VC_CORE_INFO("Recreating the swap chain ({}): {}x{} -> {}x{}", outOfDate ? "out of date" : suboptimal ? "suboptimal" : "window resized",
+				extent.width, extent.height, m_window.getWidth(), m_window.getHeight());
+			recreateSwapChain();
+		} else if (result != VK_SUCCESS && !suboptimal) {
 			VC_CORE_ERROR("Failed to present swap chain image");
 		}
 
-		m_isFrameStarted = false;
 		m_swapChain->advanceFrame();
 	}
 
@@ -165,13 +174,16 @@ namespace Vectrix {
 		depthBarrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 		depthBarrier.image = m_swapChain->getDepthImage(m_currentImageIndex);
 		depthBarrier.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 };
-		depthBarrier.srcAccessMask = 0;
-		depthBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		depthBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+		depthBarrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
+		// Color output: chains the color transition after the acquire semaphore (waited at that stage), so the
+		// presentation engine is done reading the image. Late fragment tests: the frame that used this depth image
+		// before may still be writing it, nothing on the CPU side waits for that frame anymore
 		std::array<VkImageMemoryBarrier, 2> barriers = { colorBarrier, depthBarrier };
 		vkCmdPipelineBarrier(commandBuffer,
-			VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
 			0, 0, nullptr, 0, nullptr,
 			static_cast<uint32_t>(barriers.size()), barriers.data());
 
@@ -227,7 +239,7 @@ namespace Vectrix {
 			0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 
-	std::vector<std::unique_ptr<VulkanBuffer>> createIndirectBuffers() {
+	static std::vector<std::unique_ptr<VulkanBuffer>> createIndirectBuffers() {
 		uint32_t frameCount = SwapChain::MAX_FRAMES_IN_FLIGHT;
 		std::vector<std::unique_ptr<VulkanBuffer>> buffers;
 		buffers.reserve(frameCount);
@@ -248,20 +260,26 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		Cache<std::string, BatchInfo>& cache = VulkanContext::instance().getRenderer().m_batchCache;
 		auto vkShader = std::dynamic_pointer_cast<VulkanShader>(shader);
-		if (!cache.exist(vkShader->m_name)) {
-			cache.emplace(
+		auto it = cache.find(vkShader->m_name);
+		if (it == cache.end()) {
+			it = cache.emplace(
 					vkShader->m_name,
 					BatchInfo{
-						.pipeline = vkShader->m_pipeline->getPipeline(),
-						.pipelineLayout = vkShader->m_pipelineLayout,
-						.descriptorSet = vkShader->m_ssbo->descriptorSet(),
 						.indirectBuffers = createIndirectBuffers(),
-						.commands = {},
 						.objectDataSSBO = DynamicSSBO(getObjectDataLayout(), MAX_OBJECTS_BATCHING),
 						.elementCount = 0
-					});
+					}).first;
 		}
-		BatchInfo& b = cache.find(vkShader->m_name)->second;
+		BatchInfo& b = it->second;
+		if (b.elementCount >= MAX_OBJECTS_BATCHING) {
+			// The indirect buffer and object SSBO only hold MAX_OBJECTS_BATCHING entries: writing past them corrupts GPU memory
+			static bool s_overflowReported = false;
+			if (!s_overflowReported) {
+				s_overflowReported = true;
+				VC_CORE_ERROR_NO_EXIT("Too many objects submitted with shader '{}' in one frame (max {}), the rest is not drawn", vkShader->m_name, MAX_OBJECTS_BATCHING);
+			}
+			return;
+		}
 		uint32_t index = b.elementCount++;
 
 		ObjectData currentObjectData = {
@@ -280,16 +298,54 @@ namespace Vectrix {
 			.vertexOffset  = static_cast<int32_t>(handle.firstVertex),
 			.firstInstance = index
 		};
-		b.commands.push_back(command);
 		b.indirectBuffers[frameIndex]->writeToBuffer(&command,sizeof(VkDrawIndexedIndirectCommand),index * sizeof(VkDrawIndexedIndirectCommand));
 	}
 
-	void VulkanRenderer::flush() {
+	void VulkanRenderer::setViewportAndScissor(VkCommandBuffer cmd, VkExtent2D extent) {
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(extent.width);
+		viewport.height = static_cast<float>(extent.height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(cmd, 0, 1, &viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = {0, 0};
+		scissor.extent = extent;
+		vkCmdSetScissor(cmd, 0, 1, &scissor);
+	}
+
+	void VulkanRenderer::bindMeshBuffers(VkCommandBuffer cmd) {
 		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
-		if (!meshRegistry.isUploaded()) {return;}
 		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
 		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
-		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+
+		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
+		VkDeviceSize offset = 0;
+		vkCmdBindVertexBuffers(cmd, 0, 1, &vertexBuf, &offset);
+		vkCmdBindIndexBuffer(cmd, meshRegistry.getIndexBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+	}
+
+	void VulkanRenderer::drawBatch(VkCommandBuffer cmd, const VulkanShader& shader, BatchInfo& batch, uint32_t frameIndex) {
+		VC_CORE_ASSERT(shader.m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shader.m_name);
+
+		VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
+		VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shader.m_name);
+
+		if (shader.isAffectedByCamera())
+			shader.sendCameraUniform(Renderer::getSceneData().transformation_matrix);
+		shader.bind();
+		vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader.m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
+		batch.objectDataSSBO.flush(frameIndex, batch.elementCount);
+		vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
+		m_drawCalls++;
+	}
+
+	void VulkanRenderer::flush() {
+		if (!VulkanContext::instance().getMeshRegistry().isUploaded()) {return;}
+		VkCommandBuffer cmd = getCurrentCommandBuffer();
 
 		VkExtent2D extent = m_swapChain->getSwapChainExtent();
 
@@ -299,97 +355,35 @@ namespace Vectrix {
 			extent = currentFB->getExtent();
 		}
 
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(extent.width);
-		viewport.height  = static_cast<float>(extent.height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(cmd, 0, 1, &viewport);
-
-		VkRect2D scissor{};
-		scissor.offset = {0, 0};
-		scissor.extent = extent;
-		vkCmdSetScissor(cmd, 0, 1, &scissor);
-		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
-		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
-
-		VkDeviceSize offset = 0;
-		vkCmdBindVertexBuffers(cmd, 0, 1, &vertexBuf, &offset);
-		vkCmdBindIndexBuffer(cmd, meshRegistry.getIndexBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+		setViewportAndScissor(cmd, extent);
+		bindMeshBuffers(cmd);
+		const uint32_t frameIndex = getFrameIndex();
 
 		for (auto& [shaderName, batch] : m_batchCache) {
 			if (batch.elementCount == 0) continue;
 
-
 			std::shared_ptr<VulkanShader> shader = std::static_pointer_cast<VulkanShader>(AssetsManager::instance().getShaderManager().get(shaderName));
-
 			VC_CORE_ASSERT(shader != nullptr, "Shader '{}' not found in ShaderManager", shaderName);
-			VC_CORE_ASSERT(shader->m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shaderName);
+			if (!shader) continue;
 
-
-			VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
-			VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shaderName);
-
-			if (shader->isAffectedByCamera())
-				shader->sendCameraUniform(Renderer::getSceneData().transformation_matrix);
-			shader->bind();
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
-			batch.objectDataSSBO.flush(frameIndex);
-			batch.objectDataSSBO.reset(frameIndex);
-			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
+			drawBatch(cmd, *shader, batch, frameIndex);
 		}
 	}
 
 	void VulkanRenderer::flushOnly(const std::shared_ptr<VulkanShader> &shader,const VulkanFramebuffer& framebuffer) {
-		VC_CORE_ASSERT(shader != nullptr, "Shader '{}' not found in ShaderManager", shader->getID());
-		VC_CORE_ASSERT(shader->m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shader->getID());
+		VC_CORE_ASSERT(shader != nullptr, "flushOnly called without a shader");
+		if (!shader) return;
 
-		MeshRegistry& meshRegistry = VulkanContext::instance().getMeshRegistry();
-		if (!meshRegistry.isUploaded()) {return;}
-		VC_CORE_ASSERT(meshRegistry.getVertexBuffer().getBuffer() != VK_NULL_HANDLE, "Global vertex buffer is null!");
-		VC_CORE_ASSERT(meshRegistry.getIndexBuffer().getBuffer() != VK_NULL_HANDLE, "Global index buffer is null!");
-		VkCommandBuffer cmd = VulkanContext::instance().getRenderer().getCurrentCommandBuffer();
+		if (!VulkanContext::instance().getMeshRegistry().isUploaded()) {return;}
+		VkCommandBuffer cmd = getCurrentCommandBuffer();
 
-		VkExtent2D extent = framebuffer.getExtent();
+		setViewportAndScissor(cmd, framebuffer.getExtent());
+		bindMeshBuffers(cmd);
 
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(extent.width);
-		viewport.height  = static_cast<float>(extent.height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(cmd, 0, 1, &viewport);
+		const auto it = m_batchCache.find(shader->m_name);
+		if (it == m_batchCache.end() || it->second.elementCount == 0) return;
 
-		VkRect2D scissor{};
-		scissor.offset = {0, 0};
-		scissor.extent = extent;
-		vkCmdSetScissor(cmd, 0, 1, &scissor);
-		uint32_t frameIndex = VulkanContext::instance().getRenderer().getFrameIndex();
-		VkBuffer vertexBuf = meshRegistry.getVertexBuffer().getBuffer();
-
-		VkDeviceSize offset = 0;
-		vkCmdBindVertexBuffers(cmd, 0, 1, &vertexBuf, &offset);
-		vkCmdBindIndexBuffer(cmd, meshRegistry.getIndexBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-		for (auto& [shaderName, batch] : m_batchCache) {
-			if (shaderName!=shader->getID()) continue;
-			if (batch.elementCount == 0) continue;
-
-			VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
-			VC_CORE_ASSERT(objectSet != VK_NULL_HANDLE, "ObjectSet is null for batch '{}'", shaderName);
-
-			if (shader->isAffectedByCamera())
-				shader->sendCameraUniform(Renderer::getSceneData().transformation_matrix);
-			shader->bind();
-			vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, shader->m_pipelineLayout,batch.objectDataSSBO.getSetCountID(),1, &objectSet,0, nullptr);
-			batch.objectDataSSBO.flush(frameIndex);
-			batch.objectDataSSBO.reset(frameIndex);
-			vkCmdDrawIndexedIndirect(cmd,batch.indirectBuffers[frameIndex]->getBuffer(),0,batch.elementCount,sizeof(VkDrawIndexedIndirectCommand));
-			break;
-		}
+		drawBatch(cmd, *shader, it->second, getFrameIndex());
 	}
 
 	void VulkanRenderer::renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer) {
@@ -429,40 +423,28 @@ namespace Vectrix {
 		auto* currentFB = dynamic_cast<VulkanFramebuffer*>(Framebuffer::getCurrentFramebuffer());
 		VC_CORE_ASSERT(currentFB != nullptr, "Outline composition requires a bound framebuffer");
 
-		const VkExtent2D extent = currentFB->getExtent();
-		VkViewport viewport{};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(extent.width);
-		viewport.height = static_cast<float>(extent.height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(cmd, 0, 1, &viewport);
-
-		VkRect2D scissor{};
-		scissor.offset = {0, 0};
-		scissor.extent = extent;
-		vkCmdSetScissor(cmd, 0, 1, &scissor);
+		setViewportAndScissor(cmd, currentFB->getExtent());
 
 		m_outlineShader->bind();
 		vkCmdDraw(cmd, 3, 1, 0, 0);
+		m_drawCalls++;
 	}
 
 	void VulkanRenderer::initOutline() {
-		const VkFormat f = m_swapChain->getSwapChainImageFormat();
-		VC_CORE_ASSERT(f!=VK_FORMAT_UNDEFINED,"SwapChain image format is undefined");
-		m_device.setImageFormat(f);
-
 		std::shared_ptr<Shader> ms = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/mask.vcshader", EmbeddedShaders::k_MaskShader);
 		m_maskShader = std::static_pointer_cast<VulkanShader>(ms);
 
 		std::shared_ptr<Shader> os = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/outline.vcshader", EmbeddedShaders::k_OutlineShader);
 		m_outlineShader = std::static_pointer_cast<VulkanShader>(os);
+		if (!m_maskShader || !m_outlineShader) {
+			VC_CORE_CRITICAL("The engine's embedded outline shaders failed to compile");
+		}
 
 		FramebufferSpecification spec;
 		spec.height = m_window.getHeight();
 		spec.width = m_window.getWidth();
 		spec.hasDepth = false;
+		spec.clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); // A mask: nothing drawn has to read as 0, whatever the scene clear colour
 		m_maskFramebuffer = std::static_pointer_cast<VulkanFramebuffer>(Framebuffer::create(spec));
 	}
 
@@ -473,20 +455,7 @@ namespace Vectrix {
 		f.swapchainImageIndex = m_currentImageIndex;
 
 		f.fences = std::vector<DebugFenceInfo>();
-		auto imageInFlightFences = m_swapChain->getImageInFlightFences();
 		auto inFlightFences = m_swapChain->getInFlightFences();
-		for (auto fe : imageInFlightFences) {
-			DebugFenceInfo i{};
-			i.name = "imageInFlightFences";
-			if (fe==VK_NULL_HANDLE) {
-				i.isNull = true;
-				i.signaled = false;
-			} else {
-				i.signaled = vkGetFenceStatus(m_device.device(),fe)==VK_SUCCESS;
-				i.isNull = false;
-			}
-			f.fences.push_back(i);
-		}
 		for (auto fe : inFlightFences) {
 			DebugFenceInfo i{};
 			i.name = "inFlightFences";
@@ -499,11 +468,8 @@ namespace Vectrix {
 
 		for (auto& shader : AssetsManager::instance().getShaderManager().getAll()) {
 			auto s = std::dynamic_pointer_cast<VulkanShader>(shader);
-			DebugPipelineInfo i = {s->m_name.c_str(),s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout};
-			pipelines.push_back(i);
-			DebugDescriptorSetInfo d{};
-			d = {("SSBO-" + s->m_name).c_str(), 0, s->m_ssbo->descriptorSetLayout()};
-			boundDescriptorSets.push_back(d);
+			pipelines.push_back({s->m_name,s->m_vertSRC,s->m_fragSRC,s->m_pipeline->getPipeline(),s->m_pipelineLayout});
+			boundDescriptorSets.push_back({"SSBO-" + s->m_name, 0, s->m_ssbo->descriptorSetLayout()});
 		}
 
 		f.pipelines = pipelines;
@@ -522,7 +488,7 @@ namespace Vectrix {
 			f.images.push_back(i);
 		}
 
-		f.drawCalls = VulkanRendererAPI::getDrawCalls();
+		f.drawCalls = m_drawCalls;
 		f.dispatchCalls = 0;
 		return f;
 	}

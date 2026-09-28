@@ -25,22 +25,16 @@ namespace Vectrix {
     class Mesh {
     public:
         /**
-         * @brief Build a mesh from vertices alone, drawing them in order
-         * @param vertices The vertices making up the geometry
-         */
-        Mesh(const std::vector<Vertex>& vertices);
-
-        /**
          * @brief Build a mesh from vertices and the indices pointing into them
          *
          * Indexing lets a vertex shared by several triangles be stored once.
          * @param vertices The vertices making up the geometry
          * @param indices Which vertices each triangle uses
          */
-        Mesh(const std::vector<Vertex>& vertices, std::vector<uint32_t> indices);
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
         /**
-         * @brief Return the GPU buffers holding the geometry
+         * @brief Return where the geometry lives on the GPU
          * @return The vertex array of the mesh
          */
         [[nodiscard]] std::shared_ptr<VertexArray> getVertexArray() const { return m_vertexArray; }
@@ -62,12 +56,8 @@ namespace Vectrix {
         friend class MeshManager;
         friend class VulkanContext;
         friend class Scene;
-        void registerMesh();
         std::shared_ptr<VertexArray> m_vertexArray;
-        BufferLayout m_layout;
         AABB m_aabb;
-        std::vector<Vertex> m_vertices;
-        std::vector<uint32_t> m_indices;
         std::string m_id = "None";
     };
 } // Vectrix

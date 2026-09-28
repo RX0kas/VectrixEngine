@@ -27,7 +27,7 @@ namespace Vectrix {
 
     void GraphicsContext::waitIdle() {
         switch (RendererAPI::getAPI()) {
-            case RendererAPI::API::Vulkan: VulkanContext::waitIdle();
+            case RendererAPI::API::Vulkan: VulkanContext::waitIdle(); break;
             case RendererAPI::API::None:
                 break;
         }

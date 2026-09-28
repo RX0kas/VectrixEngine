@@ -12,16 +12,18 @@ namespace Vectrix {
 
         VkPhysicalDeviceProperties props{};
         vkGetPhysicalDeviceProperties(m_device.physicalDevice(), &props);
-        VkDeviceSize minAlign = props.limits.minStorageBufferOffsetAlignment;
+        m_minOffsetAlignment = props.limits.minStorageBufferOffsetAlignment;
 
-        uint32_t structSize = m_layout->getStructSize();
-        m_elementStride = static_cast<uint32_t>((structSize + minAlign - 1) / minAlign * minAlign);
+        // The elements are an array the shader indexes with the std430 stride, which is the layout's struct size.
+        // minStorageBufferOffsetAlignment only constrains descriptor offsets, i.e. where each frame's region starts
+        // (see frameSize): padding every element to it would make the CPU and the shader disagree on where object i is
+        m_elementStride = m_layout->getStructSize();
 
         createDescriptorSetLayout();
 
         allocateGPUBuffer();
 
-        m_storage.resize(static_cast<size_t>(m_elementStride) * m_capacity * m_framesInFlight, 0);
+        m_storage.resize(frameSize() * m_framesInFlight, 0);
 
         m_descriptorSets.resize(m_framesInFlight);
         std::vector<VkDescriptorSetLayout> layouts(m_framesInFlight, getStaticDescriptorSetLayout());
@@ -35,7 +37,7 @@ namespace Vectrix {
     }
 
     DynamicSSBO::DynamicSSBO(DynamicSSBO&& other) noexcept
-    : m_device(other.m_device), m_elementStride(other.m_elementStride), m_capacity(other.m_capacity),
+    : m_device(other.m_device), m_elementStride(other.m_elementStride), m_minOffsetAlignment(other.m_minOffsetAlignment), m_capacity(other.m_capacity),
         m_framesInFlight(other.m_framesInFlight), m_buffer(other.m_buffer), m_allocation(other.m_allocation), m_allocator(other.m_allocator),
         m_mapped(other.m_mapped), m_storage(std::move(other.m_storage)), m_descriptorSets(std::move(other.m_descriptorSets)) {
         m_layout = other.m_layout;
@@ -49,6 +51,7 @@ namespace Vectrix {
     }
 
     DynamicSSBO::~DynamicSSBO() {
+        freeDescriptorSets();
         if (m_allocation == VK_NULL_HANDLE) return;
 
         if (m_mapped) {
@@ -66,6 +69,7 @@ namespace Vectrix {
     DynamicSSBO& DynamicSSBO::operator=(DynamicSSBO&& other) noexcept {
         if (this == &other) return *this;
 
+        freeDescriptorSets();
         if (m_allocation != VK_NULL_HANDLE) {
             if (m_mapped) vmaUnmapMemory(m_allocator, m_allocation);
             m_device.destroyBuffer(m_buffer, m_allocation,m_allocator);
@@ -73,6 +77,7 @@ namespace Vectrix {
 
         m_layout = other.m_layout;
         m_elementStride = other.m_elementStride;
+        m_minOffsetAlignment = other.m_minOffsetAlignment;
         m_capacity = other.m_capacity;
         m_framesInFlight = other.m_framesInFlight;
         m_buffer = other.m_buffer;
@@ -98,34 +103,47 @@ namespace Vectrix {
             grow();
         }
 
-        size_t offset = (static_cast<size_t>(frameIndex) * m_capacity + elementIndex) * m_elementStride;
+        const size_t offset = frameIndex * frameSize() + static_cast<size_t>(elementIndex) * m_elementStride;
 
         std::memcpy(m_storage.data() + offset, src, m_layout->getStructSize());
     }
 
-    void DynamicSSBO::flush(uint32_t frameIndex) const {
-        size_t frameSize = static_cast<size_t>(m_elementStride) * m_capacity;
-        size_t offset = static_cast<size_t>(frameIndex) * frameSize;
+    void DynamicSSBO::flush(uint32_t frameIndex, uint32_t elementCount) const {
+        VC_CORE_ASSERT(elementCount <= m_capacity, "Flushing {} elements but the DynamicSSBO only holds {}", elementCount, m_capacity);
+        // Only the elements written this frame: the GPU never reads past elementCount, so copying the whole
+        // frame region (capacity * stride, e.g. ~800 KB for the renderer's batches) every frame is wasted work
+        const size_t offset = frameIndex * frameSize();
+        const size_t size = static_cast<size_t>(m_elementStride) * elementCount;
 
         uint8_t* dst = static_cast<uint8_t*>(m_mapped) + offset;
-        std::memcpy(dst, m_storage.data() + offset, frameSize);
+        std::memcpy(dst, m_storage.data() + offset, size);
     }
 
-    void DynamicSSBO::reset(uint32_t frameIndex) {
-        size_t frameSize = static_cast<size_t>(m_elementStride) * m_capacity;
-        size_t offset = static_cast<size_t>(frameIndex) * frameSize;
-        std::memset(m_storage.data() + offset, 0, frameSize);
+    void DynamicSSBO::freeDescriptorSets() {
+        if (m_descriptorSets.empty()) return;
+        // Frames still in flight bind these sets: they can only be freed once the GPU is done
+        vkDeviceWaitIdle(m_device.device());
+        // The device pool is created with VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+        vkFreeDescriptorSets(m_device.device(), m_device.descriptorPool(), static_cast<uint32_t>(m_descriptorSets.size()), m_descriptorSets.data());
+        m_descriptorSets.clear();
     }
 
     void DynamicSSBO::grow() {
         vkDeviceWaitIdle(m_device.device());
+        const size_t oldFrameSize = frameSize();
         m_capacity *= 4;
 
         if (m_mapped) vmaUnmapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation);
         m_device.destroyBuffer(m_buffer, m_allocation,m_allocator);
         m_mapped = nullptr;
 
-        m_storage.resize(static_cast<size_t>(m_elementStride) * m_capacity * m_framesInFlight, 0);
+        // Each frame's region starts at frameIndex * frameSize(): move the elements already written to
+        // their new offsets rather than just resizing, which would leave them under the wrong frame
+        const size_t newFrameSize = frameSize();
+        std::vector<uint8_t> storage(newFrameSize * m_framesInFlight, 0);
+        for (uint32_t frame = 0; frame < m_framesInFlight; ++frame)
+            std::memcpy(storage.data() + frame * newFrameSize, m_storage.data() + frame * oldFrameSize, oldFrameSize);
+        m_storage = std::move(storage);
 
         allocateGPUBuffer();
 
@@ -134,7 +152,7 @@ namespace Vectrix {
 
     void DynamicSSBO::allocateGPUBuffer() {
         VC_CORE_ASSERT(m_layout != nullptr, "Layout is null in DynamicSSBO::allocateGPUBuffer!");
-        VkDeviceSize bufferSize = static_cast<VkDeviceSize>(m_elementStride) * m_capacity * m_framesInFlight;
+        VkDeviceSize bufferSize = static_cast<VkDeviceSize>(frameSize()) * m_framesInFlight;
         VC_CORE_ASSERT(bufferSize > 0, "Buffer size is 0 in DynamicSSBO::allocateGPUBuffer!");
         m_device.createBuffer(
             bufferSize,
@@ -168,7 +186,7 @@ namespace Vectrix {
         for (uint32_t frame = 0; frame < m_framesInFlight; ++frame) {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = m_buffer;
-            bufferInfo.offset = static_cast<VkDeviceSize>(frame) * m_elementStride * m_capacity;
+            bufferInfo.offset = static_cast<VkDeviceSize>(frame) * frameSize();
             bufferInfo.range = static_cast<VkDeviceSize>(m_elementStride) * m_capacity;
 
             VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };

@@ -17,9 +17,6 @@
 
 
 namespace Vectrix {
-
-#define BIND_EVENT_FN(x) [this](auto && PH1) { x(std::forward<decltype(PH1)>(PH1)); }
-
 	namespace {
 		// Layers get the callback first, then overlays, so an overlay (e.g. the ImGuiLayer)
 		// always ends up drawn/updated on top. Cache is an unordered_map, so only this
@@ -79,7 +76,7 @@ namespace Vectrix {
 #endif
 
 		m_window = std::unique_ptr<Window>(Window::create());
-		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+		m_window->setEventCallback(VC_BIND_EVENT_FN(onEvent));
 		m_window->init(windowAttributes);
 		if (!windowTitle.empty())
 			m_window->setTitle(windowTitle);
@@ -95,6 +92,10 @@ namespace Vectrix {
 
 	Application::~Application() {
 		VC_PROFILER_FUNCTION();
+		// The last frame may still be executing: nothing it uses (layers' framebuffers, textures, ImGui
+		// descriptors) can be destroyed before the GPU is done with it
+		GraphicsContext::waitIdle();
+		forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnDetach(); });
 		m_layerStack.destroy();
 		m_assetsManager.reset();
 		m_imGuiLayer.reset();
@@ -105,6 +106,11 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
+
+		// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the
+		// first look so it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)
+		if (!e.Handled && m_imGuiLayer)
+			m_imGuiLayer->OnEvent(e);
 
 		for (auto it = m_layerStack.beginOverlays(); it != m_layerStack.endOverlays() && !e.Handled; ++it)
 			it->second->OnEvent(e);
@@ -122,7 +128,10 @@ namespace Vectrix {
 			m_LastFrameTime = time;
 
 			if (m_hasToSwitch) {
-				m_layerStack.PopLayer(m_oldLayerDebugName);
+				// The previous frame can still be drawing with the old layer's resources, which go away with it
+				GraphicsContext::waitIdle();
+				if (const std::shared_ptr<Layer> oldLayer = m_layerStack.PopLayer(m_oldLayerDebugName))
+					oldLayer->OnDetach();
 				m_layerStack.PushLayer(m_nextLayer);
 				if (m_dataToNextLayer.empty()) m_nextLayer->OnAttach();
 				else m_nextLayer->OnAttach(m_dataToNextLayer);

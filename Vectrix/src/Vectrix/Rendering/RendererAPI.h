@@ -32,8 +32,6 @@ namespace Vectrix {
 		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 		virtual void sendFrame() = 0;
-
-		virtual void drawIndexed(const VertexArray& vertexArray) = 0;
 		/// @endcond
 
 		/**

@@ -15,16 +15,12 @@
 
 
 namespace Vectrix {
-	VulkanImGuiManager* VulkanImGuiManager::m_instance = nullptr;
-
     VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
-    	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists");
-    	m_instance = this;
 		m_renderer = &VulkanContext::instance().getRenderer();
 	}
 
-	std::vector<DebugMemoryHeapInfo> collectMemoryInfo(VmaAllocator allocator) {
+	static std::vector<DebugMemoryHeapInfo> collectMemoryInfo(VmaAllocator allocator) {
     	std::vector<DebugMemoryHeapInfo> heap_infos;
     	VmaBudget budgets[VK_MAX_MEMORY_HEAPS];
 
@@ -45,6 +41,35 @@ namespace Vectrix {
     	}
     	return heap_infos;
     }
+
+	static void drawMemoryHeaps(const char* label, const std::vector<DebugMemoryHeapInfo>& heaps) {
+		if (!ImGui::TreeNode(label)) return;
+		for (const auto& heap : heaps) {
+			float fraction = 0.0f;
+			if (heap.budgetBytes > 0) {
+				fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+			}
+
+			ImGui::Text("%s", heap.name);
+
+			ImVec4 color;
+			if (fraction < 0.6f)
+				color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+			else if (fraction < 0.85f)
+				color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+			else
+				color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+			ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+			ImGui::Separator();
+		}
+		ImGui::TreePop();
+	}
 
     void VulkanImGuiManager::renderDebugGraphicWidget(bool& enable) {
     	if (!ImGui::Begin("Vulkan Debug", &enable)) {
@@ -85,9 +110,7 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Pipeline")) {
             for (const auto& pipeline : frame.pipelines) {
-                char name[256] = "Pipeline - ";
-                strcat(name,pipeline.name);
-                if (ImGui::TreeNode(name)) {
+                if (ImGui::TreeNode(("Pipeline - " + pipeline.name).c_str())) {
                     // TODO: add a hot shader edition
                     // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
                     // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
@@ -99,90 +122,9 @@ namespace Vectrix {
         }
 
         if (ImGui::CollapsingHeader("GPU Memory")) {
-            if (ImGui::TreeNode("SSBOMem")) {
-                for (const auto& heap : memorySSBO) {
-                    float fraction = 0.0f;
-                    if (heap.budgetBytes > 0) {
-                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
-                    }
-
-                    ImGui::Text("%s", heap.name);
-
-                    ImVec4 color;
-                    if (fraction < 0.6f)
-                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
-                    else if (fraction < 0.85f)
-                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
-                    else
-                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
-
-                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
-                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
-                    ImGui::PopStyleColor();
-
-
-                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
-
-                    ImGui::Separator();
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("ImagesMem")) {
-                for (const auto& heap : memoryTexture) {
-                    float fraction = 0.0f;
-                    if (heap.budgetBytes > 0) {
-                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
-                    }
-
-                    ImGui::Text("%s", heap.name);
-
-                    ImVec4 color;
-                    if (fraction < 0.6f)
-                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
-                    else if (fraction < 0.85f)
-                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
-                    else
-                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
-
-                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
-                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
-                    ImGui::PopStyleColor();
-
-
-                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
-
-                    ImGui::Separator();
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("BuffersMem")) {
-                for (const auto& heap : memoryBuffer) {
-                    float fraction = 0.0f;
-                    if (heap.budgetBytes > 0) {
-                        fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
-                    }
-
-                    ImGui::Text("%s", heap.name);
-
-                    ImVec4 color;
-                    if (fraction < 0.6f)
-                        color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
-                    else if (fraction < 0.85f)
-                        color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
-                    else
-                        color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
-
-                    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
-                    ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
-                    ImGui::PopStyleColor();
-
-
-                    ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
-
-                    ImGui::Separator();
-                }
-                ImGui::TreePop();
-            }
+            drawMemoryHeaps("SSBOMem", memorySSBO);
+            drawMemoryHeaps("ImagesMem", memoryTexture);
+            drawMemoryHeaps("BuffersMem", memoryBuffer);
         }
 
 
@@ -191,7 +133,7 @@ namespace Vectrix {
                 ImGui::BulletText(
                     "Set %u (%s) | Layout: 0x%p",
                     set.setIndex,
-                    set.name,
+                    set.name.c_str(),
                     set.layout
                 );
             }
@@ -199,9 +141,7 @@ namespace Vectrix {
 
         if (ImGui::CollapsingHeader("Images")) { // TODO : fix images
             for (const auto& img : frame.images) {
-                char name[256] = "Image - ";
-                strcat(name,img.name.c_str());
-                if (ImGui::TreeNode(name)) {
+                if (ImGui::TreeNode(("Image - " + img.name).c_str())) {
                     ImGui::Text("Format: %s", string_VkFormat(img.format));
                     ImGui::Text("Layout: %d", img.layout);
                     ImGui::Text(
@@ -239,14 +179,16 @@ namespace Vectrix {
 		uint32_t imageIndex = VulkanContext::instance().getRenderer().getCurrentImageIndex();
 		VkImageView imageView = VulkanContext::instance().getRenderer().getSwapChainImageView(static_cast<int>(imageIndex));
 
+		// The frame's main pass (VulkanRenderer::endDynamicRendering) always runs first and leaves the image in
+		// COLOR_ATTACHMENT_OPTIMAL: transitioning from UNDEFINED here would let the driver discard what it drew
 		VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
-		barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		barrier.image = VulkanContext::instance().getRenderer().getSwapChainImage(imageIndex);
 		barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-		barrier.srcAccessMask = 0;
-		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,0, 0, nullptr, 0, nullptr, 1, &barrier);
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		VkRenderingAttachmentInfoKHR colorAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
 		colorAttachment.imageView = imageView;
@@ -346,7 +288,7 @@ namespace Vectrix {
     	init_info.Instance = m_device.instance();
     	init_info.PhysicalDevice = m_device.physicalDevice();
     	init_info.Device = m_device.device();
-    	init_info.QueueFamily = findGraphicsQueueFamilyIndex(m_device.physicalDevice());
+    	init_info.QueueFamily = m_device.findPhysicalQueueFamilies().graphicsFamily;
     	init_info.Queue = m_device.graphicsQueue();
     	init_info.DescriptorPool = createImGuiDescriptorPool();
     	init_info.MinImageCount = 2;
@@ -386,22 +328,6 @@ namespace Vectrix {
 		VC_CORE_INFO("ImGui has been initialized");
 	}
 
-
-	uint32_t VulkanImGuiManager::findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice) {
-		uint32_t queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
-
-		for (uint32_t i = 0; i < queueFamilyCount; i++) {
-			if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-				return i;  // Found graphics queue family
-			}
-		}
-
-		VC_CORE_ERROR("No graphics queue family found");
-	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {
 		const VkDescriptorPoolSize pool_sizes[] = {

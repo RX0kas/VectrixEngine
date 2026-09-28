@@ -3,8 +3,11 @@
 #include <memory>
 #include <cstdint>
 
+#include <optional>
+
 #include "imgui.h"
 #include "glm/vec2.hpp"
+#include "glm/vec4.hpp"
 #include "Vectrix/Utils/ImageFormat.h"
 
 namespace Vectrix {
@@ -31,9 +34,15 @@ namespace Vectrix {
         VectrixImageFormat imageFormat = UNDEFINED;
 
         /**
-         * @brief The framebuffer image format
+         * @brief The framebuffer depth image format
          */
         VectrixImageFormat depthFormat = UNDEFINED;
+
+        /**
+         * @brief The colour the image is cleared to when bound with clear
+         * @note Left unset, it follows the renderer's clear colour (RenderCommand::setClearColor)
+         */
+        std::optional<glm::vec4> clearColor;
     };
 
     /**

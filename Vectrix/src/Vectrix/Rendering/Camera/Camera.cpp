@@ -16,10 +16,14 @@
 namespace Vectrix {
 	std::shared_ptr<Entity> Camera::s_currentCamera = nullptr;
 
-	Camera::Camera(std::shared_ptr<Entity> entity, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear), m_transform(entity->getComponent<TransformComponent>()) {
+	Camera::Camera(std::shared_ptr<Entity> entity, float fov,float camNear,float camFar) : m_viewMatrix(1.0f),m_fov(glm::radians(fov)),m_camFar(camFar),m_camNear(camNear) {
 		m_entity = entity;
 		recalculateMatrices();
 		setAsCurrent();
+	}
+
+	TransformComponent& Camera::transform() const {
+		return m_entity->getComponent<TransformComponent>();
 	}
 
 	float Camera::getAspect() const {
@@ -34,9 +38,7 @@ namespace Vectrix {
 	}
 
 	void Camera::recalculateViewMatrix() {
-		glm::mat4 transform = m_transform.modelMatrix();
-
-		m_viewMatrix = glm::inverse(transform);
+		m_viewMatrix = glm::inverse(transform().modelMatrix());
 	}
 
 
@@ -71,16 +73,17 @@ namespace Vectrix {
 		m_viewMatrix[0][2] = w.x;
 		m_viewMatrix[1][2] = w.y;
 		m_viewMatrix[2][2] = w.z;
-		m_viewMatrix[3][0] = -glm::dot(u, m_transform.position);
-		m_viewMatrix[3][1] = -glm::dot(v, m_transform.position);
-		m_viewMatrix[3][2] = -glm::dot(w, m_transform.position);
+		const glm::vec3 position = transform().position;
+		m_viewMatrix[3][0] = -glm::dot(u, position);
+		m_viewMatrix[3][1] = -glm::dot(v, position);
+		m_viewMatrix[3][2] = -glm::dot(w, position);
 
 		recalculateTransformationMatrix();
 	}
 
 	void Camera::setViewTarget(glm::vec3 target) {
 		VC_PROFILER_FUNCTION();
-		setViewDirection(target - m_transform.position);
+		setViewDirection(target - transform().position);
 	}
 
 	std::shared_ptr<Entity> Camera::getCurrentCamera() { return s_currentCamera; }

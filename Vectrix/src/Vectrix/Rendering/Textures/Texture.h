@@ -51,7 +51,6 @@ namespace Vectrix {
         friend class TextureManager;
         static std::shared_ptr<Texture> create(const std::string &name,const std::string& path);
         static std::shared_ptr<Texture> createDefaultTexture();
-        static unsigned int m_count;
     };
 } // Vectrix
 

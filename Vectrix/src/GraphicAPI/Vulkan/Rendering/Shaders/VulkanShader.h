@@ -29,12 +29,15 @@ namespace Vectrix {
             VC_VERIFY_UNIFORM_NAME(name);
 
             const auto* e = m_layout->find(name);
+            // VC_CORE_ERROR is compiled out in release: return explicitly rather than dereferencing a null entry
             if (!e) {
                 VC_CORE_ERROR("{} is not found in layout", name);
+                return;
             }
 
             if (e->type != type) {
                 VC_CORE_ERROR("Uniform '{}' type mismatch (expected {}, got {})",name,static_cast<int>(e->type),static_cast<int>(type));
+                return;
             }
 
             m_ssbo->copyToFrame(m_renderer.getFrameIndex(),e->offset,data,size);
@@ -47,7 +50,7 @@ namespace Vectrix {
     private:
 
         void createPipelineLayout();
-        void createPipeline(VkRenderPass renderPass, BufferLayout layout);
+        void createPipeline(BufferLayout layout);
         uint32_t useImage(const std::string& key, const VkDescriptorImageInfo& imageInfo);
     private:
         Device& m_device;

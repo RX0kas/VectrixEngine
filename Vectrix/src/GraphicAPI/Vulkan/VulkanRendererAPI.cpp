@@ -9,8 +9,6 @@
 
 
 namespace Vectrix {
-	uint32_t VulkanRendererAPI::s_drawCalls = 0;
-
 	void VulkanRendererAPI::setClearColor(const glm::vec4& color) {
 		VC_PROFILER_FUNCTION();
 		VulkanContext::instance().getRenderer().makeClearColor(color);
@@ -18,15 +16,8 @@ namespace Vectrix {
 
 	bool VulkanRendererAPI::canRender() {
 		VC_PROFILER_FUNCTION();
-		VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
-		auto commandBuffer = renderer.beginFrame();
-
-		if (commandBuffer == VK_NULL_HANDLE) {
-			renderer.recreateSwapChain();
-			return false;
-		}
-
-		return true;
+		// beginFrame already recreates the swap chain when it returns VK_NULL_HANDLE
+		return VulkanContext::instance().getRenderer().beginFrame() != VK_NULL_HANDLE;
 	}
 
 	void VulkanRendererAPI::beginFrame() {
@@ -44,20 +35,5 @@ namespace Vectrix {
 	void VulkanRendererAPI::sendFrame() {
 		VC_PROFILER_FUNCTION();
 		VulkanContext::instance().getRenderer().endFrame();
-	}
-
-	void VulkanRendererAPI::drawIndexed(const VertexArray& vertexArray)	{
-		VC_PROFILER_FUNCTION();
-		if (vertexArray.getIndexBuffer()) {
-			auto i = dynamic_cast<VulkanIndexBuffer*>(vertexArray.getIndexBuffer().get());
-			if (i) {
-				i->draw();
-			}
-		} else {
-			for (auto& v : vertexArray.getVertexBuffers()) {
-				dynamic_cast<VulkanVertexBuffer*>(v.get())->draw();
-			}
-		}
-		s_drawCalls++;
 	}
 }
