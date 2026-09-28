@@ -32,7 +32,6 @@ namespace Vectrix {
         std::vector<VkDynamicState> dynamicStateEnables;
         VkPipelineDynamicStateCreateInfo dynamicStateInfo;
         VkPipelineLayout pipelineLayout = nullptr;
-        VkRenderPass renderPass = nullptr;
         uint32_t subpass = 0;
 		BufferLayout layout;
     };

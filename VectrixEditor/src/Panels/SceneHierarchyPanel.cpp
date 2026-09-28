@@ -87,6 +87,7 @@ namespace Vectrix {
         }
 
         ImGui::End();
+        renderErrorMessage("FAILED_DRAW_ASSET_DROP_FIELD",m_lastAssetErrorMessage);
     }
 
     void SceneHierarchyPanel::drawEntityNode(const std::shared_ptr<Entity>& entity) {
@@ -105,7 +106,7 @@ namespace Vectrix {
     }
 
     template<typename T>
-    static bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc) {
+    bool SceneHierarchyPanel::drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc) {
         bool changed = false;
 
         ImGui::PushID(label);
@@ -149,7 +150,8 @@ namespace Vectrix {
                     asset = loadedAsset;
                     changed = true;
                 } else {
-                    VC_ERROR_NO_EXIT("Failed to load asset dropped on {}: {} ({})",label,assetPath.string(),toString(result));
+                    showErrorMessage("FAILED_DRAW_ASSET_DROP_FIELD");
+                    m_lastAssetErrorMessage = std::format("Failed to load asset dropped on {}: {} ({})",label,assetPath.string(),toString(result));
                 }
             }
 
@@ -184,10 +186,9 @@ namespace Vectrix {
 
         drawList->AddText(ImVec2(textStartX, start.y + 10.0f),ImGui::GetColorU32(ImVec4(0.78f, 0.80f, 0.86f, 1.0f)),label);
 
-        const std::string& displayValue = valueText;
         ImGui::SetCursorScreenPos(ImVec2(textStartX, start.y + 31.0f));
         ImGui::PushTextWrapPos(textStartX + textWidth);
-        ImGui::TextColored(asset ? ImVec4(0.95f, 0.95f, 0.98f, 1.0f) : ImVec4(0.50f, 0.52f, 0.58f, 1.0f),"%s",displayValue.c_str());
+        ImGui::TextColored(asset ? ImVec4(0.95f, 0.95f, 0.98f, 1.0f) : ImVec4(0.50f, 0.52f, 0.58f, 1.0f),"%s",valueText.c_str());
         ImGui::PopTextWrapPos();
 
         if (asset) {
@@ -299,7 +300,6 @@ namespace Vectrix {
                     bool before = mc.isEnable();
                     if (isEnable) {
                         if (!mc.tryEnabling()) {
-                            isEnable = false;
                             showErrorMessage("MeshRendererEnableError");
                         }
                     } else {

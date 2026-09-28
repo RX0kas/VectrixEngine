@@ -19,19 +19,17 @@ namespace Vectrix {
 		m_overlays.emplace(overlay->getName(),overlay);
 	}
 
-	void LayerStack::PopLayer(const std::shared_ptr<Layer>& layer) {
-		m_layers.erase(layer->getName());
-	}
-
-	void LayerStack::PopLayer(const std::string& layer) {
-		m_layers.erase(layer);
-	}
-
-	void LayerStack::PopOverlay(const std::shared_ptr<Layer>& overlay) {
-		m_overlays.erase(overlay->getName());
+	std::shared_ptr<Layer> LayerStack::PopLayer(const std::string& layer) {
+		const auto it = m_layers.find(layer);
+		if (it == m_layers.end())
+			return nullptr;
+		std::shared_ptr<Layer> removed = std::move(it->second);
+		m_layers.erase(it);
+		return removed;
 	}
 
 	void LayerStack::destroy() {
 		m_layers.clear();
+		m_overlays.clear();
 	}
 }

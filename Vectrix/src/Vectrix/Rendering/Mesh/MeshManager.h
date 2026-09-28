@@ -52,6 +52,7 @@ namespace Vectrix {
              * @pre A mesh with the name given should not already exist
              * @param name Name given to the mesh
              * @param path Path of the mesh source file
+             * @return The mesh, registered under name, or nullptr when the file can't be read as an OBJ
              */
             std::shared_ptr<Mesh> createMesh(const std::string &name, const std::string &path);
             ~MeshManager();

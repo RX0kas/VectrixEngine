@@ -38,12 +38,9 @@ namespace Vectrix {
     	void applyLiveSettings(); // re-reads the settings that take effect without a relaunch
     	std::shared_ptr<Entity> pickEntity(glm::vec2 mousePos);
     	glm::vec3 screenToWorldRay(glm::vec2 mousePos);
-		std::shared_ptr<Shader> m_viewportShader;
 		std::shared_ptr<Framebuffer> m_framebuffer;
     	std::unique_ptr<EditorCamera> m_camera;
 
-    	std::shared_ptr<Texture> m_foxTexture;
-    	std::shared_ptr<Mesh> m_foxMesh;
     	glm::vec2 m_viewportSize;
     	glm::vec2 m_viewportPos{1};
     	bool m_viewportFocused = false, m_viewportHovered = false;
@@ -52,11 +49,8 @@ namespace Vectrix {
     	std::shared_ptr<Scene> m_activeScene;
     	std::string m_pendingScenePath{};
     	std::string m_pendingProjectPath{};
+    	std::filesystem::path m_projectDirectory; ///< Root of the open project, where its settings.vectrix.json lives
 
-    	bool m_projectsHasBeenLoaded = false;
-    	std::vector<RecentProject> m_recentProjects;
-
-    	std::shared_ptr<Entity> m_foxEntity;
     	float m_cameraRotationSpeed = 50.0f;
     	float m_cameraMoveSpeed = 1.5f;
     	float m_gizmoTranslationSnap = 0.5f;
@@ -77,6 +71,13 @@ namespace Vectrix {
     	bool m_ctrlRedoWasDown = false;
 
     	void refreshSelectionAfter(Command* command);
+
+    	// Errors
+    	std::string m_lastLoadSceneFileErrorMessage;
+    	std::string m_lastLoadSceneErrorMessage;
+    	std::string m_lastNFDOpenError;
+    	std::string m_lastOpenProjectNFDError;
+    	std::string m_lastSaveSceneNFDError;
     };
 } // Vectrix
 

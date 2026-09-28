@@ -9,13 +9,7 @@
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
-    unsigned int Texture::m_count = 0;
-
     std::shared_ptr<Texture> Texture::create(const std::string &name,const std::string &path) {
-        if (m_count==getMaxTexturePerShader()) {
-            VC_CORE_ERROR("The maximum number of texture allowed is {}",getMaxTexturePerShader());
-        }
-
         if (!std::filesystem::exists(path)) {
             VC_CORE_WARN("Texture {} doesn't exist, using default Texture instead",path);
             return TextureManager::getNotFoundTexture();

@@ -69,8 +69,6 @@ namespace Vectrix {
     protected:
         std::string m_DebugName;
         bool m_enable = true;
-        /// Whether a newly created widget starts enabled
-        static bool vc_defaultEnable;
     };
 }
 #endif //VECTRIXWORKSPACE_IMGUIWIDGET_H

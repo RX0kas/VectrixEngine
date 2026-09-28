@@ -19,7 +19,7 @@ namespace Vectrix {
 	};
 
 	struct DebugPipelineInfo {
-		const char* name;
+		std::string name;
 		std::string vertSRC;
 		std::string fragSRC;
 		VkPipeline pipeline;
@@ -27,7 +27,7 @@ namespace Vectrix {
 	};
 
 	struct DebugDescriptorSetInfo {
-		const char* name;
+		std::string name;
 		uint32_t setIndex;
 		VkDescriptorSetLayout layout;
 	};
@@ -72,17 +72,14 @@ namespace Vectrix {
         void update() override;
         void cleanup() override;
 		void renderDebugGraphicWidget(bool& enable) override;
-		static VulkanImGuiManager& instance() { return *m_instance; }
 
 	private:
 		friend class VulkanRenderer;
         VkDescriptorPool createImGuiDescriptorPool();
-        static uint32_t findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice);
         Device& m_device;
         Window& m_window;
         VulkanRenderer* m_renderer;
         VkDescriptorPool m_descriptorPool = nullptr;
-		static VulkanImGuiManager* m_instance;
 	};
 
 }

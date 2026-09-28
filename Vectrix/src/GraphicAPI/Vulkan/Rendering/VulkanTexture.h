@@ -26,14 +26,15 @@ namespace Vectrix {
         [[nodiscard]] VkFormat getFormat() const { return m_format; }
         [[nodiscard]] VkImageLayout getLayout() const { return m_layout; }
 
-        [[nodiscard]] ImTextureID getImGuiTextureID() const override { return reinterpret_cast<ImTextureID>(m_descriptorSet); }
+        [[nodiscard]] ImTextureID getImGuiTextureID() const override;
         [[nodiscard]] uint32_t getUniqueTextureID() const { return m_id; }
         [[nodiscard]] std::string getID() const override { return m_name; }
     private:
         friend class Texture;
         VulkanTexture();
         void createTexture(stbi_uc* pixels, int channels);
-        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+        /// Copies the staging buffer into m_image and leaves it ready to be sampled
+        void uploadPixels(VkBuffer stagingBuffer);
         int m_width = -1;
         int m_height = -1;
         int m_channel = -1;
@@ -42,7 +43,7 @@ namespace Vectrix {
         VmaAllocation m_allocation = VK_NULL_HANDLE;
         VkImageView m_imageView = VK_NULL_HANDLE;
         VkSampler m_sampler = VK_NULL_HANDLE;
-        VkDescriptorSet m_descriptorSet = VK_NULL_HANDLE;
+        mutable VkDescriptorSet m_descriptorSet = VK_NULL_HANDLE; ///< ImGui descriptor, see getImGuiTextureID
         VkFormat m_format = VK_FORMAT_UNDEFINED;
         VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
         Device& m_device;

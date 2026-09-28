@@ -15,8 +15,8 @@
  *
  * ### 3. @ref mesh
  * - @ref Vectrix::Mesh "Mesh" : Class that represents the geometry of a 3D model
- * - @ref Vectrix::VertexBuffer "VertexBuffer" : Vertex data
- * - @ref Vectrix::IndexBuffer "IndexBuffer" : Indexes for indexing
+ * - @ref Vectrix::VertexArray "VertexArray" : Where a mesh's geometry lives in the renderer's shared GPU buffers
+ * - @ref Vectrix::BufferLayout "BufferLayout" : How the attributes of a vertex are laid out
  *
  * ### 4. @ref textures
  * - @ref Vectrix::Texture "Texture" : Base class

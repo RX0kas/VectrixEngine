@@ -28,19 +28,20 @@ namespace Vectrix {
      * @param minor A minor version number
      * @param patch A patch version number
      * @return The three numbers and the platform packed together
-     * @warning Major is capped at 8, minor and patch at 12, going over is reported as an error
+     * @warning Major is stored on 7 bits (up to 127), minor and patch on 12 bits (up to 4095): a larger
+     *          value is reported as an error and truncated, so it can't overflow into the other fields
      */
     static Version makeVersion(const std::uint32_t major, const std::uint32_t minor, const std::uint32_t patch) {
-        if (major>8U) {
+        if (major>0x7FU) {
             VC_CORE_ERROR_NO_EXIT("Major is too high to be fully registered");
         }
-        if (minor>12U) {
+        if (minor>0xFFFU) {
             VC_CORE_ERROR_NO_EXIT("Minor is too high to be fully registered");
         }
-        if (patch>12U) {
+        if (patch>0xFFFU) {
             VC_CORE_ERROR_NO_EXIT("Patch is too high to be fully registered");
         }
-        return static_cast<uint32_t>(VC_PLATFORM_ID)<< 31U | major << 24U | minor << 12U | patch;
+        return static_cast<uint32_t>(VC_PLATFORM_ID)<< 31U | (major & 0x7FU) << 24U | (minor & 0xFFFU) << 12U | (patch & 0xFFFU);
     }
 
     /**
@@ -49,7 +50,7 @@ namespace Vectrix {
      * @return The platform the version was built for, 0 for Linux and 1 for Windows
      */
     constexpr static std::uint32_t getOS(const Version version) {
-        return version >> 24 & 0xFF;
+        return version >> 31U & 0x1U; // Bits 24-30 are the major
     }
 
     /**
@@ -86,7 +87,7 @@ namespace Vectrix {
      */
     static std::string toString(const Version version) {
         char r[32];
-        sprintf(r,"%s-%u.%u.%u",getOS(version) ? "Windows" : "Linux",getMajor(version),getMinor(version),getPatch(version));
+        snprintf(r,sizeof(r),"%s-%u.%u.%u",getOS(version) ? "Windows" : "Linux",getMajor(version),getMinor(version),getPatch(version));
         return {r};
     }
 

@@ -1,5 +1,7 @@
 #include "Profiler.h"
 
+#include <iomanip>
+
 #include "Vectrix/Rendering/RendererAPI.h"
 
 namespace Vectrix {
@@ -34,10 +36,11 @@ namespace Vectrix {
         m_outputStream << R"("duration":)" << (result.elapsedTime.count()) << ',';
         m_outputStream << R"("name":")" << name << "\",";
         m_outputStream << R"("threadID":)" << result.threadID << ',';
-        m_outputStream << R"("start":)" << result.start.count();
+        // Fixed notation: the default 6 significant digits turn microseconds since boot into 10 ms steps
+        m_outputStream << R"("start":)" << std::fixed << std::setprecision(3) << result.start.count();
         m_outputStream << '}';
-
-        m_outputStream.flush();
+        // No flush per result: this runs for every profiled call, so a write syscall each time slowed debug builds
+        // down; the stream is flushed when the session ends (writeFooter/close)
     }
 
     void Profiler::writeData() {

@@ -33,6 +33,9 @@ namespace Vectrix {
         void drawProperties(const std::shared_ptr<Entity>& entity);
         static bool drawTreeNodeComponent(const std::string& text, bool& mustBeRemoved, bool removable=true);
 
+        template<typename T>
+        bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc);
+
         /// Pushes `command` through m_undoHistory, then re-selects whichever entity it now
         /// targets if it is a create/delete command (see EntityHandleCommand)
         void pushAndRefreshSelection(std::unique_ptr<Command> command);
@@ -53,6 +56,8 @@ namespace Vectrix {
         TransformSnapshot m_transformDragBefore;
         float m_floatDragBefore = 0.0f;
         std::string m_nameEditBefore;
+
+        std::string m_lastAssetErrorMessage;
     };
 } // Vectrix
 

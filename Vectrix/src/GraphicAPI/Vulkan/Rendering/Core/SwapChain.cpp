@@ -2,6 +2,7 @@
 #include "SwapChain.h"
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Application.h"
 
 
 namespace Vectrix {
@@ -24,11 +25,10 @@ namespace Vectrix {
 
 
     void SwapChain::init() {
+        // No render pass/framebuffers: the renderer and ImGui draw with dynamic rendering straight into the image views
         createSwapChain();
         createImageViews();
-        createRenderPass();
         createDepthResources();
-        createFramebuffers();
         createSyncObjects();
     }
 
@@ -53,16 +53,6 @@ namespace Vectrix {
         m_depthImageAllocations.clear();
         m_depthImageViews.clear();
 
-        for (const auto framebuffer : m_swapChainFramebuffers) {
-            vkDestroyFramebuffer(m_device.device(), framebuffer, nullptr);
-        }
-        m_swapChainFramebuffers.clear();
-
-        if (m_renderPass!=VK_NULL_HANDLE) {
-            vkDestroyRenderPass(m_device.device(), m_renderPass, nullptr);
-            m_renderPass = VK_NULL_HANDLE;
-        }
-
         for (auto& sem : m_renderFinishedSemaphores) {
             if (sem != VK_NULL_HANDLE) {
                 vkDestroySemaphore(m_device.device(), sem, nullptr);
@@ -83,14 +73,15 @@ namespace Vectrix {
     }
 
     VkResult SwapChain::acquireNextImage(uint32_t* imageIndex) const {
-        // Wait for the current frame's fence to ensure the CPU isn't overlapping frame usage
-        //vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+        // The GPU must be done with this frame slot before the CPU touches it again: its command buffer, its image
+        // available semaphore, and the per-frame object SSBO/indirect buffers the renderer is about to overwrite.
+        // The image itself needs no wait here: the GPU work writing it waits on the acquire semaphore
+        if (vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, VC_TIMEOUT_SYNC) == VK_TIMEOUT) {
+            VC_CORE_CRITICAL("GPU HANG DETECTED - frame {} fence never signaled", m_currentFrame);
+        }
 
-        const VkResult result = vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
-
-        return result;
+        return vkAcquireNextImageKHR(m_device.device(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, imageIndex);
     }
-
 
     VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, const uint32_t* imageIndex) {
         VC_CORE_ASSERT(buffers != nullptr, "buffers is null");
@@ -102,17 +93,8 @@ namespace Vectrix {
         VC_CORE_ASSERT(m_inFlightFences[m_currentFrame] != VK_NULL_HANDLE, "inFlightFence is null");
         VC_CORE_ASSERT(m_swapChain != VK_NULL_HANDLE, "swapchain handle is null");
 
-        if (m_imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-            VkResult waitResult = vkWaitForFences(m_device.device(), 1, &m_imagesInFlight[*imageIndex], VK_TRUE, VC_TIMEOUT_SYNC);
-            if (waitResult == VK_TIMEOUT) {
-                VC_CORE_CRITICAL("GPU HANG DETECTED - fence never signaled - submitCommandBuffers(buffers,{})",*imageIndex);
-            }
-        }
-
+        // acquireNextImage already waited on this frame's fence
         vkResetFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame]);
-
-        // update tracking after the reset
-        m_imagesInFlight[*imageIndex] = m_inFlightFences[m_currentFrame];
 
         const VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
         const VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[*imageIndex] };
@@ -131,12 +113,10 @@ namespace Vectrix {
             VC_CORE_CRITICAL("vkQueueSubmit failed");
         }
 
-        #ifdef VC_DEBUG
-                VkResult fenceResult = vkWaitForFences(m_device.device(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, 5'000'000'000ULL);
-                if (fenceResult == VK_TIMEOUT) {
-                    VC_CORE_CRITICAL("GPU HANG - command buffer never finished executing");
-                }
-        #endif
+        // No wait on the fence here: with FIFO the GPU can't write the image before the display releases it
+        // (the acquire semaphore), so blocking until the work finishes lined the CPU up with the vblank and cost
+        // a whole refresh every other frame (72/144 fps at 144 Hz). A hang is still caught one frame later,
+        // by acquireNextImage waiting on this same fence with VC_TIMEOUT_SYNC
 
         VkPresentInfoKHR presentInfo{ VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
         presentInfo.waitSemaphoreCount = 1;
@@ -211,13 +191,12 @@ namespace Vectrix {
         // images with vkGetSwapchainImagesKHR, then resize the container and finally call it again to
         // retrieve the handles.
         vkGetSwapchainImagesKHR(m_device.device(), m_swapChain, &imageCount, nullptr);
-        m_imagesInFlight.clear();
-        m_imagesInFlight.resize(imageCount, VK_NULL_HANDLE);
         m_swapChainImages.resize(imageCount);
         vkGetSwapchainImagesKHR(m_device.device(), m_swapChain, &imageCount, m_swapChainImages.data());
 
         m_swapChainImageFormat = format;
         m_swapChainExtent = extent;
+        VC_CORE_INFO("Swap chain: {} images of {}x{} (surface min {} / max {})", imageCount, extent.width, extent.height, capabilities.minImageCount, capabilities.maxImageCount);
     }
 
     void SwapChain::createImageViews() {
@@ -236,88 +215,6 @@ namespace Vectrix {
 
             if (vkCreateImageView(m_device.device(), &viewInfo, nullptr, &m_swapChainImageViews[i]) != VK_SUCCESS) {
                 VC_CORE_CRITICAL("Failed to create texture image view");
-            }
-        }
-    }
-
-    void SwapChain::createRenderPass() {
-        VkAttachmentDescription depthAttachment{};
-        depthAttachment.format = findDepthFormat();
-        depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-        VkAttachmentReference depthAttachmentRef{};
-        depthAttachmentRef.attachment = 1;
-        depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-        VkAttachmentDescription colorAttachment = {};
-        colorAttachment.format = getSwapChainImageFormat();
-        colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-        VkAttachmentReference colorAttachmentRef = {};
-        colorAttachmentRef.attachment = 0;
-        colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-        VkSubpassDescription subpass = {};
-        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpass.colorAttachmentCount = 1;
-        subpass.pColorAttachments = &colorAttachmentRef;
-        subpass.pDepthStencilAttachment = &depthAttachmentRef;
-
-        VkSubpassDependency dependency = {};
-        dependency.dstSubpass = 0;
-        dependency.dstAccessMask =
-            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-        dependency.dstStageMask =
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        dependency.srcAccessMask = 0;
-        dependency.srcStageMask =
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-
-        const std::array<VkAttachmentDescription, 2> attachments = { colorAttachment, depthAttachment };
-        VkRenderPassCreateInfo renderPassInfo = {};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-        renderPassInfo.pAttachments = attachments.data();
-        renderPassInfo.subpassCount = 1;
-        renderPassInfo.pSubpasses = &subpass;
-        renderPassInfo.dependencyCount = 1;
-        renderPassInfo.pDependencies = &dependency;
-
-        if (vkCreateRenderPass(m_device.device(), &renderPassInfo, nullptr, &m_renderPass) != VK_SUCCESS) {
-            VC_CORE_CRITICAL("Failed to create render pass");
-        }
-    }
-
-    void SwapChain::createFramebuffers() {
-        m_swapChainFramebuffers.resize(imageCount());
-        for (size_t i = 0; i < imageCount(); i++) {
-            std::array<VkImageView, 2> attachments = { m_swapChainImageViews[i], m_depthImageViews[i] };
-
-            VkExtent2D newSwapChainExtent = getSwapChainExtent();
-            VkFramebufferCreateInfo framebufferInfo = {};
-            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = m_renderPass;
-            framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-            framebufferInfo.pAttachments = attachments.data();
-            framebufferInfo.width = newSwapChainExtent.width;
-            framebufferInfo.height = newSwapChainExtent.height;
-            framebufferInfo.layers = 1;
-
-            if (vkCreateFramebuffer(m_device.device(), &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]) != VK_SUCCESS) {
-                VC_CORE_CRITICAL("Failed to create framebuffer");
             }
         }
     }
@@ -371,7 +268,6 @@ namespace Vectrix {
         m_imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         m_inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
         m_renderFinishedSemaphores.resize(m_swapChainImages.size());
-        m_imagesInFlight.resize(imageCount(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -403,16 +299,29 @@ namespace Vectrix {
         return availableFormats[0];
     }
 
-    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, VkPresentModeKHR preferred) {
-        for (const VkPresentModeKHR mode : availablePresentModes) {
-            if (mode == preferred) {
-                VC_CORE_INFO("Present mode: {}", presentModeToString(preferred));
-                return preferred;
-            }
+    VkPresentModeKHR SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, VkPresentModeKHR preferred) const {
+        const auto isAvailable = [&](const VkPresentModeKHR mode) {
+            return std::ranges::find(availablePresentModes, mode) != availablePresentModes.end();
+        };
+        // The setting and the surface don't change at runtime: report the choice once, not on every resize
+        const bool report = m_oldSwapChain == nullptr;
+
+        if (isAvailable(preferred)) {
+            if (report) VC_CORE_INFO("Present mode: {}", presentModeToString(preferred));
+            return preferred;
+        }
+
+        // Mailbox is asked for to render uncapped without tearing. XWayland (an X11 window in a Wayland session,
+        // where NVIDIA offers no mailbox) hands finished frames to the compositor, so immediate doesn't tear there
+        // either, while fifo would tie the frame rate to the compositor's pacing (72/144 fps swings at 144 Hz)
+        const bool xWayland = glfwGetPlatform() == GLFW_PLATFORM_X11 && Application::instance().window().getDisplayServer() == WAYLAND;
+        if (preferred == VK_PRESENT_MODE_MAILBOX_KHR && xWayland && isAvailable(VK_PRESENT_MODE_IMMEDIATE_KHR)) {
+            if (report) VC_CORE_INFO("Present mode: immediate (mailbox isn't supported under XWayland, whose compositing keeps it from tearing)");
+            return VK_PRESENT_MODE_IMMEDIATE_KHR;
         }
 
         // FIFO is the only mode the spec guarantees is always available.
-        VC_CORE_WARN("Present mode '{}' not supported by the surface, falling back to fifo (V-Sync)", presentModeToString(preferred));
+        if (report) VC_CORE_WARN("Present mode '{}' not supported by the surface, falling back to fifo (V-Sync)", presentModeToString(preferred));
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 

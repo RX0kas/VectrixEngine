@@ -12,15 +12,15 @@
 
 namespace Vectrix {
 	/**
-	 * @brief Holds the layers of the application, in the order they are processed
+	 * @brief Holds the layers of the application, keyed by their name
 	 *
-	 * The stack is split in two: the layers, kept at the front, and the overlays, kept at
-	 * the back. Updates and renders walk the stack from the first layer to the last
-	 * overlay, so an overlay always draws on top. Events go the other way, from the last
-	 * overlay down to the first layer, which lets an overlay such as the ImGuiLayer
-	 * consume an event before the rest of the application sees it.
+	 * The stack is split in two groups: the layers and the overlays. Updates and renders
+	 * go through every layer then every overlay, so an overlay always draws on top; events
+	 * go through the overlays first. Within a group there is no order: the storage is a
+	 * hash map, so two layers of the same group must not rely on running one before the
+	 * other, and two layers can't share a name.
 	 * @see Layer
-	 * @see Application::pushLayer
+	 * @see Application::PushLayer
 	 * @ingroup layers
 	 */
 	class LayerStack {
@@ -44,24 +44,11 @@ namespace Vectrix {
 
 		/**
 		 * @brief Take a layer out of the stack
-		 * @param layer The layer to remove
-		 * @note Does nothing when the layer is not in the stack
+		 * @param layer The name of the layer to remove
+		 * @return The removed layer, or nullptr when no layer has that name
+		 * @note Layer::OnDetach is called by the Application, not by the stack
 		 */
-		void PopLayer(const std::shared_ptr<Layer>& layer);
-
-		/**
-		 * @brief Take a layer out of the stack
-		 * @param layer The layer to remove
-		 * @note Does nothing when the layer is not in the stack
-		 */
-		void PopLayer(const std::string& layer);
-
-		/**
-		 * @brief Take an overlay out of the stack
-		 * @param overlay The overlay to remove
-		 * @note Does nothing when the overlay is not in the stack
-		 */
-		void PopOverlay(const std::shared_ptr<Layer>& overlay);
+		std::shared_ptr<Layer> PopLayer(const std::string& layer);
 
 		using iterator = Cache<std::string, std::shared_ptr<Layer>>::iterator;
 
@@ -72,8 +59,9 @@ namespace Vectrix {
 		iterator endOverlays() { return m_overlays.end(); }
 
 		/**
-		 * @brief Detach and drop every layer of the stack
+		 * @brief Drop every layer and overlay of the stack
 		 * @post The stack is empty
+		 * @note Layer::OnDetach is called by the Application beforehand
 		 */
 		void destroy();
 	private:

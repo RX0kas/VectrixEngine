@@ -17,7 +17,14 @@ namespace Vectrix {
 
         switch (Renderer::getAPI()) {
             case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::Vulkan:  return std::make_shared<VulkanShader>(name, source, layout, bufferLayout, affectedByCamera);
+            case RendererAPI::API::Vulkan: {
+                auto shader = std::make_shared<VulkanShader>(name, source, layout, bufferLayout, affectedByCamera);
+                if (!shader->m_pipeline) {
+                    VC_CORE_ERROR_NO_EXIT("Shader {} failed to compile", name);
+                    return nullptr;
+                }
+                return shader;
+            }
         }
 
         VC_CORE_ERROR("Unknown RendererAPI!");
@@ -25,7 +32,7 @@ namespace Vectrix {
     }
 
     /// @cond INTERNAL
-    void replaceAll(std::string& str, const std::string& from, std::string to) {
+    static void replaceAll(std::string& str, const std::string& from, const std::string& to) {
         if(from.empty())
             return;
         size_t start_pos = 0;
@@ -37,7 +44,7 @@ namespace Vectrix {
     /// @endcond
 
     /// @cond INTERNAL
-    std::string normalizeSpaces(const std::string& s) {
+    static std::string normalizeSpaces(const std::string& s) {
         std::string result;
         bool lastWasSpace = false;
         for (char c : s) {
@@ -69,9 +76,7 @@ namespace Vectrix {
 
         while (std::getline(file, line)) {
             std::string lineCopy = normalizeSpaces(line);
-            char* l = static_cast<char*>(malloc(lineCopy.size()));
-            lineCopy.copy(l,lineCopy.size());
-            std::string lineWithOutSpace = { l };
+            std::string lineWithOutSpace = lineCopy;
             replaceAll(lineWithOutSpace," ","");
             // Trim leading space
             if (!lineCopy.empty() && lineCopy.front() == ' ')
@@ -81,7 +86,6 @@ namespace Vectrix {
                 isContent = true;
                 continue;
             }
-            free(l);
 
 
             if (isContent && lineCopy.find('{') != std::string::npos) {

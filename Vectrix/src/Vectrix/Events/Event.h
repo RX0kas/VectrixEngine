@@ -27,8 +27,7 @@ namespace Vectrix {
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased,
-		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
-		SceneSaved, SceneLoading, SceneLoaded
+		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
 	/**
@@ -47,8 +46,7 @@ namespace Vectrix {
 		EventCategoryInput = BIT(1),       ///< Sent by any input device
 		EventCategoryKeyboard = BIT(2),    ///< Sent by the keyboard
 		EventCategoryMouse = BIT(3),       ///< Sent by the mouse
-		EventCategoryMouseButton = BIT(4), ///< Sent by a mouse button specifically
-		EventCategoryEditor = BIT(5)       ///< Sent by the editor (scene saved, scene loaded, ...)
+		EventCategoryMouseButton = BIT(4)  ///< Sent by a mouse button specifically
 	};
 
 	/**

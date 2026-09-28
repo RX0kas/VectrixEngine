@@ -134,18 +134,6 @@ namespace Vectrix {
 		 */
 		void setEventCallback(const EventCallbackFn& callback) { m_data.eventCallback = callback; }
 
-		/**
-		 * @brief Turn the vertical synchronisation on or off
-		 * @param enabled true to wait for the vertical blank before presenting
-		 * @note This recreates the swapchain
-		 */
-		void setVSync(bool enabled);
-
-		/**
-		 * @brief Tell if the vertical synchronisation is on
-		 * @return true when vsync is enabled
-		 */
-		[[nodiscard]] bool isVSync() const;
 
 		/**
 		 * @brief Make the window visible
@@ -198,8 +186,7 @@ namespace Vectrix {
 		struct WindowData
 		{
 			std::string title;
-			unsigned int width, height;
-			bool vSync;
+			unsigned int width, height; ///< Framebuffer size, in pixels
 			bool windowResized;
 			EventCallbackFn eventCallback;
 			bool visible;

@@ -14,8 +14,8 @@
 #include <nfd.h>
 
 #include "StartupLayer.h"
+#include "Utils/Error.h"
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
-#include "Vectrix/Events/EditorEvent.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 #include "Vectrix/Settings/Outline.h"
 #include "Vectrix/Settings/SettingsManager.h"
@@ -74,8 +74,10 @@ namespace Vectrix {
 
 	void EditorLayer::OnAttach(const JsonObject& data) {
     	if (data.contains("projectDirectory")) {
-    		if (const auto projectDirectory = data.at("projectDirectory").getAs<std::string>())
-    			AssetsManager::setAssetsPath(std::filesystem::path(*projectDirectory) / "Assets");
+    		if (const auto projectDirectory = data.at("projectDirectory").getAs<std::string>()) {
+    			m_projectDirectory = *projectDirectory;
+    			AssetsManager::setAssetsPath(m_projectDirectory / "Assets");
+    		}
     	}
     	OnAttach();
     	if (data.contains("scenePath")) {
@@ -120,13 +122,15 @@ namespace Vectrix {
 	void EditorLayer::openScene(const std::filesystem::path& path) {
     	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path.string());
     	if (sceneCreationData.result != SUCCESS) {
-    		VC_ERROR_NO_EXIT("Error while loading scene file {}: {}",m_pendingScenePath,toString(sceneCreationData.result));
+    		showErrorMessage("ERROR_LOADING_SCENE_FILE");
+    		m_lastLoadSceneFileErrorMessage = std::format("Error while loading scene file {}: {}",path.string(),toString(sceneCreationData.result));
     		return;
     	}
 
     	auto newScene = Scene::loadScene(sceneCreationData);
     	if (newScene.first != SUCCESS) {
-    		VC_ERROR_NO_EXIT("Error while loading scene {}: {}",m_pendingScenePath,toString(newScene.first));
+    		showErrorMessage("ERROR_LOADING_SCENE");
+    		m_lastLoadSceneErrorMessage = std::format("Error while loading scene {}: {}",path.string(),toString(newScene.first));
     		return;
     	}
 
@@ -136,12 +140,14 @@ namespace Vectrix {
     	m_activeScene->m_registry.clear<>();
 
     	m_activeScene = newScene.second;
-    	m_activeScene->m_projectDirectory = path.parent_path();
+    	m_activeScene->m_directory = path.parent_path();
     	m_activeScene->m_fileName = path.filename().string();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
     	m_undoHistory.clear();
 
-    	const std::filesystem::path settingsPath = std::filesystem::path(m_activeScene->getProjectDirectory()) / settingsFileName;
+    	// The project tier lives at the project root, not next to the scene (scenes are in <project>/Scenes):
+    	// using the scene's folder read and wrote <project>/Scenes/settings.vectrix.json instead
+    	const std::filesystem::path settingsPath = m_projectDirectory.empty() ? std::filesystem::path{} : m_projectDirectory / settingsFileName;
     	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath); settingsResult != SUCCESS)
     		VC_WARN("Project settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
 
@@ -151,7 +157,6 @@ namespace Vectrix {
 
     	AssetsManager::instance().getMeshManager().clear();
     	AssetsManager::instance().getTextureManager().clear();
-    	AssetsManager::instance().getMeshManager().clear();
 
     	GraphicsContext::waitIdle();
 	}
@@ -175,7 +180,8 @@ namespace Vectrix {
     	} else if (result == NFD_CANCEL) {
     		VC_INFO("User cancelled");
     	} else {
-    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    		showErrorMessage("OPEN_DIALOG_NFD_ERROR");
+    		m_lastNFDOpenError = std::format("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -194,7 +200,8 @@ namespace Vectrix {
     	} else if (result == NFD_CANCEL) {
     		VC_INFO("User cancelled");
     	} else {
-    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    		showErrorMessage("OPEN_PROJECT_DIALOG_NFD_ERROR");
+    		m_lastOpenProjectNFDError = std::format("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -217,7 +224,7 @@ namespace Vectrix {
     	std::string path = m_pendingProjectPath;
     	m_pendingProjectPath.clear();
 		JsonObject data;
-    	data.emplace("path",path);
+    	data.emplace("openProject",path); // the key StartupLayer::OnAttach looks for ("path" was ignored: nothing opened)
     	Application::instance().switchToLayer<StartupLayer>(this,data);
     }
 
@@ -231,14 +238,15 @@ namespace Vectrix {
 
     	if (result == NFD_OKAY) {
     		const std::filesystem::path scenePath(outPath);
-    		m_activeScene->m_projectDirectory = scenePath.parent_path();
+    		m_activeScene->m_directory = scenePath.parent_path();
     		m_activeScene->m_fileName = scenePath.filename().string();
     		SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {
     		VC_INFO("User cancelled");
     	} else {
-    		VC_ERROR_NO_EXIT("NFD Error: {}", NFD_GetError());
+    		showErrorMessage("SAVE_DIALOG_NFD_ERROR");
+    		m_lastSaveSceneNFDError = std::format("NFD Error: {}", NFD_GetError());
     	}
 
     	NFD_Quit();
@@ -290,7 +298,7 @@ namespace Vectrix {
 						showSaveDialog();
 					} else {
 						const std::filesystem::path scenePath =
-							std::filesystem::path(m_activeScene->getProjectDirectory()) / m_activeScene->getFileName();
+							std::filesystem::path(m_activeScene->getDirectory()) / m_activeScene->getFileName();
 						SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
 					}
 				}
@@ -301,15 +309,20 @@ namespace Vectrix {
 				}
 
 				if (ImGui::BeginMenu("Open recent project")) {
-					if (!m_projectsHasBeenLoaded) {
-						m_recentProjects = StartupLayer::loadRecentProject();
-					}
-					// TODO: verify cache from StartupLayer
-					for (const auto&[name, path] : m_recentProjects) {
-						if (ImGui::Button(name.c_str())) {
+					// Cached by StartupLayer: only re-read from disk when recentProjects.json changed
+					for (const RecentProject& project : StartupLayer::loadRecentProject()) {
+						ImGui::PushID(&project);
+						const bool clicked = ImGui::MenuItem(project.name.c_str());
+						if (ImGui::IsItemHovered())
+							ImGui::SetTooltip("%s", project.path.string().c_str());
+						ImGui::PopID();
+						if (clicked) {
 							JsonObject data;
-							data["openProject"] = path.c_str();
+							// path.string(), not c_str(): on Windows c_str() is a wchar_t* that would silently become a JsonValue(bool)
+							data["openProject"] = JsonValue(project.path.string());
 							Application::instance().switchToLayer<StartupLayer>(this, data);
+							// The new StartupLayer is constructed right away and may reload the list we're iterating
+							break;
 						}
 					}
 					ImGui::EndMenu();
@@ -389,6 +402,13 @@ namespace Vectrix {
     	if (m_graphicDebugWidgetEnable) {
     		Application::instance().imguiLayer().getManager().renderDebugGraphicWidget(m_graphicDebugWidgetEnable);
     	}
+
+    	renderErrorMessage("ERROR_LOADING_SCENE_FILE",m_lastLoadSceneFileErrorMessage);
+    	renderErrorMessage("ERROR_LOADING_SCENE",m_lastLoadSceneErrorMessage);
+    	renderErrorMessage("OPEN_DIALOG_NFD_ERROR", m_lastNFDOpenError);
+    	renderErrorMessage("OPEN_PROJECT_DIALOG_NFD_ERROR", m_lastOpenProjectNFDError);
+    	renderErrorMessage("SAVE_DIALOG_NFD_ERROR", m_lastSaveSceneNFDError);
+    	renderErrorMessage("LOAD_RECENT_PROJECTS_ERROR", StartupLayer::lastLoadRecentProjectsError());
     }
 
     void EditorLayer::OnRender() {

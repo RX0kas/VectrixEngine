@@ -71,10 +71,11 @@ namespace Vectrix {
         [[nodiscard]] std::string getName() const { return m_name; }
 
         /**
-         * @brief Return the folder of the project the scene belongs to
-         * @return The project directory, which the asset paths are relative to
+         * @brief Return the folder the scene file is in
+         * @return The scene's directory (e.g. `<project>/Scenes`), empty until the scene is loaded or saved
+         * @note Not the project directory: asset paths are resolved against AssetsManager::getAssetsPath
          */
-        [[nodiscard]] std::string getProjectDirectory() const { return m_projectDirectory.string(); }
+        [[nodiscard]] std::string getDirectory() const { return m_directory.string(); }
 
         /**
          * @brief Return the name of the file the scene was loaded from
@@ -94,12 +95,14 @@ namespace Vectrix {
         friend class SceneHierarchyPanel;
         friend class EditorLayer;
         friend class SceneSerializer;
-        friend class MenuBar;
-        std::shared_ptr<Entity> getEntity(entt::entity entityHandle) { return m_entities[entityHandle]; }
+        std::shared_ptr<Entity> getEntity(entt::entity entityHandle) {
+            const auto it = m_entities.find(entityHandle); // not operator[]: it would insert a null entry on a miss
+            return it != m_entities.end() ? it->second : nullptr;
+        }
         entt::registry m_registry;
         std::string m_name;
         std::string m_fileName;
-        std::filesystem::path m_projectDirectory;
+        std::filesystem::path m_directory;
         std::unordered_map<entt::entity,std::shared_ptr<Entity>> m_entities{};
     };
 } // Vectrix

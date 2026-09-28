@@ -44,8 +44,8 @@ namespace Vectrix {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
-        const std::vector<VkVertexInputAttributeDescription> generatedAttributeDescriptions = VulkanVertexBuffer::getAttributeDescriptions(configInfo.layout);
-        const std::vector<VkVertexInputBindingDescription> generatedBindingDescriptions = VulkanVertexBuffer::getBindingDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputAttributeDescription> generatedAttributeDescriptions = getVertexAttributeDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputBindingDescription> generatedBindingDescriptions = getVertexBindingDescriptions(configInfo.layout);
         const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions =
             configInfo.overrideVertexInput ? configInfo.attributeDescriptions : generatedAttributeDescriptions;
         const std::vector<VkVertexInputBindingDescription>& bindingDescriptions =
@@ -61,9 +61,12 @@ namespace Vectrix {
         VkPipelineRenderingCreateInfoKHR renderingInfo{};
         renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
         renderingInfo.colorAttachmentCount = 1;
-        VkFormat f =  VulkanContext::instance().getRenderer().getImageFormat();
+        const VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
+        VkFormat f = renderer.getImageFormat();
         renderingInfo.pColorAttachmentFormats = &f;
-        renderingInfo.depthAttachmentFormat = VK_FORMAT_D32_SFLOAT;
+        // The same query the swap chain and framebuffers create their depth images with: D32_SFLOAT isn't
+        // guaranteed, and a pipeline format that doesn't match the attachment is invalid
+        renderingInfo.depthAttachmentFormat = renderer.findDepthFormat();
 
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};

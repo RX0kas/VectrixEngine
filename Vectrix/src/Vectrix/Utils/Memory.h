@@ -24,7 +24,7 @@ namespace Vectrix {
  * @param align The alignment to respect, a power of two
  * @ingroup utils
  */
-#define ALIGN_TO(offset,align) (offset + (align - 1)) & ~(align - 1)
+#define ALIGN_TO(offset,align) (((offset) + ((align) - 1)) & ~((align) - 1))
 
     /**
      * @brief A hash map tuned for the engine, used to keep loaded assets around
@@ -100,7 +100,8 @@ namespace Vectrix {
     inline std::string readUTF8(const std::string& path) {
         std::ifstream fichier(path, std::ios::binary);
         if (!fichier.is_open()) {
-            VC_CORE_ERROR("Can't open: {}", path);
+            VC_CORE_ERROR_NO_EXIT("Can't open: {}", path);
+            return {};
         }
         std::stringstream buffer;
         buffer << fichier.rdbuf();

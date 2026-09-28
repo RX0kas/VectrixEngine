@@ -7,6 +7,24 @@
 #include "Vectrix/Core/Log.h"
 
 namespace Vectrix {
+    namespace {
+        /// Bytes left between the read position and the end of the file: sizes read from the file are
+        /// checked against it before allocating, so a corrupt size can't ask for gigabytes
+        std::uint64_t remainingBytes(std::ifstream& stream) {
+            const std::streampos position = stream.tellg();
+            stream.seekg(0, std::ios::end);
+            const std::streampos end = stream.tellg();
+            stream.seekg(position);
+            return end > position ? static_cast<std::uint64_t>(end - position) : 0;
+        }
+
+        void writeString(std::ofstream& file, const std::string& str) {
+            const auto len = static_cast<uint16_t>(str.size());
+            file.write(reinterpret_cast<const char*>(&len), sizeof(len));
+            file.write(str.data(), len);
+        }
+    }
+
     // TODO: Verify Hash
     SceneCreationData SceneSerializer::loadSceneFile(const std::string& path) {
         std::ifstream file(path,std::ios::binary);
@@ -44,6 +62,7 @@ namespace Vectrix {
             VC_CORE_ERROR_NO_EXIT("Can't load the name of the scene from file: {}",path.c_str());
             return {.result = UNKNOWN_ERROR};
         }
+        data.name = sceneName.value();
 
         auto entities = readEntities(file);
         if (!entities.has_value()) {
@@ -96,6 +115,11 @@ namespace Vectrix {
             return std::nullopt;
         }
 
+        // Every entity takes at least its name length and component count (4 bytes)
+        if (entityCount > remainingBytes(stream) / 4) {
+            return std::nullopt;
+        }
+
         std::vector<EntityCreationData> datas(entityCount);
         for (std::uint32_t entitiesLoaded = 1; entitiesLoaded <= entityCount; entitiesLoaded++) {
             std::optional<std::string> entityName = getString(stream);
@@ -138,6 +162,10 @@ namespace Vectrix {
                 return std::nullopt;
             }
 
+            if (data_size > remainingBytes(stream)) {
+                return std::nullopt;
+            }
+
             std::vector<std::byte> data(data_size);
             if (!stream.read(reinterpret_cast<char*>(data.data()), data_size)) {
                 return std::nullopt;
@@ -152,14 +180,6 @@ namespace Vectrix {
 
         return datas;
     }
-
-    /// @cond INTERNAL
-    void writeString(std::ofstream& file, const std::string& str) {
-        uint16_t len = static_cast<uint16_t>(str.size());
-        file.write(reinterpret_cast<const char*>(&len), sizeof(len));
-        file.write(str.data(), len);
-    }
-    /// @endcond
 
     VectrixResult SceneSerializer::saveScene(const std::string &path, Scene& scene) {
         std::ofstream file(path, std::ios::binary);
@@ -215,7 +235,7 @@ namespace Vectrix {
                 float camFar = camera.camera.getCamFar();
                 file.write(reinterpret_cast<const char*>(&camFar), sizeof(float));
 
-                float aspect = camera.camera.getAspect() ? camera.camera.hasCustomAspect() : -1.0f;
+                const float aspect = camera.camera.hasCustomAspect() ? camera.camera.getAspect() : -1.0f;
                 file.write(reinterpret_cast<const char*>(&aspect), sizeof(float));
             }
 
@@ -223,19 +243,28 @@ namespace Vectrix {
                 auto& mesh = e->getComponent<MeshRendererComponent>();
                 uint32_t hashMesh = entt::type_hash<MeshRendererComponent>::value();
 
-                uint32_t meshSize = sizeof(uint16_t) + mesh.mesh->getID().size()
-                                  + sizeof(uint16_t) + mesh.texture->getID().size()
-                                  + sizeof(uint16_t) + mesh.shader->getID().size() + sizeof(bool);
+                // The editor lets a component be saved before all its assets are set: an unset asset is an empty id
+                const std::string meshId = mesh.mesh ? mesh.mesh->getID() : std::string();
+                const std::string textureId = mesh.texture ? mesh.texture->getID() : std::string();
+                const std::string shaderId = mesh.shader ? mesh.shader->getID() : std::string();
+
+                uint32_t meshSize = sizeof(uint16_t) + meshId.size()
+                                  + sizeof(uint16_t) + textureId.size()
+                                  + sizeof(uint16_t) + shaderId.size() + sizeof(bool);
                 file.write(reinterpret_cast<const char*>(&hashMesh), sizeof(hashMesh));
                 file.write(reinterpret_cast<const char*>(&meshSize), sizeof(meshSize));
-                writeString(file, mesh.mesh->getID());
-                writeString(file, mesh.texture->getID());
-                writeString(file, mesh.shader->getID());
+                writeString(file, meshId);
+                writeString(file, textureId);
+                writeString(file, shaderId);
                 bool isEnable = mesh.isEnable();
                 file.write(reinterpret_cast<const char*>(&isEnable),sizeof(bool));
             }
         }
 
+        if (!file.good()) {
+            VC_CORE_ERROR_NO_EXIT("Failed while writing: {}", path.c_str());
+            return UNKNOWN_ERROR;
+        }
         return SUCCESS;
     }
 } // Vectrix

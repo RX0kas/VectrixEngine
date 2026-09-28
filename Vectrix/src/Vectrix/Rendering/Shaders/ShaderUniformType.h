@@ -34,7 +34,7 @@ namespace Vectrix {
             case ShaderUniformType::Uint:
             case ShaderUniformType::Bool:  return 4;
             case ShaderUniformType::Vec2:  return 8;
-            case ShaderUniformType::Vec3:  // vec3 occupies vec4 slot
+            case ShaderUniformType::Vec3:  // vec3 is aligned like a vec4 (it only occupies 12 bytes)
             case ShaderUniformType::Vec4:
             case ShaderUniformType::Mat4:  return 16;
             default: return 4;

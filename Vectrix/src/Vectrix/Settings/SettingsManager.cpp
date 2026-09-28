@@ -50,11 +50,17 @@ namespace Vectrix {
 			return {SUCCESS, ""};
 		}
 
+		// On failure the tier is emptied rather than left holding what the previous file loaded into it
+		// (e.g. the previous project's settings when the new project's file is broken)
 		auto [result, root] = Json::load(file.string());
-		if (result != SUCCESS)
+		if (result != SUCCESS) {
+			target.clear();
 			return {result, "Error while parsing settings: " + root.getString()};
-		if (!root.isType<JsonObject>())
+		}
+		if (!root.isType<JsonObject>()) {
+			target.clear();
 			return {WRONG_TYPE, "Settings root is not a JSON object"};
+		}
 
 		target = root.getAsObject();
 		return {SUCCESS, ""};

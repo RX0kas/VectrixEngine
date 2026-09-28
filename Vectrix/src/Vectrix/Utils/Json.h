@@ -1,6 +1,5 @@
 #ifndef VECTRIXWORKSPACE_JSON_H
 #define VECTRIXWORKSPACE_JSON_H
-#include <any>
 #include <cstddef>
 #include <map>
 #include <optional>
@@ -84,6 +83,15 @@ namespace Vectrix {
          * @param value The object (map of string to JsonValue)
          */
         JsonValue(const JsonObject& value) : m_data(value) {}
+
+        /// @brief Constructs a JSON string value, taking over the string
+        explicit JsonValue(std::string&& value) : m_data(std::move(value)) {}
+
+        /// @brief Constructs a JSON array value, taking over the elements
+        JsonValue(JsonArray&& value) : m_data(std::move(value)) {}
+
+        /// @brief Constructs a JSON object value, taking over the members
+        JsonValue(JsonObject&& value) : m_data(std::move(value)) {}
 
         /**
          * @brief Retrieves the value as a string.
@@ -315,10 +323,6 @@ namespace Vectrix {
             return s_discard;
         }
 
-        bool isArray() {
-            return std::holds_alternative<std::nullptr_t>(m_data) || std::get_if<JsonArray>(&m_data);
-        }
-
     private:
         /**
          * @brief Shared writable value handed back when a mutating accessor is misused.
@@ -353,16 +357,16 @@ namespace Vectrix {
         /**
          * @brief Parses a JSON string and returns the root JsonValue.
          * @param fileData The JSON string to parse.
-         * @return The root JsonValue representing the parsed JSON.
-         * @note On parsing error, the behavior is undefined (likely an assertion or error log).
+         * @return #SUCCESS and the root value, or #FORMATING_ERROR and a string value describing
+         *         what is wrong and where, when the text is not valid JSON
+         * @note Numbers are read independently of the C locale.
          */
         [[nodiscard]] static std::pair<VectrixResult,JsonValue> parse(const std::string& fileData);
 
         /**
          * @brief Loads a JSON file from disk and parses its contents.
          * @param filePath Path to the JSON file.
-         * @return The root JsonValue representing the parsed JSON.
-         * @note If the file cannot be opened or parsed, an error is logged.
+         * @return As parse, or #NOT_FOUND and a string value when the file can't be opened
          */
         [[nodiscard]] static std::pair<VectrixResult,JsonValue> load(const std::string& filePath);
 
@@ -376,75 +380,6 @@ namespace Vectrix {
          */
         [[nodiscard]] static VectrixResult save(const std::string& filePath,const JsonObject& object);
     private:
-        /**
-         * @brief Skips whitespace and returns the next character without consuming it.
-         * @param src The source string.
-         * @param pos Current parsing position (updated to skip whitespace).
-         * @return The next non-whitespace character.
-         */
-        static char peek(const std::string& src, size_t& pos) {
-            while (pos < src.size() && std::isspace(src[pos])) pos++;
-            return src[pos];
-        }
-
-        /**
-         * @brief Consumes and returns the current character, advancing the position.
-         * @param src The source string.
-         * @param pos Current parsing position.
-         * @return The character at the current position before advancing.
-         */
-        static char consume(const std::string& src, size_t& pos) {
-            return src[pos++];
-        }
-
-        /**
-         * @brief Parses a JSON string enclosed in double quotes.
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the string).
-         * @return The parsed string content (without quotes, with escape sequences resolved).
-         */
-        static std::string parseString(const std::string& src, size_t& pos);
-
-        /**
-         * @brief Parses a JSON number.
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the number).
-         * @return The parsed double value.
-         */
-        static double parseNumber(const std::string& src, size_t& pos);
-
-        /**
-         * @brief Parses a JSON boolean (true/false) or null.
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the token).
-         * @return A variant holding either bool or nullptr_t.
-         */
-        static std::variant<bool, std::nullptr_t> parseBool(const std::string& src, size_t& pos);
-
-        /**
-         * @brief Parses a JSON array (e.g., [value, value, ...]).
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the array).
-         * @return The parsed JsonArray.
-         */
-        static JsonArray parseArray(const std::string& src, size_t& pos);
-
-        /**
-         * @brief Parses a JSON object (e.g., {"key": value, ...}).
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the object).
-         * @return The parsed JsonObject.
-         */
-        static JsonObject parseObject(const std::string& src, size_t& pos);
-
-        /**
-         * @brief Parses any JSON value (string, number, bool, null, array, object).
-         * @param src The source string.
-         * @param pos Current parsing position (updated to after the value).
-         * @return The parsed JsonValue.
-         */
-        static JsonValue parseValue(const std::string& src, size_t& pos);
-
         /**
          * @brief Appends the textual form of any JSON value to a buffer.
          * @param value The value to serialize.
@@ -467,9 +402,6 @@ namespace Vectrix {
          * @note Integral values are written without a fractional part; NaN and infinities become @c null.
          */
         static void writeNumber(double value, std::string& out);
-
-        /** @brief Characters allowed in a JSON number (including sign and exponent) */
-        static constexpr std::string_view number_characters = "0123456789-+e.";
     };
 } // Vectrix
 
