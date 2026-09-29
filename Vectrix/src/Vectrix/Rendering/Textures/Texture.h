@@ -2,7 +2,7 @@
 #define VECTRIXWORKSPACE_TEXTURE_H
 
 #include "Vectrix/Core/Core.h"
-#include <cstdint>
+#include "imgui.h"
 
 /**
  * @file Texture.h
@@ -36,12 +36,24 @@ namespace Vectrix {
          * @brief This function return the maximal number of Texture allowed per Shader
          * @return The maximum number of Texture allowed per shader
          */
-        static constexpr uint32_t getMaxTexturePerShader() { return 8; }
+        static constexpr uint32_t getMaxTexturePerShader() { return 128; }
+
+        /**
+         * @brief Return the name of the texture
+         */
+        [[nodiscard]] virtual std::string getID() const = 0;
+
+        /**
+         * @brief Return the unique identifier to be used by ImGui
+         */
+        [[nodiscard]] virtual ImTextureID getImGuiTextureID() const = 0;
     private:
         friend class TextureManager;
-        static std::shared_ptr<Texture> create(const std::string& path);
+        friend class AssetsManager;
+        /// Takes the id of the file the texture was loaded from once it moved (AssetsManager::moveProjectAssets)
+        virtual void setID(std::string id) = 0;
+        static std::shared_ptr<Texture> create(const std::string &name,const std::string& path);
         static std::shared_ptr<Texture> createDefaultTexture();
-        static unsigned int m_count;
     };
 } // Vectrix
 

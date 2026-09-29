@@ -1,17 +1,18 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.28)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Dist")
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.5.0 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.5.1 LANGUAGES CXX C)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -20,6 +21,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
+# Options
+option(VECTRIX_BUILD_EDITOR "Build VectrixEditor" OFF)
 
 message(STATUS "Initializing Vectrix dependencies")
 
@@ -76,6 +79,48 @@ add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
 message(VERBOSE "Initializing EnTT")
 add_subdirectory(Vectrix/extern/EnTT)
 
+# ImGui
+message(VERBOSE "Initializing ImGui")
+file(GLOB IMGUI_SOURCES
+        Vectrix/extern/imgui/*.cpp
+)
+
+add_library(imgui STATIC
+        ${IMGUI_SOURCES}
+)
+target_compile_definitions(imgui PRIVATE IMGUI_IMPL_VULKAN_USE_VOLK)
+target_link_libraries(imgui volk::volk glfw)
+
+target_include_directories(imgui PUBLIC Vectrix/extern/imgui)
+
+# ImGuizmo
+message(VERBOSE "Initializing ImGuizmo")
+add_library(imguizmo STATIC
+        Vectrix/extern/ImGuizmo/src/ImGuizmo.cpp
+        Vectrix/extern/ImGuizmo/src/ImGuizmo.h
+)
+
+target_link_libraries(imguizmo PUBLIC imgui)
+target_include_directories(imguizmo PUBLIC Vectrix/extern/imgui)
+
+# nativefiledialog-extended
+message(VERBOSE "Initializing nativefiledialog-extended")
+if (UNIX AND NOT APPLE)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(GTK3 gtk+-3.0)
+
+  if (GTK3_FOUND)
+    message(VERBOSE "GTK3 found")
+  else()
+    message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
+  endif()
+endif()
+add_subdirectory(Vectrix/extern/NativeFileDialog)
+
+# PlatformFolders
+message(VERBOSE "Initialising PlatformFolders")
+add_subdirectory(Vectrix/extern/PlatformFolders)
+
 # Vectrix
 message(STATUS "Initializing Vectrix")
 
@@ -93,23 +138,23 @@ list(APPEND Vectrix_SOURCES
 
 
 if (WIN32)
-    message(STATUS "Windows Platform detected")
+  message(STATUS "Windows Platform detected")
 
-    file(GLOB_RECURSE PLATFORM_SOURCES
+  file(GLOB_RECURSE PLATFORM_SOURCES
             Vectrix/src/Platform/Windows/*.cpp
             Vectrix/src/Platform/Windows/*.h
     )
 
 elseif (UNIX AND NOT APPLE)
-    message(STATUS "Linux Platform detected")
+  message(STATUS "Linux Platform detected")
 
-    file(GLOB_RECURSE PLATFORM_SOURCES
+  file(GLOB_RECURSE PLATFORM_SOURCES
             Vectrix/src/Platform/Linux/*.cpp
             Vectrix/src/Platform/Linux/*.h
     )
 
 else()
-    message(FATAL_ERROR "Unsupported platform")
+  message(FATAL_ERROR "Unsupported platform")
 endif()
 
 file(GLOB_RECURSE GRAPHICS_API_SOURCES
@@ -120,10 +165,36 @@ file(GLOB_RECURSE GRAPHICS_API_SOURCES
 list(APPEND Vectrix_SOURCES ${PLATFORM_SOURCES})
 list(APPEND Vectrix_SOURCES ${GRAPHICS_API_SOURCES})
 
+# Embedded shaders: generate headers holding the engine's built-in .vcshader files as
+# string literals, so they compile into the binary instead of being read from disk.
+set(EMBEDDED_SHADER_DIR ${CMAKE_BINARY_DIR}/generated/Vectrix/Rendering/Shaders)
+file(MAKE_DIRECTORY ${EMBEDDED_SHADER_DIR})
+
+function(vectrix_embed_shader NAME SOURCE_FILE IDENTIFIER)
+  add_custom_command(
+          OUTPUT ${EMBEDDED_SHADER_DIR}/${NAME}.h
+          COMMAND Python3::Interpreter ${PROJECT_SOURCE_DIR}/Vectrix/scripts/embed_shader.py
+                  ${SOURCE_FILE} ${EMBEDDED_SHADER_DIR}/${NAME}.h ${IDENTIFIER}
+          DEPENDS ${SOURCE_FILE} ${PROJECT_SOURCE_DIR}/Vectrix/scripts/embed_shader.py
+          COMMENT "Embedding shader ${NAME}"
+  )
+endfunction()
+
+vectrix_embed_shader(ImguiShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/imgui.vcshader k_ImguiShader)
+vectrix_embed_shader(MaskShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/mask.vcshader k_MaskShader)
+vectrix_embed_shader(OutlineShader ${PROJECT_SOURCE_DIR}/run/assets/shaders/outline.vcshader k_OutlineShader)
+
+add_custom_target(VectrixEmbeddedShaders DEPENDS
+        ${EMBEDDED_SHADER_DIR}/ImguiShader.h
+        ${EMBEDDED_SHADER_DIR}/MaskShader.h
+        ${EMBEDDED_SHADER_DIR}/OutlineShader.h
+)
+
 add_library(Vectrix STATIC ${Vectrix_SOURCES})
+add_dependencies(Vectrix VectrixEmbeddedShaders)
 
 if(MSVC)
-    target_precompile_headers(Vectrix PRIVATE
+  target_precompile_headers(Vectrix PRIVATE
             Vectrix/src/vcpch.h
     )
 endif()
@@ -135,6 +206,8 @@ target_include_directories(Vectrix PUBLIC
         Vectrix/extern/glm
         Vectrix/extern/imgui
         Vectrix/extern/include
+        Vectrix/extern/ImGuizmo/src
+        ${CMAKE_BINARY_DIR}/generated
         ${Vulkan_INCLUDE_DIRS}
 )
 
@@ -144,21 +217,15 @@ target_compile_definitions(Vectrix PRIVATE
 )
 
 if(WIN32)
-    target_compile_definitions(Vectrix PRIVATE _CRT_SECURE_NO_WARNINGS)
+  target_compile_definitions(Vectrix PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
-
-file(GLOB IMGUI_SOURCES
-        Vectrix/extern/imgui/*.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_glfw.cpp
-        Vectrix/extern/imgui/backends/imgui_impl_vulkan.cpp
-)
 
 target_sources(Vectrix PRIVATE ${IMGUI_SOURCES})
 
 if (UNIX AND NOT APPLE)
-    # For Linux we need X11
-    find_package(X11 REQUIRED)
-    target_link_libraries(Vectrix
+  # For Linux we need X11
+  find_package(X11 REQUIRED)
+  target_link_libraries(Vectrix
             glfw
             shaderc
             X11::X11
@@ -166,21 +233,27 @@ if (UNIX AND NOT APPLE)
             GPUOpen::VulkanMemoryAllocator
             volk::volk
             EnTT::EnTT
+            imguizmo
+            nfd
+            sago::platform_folders
     )
 else()
-target_link_libraries(Vectrix
+  target_link_libraries(Vectrix
         glfw
         shaderc
         xxHash::xxhash
         GPUOpen::VulkanMemoryAllocator
         volk::volk
         EnTT::EnTT
+        imguizmo
+        nfd
+        sago::platform_folders
 )
 endif()
 
 # UTF-8 (MSVC)
 if(MSVC)
-    target_compile_options(Vectrix PRIVATE /utf-8)
+  target_compile_options(Vectrix PRIVATE /utf-8)
 endif()
 
 target_compile_definitions(Vectrix PUBLIC
@@ -190,62 +263,40 @@ target_compile_definitions(Vectrix PUBLIC
 )
 
 if(WIN32)
-    target_compile_definitions(Vectrix PUBLIC
+  target_compile_definitions(Vectrix PUBLIC
             VC_PLATFORM_WINDOWS
             GLFW_INCLUDE_NONE
     )
 elseif(UNIX AND NOT APPLE)
-    target_compile_definitions(Vectrix PUBLIC
-            VC_PLATFORM_LINUX
-    )
+    target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_LINUX)
 endif()
 
 ##########
 # Editor #
 ##########
+if (${VECTRIX_BUILD_EDITOR})
+  message(STATUS "Creating VectrixEditor project")
+  file(GLOB_RECURSE EDITOR_SOURCES
+          VectrixEditor/src/*.cpp
+          VectrixEditor/src/*.h
+  )
 
-file(GLOB_RECURSE EDITOR_SOURCES
-        VectrixEditor/src/*.cpp
-        VectrixEditor/src/*.h
-)
+  add_executable(VectrixEditor ${EDITOR_SOURCES})
 
-add_executable(VectrixEditor ${EDITOR_SOURCES})
+  target_link_libraries(VectrixEditor PRIVATE Vectrix)
 
-target_link_libraries(VectrixEditor PRIVATE Vectrix)
+  target_include_directories(VectrixEditor PRIVATE
+          $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
+          VectrixEditor/src/
+  )
 
-target_include_directories(VectrixEditor PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
-)
+  target_compile_definitions(VectrixEditor PRIVATE
+          $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
+  )
 
-target_compile_definitions(VectrixEditor PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
-)
-
-if(MSVC)
+  if(MSVC)
     target_compile_options(VectrixEditor PRIVATE /utf-8)
-endif()
-
-
-###########
-# Sandbox #
-###########
-file(GLOB_RECURSE SANDBOX_SOURCES
-        Sandbox/src/*.cpp
-        Sandbox/src/*.h
-)
-
-add_executable(Sandbox ${SANDBOX_SOURCES})
-
-target_link_libraries(Sandbox PRIVATE Vectrix)
-
-target_include_directories(Sandbox PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
-)
-
-target_compile_definitions(Sandbox PRIVATE
-        $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
-)
-
-if(MSVC)
-    target_compile_options(Sandbox PRIVATE /utf-8)
+  endif()
+else ()
+  message(STATUS "Skipping VectrixEditor")
 endif()

@@ -39,26 +39,11 @@ namespace Vectrix
 			s_rendererAPI->setClearColor(color);
 		}
 
-		/**
-		 * @brief Draws geometry using the provided vertex array
-		 *
-		 * @param vertexArray The vertex array containing vertex data and indices
-		 *
-		 * @pre A frame must have been started with setupFrame()
-		 * @pre The vertex array must be properly initialized
-		 */
-		static void drawIndexed(const VertexArray& vertexArray)
-		{
-			VC_PROFILER_FUNCTION();
-			if (!s_frameStarted) VC_ERROR("Trying to draw but no frame has started");
-			s_rendererAPI->drawIndexed(vertexArray);
-		}
-
 	private:
 		static bool canRender() {
 			VC_PROFILER_FUNCTION();
-			s_frameStarted = true;
-			return s_rendererAPI->canRender();
+			s_frameStarted = s_rendererAPI->canRender();
+			return s_frameStarted;
 		}
 
 		static void beginFrame() {
@@ -67,12 +52,16 @@ namespace Vectrix
 
 		static void endFrame() {
 			VC_PROFILER_FUNCTION();
-			if (!s_frameStarted) VC_ERROR("Trying to end a frame but none has started");
+			if (!s_frameStarted) {
+				VC_ERROR("Trying to end a frame but none has started");
+			}
 			s_rendererAPI->endFrame();
 		}
 		static void sendFrame() {
 			VC_PROFILER_FUNCTION();
-			if (!s_frameStarted) VC_ERROR("Trying to send a frame but none has started");
+			if (!s_frameStarted) {
+				VC_ERROR("Trying to send a frame but none has started");
+			}
 			s_rendererAPI->sendFrame();
 			s_frameStarted = false;
 		}

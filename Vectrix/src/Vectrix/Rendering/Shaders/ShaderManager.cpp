@@ -5,21 +5,27 @@
 #include "Vectrix/Rendering/Mesh/ObjLoader.h"
 
 namespace Vectrix {
-    ShaderManager* ShaderManager::s_instance = nullptr;
 
 
     ShaderManager::ShaderManager() {
         VC_CORE_INFO("Initializing ShaderManager");
-        VC_CORE_ASSERT(!s_instance, "ShaderManager already exists!");
-        s_instance = this;
     }
 
 
 
-    std::shared_ptr<Shader> ShaderManager::createShader(const std::string &name, const std::string &vertexPath, const std::string &fragmentPath,ShaderUniformLayout uniformLayout, const BufferLayout &layout, const bool affectedByCamera) {
+    std::shared_ptr<Shader> ShaderManager::createShader(const std::string &name, const std::string &path, const bool affectedByCamera) {
         VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
-        std::shared_ptr<Shader> shader(Shader::create(name, vertexPath, fragmentPath,std::move(uniformLayout), layout,affectedByCamera));
-        instance().add(name,shader);
+        std::shared_ptr<Shader> shader(Shader::create(name, path, getTinyObjLayout()));
+        if (!shader) return nullptr;
+        add(name,shader);
+        return shader;
+    }
+
+    std::shared_ptr<Shader> ShaderManager::createShaderFromSource(const std::string &name, const std::string &source, const bool affectedByCamera) {
+        VC_CORE_ASSERT(!exist(name),"A shader with the name {} already exist",name);
+        std::shared_ptr<Shader> shader(Shader::createFromSource(name, source, getTinyObjLayout()));
+        if (!shader) return nullptr;
+        add(name,shader);
         return shader;
     }
 
@@ -37,6 +43,7 @@ namespace Vectrix {
         const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Shader with the name \"{}\" doesn't exist", name);
+            return nullptr;
         }
         return it->second;
 

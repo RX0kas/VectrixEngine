@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_IMGUIMANAGER_H
 /// @cond INTERNAL
 namespace Vectrix {
+    class ImGuiWidget;
     class Window;
     class ImGuiManager {
     public:
@@ -11,7 +12,7 @@ namespace Vectrix {
         virtual void render() = 0;
         virtual void update() = 0;
         virtual void cleanup() = 0;
-        virtual void attachDebugGraphicWidget() = 0;
+        virtual void renderDebugGraphicWidget(bool& enable) = 0;
         static ImGuiManager* create(Window& window);
     };
 } // Vectrix

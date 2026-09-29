@@ -98,7 +98,7 @@ namespace Vectrix {
                 case ShaderUniformType::Uint:
                 case ShaderUniformType::Bool: return 4;
                 case ShaderUniformType::Vec2: return 8;
-                case ShaderUniformType::Vec3:
+                case ShaderUniformType::Vec3: return 12; // std430: aligned like a vec4, but a following scalar packs into its last 4 bytes
                 case ShaderUniformType::Vec4: return 16;
                 case ShaderUniformType::Mat4: return 64;
                 default: return 4;

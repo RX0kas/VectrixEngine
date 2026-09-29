@@ -6,14 +6,31 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
+#include <fstream>
 #include <unordered_map>
 #include <sstream>
 #include "Vertex.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Utils/Hashing.h"
+#include "Vectrix/Utils/Path.h"
+
+/**
+ * @file ObjLoader.h
+ * @brief Reading of a Wavefront OBJ file into vertices and indices
+ * @ingroup mesh
+ */
 
 namespace Vectrix {
+    /**
+     * @brief Return the vertex layout an OBJ file is loaded into
+     *
+     * Position, normal and texture coordinates, in that order, which is what the shaders
+     * drawing a loaded model expect.
+     * @return The layout matching what loadOBJ produces
+     * @see loadOBJ
+     * @ingroup mesh
+     */
     inline BufferLayout getTinyObjLayout() {
         return {
             { ShaderDataType::Float3, "a_Position" },
@@ -22,6 +39,19 @@ namespace Vectrix {
         };
     }
 
+    /**
+     * @brief Read a Wavefront OBJ file into vertices and indices
+     *
+     * Vertices repeated across faces are merged, so the same position, normal and texture
+     * coordinate triple is only stored once and referred to by index. A missing normal or
+     * texture coordinate becomes zero rather than failing the load.
+     * @param filepath The path of the OBJ file to read
+     * @param outVertices Receives the vertices, appended to what is already there
+     * @param outIndices Receives the indices, appended to what is already there
+     * @return true when the file could be read
+     * @see getTinyObjLayout
+     * @ingroup mesh
+     */
     inline bool loadOBJ(const std::string& filepath,std::vector<Vertex>& outVertices,std::vector<uint32_t>& outIndices) {
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
@@ -29,16 +59,25 @@ namespace Vectrix {
 
         std::string err;
 
-        const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,filepath.c_str());
-
-
-        if (!err.empty()) {
-            VC_ERROR("OBJ error: {}",err);
+        // Opened here rather than by tinyobj, which reads the name in the system code page on Windows (as its
+        // filename overload does, the .mtl files are looked for from the working directory)
+        std::ifstream stream(fromUtf8(filepath));
+        if (!stream) {
+            VC_CORE_ERROR_NO_EXIT("Failed to load OBJ {}: can't open the file",filepath);
             return false;
         }
+        tinyobj::MaterialFileReader materialReader("");
+        const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,&stream,&materialReader);
 
+
+        // This tinyobjloader version reports warnings (e.g. a missing .mtl file) through err too,
+        // so only the return value tells whether the load failed
         if (!ret) {
+            VC_CORE_ERROR_NO_EXIT("Failed to load OBJ {}: {}",filepath,err);
             return false;
+        }
+        if (!err.empty()) {
+            VC_CORE_WARN("OBJ {}: {}",filepath,err);
         }
 
         std::unordered_map<Vertex, uint32_t> uniqueVertices{};

@@ -1,6 +1,8 @@
 #include "vcpch.h"
 #include "Device.h"
 
+#include <algorithm>
+
 #include "GraphicAPI/Vulkan/Enum_str.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
@@ -27,10 +29,13 @@ namespace Vectrix {
                 break;
             case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
                 VC_CORE_ERROR("validation layer: {0}", pCallbackData->pMessage);
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
+                break;
+            default:
                 VC_CORE_CRITICAL("validation layer: {0}", pCallbackData->pMessage);
         }
-        return true;
+        // VK_TRUE is reserved for layer development: it makes the layer skip the Vulkan call that
+        // triggered the message, so a mere warning would silently drop that call
+        return VK_FALSE;
     }
 
     VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
@@ -64,8 +69,6 @@ namespace Vectrix {
         createSurface();
         pickPhysicalDevice();
         createLogicalDevice();
-
-        volkLoadDeviceTable(&m_deviceTable, device());
 
         // VMA
         VmaVulkanFunctions vmaVulkanFunctions{};
@@ -110,21 +113,6 @@ namespace Vectrix {
 
         vkDestroyInstance(m_instance, nullptr);
         VC_CORE_INFO("Device destroyed");
-    }
-
-    uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags memoryProperties) const {
-        VC_PROFILER_FUNCTION();
-        VkPhysicalDeviceMemoryProperties memProperties;
-        vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memProperties);
-        for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-            if ((typeFilter & (1 << i)) &&
-                (memProperties.memoryTypes[i].propertyFlags & memoryProperties) == memoryProperties) {
-                return i;
-            }
-        }
-
-        VC_CORE_CRITICAL("Failed to find suitable memory type");
-        return 0;
     }
 
     VkFormat Device::findSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features) const {
@@ -201,40 +189,6 @@ namespace Vectrix {
         vkFreeCommandBuffers(m_device, m_commandPool, 1, &commandBuffer);
     }
 
-    void Device::copyBuffer(const VkBuffer srcBuffer, const VkBuffer dstBuffer, const VkDeviceSize size) {
-        VC_PROFILER_FUNCTION();
-        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
-
-        VkBufferCopy copyRegion{};
-        copyRegion.srcOffset = 0;  // Optional
-        copyRegion.dstOffset = 0;  // Optional
-        copyRegion.size = size;
-        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-        endSingleTimeCommands(commandBuffer);
-    }
-
-    void Device::copyBufferToImage(const VkBuffer buffer, const VkImage image, const uint32_t width, const uint32_t height, const uint32_t layerCount) {
-        VC_PROFILER_FUNCTION();
-        const VkCommandBuffer commandBuffer = beginSingleTimeCommands();
-
-        VkBufferImageCopy region{};
-        region.bufferOffset = 0;
-        region.bufferRowLength = 0;
-        region.bufferImageHeight = 0;
-
-        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.baseArrayLayer = 0;
-        region.imageSubresource.layerCount = layerCount;
-
-        region.imageOffset = { 0, 0, 0 };
-        region.imageExtent = { width, height, 1 };
-
-        vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
-        endSingleTimeCommands(commandBuffer);
-    }
-
     void Device::createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags memoryProperties, VkImage& image, VmaAllocation& allocation) {
         VC_PROFILER_FUNCTION();
         VmaAllocationCreateInfo allocCreateInfo = {};
@@ -252,37 +206,16 @@ namespace Vectrix {
         }
     }
 
-    VkDescriptorSetLayout Device::createFrameSSBOLayout() const {
-        VC_PROFILER_FUNCTION();
-        VkDescriptorSetLayoutBinding binding{};
-        binding.binding = 0;
-        binding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        binding.descriptorCount = 1;
-        binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-        binding.pImmutableSamplers = nullptr;
-
-        VkDescriptorSetLayoutCreateInfo info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO};
-        info.bindingCount = 1;
-        info.pBindings = &binding;
-
-        VkDescriptorSetLayout layout{};
-        if (vkCreateDescriptorSetLayout(m_device,&info,nullptr,&layout) != VK_SUCCESS) {
-            VC_CORE_CRITICAL("Failed to create SSBO set layout");
-        }
-
-        return layout;
-    }
-
     void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator) {
         VC_PROFILER_FUNCTION();
         if (!allocator) allocator = m_bufferAllocator;
-        vkDeviceWaitIdle(m_device);
+        // No wait on the whole GPU here, which every destroyed resource paid for: the callers only destroy what
+        // no frame in flight uses anymore (VulkanContext::destroyWhenUnused, or after their own wait)
         vmaDestroyBuffer(allocator, buffer, allocation);
     }
 
     void Device::destroyImage(VkImage image, VmaAllocation allocation) {
         VC_PROFILER_FUNCTION();
-        vkDeviceWaitIdle(m_device);
         vmaDestroyImage(m_textureAllocator, image, allocation);
     }
 
@@ -293,6 +226,10 @@ namespace Vectrix {
             VC_CORE_WARN("Validation layers requested but not available, disabling.");
             enableValidationLayers = false;
         }
+#else
+        // Nothing is logged on a release build, and the layers are never enabled below: without this the
+        // debug utils extension and messenger would still be set up for nothing
+        enableValidationLayers = false;
 #endif
         VkApplicationInfo appInfo{VK_STRUCTURE_TYPE_APPLICATION_INFO};
         const ApplicationInfo i = Application::getAppInfo();
@@ -359,18 +296,36 @@ namespace Vectrix {
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.data());
 
+        std::vector<VkPhysicalDevice> suitable;
         for (const auto& device : devices) {
             if (isDeviceSuitable(device)) {
-                m_physicalDevice = device;
-                break;
+                suitable.push_back(device);
             }
         }
 
-        if (m_physicalDevice == VK_NULL_HANDLE) {
+        if (suitable.empty()) {
             VC_CORE_CRITICAL("Failed to find a suitable GPU");
         }
 
+        const VulkanSettings::DeviceCfg& deviceCfg = VulkanContext::instance().settings().device;
+        const auto score = [&](VkPhysicalDevice d) {
+            VkPhysicalDeviceProperties p;
+            vkGetPhysicalDeviceProperties(d, &p);
+            int s = 0;
+            if (!deviceCfg.preferredGpuName.empty() &&
+                std::string(p.deviceName).find(deviceCfg.preferredGpuName) != std::string::npos) {
+                s += 1000;
+            }
+            if (deviceCfg.preferDiscreteGpu && p.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+                s += 100;
+            }
+            return s;
+        };
+        m_physicalDevice = *std::max_element(suitable.begin(), suitable.end(),
+            [&](VkPhysicalDevice a, VkPhysicalDevice b) { return score(a) < score(b); });
+
         vkGetPhysicalDeviceProperties(m_physicalDevice, &properties);
+        VC_CORE_INFO("Selected GPU: {}", properties.deviceName);
     }
 
     void Device::createLogicalDevice() {
@@ -390,24 +345,36 @@ namespace Vectrix {
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
-        VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeature{};
-        dynamicRenderingFeature.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR;
-        dynamicRenderingFeature.dynamicRendering = VK_TRUE;
+        // The app targets Vulkan 1.3, so the promoted-into-core feature structs
+        // (VkPhysicalDeviceVulkan12Features/13Features) must be used instead of their
+        // individual extension-era equivalents (VkPhysicalDeviceDescriptorIndexingFeatures,
+        // VkPhysicalDeviceDynamicRenderingFeaturesKHR) — mixing both forms in the same
+        // pNext chain violates VUID-VkDeviceCreateInfo-pNext-02830, which graphics
+        // debuggers that inject their own Vulkan12Features/13Features (e.g. Nsight
+        // Graphics) will trip on.
+        VkPhysicalDeviceVulkan13Features vulkan13Features{};
+        vulkan13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
 
-        VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures{};
-        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-        indexingFeatures.pNext = &dynamicRenderingFeature;
+        VkPhysicalDeviceVulkan12Features vulkan12Features{};
+        vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        vulkan12Features.pNext = &vulkan13Features;
 
         // Get supported feature of the GPU
         VkPhysicalDeviceFeatures2 deviceFeatures2{};
         deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        deviceFeatures2.pNext = &indexingFeatures;
+        deviceFeatures2.pNext = &vulkan12Features;
         vkGetPhysicalDeviceFeatures2(m_physicalDevice, &deviceFeatures2);
 
-        indexingFeatures.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+        vulkan12Features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+        vulkan13Features.dynamicRendering = VK_TRUE;
+
+        VkPhysicalDeviceFeatures supportedBaseFeatures{};
+        vkGetPhysicalDeviceFeatures(m_physicalDevice, &supportedBaseFeatures);
+        m_fillModeNonSolid = supportedBaseFeatures.fillModeNonSolid == VK_TRUE;
 
         VkPhysicalDeviceFeatures deviceFeatures = {};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
+        deviceFeatures.fillModeNonSolid = supportedBaseFeatures.fillModeNonSolid;
 
         VkDeviceCreateInfo createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -421,7 +388,7 @@ namespace Vectrix {
 
         createInfo.enabledLayerCount = 0;
         createInfo.ppEnabledLayerNames = nullptr;
-        createInfo.pNext = &indexingFeatures;
+        createInfo.pNext = &vulkan12Features;
 
 
         if (vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_device) != VK_SUCCESS) {
@@ -489,21 +456,37 @@ namespace Vectrix {
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
 
-        VkPhysicalDeviceFeatures supportedFeatures;
-        vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
-
-        VkPhysicalDeviceDescriptorIndexingFeaturesEXT indexingFeatures{};
-        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT;
-        VkPhysicalDeviceFeatures2 deviceFeatures2{};
-        deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-        deviceFeatures2.pNext = &indexingFeatures;
-        vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
-
-        if (!indexingFeatures.descriptorBindingUpdateUnusedWhilePending || !indexingFeatures.descriptorBindingPartiallyBound) {
-            VC_CORE_ERROR("Your GPU is not capable of using a necessary vulkan extension, please use another RendererAPI");
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+        if (deviceProperties.apiVersion < VK_API_VERSION_1_3) {
+            // Also required before chaining the Vulkan 1.2/1.3 feature structs below
+            VC_CORE_WARN("GPU {} skipped: it doesn't support Vulkan 1.3", deviceProperties.deviceName);
+            return false;
         }
 
-        return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
+        VkPhysicalDeviceVulkan13Features features13{};
+        features13.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+        VkPhysicalDeviceVulkan12Features features12{};
+        features12.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        features12.pNext = &features13;
+        VkPhysicalDeviceFeatures2 deviceFeatures2{};
+        deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+        deviceFeatures2.pNext = &features12;
+        vkGetPhysicalDeviceFeatures2(physicalDevice, &deviceFeatures2);
+
+        // The descriptor indexing flags ShaderSSBO uses, and what createLogicalDevice turns on
+        const bool featuresSupported =
+            features12.descriptorBindingPartiallyBound &&
+            features12.descriptorBindingUpdateUnusedWhilePending &&
+            features12.descriptorBindingSampledImageUpdateAfterBind &&
+            features13.dynamicRendering &&
+            deviceFeatures2.features.samplerAnisotropy;
+        if (!featuresSupported) {
+            // Not an abort: another GPU of the machine may still be suitable
+            VC_CORE_WARN("GPU {} skipped: it lacks a Vulkan feature the engine needs", deviceProperties.deviceName);
+        }
+
+        return indices.isComplete() && extensionsSupported && swapChainAdequate && featuresSupported;
     }
 
     std::vector<const char*> Device::getRequiredExtensions() {
@@ -582,7 +565,7 @@ namespace Vectrix {
         VC_PROFILER_FUNCTION();
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+        createInfo.messageSeverity = VulkanContext::instance().settings().device.validationSeverity;
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
         createInfo.pUserData = nullptr;  // Optional
@@ -647,5 +630,20 @@ namespace Vectrix {
         }
         return details;
     }
+    void Device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer,VkDeviceSize size) {
+        copyBuffer(srcBuffer, dstBuffer, size, 0, 0);
+    }
 
+    void Device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset) {
+        VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+
+        VkBufferCopy copyRegion{};
+        copyRegion.srcOffset = srcOffset;
+        copyRegion.dstOffset = dstOffset;
+        copyRegion.size = size;
+
+        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+        endSingleTimeCommands(commandBuffer);
+    }
 }

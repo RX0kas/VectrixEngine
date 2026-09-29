@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
 #include "Vectrix/Scene/Components/TransformComponent.h"
@@ -14,16 +16,16 @@ namespace Vectrix {
 	/**
 	 * @brief This class is the camera class
 	 */
-	class Camera	{
+	class Camera {
 	public:
 		/**
 		 * @brief This creates a new camera with a perspective projection
-		 * @param transform The transform component
+		 * @param entity The entity
 		 * @param fov The camera FOV
 		 * @param camNear The camera near
 		 * @param camFar The camera far
 		 */
-		Camera(TransformComponent& transform, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
+		Camera(std::shared_ptr<Entity> entity, float fov = 50.0f,float camNear = 0.1f,float camFar = 1000.0f);
 
 		/**
 		 * @brief This function return the projection matrix
@@ -104,7 +106,13 @@ namespace Vectrix {
 		 */
 		void setCustomAspect(float aspect) {
 			m_customAspect = aspect;
+			recalculateMatrices();
 		}
+
+		/**
+		 * @brief This function return true if the camera has a custom aspect
+		 */
+		bool hasCustomAspect() const { return m_customAspect!=-1; }
 
 		/**
 		 * @brief This function return the aspect ratio of the camera
@@ -119,16 +127,30 @@ namespace Vectrix {
 		/**
 		 * @brief This function return the current active camera
 		 */
-		static Camera* getCurrentCamera() { return s_currentCamera; }
+		static std::shared_ptr<Entity> getCurrentCamera();
 
 		/**
 		 * @brief This function set this camera as the active
 		 */
-		void setAsCurrent() { s_currentCamera = this; }
+		void setAsCurrent();
+
+		/**
+		 * @brief Clear the active camera, so no camera is current
+		 * @see setAsCurrent
+		 */
+		static void clearCurrent() { s_currentCamera = nullptr; }
+
+		/**
+		 * @brief This function returns true if this camera is the current camera used
+		 */
+		[[nodiscard]] bool isCurrent() const;
 	private:
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
 		void recalculateTransformationMatrix();
+		/// Looked up each time rather than kept as a reference: EnTT moves components around when
+		/// others of the same type are removed, which would leave a stored reference on another entity
+		[[nodiscard]] TransformComponent& transform() const;
 	private:
 		friend class Renderer;
 
@@ -137,12 +159,12 @@ namespace Vectrix {
 		glm::mat4 m_projectionMatrix{};
 		glm::mat4 m_viewMatrix;
 		glm::mat4 m_transformationMatrix{};
-		TransformComponent& m_transform;
 
 		float m_customAspect = -1;
+		std::shared_ptr<Entity> m_entity;
 
 
-		static Camera* s_currentCamera;
+		static std::shared_ptr<Entity> s_currentCamera;
 	};
 
 }

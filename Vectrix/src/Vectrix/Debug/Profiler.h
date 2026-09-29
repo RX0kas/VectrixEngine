@@ -11,6 +11,12 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Utils/Json.h"
 
+/**
+ * @brief The version of the profiler data format
+ *
+ * Written into every profile file, so an old one can be told apart from a current one.
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_VERSION "1.1"
 
 /**
@@ -20,15 +26,26 @@
 */
 
 namespace Vectrix {
+    /**
+     * @brief A duration in microseconds, kept as a double so it does not lose precision
+     * @ingroup debugtools
+     */
     using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
     /**
      * @brief Data obtained on the execution of a function
      */
     struct ProfilerResult
     {
+        /// The name the scope was measured under
         const char* name;
+
+        /// When the scope was entered, counted from the start of the session
         FloatingPointMicroseconds start;
+
+        /// How long the scope took
         std::chrono::microseconds elapsedTime;
+
+        /// Which thread the scope ran on
         uint32_t threadID;
     };
 
@@ -37,6 +54,7 @@ namespace Vectrix {
      */
     struct ProfilerSession
     {
+        /// The name of the session, which ends up in the profile file
         const char* name;
     };
 
@@ -69,6 +87,8 @@ namespace Vectrix {
 
         /// @cond INTERNAL
         void beginSession(const char* name, const char* filepath = "results.json") {
+            if (m_currentSession)
+                endSession(); // otherwise the previous session leaks and its file is never closed
             m_outputStream.open(filepath);
             writeHeader();
             m_currentSession = new ProfilerSession{ name };
@@ -91,56 +111,15 @@ namespace Vectrix {
             m_profileCount = 0;
         }
         /// @endcond
+        /**
+         * @brief Return the profiler of the application
+         * @return The single instance, created the first time it is asked for
+         * @ingroup debugtools
+         */
         static Profiler& get()
         {
             static Profiler instance;
             return instance;
-        }
-
-        /**
-         * @brief This function return true if the file given is compatible with the current version of the profiler
-         * @param filePath path of a profiler data file
-         * @return true if the file is compatible
-         */
-        static bool isCompatible(const std::string &filePath) {
-            if (!isValidFormat(filePath)) return false;
-
-            JsonValue root = Json::load(filePath);
-            std::string profiler_version = root["data"]["profiler_version"].getString();
-            const size_t pointPos = profiler_version.find('.');
-            const std::string majorStr = profiler_version.substr(0, pointPos);
-            const std::string minorStr = profiler_version.substr(pointPos + 1);
-            const std::string currentMajorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(0,pointPos);
-            const std::string currentMinorStr = static_cast<std::string>(VC_PROFILER_VERSION).substr(pointPos+1,static_cast<std::string>(VC_PROFILER_VERSION).size()-pointPos);
-
-
-            if (std::stoi(majorStr)!=std::stoi(currentMajorStr)) return false;
-
-            if (std::stoi(currentMinorStr) < std::stoi(minorStr)) return false;
-
-            return true;
-        }
-
-        static bool isValidFormat(const std::string &filePath) {
-            JsonValue root = Json::load(filePath);
-            if (!root.contains("data")) {
-                return false;
-            }
-            JsonValue data = root["data"];
-            if (!data.isType<JsonObject>()) {
-                return false;
-            }
-
-            if (!root.contains("traceEvents")) {
-                return false;
-            }
-
-            JsonValue traceEvents = root["traceEvents"];
-            if (!traceEvents.isType<JsonArray>()) {
-                return false;
-            }
-
-            return true;
         }
     private:
         Profiler() : m_currentSession(nullptr), m_profileCount(0) {}
@@ -188,6 +167,13 @@ namespace Vectrix {
 
 #if VC_PROFILER_ENABLE
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+/**
+ * @brief The name of the enclosing function, whatever the compiler calls it
+ *
+ * It is what VC_PROFILER_FUNCTION records a measurement under.
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
 #define VC_FUNC_NAME __PRETTY_FUNCTION__
 #elif defined(__DMC__) && (__DMC__ >= 0x810)
 #define VC_FUNC_NAME __PRETTY_FUNCTION__
@@ -202,13 +188,51 @@ namespace Vectrix {
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
 #define VC_FUNC_NAME __func__
 #else
+/**
+ * @brief The name of the enclosing function, whatever the compiler calls it
+ *
+ * It is what VC_PROFILER_FUNCTION records a measurement under.
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
 #define VC_FUNC_NAME "VC_FUNC_NAME unknown"
 #endif
-/// @cond INTERNAL
+/**
+ * @brief Start recording into a profile file
+ * @param name The name of the session
+ * @param filepath Where the recorded data is written
+ * @note The entry point opens a session for startup, runtime and shutdown
+ * @see VC_PROFILER_END_SESSION
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_BEGIN_SESSION(name, filepath) ::Vectrix::Profiler::get().beginSession(name, filepath)
+
+/**
+ * @brief Stop recording and close the profile file
+ * @see VC_PROFILER_BEGIN_SESSION
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_END_SESSION() ::Vectrix::Profiler::get().endSession()
-/// @endcond
-#define VC_PROFILER_SCOPE(name) ::Vectrix::Timer timer##__LINE__(name);
+
+/**
+ * @brief Measure how long the enclosing scope takes, under a name of your choosing
+ * @param name The name the measurement is recorded under
+ * @see VC_PROFILER_FUNCTION
+ * @ingroup debugtools
+ */
+// Two levels so __LINE__ is expanded before pasting: timer##__LINE__ would name every timer "timer__LINE__"
+#define VC_PROFILER_CONCAT_IMPL(a, b) a##b
+#define VC_PROFILER_CONCAT(a, b) VC_PROFILER_CONCAT_IMPL(a, b)
+#define VC_PROFILER_SCOPE(name) ::Vectrix::Timer VC_PROFILER_CONCAT(vcProfilerTimer, __LINE__)(name);
+
+/**
+ * @brief Measure how long the enclosing function takes, under its own name
+ *
+ * The usual way to instrument a function: put it on the first line and the whole call is
+ * timed. It costs nothing on a release build.
+ * @see VC_PROFILER_SCOPE
+ * @ingroup debugtools
+ */
 #define VC_PROFILER_FUNCTION() VC_PROFILER_SCOPE(VC_FUNC_NAME)
 #else
 #define VC_PROFILER_BEGIN_SESSION(name, filepath)

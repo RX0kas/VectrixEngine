@@ -12,6 +12,12 @@
 namespace Vectrix {
 	/**
 	 * @brief This function is the layer responsible for drawing Dear ImGui
+	 *
+	 * The Application creates it and keeps it as an overlay, so it draws on top of
+	 * everything and gets the events first. Widgets registered through addWidget are
+	 * rendered by this layer every frame.
+	 * @see ImGuiWidget
+	 * @ingroup imgui
 	 */
 	class ImGuiLayer : public Layer	{
 	public:
@@ -29,16 +35,36 @@ namespace Vectrix {
 		 * @brief This function add a new ImGuiWidget
 		 * @param widget A shared_ptr to the widget
 		 */
-		void addWidget(const std::shared_ptr<ImGuiWidget> &widget) {
+		void addWidget(ImGuiWidget* widget) {
 			m_widgets.push_back(widget);
 		}
+		/**
+		 * @brief Stop drawing a widget that was added before
+		 * @param widget The widget to remove
+		 * @note Does nothing when the widget was never added
+		 */
+		void removeWidget(ImGuiWidget* widget);
+
+		/**
+		 * @brief Keep the events handled by ImGui from reaching the layers below
+		 * @see stopBlockEvents
+		 */
 		void startBlockEvents() { m_blockEvents = true; }
+
+		/**
+		 * @brief Let every event through, even the ones ImGui handled
+		 * @see startBlockEvents
+		 */
 		void stopBlockEvents() { m_blockEvents = false; }
 	private:
 		friend class Application;
+		friend class EditorLayer;
+		friend class VulkanImGuiManager;
+		[[nodiscard]] ImGuiManager& getManager() const { return *m_manager; }
 		ImGuiLayer();
+		static void setDarkThemeColors();
 		std::unique_ptr<ImGuiManager> m_manager;
-		std::vector<std::shared_ptr<ImGuiWidget>> m_widgets;
+		std::vector<ImGuiWidget*> m_widgets;
 		bool m_attached;
 		bool m_blockEvents = true;
 	};

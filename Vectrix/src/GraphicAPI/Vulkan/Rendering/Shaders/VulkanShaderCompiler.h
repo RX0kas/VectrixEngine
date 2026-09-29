@@ -12,14 +12,14 @@
 namespace Vectrix {
 
     typedef enum {
-        Vertex_Shader,
-        Fragment_Shader
+        VertexShader,
+        FragmentShader
     } ShaderType;
 
     inline shaderc_shader_kind shaderTypeToShaderCKind(ShaderType t) {
         switch (t) {
-            case Vertex_Shader:   return shaderc_vertex_shader;
-            case Fragment_Shader: return shaderc_fragment_shader;
+            case VertexShader:   return shaderc_vertex_shader;
+            case FragmentShader: return shaderc_fragment_shader;
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
@@ -28,8 +28,8 @@ namespace Vectrix {
 
     inline const char* toString(ShaderType t) {
         switch (t) {
-            case Vertex_Shader:   return "Vertex shader";
-            case Fragment_Shader: return "Fragment shader";
+            case VertexShader:   return "Vertex shader";
+            case FragmentShader: return "Fragment shader";
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
@@ -40,21 +40,9 @@ namespace Vectrix {
     public:
         VulkanShaderCompiler();
 
-        void addMacro(const std::string& name,const std::string& value) {
-            p_macros.emplace(name,value);
-        }
-        std::string getMacro(std::string name) {
-            auto it = p_macros.find(name);
-            if (it == p_macros.end()) {
-                VC_CORE_ERROR("Shader with the name \"{}\" doesn't exist", name);
-            }
-            return it->second;
-        }
+        /// @return The SPIR-V code, or an empty vector when the source doesn't compile (the error is logged)
         std::vector<uint32_t> compile_file(const char *src_name,ShaderType type,const char *src,bool optimize = false);
     private:
-        std::string preprocessing(const char *source_name, const shaderc_shader_kind& kind, const char *src);
-    private:
-        std::unordered_map<std::string,std::string,XXH3> p_macros;
         shaderc::Compiler m_compiler;
         shaderc::CompileOptions m_options;
     };

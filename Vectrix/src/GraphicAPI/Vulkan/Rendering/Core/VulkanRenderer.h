@@ -4,32 +4,32 @@
 #include "SwapChain.h"
 #include "Vectrix/Core/Window.h"
 
+#include <array>
 #include <memory>
 #include <vector>
 
 #include <glm/vec4.hpp>
 
+#include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/DynamicSSBO.h"
 #include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
-#include "GraphicAPI/Vulkan/ImGui/VulkanDebugWidget.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
 
 namespace Vectrix {
+    class VulkanFramebuffer;
+    class VulkanShader;
+
     struct ObjectData {
         glm::mat4 modelMatrix;
         uint32_t  textureIndex;
     };
 
     struct BatchInfo {
-        VkPipeline pipeline = VK_NULL_HANDLE;
-        VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-        std::vector<VkDescriptorSet> descriptorSet{};
-
         std::vector<std::unique_ptr<VulkanBuffer>> indirectBuffers{}; // The buffer that will send the commands, not visible in the shader
 
-        std::vector<VkDrawIndexedIndirectCommand> commands{};
         DynamicSSBO objectDataSSBO; // The buffer that will send the objectDatas
 
         std::uint32_t elementCount = 0;
@@ -46,20 +46,15 @@ namespace Vectrix {
 
         ~VulkanRenderer();
 
-        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const { return m_swapChain->getRenderPass(); }
         [[nodiscard]] size_t getSwapChainImageCount() const { return m_swapChain->imageCount();}
         [[nodiscard]] VkFormat getImageFormat() const { return m_swapChain->getSwapChainImageFormat(); }
         [[nodiscard]] VkFormat findDepthFormat() const { return m_swapChain->findDepthFormat(); }
-        [[nodiscard]] bool isFrameInProgress() const { return m_isFrameStarted; }
-        [[nodiscard]] VkImageView getSwapChainImageView(int i) const {return m_swapChain->getImageView(i);}
-        [[nodiscard]] VkImage getSwapChainImage(int i) const {return m_swapChain->getSwapChainImage(i);}
-
-        [[nodiscard]] VkFramebuffer getCurrentSwapChainFramebuffer() const { return m_swapChain->getFrameBuffer(m_swapChain->getFrameIndex()); }
+        [[nodiscard]] VkImageView getSwapChainImageView(std::uint32_t i) const {return m_swapChain->getImageView(i);}
+        [[nodiscard]] VkImage getSwapChainImage(std::uint32_t i) const {return m_swapChain->getSwapChainImage(i);}
 
         [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const {
             VC_CORE_ASSERT(m_isFrameStarted, "Frame not started: can't get command buffer");
-            VC_CORE_ASSERT(m_currentImageIndex <= m_commandBuffers.size(), "currentImageIndex out of bounds");
-            return m_commandBuffers[m_currentImageIndex];
+            return m_commandBuffers[m_swapChain->getFrameIndex()];
         }
 
         [[nodiscard]] uint32_t getCurrentImageIndex() const {return m_currentImageIndex;}
@@ -69,6 +64,22 @@ namespace Vectrix {
             return m_swapChain->getFrameIndex();
         }
 
+        /**
+         * @brief Keep a GPU resource alive until no frame that may use it is still in flight
+         *
+         * For a resource replaced or dropped while the GPU may still use it (e.g. a mesh buffer grown by a model
+         * loaded from an ImGui panel, after the scene was drawn): its release is delayed until then.
+         * @param resource The resource, dropped once every frame recorded so far has finished executing
+         */
+        void releaseAfterFrame(std::shared_ptr<void> resource) {
+            // A slot's list is emptied when that slot's fence has been waited on again. During a frame, that is the
+            // fence of this frame; between frames, the frame just submitted (the slot before the current one) is the
+            // last that may use it
+            const size_t current = static_cast<size_t>(m_swapChain->getFrameIndex());
+            const size_t slot = m_isFrameStarted ? current : (current + SwapChain::MAX_FRAMES_IN_FLIGHT - 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
+            m_releasedAfterFrame[slot].push_back(std::move(resource));
+        }
+
         VkCommandBuffer beginFrame();
         void endFrame();
         void beginDynamicRendering(VkCommandBuffer commandBuffer);
@@ -76,9 +87,7 @@ namespace Vectrix {
         [[nodiscard]] VkExtent2D getSwapChainExtent() const {return m_swapChain->getSwapChainExtent();}
         void endDynamicRendering(VkCommandBuffer commandBuffer) const;
 
-        [[nodiscard]] std::vector<VkFence> getInFlightFences() const {
-            return m_swapChain->getInFlightFences();
-        }
+        [[nodiscard]] const VkClearValue& getClearValue() const { return m_clearValue; }
 
         void makeClearColor(const glm::vec4& color) {
             m_clearValue.color.float32[0] = color.r;
@@ -87,23 +96,24 @@ namespace Vectrix {
             m_clearValue.color.float32[3] = color.a;
         }
 
-        static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray,glm::mat4 modelMatrix,std::uint32_t textureIndex=0);
+        static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4 &modelMatrix,std::uint32_t textureIndex=0);
+        void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
+        void resizeMask(glm::vec2 size) { m_maskFramebuffer->resize(size); }
     private:
-        friend class VulkanDebugWidget;
         friend class VulkanRendererAPI;
         friend class Renderer;
         friend class VulkanContext;
         friend class Application;
+        friend class VulkanImGuiManager;
         [[nodiscard]] DebugFrameInfo getCurrentFrameInfo() const;
         void createCommandBuffers();
         void freeCommandBuffers();
         void recreateSwapChain();
         void cleanupSwapChain();
-
+        void initOutline();
         void resetCache() {
             for (auto& [name, batch] : m_batchCache) {
                 batch.elementCount = 0;
-                batch.commands.clear();
             }
         }
 
@@ -119,6 +129,15 @@ namespace Vectrix {
          * Render all submitted data
          */
         void flush();
+        void flushOnly(const std::shared_ptr<VulkanShader> &shader, const VulkanFramebuffer& framebuffer);
+        void renderOutlineFromMask();
+
+        /// Viewport and scissor covering the whole extent
+        static void setViewportAndScissor(VkCommandBuffer cmd, VkExtent2D extent);
+        /// Binds the MeshRegistry's global vertex/index buffers every batch draws from
+        static void bindMeshBuffers(VkCommandBuffer cmd);
+        /// Records the indirect draw of every element submitted to the batch this frame
+        void drawBatch(VkCommandBuffer cmd, const VulkanShader& shader, BatchInfo& batch, uint32_t frameIndex);
 
         Window& m_window;
         Device& m_device;
@@ -127,9 +146,15 @@ namespace Vectrix {
 
         uint32_t m_currentImageIndex{ 0 };
         bool m_isFrameStarted{ false };
+        uint32_t m_drawCalls = 0; ///< Draw commands recorded since the current frame began, shown by the debug widget
 
         VkClearValue m_clearValue = { 0, 0, 0, 1.0f };
 
         Cache<std::string,BatchInfo> m_batchCache;
+        /// Resources waiting for their frame slot's fence, see releaseAfterFrame
+        std::array<std::vector<std::shared_ptr<void>>, SwapChain::MAX_FRAMES_IN_FLIGHT> m_releasedAfterFrame;
+        std::shared_ptr<VulkanShader> m_maskShader;
+        std::shared_ptr<VulkanShader> m_outlineShader;
+        std::shared_ptr<VulkanFramebuffer> m_maskFramebuffer;
     };
 }

@@ -12,21 +12,29 @@
 */
 
 namespace Vectrix {
+	/**
+	 * @brief The type of one piece of data inside a vertex
+	 * @see BufferElement
+	 * @ingroup buffers
+	 */
 	enum class ShaderDataType {
-		None = 0,
-		Float, Float2, Float3, Float4,
+		None = 0, ///< No type
+		Float,    ///< A single float
+		Float2,   ///< Two floats, a 2D vector
+		Float3,   ///< Three floats, a 3D vector
+		Float4,   ///< Four floats, a 4D vector or a colour
 	};
 
 	/// @cond INTERNAL
-	static uint32_t ShaderDataTypeSize(ShaderDataType type) {
+	inline uint32_t ShaderDataTypeSize(ShaderDataType type) {
 		switch (type) {
 			case ShaderDataType::Float:  return 4;
 			case ShaderDataType::Float2: return 8;
 			case ShaderDataType::Float3: return 12;
-			case ShaderDataType::Float4:
-			default: return 16;
+			case ShaderDataType::Float4: return 16;
+			case ShaderDataType::None:   return 0;
 		}
-		VC_CORE_ERROR("Unknown ShaderDataType");
+		return 0;
 	}
 	/// @endcond
 
@@ -54,8 +62,19 @@ namespace Vectrix {
 		 */
 		uint32_t offset;
 
+		/**
+		 * @brief Describe one piece of data of a vertex
+		 * @param type The type of the element
+		 * @param name The name the shader knows it by
+		 * @note The offset is worked out by the BufferLayout holding the element
+		 */
 		BufferElement(const ShaderDataType type, std::string name) : name(std::move(name)), type(type), size(ShaderDataTypeSize(type)), offset(0) {}
 
+		/**
+		 * @brief Tell if two elements describe the same thing
+		 * @param e The element to compare with
+		 * @return true when the name, the type, the size and the offset all match
+		 */
 		bool operator==(const BufferElement& e) const {
 			return e.name==this->name && e.type==this->type && e.size==this->size && e.offset==this->offset;
 		}
@@ -68,6 +87,13 @@ namespace Vectrix {
 	public:
 		BufferLayout() = default;
 
+		/**
+		 * @brief Build the layout from the elements a vertex is made of
+		 *
+		 * The offset of each element and the stride between two vertices are worked out
+		 * from the order the elements are given in.
+		 * @param elements The elements, in the order they sit in a vertex
+		 */
 		BufferLayout(std::initializer_list<BufferElement> elements)	: m_elements(elements) {
 			CalculateOffsetsAndStride();
 		}
@@ -90,7 +116,16 @@ namespace Vectrix {
 			return std::any_of(m_elements.begin(), end, [name](const BufferElement& x) { return x.name == name; });
 		}
 
+		/**
+		 * @brief Return an iterator on the first element, so the layout can be walked
+		 * @return An iterator to the beginning of the elements
+		 */
 		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
+
+		/**
+		 * @brief Return an iterator past the last element
+		 * @return An iterator to the end of the elements
+		 */
 		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
 	private:
 		void CalculateOffsetsAndStride() {
@@ -107,68 +142,6 @@ namespace Vectrix {
 	private:
 		std::vector<BufferElement> m_elements;
 		uint32_t m_stride = 0;
-	};
-
-
-	/**
- 	* @brief Abstract interface for a GPU vertex buffer
- 	*/
-	class VertexBuffer
-	{
-	public:
-		virtual ~VertexBuffer() = default;
-
-		/**
-		 * @brief Binds the vertex buffer for use in the current draw call
-		 **/
-		virtual void bind() = 0;
-
-		/**
-		 * @brief Returns the buffer layout describing the vertex attributes
-		 **/
-		[[nodiscard]] virtual const BufferLayout& getLayout() const = 0;
-
-		/**
-	     * @brief Set the buffer layout describing the vertex attributes
-	     * @param layout The layout to assign to this buffer
-	     */
-		virtual void setLayout(const BufferLayout& layout) = 0;
-
-		/**
-	 	* @brief Function to create a new VertexBuffer
-	 	* @param vertices List of vertices to upload to the GPU
-	 	* @param size Total size in bytes of the vertex data
-	 	* @return A shared pointer to the created vertex buffer
-	 	*/
-		static std::shared_ptr<VertexBuffer> create(const std::vector<Vertex>& vertices, uint32_t size);
-	};
-
-
-	/**
- 	* @brief Abstract interface for a GPU index buffer
- 	*/
-	class IndexBuffer
-	{
-	public:
-		virtual ~IndexBuffer() = default;
-
-		/**
-		 * @brief Binds the index buffer for use in the current draw call
-		 **/
-		virtual void bind() = 0;
-
-		/**
-		 * @brief Returns the number of indices stored in this buffer
-		 **/
-		[[nodiscard]] virtual uint32_t getCount() const = 0;
-
-		/**
-		 * @brief Function to create a new IndexBuffer
-		 * @param indices Pointer to the array of indices
-	 	 * @param size Number of indices in the array
-	 	 * @return A shared pointer to the created index buffer
-		 */
-		static std::shared_ptr<IndexBuffer> create(uint32_t* indices, uint32_t size);
 	};
 
 

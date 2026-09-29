@@ -5,6 +5,7 @@
 #include "Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 namespace Vectrix {
 	VulkanContext* VulkanContext::s_instance = nullptr;
@@ -33,12 +34,33 @@ namespace Vectrix {
 		m_meshRegistry.reset();
 
 		m_device.reset();
+		s_instance = nullptr;
 	}
 
 	void VulkanContext::init() {
 		VC_PROFILER_FUNCTION();
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		DescriptorPoolConfig cfg {64,64,64,64};
+
+		m_vkSettings = VulkanSettings::load();
+
+		// Defaults to resizable: that's GLFW's default, and how the window always behaved while this setting was
+		// (wrongly) applied as a hint after the window had been created
+		bool resizable = true;
+		if (const JsonObject& s = SettingsManager::getSettings(); s.contains("window"))
+			resizable = s.at("window")["resizable"].getAs<bool>().value_or(true);
+		// The window already exists at this point (Window::init creates the context last): a
+		// glfwWindowHint would only apply to windows created later, e.g. ImGui's platform windows
+		glfwSetWindowAttrib(m_WindowHandle, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+
+		// TODO: Change make it double the size once there is no space left
+		const DescriptorPoolConfig cfg {
+			.uboCount = m_vkSettings.descriptorPool.uboCount,
+			.ssboCount = m_vkSettings.descriptorPool.ssboCount,
+			.samplerCount = m_vkSettings.descriptorPool.samplerCount,
+			.maxSets = m_vkSettings.descriptorPool.maxSets
+		};
+
+		Device::enableValidationLayers = m_vkSettings.device.validationLayers;
+
 		m_device = std::make_unique<Device>(Application::instance().window(),cfg);
 		m_renderer = std::make_unique<VulkanRenderer>(Application::instance().window(),*m_device);
 	}
@@ -48,13 +70,20 @@ namespace Vectrix {
 		glfwPollEvents();
 	}
 
-	void VulkanContext::registerMesh(MeshComponent* model) {
-		VC_PROFILER_FUNCTION();
-		auto vArrVulkan = std::dynamic_pointer_cast<VulkanVertexArray>(model->vertexArray);
-		vArrVulkan->setHandle(m_meshRegistry->registerMesh(model->m_vertices,model->m_indices));
+	void VulkanContext::destroyWhenUnused(std::function<void()> destroy) {
+		// m_renderer is already null while the renderer is being destroyed (unique_ptr::reset), and before it exists
+		if (s_instance && s_instance->m_renderer) {
+			// The deleter runs even though the pointer is null: when the renderer drops it
+			s_instance->m_renderer->releaseAfterFrame(std::shared_ptr<void>(nullptr, [destroy = std::move(destroy)](void*) { destroy(); }));
+			return;
+		}
+		if (s_instance)
+			vkDeviceWaitIdle(s_instance->m_device->device());
+		destroy();
 	}
 
-	void VulkanContext::uploadMeshData() {
-		s_instance->m_meshRegistry->uploadToGPU();
+	void VulkanContext::waitIdle() {
+		VulkanContext& i = instance();
+		vkDeviceWaitIdle(i.m_device->device());
 	}
 }

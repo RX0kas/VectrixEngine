@@ -42,12 +42,9 @@ namespace Vectrix {
         [[nodiscard]] VkSurfaceKHR surface() const { return m_surface; }
         [[nodiscard]] VkQueue graphicsQueue() const { return m_graphicsQueue; }
         [[nodiscard]] VkQueue presentQueue() const { return m_presentQueue; }
-        [[nodiscard]] VkFormat imageFormat() const { return m_imageFormat; }
         [[nodiscard]] VkDescriptorPool descriptorPool() const { return m_descriptorPool; }
-        [[nodiscard]] VkDescriptorSetLayout descriptorSetLayout() const {return m_descriptorSetLayout;}
 
         SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(m_physicalDevice); }
-        [[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
         QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(m_physicalDevice); }
         [[nodiscard]] VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
@@ -56,17 +53,12 @@ namespace Vectrix {
         VkCommandBuffer beginSingleTimeCommands();
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-        void copyBufferToImage( VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount);
+        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset);
 
         void createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties, VkImage& image, VmaAllocation& allocation);
 
         VkPhysicalDeviceProperties properties;
 
-        void setImageFormat(VkFormat format) {
-            m_imageFormat = format;
-        }
-
-        VkDescriptorSetLayout createFrameSSBOLayout() const;
 
         void destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator=nullptr);
         void destroyImage(VkImage image, VmaAllocation allocation);
@@ -74,6 +66,9 @@ namespace Vectrix {
         [[nodiscard]] VmaAllocator getBufferAllocator() const {return m_bufferAllocator;}
         [[nodiscard]] VmaAllocator getTextureAllocator() const {return m_textureAllocator;}
         [[nodiscard]] VmaAllocator getSSBOAllocator() const {return m_SSBOAllocator;}
+
+        /// @brief Whether the logical device was created with the fillModeNonSolid feature (wireframe).
+        [[nodiscard]] bool supportsFillModeNonSolid() const { return m_fillModeNonSolid; }
     private:
         void createInstance();
         void setupDebugMessenger();
@@ -85,7 +80,7 @@ namespace Vectrix {
         // helper functions
         bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
         static std::vector<const char*> getRequiredExtensions();
-        bool checkValidationLayerSupport() const;
+        [[nodiscard]] bool checkValidationLayerSupport() const;
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) const;
 
         static void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -108,11 +103,9 @@ namespace Vectrix {
         VkSurfaceKHR m_surface;
         VkQueue m_graphicsQueue;
         VkQueue m_presentQueue;
-        VkFormat m_imageFormat;
 	    VkDescriptorPool m_descriptorPool;
-	    VkDescriptorSetLayout m_descriptorSetLayout;
+	    bool m_fillModeNonSolid = false;
 
-        VolkDeviceTable m_deviceTable;
 
         const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
         const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME };

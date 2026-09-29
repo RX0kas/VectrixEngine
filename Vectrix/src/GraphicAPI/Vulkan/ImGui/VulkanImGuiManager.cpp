@@ -4,26 +4,158 @@
 #include "Vectrix/Application.h"
 
 #include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_vulkan.h"
+#include "ImGuizmo.h"
+#include "GraphicAPI/Vulkan/ImGui/imgui_impl_glfw.h"
+#include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
+
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "Vectrix/Settings/SettingsManager.h"
 
 
 
 namespace Vectrix {
-	VulkanImGuiManager* VulkanImGuiManager::m_instance = nullptr;
-
     VulkanImGuiManager::VulkanImGuiManager(Window& window) : m_device{ VulkanContext::instance().getDevice() }, m_window{ window } {
 		VC_CORE_INFO("Initializing ImGuiManager");
-    	VC_CORE_ASSERT(!m_instance, "ImGuiManager already exists!");
-    	m_instance = this;
 		m_renderer = &VulkanContext::instance().getRenderer();
 	}
 
-    void VulkanImGuiManager::attachDebugGraphicWidget() {
-    	m_debugWidget = std::make_shared<VulkanDebugWidget>();
-    	Application::instance().imguiLayer().addWidget(m_debugWidget);
+	static std::vector<DebugMemoryHeapInfo> collectMemoryInfo(VmaAllocator allocator) {
+    	std::vector<DebugMemoryHeapInfo> heap_infos;
+    	VmaBudget budgets[VK_MAX_MEMORY_HEAPS];
+
+    	vmaGetHeapBudgets(allocator, budgets);
+
+    	uint32_t heapCount = 0;
+    	VkPhysicalDeviceMemoryProperties props;
+    	vkGetPhysicalDeviceMemoryProperties(VulkanContext::instance().getDevice().physicalDevice(),&props);
+    	heapCount = props.memoryHeapCount;
+
+    	for (uint32_t i = 0; i < heapCount; ++i) {
+    		DebugMemoryHeapInfo info{};
+    		info.name = (props.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) ? "DEVICE_LOCAL" : "HOST_VISIBLE";
+
+    		info.usedBytes = budgets[i].usage;
+    		info.budgetBytes = budgets[i].budget;
+    		heap_infos.push_back(info);
+    	}
+    	return heap_infos;
+    }
+
+	static void drawMemoryHeaps(const char* label, const std::vector<DebugMemoryHeapInfo>& heaps) {
+		if (!ImGui::TreeNode(label)) return;
+		for (const auto& heap : heaps) {
+			float fraction = 0.0f;
+			if (heap.budgetBytes > 0) {
+				fraction = static_cast<float>(heap.usedBytes) / static_cast<float>(heap.budgetBytes);
+			}
+
+			ImGui::Text("%s", heap.name);
+
+			ImVec4 color;
+			if (fraction < 0.6f)
+				color = ImVec4(0.2f, 0.8f, 0.2f, 1.0f); // green
+			else if (fraction < 0.85f)
+				color = ImVec4(0.9f, 0.7f, 0.2f, 1.0f); // orange
+			else
+				color = ImVec4(0.9f, 0.2f, 0.2f, 1.0f); // red
+
+			ImGui::PushStyleColor(ImGuiCol_PlotHistogram, color);
+			ImGui::ProgressBar(fraction, ImVec2(-1.0f, 0.0f));
+			ImGui::PopStyleColor();
+
+			ImGui::Text("Used: %.2f MB / %.2f MB",static_cast<float>(heap.usedBytes) / (1024.0f * 1024.0f),static_cast<float>(heap.budgetBytes) / (1024.0f * 1024.0f));
+
+			ImGui::Separator();
+		}
+		ImGui::TreePop();
+	}
+
+    void VulkanImGuiManager::renderDebugGraphicWidget(bool& enable) {
+    	if (!ImGui::Begin("Vulkan Debug", &enable)) {
+            ImGui::End();
+            return;
+        }
+
+        const ApplicationInfo info = Application::getAppInfo();
+        if (ImGui::CollapsingHeader("Application Information")) {
+            ImGui::Text("Application name: %s",info.getAppName());
+            ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
+            ImGui::Text("Engine name: %s",ApplicationInfo::getEngineName());
+            ImGui::Text("Engine version: %s",toString(ApplicationInfo::getEngineVersion()).c_str());
+            ImGui::Text("FPS: %f",1/Application::instance().getDeltaTime().getSeconds());
+        }
+        ImGui::Separator();
+        const DebugFrameInfo frame = VulkanContext::instance().getRenderer().getCurrentFrameInfo();
+        const std::vector<DebugMemoryHeapInfo> memorySSBO = collectMemoryInfo(VulkanContext::instance().getSSBOAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryBuffer = collectMemoryInfo(VulkanContext::instance().getBufferAllocator());
+        const std::vector<DebugMemoryHeapInfo> memoryTexture = collectMemoryInfo(VulkanContext::instance().getTextureAllocator());
+        ImGui::Text("Frame Index: %u", frame.frameIndex);
+        ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
+        ImGui::Separator();
+
+        if (ImGui::CollapsingHeader("Frame Stats")) {
+            ImGui::Text("Draw Calls: %u", frame.drawCalls);
+            ImGui::Text("Dispatch Calls: %u", frame.dispatchCalls);
+        }
+
+        if (ImGui::CollapsingHeader("Synchronization")) {
+            if (ImGui::TreeNode("Fences")) {
+                for (const auto& f : frame.fences) {
+                    ImGui::Text("%s : %s", f.name, f.isNull ? "VK_NULL_HANDLE" : f.signaled ? "SIGNALED" : "UNSIGNALED");
+                }
+                ImGui::TreePop();
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Pipeline")) {
+            for (const auto& pipeline : frame.pipelines) {
+                if (ImGui::TreeNode(("Pipeline - " + pipeline.name).c_str())) {
+                    // TODO: add a hot shader edition
+                    // ImGui::Text("Vertex shader SRC: %s",pipeline.vertSRC.c_str());
+                    // ImGui::Text("Fragment shader SRC: %s", pipeline.fragSRC.c_str());
+                    ImGui::Text("Pipeline Handle: 0x%p", pipeline.pipeline);
+                    ImGui::Text("Layout Handle: 0x%p", pipeline.layout);
+                    ImGui::TreePop();
+                }
+            }
+        }
+
+        if (ImGui::CollapsingHeader("GPU Memory")) {
+            drawMemoryHeaps("SSBOMem", memorySSBO);
+            drawMemoryHeaps("ImagesMem", memoryTexture);
+            drawMemoryHeaps("BuffersMem", memoryBuffer);
+        }
+
+
+        if (ImGui::CollapsingHeader("Descriptor Sets")) {
+            for (const auto& set : frame.boundDescriptorSets) {
+                ImGui::BulletText(
+                    "Set %u (%s) | Layout: 0x%p",
+                    set.setIndex,
+                    set.name.c_str(),
+                    set.layout
+                );
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Images")) { // TODO : fix images
+            for (const auto& img : frame.images) {
+                if (ImGui::TreeNode(("Image - " + img.name).c_str())) {
+                    ImGui::Text("Format: %s", string_VkFormat(img.format));
+                    ImGui::Text("Layout: %d", img.layout);
+                    ImGui::Text(
+                        "Extent: %u x %u x %u",
+                        img.extent.width,
+                        img.extent.height,
+                        img.extent.depth
+                    );
+                    ImGui::TreePop();
+                }
+            }
+        }
+
+        ImGui::End();
     }
 
     void VulkanImGuiManager::cleanup() {
@@ -31,13 +163,12 @@ namespace Vectrix {
 		VC_CORE_INFO("Destroying ImGui");
 
 		ImGui_ImplVulkan_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-
 		if (m_descriptorPool != VK_NULL_HANDLE) {
 			vkDestroyDescriptorPool(m_device.device(), m_descriptorPool, nullptr);
 			m_descriptorPool = VK_NULL_HANDLE;
 		}
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 
@@ -48,14 +179,16 @@ namespace Vectrix {
 		uint32_t imageIndex = VulkanContext::instance().getRenderer().getCurrentImageIndex();
 		VkImageView imageView = VulkanContext::instance().getRenderer().getSwapChainImageView(static_cast<int>(imageIndex));
 
+		// The frame's main pass (VulkanRenderer::endDynamicRendering) always runs first and leaves the image in
+		// COLOR_ATTACHMENT_OPTIMAL: transitioning from UNDEFINED here would let the driver discard what it drew
 		VkImageMemoryBarrier barrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
-		barrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		barrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		barrier.image = VulkanContext::instance().getRenderer().getSwapChainImage(imageIndex);
 		barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-		barrier.srcAccessMask = 0;
-		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,0, 0, nullptr, 0, nullptr, 1, &barrier);
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		VkRenderingAttachmentInfoKHR colorAttachment{ VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR };
 		colorAttachment.imageView = imageView;
@@ -74,6 +207,7 @@ namespace Vectrix {
 		ImGui_ImplVulkan_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+    	ImGuizmo::BeginFrame();
 		Application::instance().renderImGui();
 		ImGui::Render();
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
@@ -90,7 +224,6 @@ namespace Vectrix {
 	void VulkanImGuiManager::update() {}
 
 	void VulkanImGuiManager::initImGui() {
-#if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 		VC_CORE_INFO("Initializing ImGui");
     	VC_CORE_ASSERT(vkGetInstanceProcAddr != nullptr, "Volk global functions not loaded!");
     	VC_CORE_ASSERT(vkGetDeviceProcAddr != nullptr, "Volk device proc addr function is null!");
@@ -102,27 +235,42 @@ namespace Vectrix {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-    	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		// Editor UI options from the project settings (editor.ui.*)
+		bool uiDocking = true, uiViewports = true, uiDpiScaling = true;
+		std::string uiTheme = "dark";
+		if (const JsonObject& appSettings = SettingsManager::getSettings(); appSettings.contains("editor")) {
+			const JsonValue& ui = appSettings.at("editor")["ui"];
+			uiDocking    = ui["docking"].getAs<bool>().value_or(uiDocking);
+			uiViewports  = ui["viewports"].getAs<bool>().value_or(uiViewports);
+			uiDpiScaling = ui["dpiScaling"].getAs<bool>().value_or(uiDpiScaling);
+			uiTheme      = ui["theme"].getAs<std::string>().value_or(uiTheme);
+		}
 
-		#ifndef VC_PLATFORM_LINUX
-		    	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		    	io.ConfigDpiScaleFonts    = true;
-		    	io.ConfigDpiScaleViewports = true;
-		#else
-		    	VC_CORE_WARN("Multi-Viewport and DPI scaling disabled on Linux due to compatibility issues");
-		    	io.ConfigDpiScaleFonts    = false;
-		    	io.ConfigDpiScaleViewports = false;
-		#endif
+		if (uiDocking) {
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		}
+		if (uiViewports) {
+			if (Application::instance().window().getDisplayServer() != WAYLAND) {
+				io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+			} else {
+				VC_CORE_WARN("Multi viewports has been disabled on wayland");
+			}
+		}
 
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
+		io.ConfigDpiScaleFonts = uiDpiScaling;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes.
+		io.ConfigDpiScaleViewports = uiDpiScaling;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
 		ImGuiStyle& style = ImGui::GetStyle();
-		io.ConfigDpiScaleFonts = true;          // [Experimental] Automatically overwrite style.FontScaleDpi in Begin() when Monitor DPI changes. This will scale fonts but _NOT_ scale sizes/padding for now.
-		io.ConfigDpiScaleViewports = true;      // [Experimental] Scale Dear ImGui and Platform Windows when Monitor DPI changes.
 
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+		if (uiTheme == "light") {
+			ImGui::StyleColorsLight();
+		} else {
+			ImGui::StyleColorsDark();
+			ImGuiLayer::setDarkThemeColors();
+		}
 
 		ImGui_ImplGlfw_InitForVulkan(w, true);
 		#ifdef VC_PLATFORM_LINUX
@@ -140,7 +288,7 @@ namespace Vectrix {
     	init_info.Instance = m_device.instance();
     	init_info.PhysicalDevice = m_device.physicalDevice();
     	init_info.Device = m_device.device();
-    	init_info.QueueFamily = findGraphicsQueueFamilyIndex(m_device.physicalDevice());
+    	init_info.QueueFamily = m_device.findPhysicalQueueFamilies().graphicsFamily;
     	init_info.Queue = m_device.graphicsQueue();
     	init_info.DescriptorPool = createImGuiDescriptorPool();
     	init_info.MinImageCount = 2;
@@ -178,28 +326,8 @@ namespace Vectrix {
 
     	//createImGuiFramebuffers();
 		VC_CORE_INFO("ImGui has been initialized");
-#else
-		VC_CORE_ERROR("The only Platform supported is Windows and Linux, ImGui can't be initialized");
-#endif
 	}
 
-
-	uint32_t VulkanImGuiManager::findGraphicsQueueFamilyIndex(VkPhysicalDevice physicalDevice) {
-		uint32_t queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
-
-		for (uint32_t i = 0; i < queueFamilyCount; i++) {
-			if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-				return i;  // Found graphics queue family
-			}
-		}
-
-		VC_CORE_ERROR("No graphics queue family found");
-		return 0;
-	}
 
 	VkDescriptorPool VulkanImGuiManager::createImGuiDescriptorPool() {
 		const VkDescriptorPoolSize pool_sizes[] = {

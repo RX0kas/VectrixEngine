@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include "Mesh/VertexArray.h"
 
@@ -30,8 +32,6 @@ namespace Vectrix {
 		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 		virtual void sendFrame() = 0;
-
-		virtual void drawIndexed(const VertexArray& vertexArray) = 0;
 		/// @endcond
 
 		/**

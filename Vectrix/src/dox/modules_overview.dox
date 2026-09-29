@@ -4,6 +4,6 @@
  * # Main modules
  *
  * @li @subpage rendering_overview "Graphic rendering"
- * @li @subpage input_overview "Input (Later)"
- * @li @subpage event_overview "Events (Later)"
+ * @li @ref input "Input"
+ * @li @ref events "Events"
  */

@@ -2,6 +2,7 @@
 
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Events/Event.h"
+#include "Vectrix/Utils/Json.h"
 
 /**
  * @file Layer.h
@@ -10,6 +11,15 @@
  */
 
 namespace Vectrix {
+	/**
+	 * @brief One slice of the application, receiving the update, render and event callbacks
+	 *
+	 * Derive from it and override only what is needed, every callback has an empty default.
+	 * The layers are held by a LayerStack, which decides in what order they are called.
+	 * @see LayerStack
+	 * @see Application::pushLayer
+	 * @ingroup layers
+	 */
 	class Layer {
 	public:
 		/**
@@ -23,6 +33,9 @@ namespace Vectrix {
 		 * @brief The function called when the Layer is added to the layer stack
 		 */
 		virtual void OnAttach() {}
+
+
+		virtual void OnAttach(const JsonObject& data) { OnAttach(); }
 
 		/**
 		 * @brief The function called when the layer is removed from the layer stack
@@ -54,6 +67,8 @@ namespace Vectrix {
 		/**
 		 * @brief Called every time an event occurre
 		 * @param event The event that occurred
+		 * @note A WindowCloseEvent reaches the layers before the application closes: setting its Handled
+		 *       flag cancels the close (e.g. to ask first about unsaved work)
 		 */
 		virtual void OnEvent(Event& event) {}
 

@@ -9,21 +9,23 @@
 namespace Vectrix {
 	static uint8_t s_GLFWWindowCount = 0;
 
+	/// @cond INTERNAL
 	static void errorCallback(int error, const char* description) {
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
 	}
+	/// @endcond
 
 	void Window::shutdown() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Window");
+		// The graphics context owns the window's Vulkan surface, which has to go before the window itself
+		m_context.reset();
 		glfwDestroyWindow(m_window);
 
-		if (s_GLFWWindowCount-- == 0) {
+		if (--s_GLFWWindowCount == 0) {
 			VC_CORE_INFO("Terminating GLFW");
 			glfwTerminate();
 		}
-
-		m_context.reset();
 	}
 
 	Window::Window() : m_window(nullptr), m_data() {
@@ -47,34 +49,47 @@ namespace Vectrix {
 
 	void Window::init(const WindowAttributes& attributes) {
 		VC_PROFILER_FUNCTION();
-		VC_CORE_INFO("Creating window {0} ({1}, {2})", attributes.title, attributes.width, attributes.height);
+		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::getAppInfo().getAppName(), attributes.width, attributes.height);
 
-		m_data.Width = attributes.width;
-		m_data.Height = attributes.height;
-		m_data.Title = attributes.title;
+		m_data.title = Application::getAppInfo().getAppName();
 		m_data.visible = false;
+#ifdef VC_PLATFORM_WINDOWS
+		m_data.displayServer = WINDOWS;
+#else
+		m_data.displayServer = detectLinuxDisplayServer();
+#endif
+
+
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
-		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), attributes.title, nullptr, nullptr);
+		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), m_data.title.c_str(), nullptr, nullptr);
+		if (m_window == nullptr) {
+			VC_CORE_CRITICAL("Failed to create the GLFW window");
+			return;
+		}
 		glfwSetWindowUserPointer(m_window, &m_data);
 
+		// width/height track the framebuffer in pixels, which the swap chain has to match. On a scaled
+		// display (HiDPI, Wayland scale factor) it differs from the window size in screen coordinates.
+		int framebufferWidth = 0, framebufferHeight = 0;
+		glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
+		m_data.width = static_cast<unsigned int>(framebufferWidth);
+		m_data.height = static_cast<unsigned int>(framebufferHeight);
 
 		// Set some callbacks
 		glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-			data.Width = width;
-			data.Height = height;
 
 			WindowResizeEvent event(width, height);
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 			WindowCloseEvent event;
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -84,19 +99,19 @@ namespace Vectrix {
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event(key, 0);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent event(key);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent event(key, 1);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				default: {
@@ -112,13 +127,13 @@ namespace Vectrix {
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent event(button);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent event(button);
-					data.EventCallback(event);
+					data.eventCallback(event);
 					break;
 				}
 				default: {
@@ -131,26 +146,30 @@ namespace Vectrix {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 			MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 			MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
-			data.EventCallback(event);
+			data.eventCallback(event);
 		});
 
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 	}
 
+	void Window::setTitle(const std::string &title) {
+		m_data.title = title; // so getTitle reports what is shown
+		glfwSetWindowTitle(m_window,title.c_str());
+	}
+
 	void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-		data.Width = width;
-		data.Height = height;
-		data.windowResized = true;
-		// TODO: implement that
+		data.width = width;
+		data.height = height;
+		data.windowResized = true; // VulkanRenderer::endFrame recreates the swap chain on it
 	}
 
 	Window* Window::create() {
@@ -161,16 +180,6 @@ namespace Vectrix {
 	void Window::onUpdate() const {
 		VC_PROFILER_FUNCTION();
 		m_context->swapBuffers();
-	}
-
-	void Window::setVSync(bool enabled)	{
-		VC_PROFILER_FUNCTION();
-		// TODO: Changer la swapchain pour appliquer l'effet
-		m_data.VSync = enabled;
-	}
-
-	bool Window::isVSync() const {
-		return m_data.VSync;
 	}
 
 	GraphicsContext* Window::createGraphicContext(GLFWwindow* window) {
@@ -184,5 +193,22 @@ namespace Vectrix {
 
 	float Window::getAspect() const {
 		return m_context->getAspect();
+	}
+
+	DisplayServer Window::detectLinuxDisplayServer() {
+		const char* sessionType = std::getenv("XDG_SESSION_TYPE");
+
+		if (sessionType != nullptr) {
+			std::string type(sessionType);
+			if (type == "wayland") return WAYLAND;
+
+			if (type == "x11") return X11;
+
+			VC_CORE_ERROR_NO_EXIT("Unknown XDG_SESSION_TYPE variable : {}", sessionType);
+			return UNKNOWN_DISPLAY_SERVER;
+		}
+
+		VC_CORE_ERROR_NO_EXIT("Undefined XDG_SESSION_TYPE variable");
+		return UNKNOWN_DISPLAY_SERVER;
 	}
 }

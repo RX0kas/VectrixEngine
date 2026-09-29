@@ -2,10 +2,15 @@
 
 #include <utility>
 
-namespace Vectrix {
-    ImGuiWidget::ImGuiWidget(std::string name) : m_DebugName(std::move(name)) {
+#include "Vectrix/Application.h"
 
+namespace Vectrix {
+
+    ImGuiWidget::ImGuiWidget(std::string name) : m_DebugName(std::move(name)) {
+        Application::instance().imguiLayer().addWidget(this);
     }
 
-    ImGuiWidget::~ImGuiWidget() = default;
+    ImGuiWidget::~ImGuiWidget() {
+        Application::instance().imguiLayer().removeWidget(this);
+    }
 }

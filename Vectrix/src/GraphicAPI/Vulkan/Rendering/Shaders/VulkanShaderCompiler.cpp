@@ -7,21 +7,8 @@
 #include "Vectrix/Debug/Profiler.h"
 
 namespace Vectrix {
-    std::string VulkanShaderCompiler::preprocessing(const char *source_name, const shaderc_shader_kind& kind, const char *src) {
-        VC_PROFILER_FUNCTION();
-        shaderc::PreprocessedSourceCompilationResult result = m_compiler.PreprocessGlsl(src, kind, source_name, m_options);
-
-        if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
-            VC_CORE_CRITICAL("Preprocessing error: {}",result.GetErrorMessage());
-        }
-
-        return {result.cbegin(), result.cend()};
-    }
-
     VulkanShaderCompiler::VulkanShaderCompiler() {
         VC_PROFILER_FUNCTION();
-        p_macros.reserve(256);
-        p_macros.max_load_factor(0.7f);
         // Options
         m_options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
         m_options.SetSourceLanguage(shaderc_source_language_glsl);
@@ -30,24 +17,27 @@ namespace Vectrix {
         m_options.SetInvertY(false);
     }
 
-    std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name,ShaderType type,const char *src,bool optimize) {
+    std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name, ShaderType type,const char *src,bool optimize) {
         VC_PROFILER_FUNCTION();
         VC_CORE_INFO("Compiling a {} called {}, with{} optimization",toString(type),src_name,optimize ? "" : "out");
 
         shaderc_shader_kind kind = shaderTypeToShaderCKind(type);
 
-        for (const auto& macro : p_macros) {
-            m_options.AddMacroDefinition(macro.first,macro.second);
-        }
-
         if (optimize) m_options.SetOptimizationLevel(shaderc_optimization_level_performance);
         else m_options.SetOptimizationLevel(shaderc_optimization_level_zero);
 
-        std::string preprocessed = preprocessing(src_name,kind,src);
-        shaderc::SpvCompilationResult module = m_compiler.CompileGlslToSpv(preprocessed, kind, src_name, m_options);
+        // Errors are returned, not aborted on: a shader with a typo is user content (an asset dropped in the
+        // editor, a project file) and must not take the whole application down
+        const shaderc::PreprocessedSourceCompilationResult preprocessed = m_compiler.PreprocessGlsl(src, kind, src_name, m_options);
+        if (preprocessed.GetCompilationStatus() != shaderc_compilation_status_success) {
+            VC_CORE_ERROR_NO_EXIT("Preprocessing error in {}: {}", src_name, preprocessed.GetErrorMessage());
+            return {};
+        }
 
+        const shaderc::SpvCompilationResult module = m_compiler.CompileGlslToSpv(std::string(preprocessed.cbegin(), preprocessed.cend()), kind, src_name, m_options);
         if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
-            VC_CORE_CRITICAL("Compilation error: {}", module.GetErrorMessage());
+            VC_CORE_ERROR_NO_EXIT("Compilation error in {}: {}", src_name, module.GetErrorMessage());
+            return {};
         }
 
         return {module.cbegin(), module.cend()};

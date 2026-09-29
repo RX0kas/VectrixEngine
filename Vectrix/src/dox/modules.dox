@@ -49,4 +49,28 @@
  * @defgroup ecs Entity component system
  * @brief The entity component system of the engine
  * @ingroup core
+ *
+ * @defgroup events Events
+ * @brief Window, input and editor events dispatched through the layer stack
+ * @ingroup core
+ *
+ * @defgroup input Input
+ * @brief Polling of the keyboard and the mouse
+ * @ingroup core
+ *
+ * @defgroup layers Layers
+ * @brief The layer stack driving update, render and event callbacks
+ * @ingroup core
+ *
+ * @defgroup assets Assets
+ * @brief Loading and lookup of the assets used by a project
+ * @ingroup core
+ *
+ * @defgroup physics Physics
+ * @brief Geometric primitives used for intersection and picking
+ * @ingroup core
+ *
+ * @defgroup settings Settings
+ * @brief Engine wide settings that tweak how a feature behaves
+ * @ingroup core
  */

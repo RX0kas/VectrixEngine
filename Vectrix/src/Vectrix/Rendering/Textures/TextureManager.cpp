@@ -2,22 +2,22 @@
 
 #include <utility>
 
+#include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Core/Log.h"
 
 namespace Vectrix {
-    TextureManager* TextureManager::p_instance = nullptr;
-
-
     TextureManager::TextureManager() {
         VC_CORE_INFO("Initializing TextureManager");
-        VC_CORE_ASSERT(!p_instance, "TextureManager already exists!");
-        p_instance = this;
         m_notFoundTexture = Texture::createDefaultTexture();
     }
 
     std::shared_ptr<Texture> TextureManager::createTexture(const std::string &name, const std::string &path) {
-        std::shared_ptr<Texture> texture(Texture::create(path));
-        instance().add(name,texture);
+        const auto it = m_cache.find(name);
+        if (it != m_cache.end())
+            return it->second;
+
+        std::shared_ptr<Texture> texture(Texture::create(name,path));
+        add(name,texture);
         return texture;
     }
 
@@ -36,12 +36,13 @@ namespace Vectrix {
         const auto it = m_cache.find(name);
         if (it == m_cache.end()) {
             VC_CORE_ERROR("Texture with the name \"{}\" doesn't exist", name);
+            return nullptr;
         }
         return it->second;
     }
 
     std::shared_ptr<Texture> TextureManager::getNotFoundTexture() {
-        return instance().m_notFoundTexture;
+        return AssetsManager::instance().m_textureManager->m_notFoundTexture;
     }
 
     bool TextureManager::remove(const std::string& name) {

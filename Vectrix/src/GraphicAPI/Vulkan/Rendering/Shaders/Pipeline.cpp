@@ -7,8 +7,6 @@
 
 #include "Vectrix/Debug/Profiler.h"
 
-//#define NO_CULLING
-
 namespace Vectrix {
 
     Pipeline::Pipeline(Device& device,const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo) : m_device{ device } {
@@ -46,8 +44,12 @@ namespace Vectrix {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
-        const std::vector<VkVertexInputAttributeDescription> attributeDescriptions = VulkanVertexBuffer::getAttributeDescriptions(configInfo.layout);
-        const std::vector<VkVertexInputBindingDescription> bindingDescriptions = VulkanVertexBuffer::getBindingDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputAttributeDescription> generatedAttributeDescriptions = getVertexAttributeDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputBindingDescription> generatedBindingDescriptions = getVertexBindingDescriptions(configInfo.layout);
+        const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions =
+            configInfo.overrideVertexInput ? configInfo.attributeDescriptions : generatedAttributeDescriptions;
+        const std::vector<VkVertexInputBindingDescription>& bindingDescriptions =
+            configInfo.overrideVertexInput ? configInfo.bindingDescriptions : generatedBindingDescriptions;
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -59,9 +61,9 @@ namespace Vectrix {
         VkPipelineRenderingCreateInfoKHR renderingInfo{};
         renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
         renderingInfo.colorAttachmentCount = 1;
-        VkFormat f =  VulkanContext::instance().getRenderer().getImageFormat();
-        renderingInfo.pColorAttachmentFormats = &f;
-        renderingInfo.depthAttachmentFormat = VK_FORMAT_D32_SFLOAT;
+        renderingInfo.pColorAttachmentFormats = &configInfo.colorAttachmentFormat;
+        // Must match the render pass instance the pipeline draws in: UNDEFINED when it has no depth attachment
+        renderingInfo.depthAttachmentFormat = configInfo.depthAttachmentFormat;
 
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -125,15 +127,18 @@ namespace Vectrix {
         configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
         configInfo.rasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
-        configInfo.rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
+        const VulkanSettings::Rendering& renderSettings = VulkanContext::instance().settings().rendering;
+
+        bool wireframe = renderSettings.wireframe;
+        if (wireframe && !VulkanContext::instance().getDevice().supportsFillModeNonSolid()) {
+            VC_CORE_WARN("Wireframe requested but the device does not support fillModeNonSolid; using fill");
+            wireframe = false;
+        }
+
+        configInfo.rasterizationInfo.polygonMode = wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
         configInfo.rasterizationInfo.lineWidth = 1.0f;
-#ifdef NO_CULLING
-        VC_CORE_WARN("No culling mode enable");
-        configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-#else
-        configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
-#endif
-        configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        configInfo.rasterizationInfo.cullMode = renderSettings.backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
+        configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
         configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;  // Optional
         configInfo.rasterizationInfo.depthBiasClamp = 0.0f;           // Optional
@@ -153,7 +158,7 @@ namespace Vectrix {
         configInfo.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         configInfo.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
         configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-        configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+        configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
         configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -182,5 +187,11 @@ namespace Vectrix {
         configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
         configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
         configInfo.dynamicStateInfo.flags = 0;
+
+        // What the swap chain and the framebuffers are created with. The depth format is the same query their
+        // depth images use: D32_SFLOAT isn't guaranteed, and a format that doesn't match the attachment is invalid
+        const VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
+        configInfo.colorAttachmentFormat = renderer.getImageFormat();
+        configInfo.depthAttachmentFormat = renderer.findDepthFormat();
     }
 }

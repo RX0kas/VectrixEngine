@@ -1,14 +1,18 @@
 #pragma once
 
+#include <functional>
+
 #include "Enum_str.h"
+#include "VulkanSettings.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Core/Device.h"
 #include "Rendering/Core/VulkanRenderer.h"
 #include "Rendering/Shaders/VulkanShaderCompiler.h"
-#include "Vectrix/Scene/Components/MeshComponent.h"
+#include "Vectrix/Scene/Components/MeshRendererComponent.h"
 
-#define VC_VK_CHECK(x,...) if (x!=VK_SUCCESS) {VC_CORE_ERROR(__VA_ARGS__);}
-#define VC_MAKE_VULKAN_COMPATIBLE_VERSION(version) VK_MAKE_API_VERSION(VC_PLATFORM_ID,std::min(getMajor(version),8U), std::min(getMinor(version),12U), std::min(getPatch(version),12U))
+#define VC_VK_CHECK(x,...) do { if ((x) != VK_SUCCESS) { VC_CORE_ERROR(__VA_ARGS__); } } while (0)
+// Clamped to the widths of VK_MAKE_API_VERSION's fields: major 7 bits, minor 10 bits, patch 12 bits
+#define VC_MAKE_VULKAN_COMPATIBLE_VERSION(version) VK_MAKE_API_VERSION(VC_PLATFORM_ID,std::min(getMajor(version),0x7FU), std::min(getMinor(version),0x3FFU), std::min(getPatch(version),0xFFFU))
 
 namespace Vectrix {
 	class MeshRegistry;
@@ -19,8 +23,7 @@ namespace Vectrix {
 		~VulkanContext() override;
 		void init() override;
 		void swapBuffers() override;
-		void registerMesh(MeshComponent* model) override;
-		static void uploadMeshData();
+		static void waitIdle();
 
 
 		[[nodiscard]] Device& getDevice() const { return *m_device; }
@@ -31,14 +34,32 @@ namespace Vectrix {
 		[[nodiscard]] VmaAllocator getSSBOAllocator() const { return getDevice().getSSBOAllocator();}
 		[[nodiscard]] VmaAllocator getTextureAllocator() const { return getDevice().getTextureAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
+		/// False before the context is created and once it is destroyed
+		static bool exists() { return s_instance != nullptr; }
+		/**
+		 * @brief Run destroy once no frame that may use the resource it destroys is still in flight
+		 *
+		 * Instead of waiting for the whole GPU on every destroyed texture or framebuffer: the renderer keeps it
+		 * until those frames are done. Without a renderer (not created yet, or being destroyed) the device is
+		 * waited on and destroy runs right away.
+		 */
+		static void destroyWhenUnused(std::function<void()> destroy);
+
+		/**
+		 * @brief The Vulkan backend options, loaded from the project settings in init().
+		 */
+		[[nodiscard]] static const VulkanSettings& settings() { return s_instance->m_vkSettings; }
+
 		static void check_vk_result(VkResult err) {
-			if (err == VK_SUCCESS)
+			// Positive results (VK_SUBOPTIMAL_KHR, VK_INCOMPLETE, ...) are statuses, not errors
+			if (err >= VK_SUCCESS)
 				return;
 
 			VC_CORE_ERROR("VkResult = {0}\n", string_VkResult(err));
 		}
 	private:
 		GLFWwindow* m_WindowHandle;
+		VulkanSettings m_vkSettings;
 		std::unique_ptr<Device> m_device;
 		std::unique_ptr<VulkanRenderer> m_renderer;
 		std::unique_ptr<VulkanShaderCompiler> m_compiler;
@@ -49,8 +70,6 @@ namespace Vectrix {
 		}
 		
 		friend class Shader;
-		friend class VulkanVertexBuffer;
-		friend class VulkanIndexBuffer;
 		friend class Application;
 	private:
 		static VulkanContext* s_instance;

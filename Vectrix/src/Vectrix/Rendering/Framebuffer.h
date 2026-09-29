@@ -3,8 +3,12 @@
 #include <memory>
 #include <cstdint>
 
+#include <optional>
+
 #include "imgui.h"
 #include "glm/vec2.hpp"
+#include "glm/vec4.hpp"
+#include "Vectrix/Utils/ImageFormat.h"
 
 namespace Vectrix {
     /**
@@ -19,6 +23,26 @@ namespace Vectrix {
          * @brief The height of the framebuffer
          */
         std::uint32_t height = -1;
+        /**
+         * @brief If the framebuffer has a depth buffer
+         */
+        bool hasDepth = true;
+
+        /**
+         * @brief The framebuffer image format
+         */
+        VectrixImageFormat imageFormat = UNDEFINED;
+
+        /**
+         * @brief The framebuffer depth image format
+         */
+        VectrixImageFormat depthFormat = UNDEFINED;
+
+        /**
+         * @brief The colour the image is cleared to when bound with clear
+         * @note Left unset, it follows the renderer's clear colour (RenderCommand::setClearColor)
+         */
+        std::optional<glm::vec4> clearColor;
     };
 
     /**
@@ -30,9 +54,10 @@ namespace Vectrix {
 
         /**
          * @brief This function tell the renderer to draw inside this framebuffer
+         * @param clear The framebuffer should clear the previous image
          * @pre Must not be already bound
          */
-        virtual void bind() = 0;
+        virtual void bind(bool clear = true) = 0;
 
         /**
          * @brief This function tell the renderer to stop drawing inside this framebuffer
@@ -55,6 +80,25 @@ namespace Vectrix {
          * @brief This function return the specification of the Framebuffer
          */
         [[nodiscard]] virtual const FramebufferSpecification& getSpecification() const = 0;
+
+        /**
+         * @brief Replace the specification and rebuild the framebuffer to match
+         * @param spec The new specification
+         * @warning The attachments are recreated, so anything already drawn is lost
+         */
+        virtual void updateSpecification(FramebufferSpecification& spec) = 0;
+
+        /**
+         * @brief Return the format of the colour attachment
+         * @return The colour format the framebuffer was created with
+         */
+        [[nodiscard]] virtual VectrixImageFormat getImageFormat() const = 0;
+
+        /**
+         * @brief Return the format of the depth attachment
+         * @return The depth format the framebuffer was created with
+         */
+        [[nodiscard]] virtual VectrixImageFormat getDepthFormat() const = 0;
 
 
         /**
@@ -80,8 +124,13 @@ namespace Vectrix {
          */
         [[nodiscard]] static bool isAFramebufferActive() { return s_currentFramebuffer!=nullptr; }
 
+        /**
+         * @brief Return the aspect ratio of the framebuffer
+         * @return The width divided by the height
+         */
         [[nodiscard]] virtual float getAspectRatio() const = 0;
     protected:
+        /// The framebuffer currently bound, or nullptr when drawing to the window
         static Framebuffer* s_currentFramebuffer;
     };
 } // Vectrix

@@ -6,20 +6,19 @@
 namespace Vectrix {
     class DynamicSSBO {
     public:
-        explicit DynamicSSBO(std::shared_ptr<ShaderUniformLayout> layout, uint32_t initialCapacity = 256);
+        explicit DynamicSSBO(const std::shared_ptr<ShaderUniformLayout> &layout, uint32_t initialCapacity = 256);
         ~DynamicSSBO();
 
         DynamicSSBO(DynamicSSBO&& other) noexcept;
         DynamicSSBO& operator=(DynamicSSBO&&) noexcept;
 
         void write(uint32_t frameIndex, uint32_t elementIndex, const void* src);
-        void flush(uint32_t frameIndex) const;
-        void reset(uint32_t frameIndex);
+        void flush(uint32_t frameIndex, uint32_t elementCount) const;
 
         [[nodiscard]] VkDescriptorSet descriptorSet(uint32_t frameIndex) const { return m_descriptorSets[frameIndex]; }
         [[nodiscard]] uint32_t capacity() const { return m_capacity; }
 
-        [[nodiscard]] std::uint32_t getSetCountID() const { return m_setCountID; }
+        [[nodiscard]] std::uint32_t getSetCountID() const { return 1; }
         static VkDescriptorSetLayout getStaticDescriptorSetLayout() {
             if (s_descriptorSetLayout==nullptr) {
                 createDescriptorSetLayout();
@@ -33,12 +32,19 @@ namespace Vectrix {
 
         void allocateGPUBuffer();
         void updateDescriptorSets() const;
+        void freeDescriptorSets();
+        /// Bytes between two frames' regions: every element, rounded up so each region starts at a valid descriptor offset
+        [[nodiscard]] size_t frameSize() const {
+            const size_t size = static_cast<size_t>(m_elementStride) * m_capacity;
+            return (size + m_minOffsetAlignment - 1) / m_minOffsetAlignment * m_minOffsetAlignment;
+        }
         void grow();
 
         Device& m_device;
         std::shared_ptr<ShaderUniformLayout> m_layout{};
 
         uint32_t m_elementStride{};
+        VkDeviceSize m_minOffsetAlignment = 1;
 
         uint32_t m_capacity{};
 
@@ -52,7 +58,6 @@ namespace Vectrix {
         std::vector<uint8_t> m_storage;
 
         std::vector<VkDescriptorSet> m_descriptorSets;
-        std::uint32_t m_setCountID{};
     };
 } // Vectrix
 

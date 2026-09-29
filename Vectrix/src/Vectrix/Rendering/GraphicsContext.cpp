@@ -7,7 +7,7 @@ namespace Vectrix {
     GraphicsContext *GraphicsContext::create(GLFWwindow *windowHandle) {
         switch (Renderer::getAPI())
         {
-            case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!");
+            case RendererAPI::API::None:    VC_CORE_ERROR("RendererAPI::None is currently not supported!"); return nullptr;
             case RendererAPI::API::Vulkan:  return new VulkanContext(windowHandle);
         }
 
@@ -25,9 +25,9 @@ namespace Vectrix {
         VC_CORE_ERROR("Unknown RendererAPI!");
     }
 
-    void GraphicsContext::uploadAllMeshData() {
+    void GraphicsContext::waitIdle() {
         switch (RendererAPI::getAPI()) {
-            case RendererAPI::API::Vulkan: VulkanContext::uploadMeshData();
+            case RendererAPI::API::Vulkan: VulkanContext::waitIdle(); break;
             case RendererAPI::API::None:
                 break;
         }

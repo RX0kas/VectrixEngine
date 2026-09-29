@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Assets/AssetsManager.h"
 #include "Core/Window.h"
 #include "Core/AppInfo.h"
 #include "Core/Core.h"
@@ -9,6 +10,7 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
+#include "Utils/Json.h"
 
 
 /**
@@ -22,16 +24,40 @@ using AppInfoFunc = Vectrix::ApplicationInfo(*)();
 extern AppInfoFunc g_getAppInfo;
 /// @endcond
 
+/**
+ * @brief Declare the name and the version of the application
+ *
+ * Put it once at file scope in the application, it is what Application::getAppInfo reads
+ * from. Without it the engine has no name nor version to report.
+ * @param name The name of the application
+ * @param major The major part of its version
+ * @param minor The minor part of its version
+ * @param patch The patch part of its version
+ * @see Vectrix::ApplicationInfo
+ * @ingroup core
+ */
 #define VC_SET_APP_INFO(name,major,minor,patch) AppInfoFunc g_getAppInfo = []() {return Vectrix::ApplicationInfo(name, major, minor, patch);};
 
 int main(int argc, char** argv);
 
 namespace Vectrix {
-	class ShaderManager;
-	class TextureManager;
-
+	class SettingsManager;
+	/**
+	 * @brief The application itself, owning the window, the assets and the layers
+	 *
+	 * Derive from it, push the layers the application needs from the constructor, and
+	 * return the instance from createApplication. The engine takes care of running it,
+	 * so there is no main loop to write.
+	 * @see createApplication
+	 * @see Layer
+	 * @ingroup core
+	 */
 	class Application {
 	public:
+		/**
+		 * @brief Create the window, the assets manager and the ImGui overlay
+		 * @note The window stays hidden until the application starts running
+		 */
 		Application();
 		virtual ~Application();
 
@@ -50,6 +76,18 @@ namespace Vectrix {
 		 * @param layer The custom layer you wanna add
 		 **/
 		void PushOverlay(const std::shared_ptr<Layer>& layer);
+
+		/**
+		 * @tparam T New layer class
+		 */
+		template<std::derived_from<Layer> T>
+		void switchToLayer(Layer* oldLayer, const JsonObject& data = JsonObject()) {
+			m_nextLayer = std::make_shared<T>();
+			m_oldLayer = oldLayer;
+			if (!data.empty()) m_dataToNextLayer = data;
+
+			m_hasToSwitch = true;
+		}
 
 		/**
 		 * @brief This function return the current Window instance
@@ -82,22 +120,39 @@ namespace Vectrix {
 
 		/**
 		 * @brief This function close the application
+		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a layer can cancel
+		 *       (see Layer::OnEvent)
 		 **/
 		void close() {
 			m_running = false;
 		}
+
+		static SettingsManager& getSettingsManager() {
+			VC_CORE_ASSERT(s_instance, "Vectrix has not been created");
+			return *s_instance->m_settingsManager;
+		}
+
+		template<std::derived_from<Layer> T>
+		void PushLayer() { PushLayer(std::make_shared<T>()); }
+
+		template<std::derived_from<Layer> T>
+		void PushOverlay() { PushOverlay(std::make_shared<T>()); }
 	private:
 		friend class VulkanImGuiManager;
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
 
+		bool m_hasToSwitch = false;
+		std::shared_ptr<Layer> m_nextLayer;
+		Layer* m_oldLayer = nullptr; ///< The layer switchToLayer replaces, only compared (it's still in the stack until then)
+		JsonObject m_dataToNextLayer;
+
 
 		std::unique_ptr<Window> m_window;
-		std::unique_ptr<ShaderManager> m_shaderManager;
-		std::unique_ptr<TextureManager> m_textureManager;
+		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;
-		std::unique_ptr<ApplicationInfo> m_appInfo;
+		std::shared_ptr<SettingsManager> m_settingsManager;
 		bool m_running = true;
 
 		LayerStack m_layerStack;
@@ -107,6 +162,19 @@ namespace Vectrix {
 		static Application* s_instance;
 	};
 
-	Application* createApplication();
+	/**
+	 * @brief Build the application the engine should run
+	 *
+	 * The application has to define it, it is what the entry point calls to get the
+	 * instance to run.
+	 * @param argc The number of command line arguments
+	 * @param argv The command line arguments, e.g. a project/scene file path passed by
+	 *             the OS when the application is launched via a file association. In UTF-8 on
+	 *             every platform: turn a path into a std::filesystem::path with fromUtf8
+	 * @return The application, which the engine takes ownership of
+	 * @see EntryPoint.h
+	 * @ingroup core
+	 */
+	Application* createApplication(int argc, char** argv);
 
 }

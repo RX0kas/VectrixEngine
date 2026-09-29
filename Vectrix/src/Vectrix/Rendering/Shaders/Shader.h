@@ -8,7 +8,15 @@
 #include "Vectrix/Rendering/Camera/Camera.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
-#define VC_VERIFY_UNIFORM_NAME(name) if (name=="vc_cameraTransform") VC_ERROR("The uniform name \"{}\" is reserved",name)
+/**
+ * @brief Refuse a uniform name the engine keeps for itself
+ *
+ * `vc_cameraTransform` is set by the renderer on every shader, so a shader defining its
+ * own uniform under that name would have it overwritten.
+ * @param name The uniform name to check
+ * @ingroup shaders
+ */
+#define VC_VERIFY_UNIFORM_NAME(name) do { if ((name)=="vc_cameraTransform") { VC_CORE_ERROR("The uniform name \"{}\" is reserved",(name)); } } while (0)
 
 
 /**
@@ -19,6 +27,7 @@
 
 
 namespace Vectrix {
+	class Framebuffer;
 	/**
  	* @brief This class represent a shader
 	* @details This class represent a shader that can be created with Vectrix::ShaderManager::createShader() <br>
@@ -282,6 +291,24 @@ namespace Vectrix {
 		virtual uint32_t useTexture(std::shared_ptr<Texture> texture) = 0;
 
 		/**
+		 * @brief Define the value of the current framebuffer in the shader
+		 *
+		 * This function permit to modify the value of the current framebuffer in this shader and return the index it has been set to
+		 *
+		 * @param framebuffer the framebuffer that is sent
+		 *
+		 * @pre The shader must be bind before
+		 *
+		 * @post The value is set until another one is given, even for upcoming frames
+		 *
+		 * @warning Don't call this function before the initialization of the window
+		 * @warning The name of the uniform is case-sensitive
+		 *
+		 * @warning There is a limited number of texture/framebuffer allowed per shader Texture::getMaxTexturePerShader()
+		 */
+		virtual uint32_t useFramebuffer(std::shared_ptr<Framebuffer> framebuffer) = 0;
+
+		/**
 		 * @brief Define the value of a uniform in the shader, without needing to think about the type
 		 *
 		 * This function permit to modify the value of a uniform variable in this shader
@@ -318,17 +345,29 @@ namespace Vectrix {
 		 * @brief Return if the shader is set up to receives the camera
 		 */
 		[[nodiscard]] virtual bool isAffectedByCamera() const = 0;
+
+		/**
+		 * @brief Return the name of the shader
+		 */
+		[[nodiscard]] virtual std::string getID() const = 0;
 	protected:
 		/// @cond INTERNAL
 		virtual void setUniformImplementation(const std::string& name,ShaderUniformType type,const void* data,size_t size) const = 0;
 		static void finalize(ShaderUniformLayout* s) {
 			s->finalize();
 		}
+		// VertexSRC, FragmentSRC — `source` is the whole .vcshader file's text, already in memory
+		static std::pair<std::string, std::string> parseSource(const std::string& source);
 		///  @endcond
 	private:
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
 		friend class ShaderManager;
 		friend class Renderer;
-		static std::shared_ptr<Shader> create(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath,ShaderUniformLayout layout,const BufferLayout& buffer_layout,bool affectedByCamera);
+		friend class AssetsManager;
+		/// Takes the id of the file the shader was loaded from once it moved (AssetsManager::moveProjectAssets)
+		virtual void setID(std::string id) = 0;
+		static std::shared_ptr<Shader> create(const std::string& name, const std::string& path,const BufferLayout& bufferLayout);
+		static std::shared_ptr<Shader> createFromSource(const std::string& name, const std::string& source,const BufferLayout& bufferLayout);
+		static ShaderUniformLayout findShaderUniformLayoutFromSource(const std::string& source,bool& isAffectedByCamera);
 	};
 }

@@ -14,7 +14,17 @@ namespace Vectrix {
      */
     class DeltaTime {
     public:
+        /**
+         * @brief Build a delta time from a duration in seconds
+         * @param time The elapsed time in seconds
+         */
         DeltaTime(float time = 0.0f) : m_Time(time) {}
+
+        /**
+         * @brief Convert to a float, so it can be used directly in a computation
+         * @return The elapsed time in seconds
+         * @see getSeconds
+         */
 
         operator float() const { return m_Time; }
 
