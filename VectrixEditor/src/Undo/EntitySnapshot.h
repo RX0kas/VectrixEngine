@@ -32,6 +32,11 @@ namespace Vectrix {
         std::shared_ptr<Texture> texture;
         std::shared_ptr<Shader> shader;
         bool enabled = false;
+        // The paths of the assets that couldn't be loaded, so an undo doesn't drop them (see MeshRendererComponent)
+        std::string missingMesh;
+        std::string missingTexture;
+        std::string missingShader;
+        bool enabledOnceComplete = false;
     };
 
     /// CameraComponent's fields — captured individually rather than copying Camera (it holds a

@@ -161,6 +161,7 @@ namespace Vectrix {
 	}
 
 	void Window::setTitle(const std::string &title) {
+		m_data.title = title; // so getTitle reports what is shown
 		glfwSetWindowTitle(m_window,title.c_str());
 	}
 

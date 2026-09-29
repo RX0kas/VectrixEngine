@@ -10,6 +10,7 @@
 
 #include "Vectrix/Core/AppInfo.h"
 #include "Vectrix/Utils/Result.h"
+#include "Vectrix/Utils/Path.h"
 
 /**
  * @file ProjectSerializer.h
@@ -36,7 +37,7 @@
 #define PROJECT_VERSION_PATCH 0
 
 namespace Vectrix {
-	const static std::filesystem::path DefaultVectrixProjectPath = std::filesystem::path(sago::getDocumentsFolder()) / "VectrixProject" ;
+	const static std::filesystem::path DefaultVectrixProjectPath = fromUtf8(sago::getDocumentsFolder()) / "VectrixProject"; // sago returns UTF-8
 
 	/*
 	[HEADER]

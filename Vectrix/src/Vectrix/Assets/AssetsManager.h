@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_ASSETSMANAGER_H
 
 #include <memory>
+#include <optional>
 #include <filesystem>
 #include <string>
 
@@ -11,6 +12,8 @@
 #include "Vectrix/Rendering/Mesh/MeshManager.h"
 #include "Vectrix/Utils/Memory.h"
 #include "Vectrix/Utils/Result.h"
+#include "Vectrix/Utils/Path.h"
+#include "Vectrix/Assets/AssetFingerprint.h"
 
 /**
  * @file AssetsManager.h
@@ -83,7 +86,7 @@ namespace Vectrix {
         template<typename T>
         static std::pair<VectrixResult, std::shared_ptr<T>> load(const std::filesystem::path& path)
         {
-            return load<T>(path.string());
+            return load<T>(toUtf8(path));
         }
 
 
@@ -129,11 +132,11 @@ namespace Vectrix {
          * @param path The project's assets folder, e.g. `<project>/Assets`
          * @note Does not affect #getEngineAssetsPath, which stays fixed: editor/engine
          *       built-in assets (icons, the ImGui shader, ...) never live in a project
+         * @note Moving to another folder forgets the assets loaded from the previous one, so a
+         *       project whose assets have the same relative paths gets its own
          * @see getAssetsPath
          */
-        static void setAssetsPath(const std::filesystem::path& path) {
-            s_assetsPath = path;
-        }
+        static void setAssetsPath(const std::filesystem::path& path);
 
         /**
          * @brief Return the folder the engine's own built-in assets are taken from
@@ -158,10 +161,99 @@ namespace Vectrix {
          * @note The file is not opened, only its extension is looked at
          */
         static AssetType getAssetType(const std::filesystem::path &path);
+
+        /**
+         * @brief The id a file of the assets folder is loaded, and saved in scenes, under
+         * @param path The file (or folder), absolute or relative to the assets folder
+         * @return The id, or nullopt for a path outside the assets folder
+         */
+        static std::optional<std::string> getProjectAssetId(const std::filesystem::path& path);
+
+        /**
+         * @brief An asset id after the file, or a folder holding it, moved
+         * @param id The id to update
+         * @param oldId The id of the file or folder that moved
+         * @param newId Its id after the move
+         * @return The id to use now, or nullopt when id is neither oldId nor inside it
+         */
+        static std::optional<std::string> remapAssetId(const std::string& id, const std::string& oldId, const std::string& newId);
+
+        /**
+         * @brief Follow a file or folder of the assets folder that moved
+         *
+         * The assets already loaded from it keep their objects, now registered and identified by their new ids, so
+         * what uses them (an open scene) saves the new paths.
+         * @param oldId The id of the file or folder before the move
+         * @param newId Its id after the move
+         * @note Scene files that refer to them are updated separately, see SceneSerializer::remapAssetIds
+         */
+        void moveProjectAssets(const std::string& oldId, const std::string& newId);
+
+        /**
+         * @brief The fingerprint of an asset file (its size and a hash of its content)
+         * @param id The asset's id, or the path of the file
+         * @return The fingerprint, or nullopt when the file can't be read
+         * @note Computed again only when the file changed (its size or write time), as hashing a big texture takes a
+         *       few milliseconds
+         */
+        static std::optional<AssetFingerprint> getFingerprint(const std::string& id);
+
+        /// An asset found again by findMovedAsset
+        struct MovedAsset {
+            std::string id; ///< Its new id
+            /// Found by its file name, not its content: the content changed (or the scene has no fingerprint for it),
+            /// so it may be another file with the same name
+            bool byNameOnly;
+        };
+
+        /**
+         * @brief Look for an asset that was moved or renamed outside the editor, in the assets folder
+         * @param id The path it had
+         * @param fingerprint Its content, as saved in the scene (unknown for scenes saved before fingerprints)
+         * @return The one file with the same content (of identical copies, the one with the same name). When no file
+         *         has that content, the one file with the same name, marked byNameOnly. nullopt when there is none, or
+         *         several with nothing to tell them apart
+         */
+        static std::optional<MovedAsset> findMovedAsset(const std::string& id, const AssetFingerprint& fingerprint);
     private:
+        /// Where a requested asset is on disk, and the id it is registered and saved in scenes under
+        struct ResolvedAsset {
+            std::filesystem::path file; ///< Absolute and normalised
+            std::string id; ///< Relative to the assets folder with '/' separators, or the absolute file outside it
+            bool inAssetsFolder; ///< A project asset, forgotten when the assets folder changes
+        };
+
+        /// An asset loaded from the assets folder, as registered in the caches
+        struct ProjectAsset {
+            AssetType type;
+            std::string id; ///< Its name in the type's manager
+            std::string cacheKey; ///< Its key in m_cache
+        };
+
+        /// Drop the project assets from m_cache and the type managers (what still uses them keeps them alive)
+        void forgetProjectAssets();
+
+        /**
+         * @brief Resolve a path given to #load
+         *
+         * A file inside the assets folder always gets the same id, whichever way it was asked for
+         * ("./models/a.obj", an absolute path, '\' separators on Windows): it isn't registered twice,
+         * and a scene saved on one machine or OS finds it on another.
+         */
+        static ResolvedAsset resolve(const std::string& path);
+
         friend class TextureManager;
         friend class ShaderManager;
         Cache<std::string, std::shared_ptr<void>> m_cache;
+        std::vector<ProjectAsset> m_projectAssets;
+
+        /// A fingerprint and the version of the file it was computed for
+        struct CachedFingerprint {
+            std::uint64_t size;
+            std::filesystem::file_time_type writeTime;
+            std::uint64_t hash;
+        };
+        std::unordered_map<std::string, CachedFingerprint> m_fingerprints; ///< Keyed by the file's absolute path
         std::unique_ptr<TextureManager> m_textureManager;
         std::unique_ptr<ShaderManager> m_shaderManager;
         std::unique_ptr<MeshManager> m_meshManager;
@@ -174,100 +266,88 @@ namespace Vectrix {
     /// @cond INTERNAL
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Texture>> AssetsManager::load(const std::string& path) {
-        std::filesystem::path p(path);
+        const auto [p, id, inAssetsFolder] = resolve(path);
 
-        if (p.is_relative()) {
-            std::filesystem::path tempPath;
-            tempPath.append(s_assetsPath.string());
-            tempPath.append(p.string());
-            p = tempPath;
-        }
-        // No need to check if the texture exist because the default texture will be used
+        // Reported rather than replaced by the not_found texture: a caller like the scene loader has to know, to
+        // keep the reference (and it isn't cached, so the file loads once it's back)
+        if (!std::filesystem::exists(p))
+            return {VectrixResult::NOT_FOUND, nullptr};
 
-        if (getAssetType(path)!=TEXTURE) {
+        if (getAssetType(p)!=TEXTURE) {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        const std::string cacheKey = p.lexically_normal().generic_string();
+        const std::string cacheKey = toGenericUtf8(p);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto texture = std::static_pointer_cast<Texture>(it->second);
-            if (s_instance->m_textureManager->m_cache.find(path) == s_instance->m_textureManager->m_cache.end())
-                s_instance->m_textureManager->add(path, texture);
+            if (s_instance->m_textureManager->m_cache.find(id) == s_instance->m_textureManager->m_cache.end())
+                s_instance->m_textureManager->add(id, texture);
             return {VectrixResult::SUCCESS, texture};
         }
 
-        auto texture = s_instance->m_textureManager->createTexture(path, p.string());
+        auto texture = s_instance->m_textureManager->createTexture(id, toUtf8(p));
         s_instance->m_cache.emplace(cacheKey, texture);
+        if (inAssetsFolder)
+            s_instance->m_projectAssets.push_back({TEXTURE, id, cacheKey});
         return {VectrixResult::SUCCESS, texture};
     }
 
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Shader>> AssetsManager::load(const std::string& path) {
-        std::filesystem::path p(path);
-
-
-        if (p.is_relative()) {
-            std::filesystem::path tempPath;
-            tempPath.append(s_assetsPath.string());
-            tempPath.append(p.string());
-            p = tempPath;
-        }
+        const auto [p, id, inAssetsFolder] = resolve(path);
 
         if (!std::filesystem::exists(p))
             return {VectrixResult::NOT_FOUND, nullptr};
 
-        if (getAssetType(path)!=SHADER) {
+        if (getAssetType(p)!=SHADER) {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        const std::string cacheKey = p.lexically_normal().generic_string();
+        const std::string cacheKey = toGenericUtf8(p);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto shader = std::static_pointer_cast<Shader>(it->second);
-            if (!s_instance->m_shaderManager->exist(path))
-                s_instance->m_shaderManager->add(path, shader);
+            if (!s_instance->m_shaderManager->exist(id))
+                s_instance->m_shaderManager->add(id, shader);
             return {VectrixResult::SUCCESS, shader};
         }
 
-        auto shader = s_instance->m_shaderManager->createShader(path, p.string());
+        auto shader = s_instance->m_shaderManager->createShader(id, toUtf8(p));
         if (!shader)
             return {VectrixResult::FORMATING_ERROR, nullptr}; // Doesn't compile. Not cached, so a fixed file can be loaded again
         s_instance->m_cache.emplace(cacheKey, shader);
+        if (inAssetsFolder)
+            s_instance->m_projectAssets.push_back({SHADER, id, cacheKey});
         return {VectrixResult::SUCCESS, shader};
     }
 
     template<>
     inline std::pair<VectrixResult, std::shared_ptr<Mesh>> AssetsManager::load(const std::string& path) {
-        std::filesystem::path p(path);
-
-        if (p.is_relative()) {
-            std::filesystem::path tempPath;
-            tempPath.append(s_assetsPath.string());
-            tempPath.append(p.string());
-            p = tempPath;
-        }
+        const auto [p, id, inAssetsFolder] = resolve(path);
 
         if (!std::filesystem::exists(p))
             return {VectrixResult::NOT_FOUND, nullptr};
 
-        if (getAssetType(path)!=MESH) {
+        if (getAssetType(p)!=MESH) {
             return {VectrixResult::WRONG_TYPE,nullptr};
         }
 
-        const std::string cacheKey = p.lexically_normal().generic_string();
+        const std::string cacheKey = toGenericUtf8(p);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto mesh = std::static_pointer_cast<Mesh>(it->second);
-            if (!s_instance->m_meshManager->exist(path))
-                s_instance->m_meshManager->add(path, mesh);
+            if (!s_instance->m_meshManager->exist(id))
+                s_instance->m_meshManager->add(id, mesh);
             return {VectrixResult::SUCCESS, mesh};
         }
 
-        auto mesh = s_instance->m_meshManager->createMesh(path, p.string());
+        auto mesh = s_instance->m_meshManager->createMesh(id, toUtf8(p));
         if (!mesh)
             return {VectrixResult::FORMATING_ERROR, nullptr}; // Not cached, so a fixed file can be loaded again
         s_instance->m_cache.emplace(cacheKey, mesh);
+        if (inAssetsFolder)
+            s_instance->m_projectAssets.push_back({MESH, id, cacheKey});
         return {VectrixResult::SUCCESS, mesh};
     }
     /// @endcond

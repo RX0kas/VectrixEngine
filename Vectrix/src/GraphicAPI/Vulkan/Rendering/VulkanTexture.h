@@ -31,6 +31,7 @@ namespace Vectrix {
         [[nodiscard]] std::string getID() const override { return m_name; }
     private:
         friend class Texture;
+        void setID(std::string id) override { m_name = std::move(id); }
         VulkanTexture();
         void createTexture(stbi_uc* pixels, int channels);
         /// Copies the staging buffer into m_image and leaves it ready to be sampled

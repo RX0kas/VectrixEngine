@@ -7,6 +7,7 @@
 
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Utils/Hashing.h"
+#include "Vectrix/Utils/Path.h"
 
 /**
  * @file Memory.h
@@ -98,7 +99,7 @@ namespace Vectrix {
      * @ingroup utils
      */
     inline std::string readUTF8(const std::string& path) {
-        std::ifstream fichier(path, std::ios::binary);
+        std::ifstream fichier(fromUtf8(path), std::ios::binary);
         if (!fichier.is_open()) {
             VC_CORE_ERROR_NO_EXIT("Can't open: {}", path);
             return {};

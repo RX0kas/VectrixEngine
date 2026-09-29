@@ -1,6 +1,7 @@
 #include "SettingsManager.h"
 
 #include "Vectrix/Application.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
 	namespace {
@@ -52,7 +53,7 @@ namespace Vectrix {
 
 		// On failure the tier is emptied rather than left holding what the previous file loaded into it
 		// (e.g. the previous project's settings when the new project's file is broken)
-		auto [result, root] = Json::load(file.string());
+		auto [result, root] = Json::load(toUtf8(file));
 		if (result != SUCCESS) {
 			target.clear();
 			return {result, "Error while parsing settings: " + root.getString()};
@@ -93,7 +94,7 @@ namespace Vectrix {
 		if (path.empty())
 			return {NOT_FOUND, scope == Scope::Project ? "No project is open" : "No global settings location is set"};
 
-		const VectrixResult result = Json::save(path.string(), data);
+		const VectrixResult result = Json::save(toUtf8(path), data);
 		if (result != SUCCESS)
 			return {result, "Error while saving settings: " + toString(result)};
 		return {SUCCESS, ""};

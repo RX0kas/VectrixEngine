@@ -1,5 +1,8 @@
 #ifndef VECTRIXWORKSPACE_EDITORLAYER_H
 #define VECTRIXWORKSPACE_EDITORLAYER_H
+#include <functional>
+#include <optional>
+
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "imgui.h"
 #include "ImGuizmo.h"
@@ -27,10 +30,30 @@ namespace Vectrix {
 
     	void OnAttach() override;
     	void OnAttach(const JsonObject& data) override;
+    	void OnDetach() override;
     	void openScene(const std::filesystem::path& path);
     	std::shared_ptr<Scene> getActiveScene() { return m_activeScene; }
 	private:
-    	void showSaveDialog();
+    	void newScene(); ///< Replaces the scene with an empty one, saved to a file on its first save
+    	void replaceActiveScene(std::shared_ptr<Scene> scene); ///< Hierarchy and undo history follow; file fields aren't set
+    	bool saveScene(); ///< Saves to the scene's file, or asks for one (Save As) when it has none. False when not saved
+    	bool showSaveDialog(); ///< Save As. False when cancelled or when the save failed
+    	bool writeScene(const std::filesystem::path& path); ///< Reports a failure in a popup; on success the scene is clean
+    	/// Runs action, which replaces or closes the scene, right away when nothing is unsaved; asks first otherwise
+    	void runDiscardingScene(std::function<void()> action);
+    	void renderUnsavedChangesPopup();
+    	void updateWindowTitle(); ///< Scene file name, with a '*' while it has unsaved changes
+    	/// Follows a file or folder the content browser moved or renamed: loaded assets, the open scene and every
+    	/// scene file of the project are updated to the new paths
+    	void onAssetMoved(const std::filesystem::path& from, const std::filesystem::path& to);
+    	/// Updates the open scene's missing references and every scene file of the project from oldId to newId
+    	/// @return The scenes that couldn't be updated, one "\n  - scene (reason)" line each
+    	std::string remapAssetInProject(const std::string& oldId, const std::string& newId);
+    	/// Finds the open scene's missing assets that were moved or renamed outside the editor and relinks them. Those
+    	/// found by content update the project's scenes; those found by name only are a guess, kept to the open scene
+    	/// and marked unsaved. @return One "\n  - old -> new" line per asset found again, and a note on the guesses
+    	/// @param failures Receives the scenes that couldn't be updated
+    	std::string relinkMovedAssets(std::string& failures);
     	void showOpenDialog();
     	void showOpenProjectDialog();
     	void processPendingSceneLoad();
@@ -69,6 +92,15 @@ namespace Vectrix {
     	UndoHistory m_undoHistory;
     	bool m_ctrlUndoWasDown = false;
     	bool m_ctrlRedoWasDown = false;
+    	bool m_ctrlSaveWasDown = false;
+    	bool m_ctrlNewWasDown = false;
+
+    	// Unsaved changes
+    	std::function<void()> m_actionAfterSavePrompt; ///< What the "Unsaved changes" popup was opened for
+    	bool m_openUnsavedChangesPopup = false; ///< Opened from OnImGuiRender, where its BeginPopupModal is
+    	std::string m_baseWindowTitle; ///< The title before this layer, restored by OnDetach
+    	std::optional<bool> m_titleModified; ///< What the title was last built from, nullopt before it first is
+    	std::string m_titleFileName;
 
     	void refreshSelectionAfter(Command* command);
 
@@ -78,6 +110,9 @@ namespace Vectrix {
     	std::string m_lastNFDOpenError;
     	std::string m_lastOpenProjectNFDError;
     	std::string m_lastSaveSceneNFDError;
+    	std::string m_lastSaveSceneErrorMessage;
+    	std::string m_lastSceneAssetsMissingMessage;
+    	std::string m_lastAssetMoveErrorMessage;
     };
 } // Vectrix
 

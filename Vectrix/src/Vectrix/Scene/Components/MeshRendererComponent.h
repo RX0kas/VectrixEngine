@@ -82,6 +82,22 @@ namespace Vectrix {
          * @post The entity stops being drawn until tryEnabling succeeds again
          */
         void disable() { enable = false; }
+
+        /**
+         * @brief Paths of the assets the component refers to but that couldn't be loaded (moved, deleted, broken)
+         *
+         * Saving writes them back instead of the asset, so the references survive: they load again once the
+         * files are back. A missing mesh or shader leaves the asset unset; a missing texture shows the
+         * not_found texture. Empty for an asset that loaded, and cleared when another asset is set in its place.
+         */
+        std::string missingMesh;
+        std::string missingTexture; ///< See missingMesh
+        std::string missingShader; ///< See missingMesh
+        /// Saved enabled but kept disabled because of a missing asset: saved enabled again while one is missing
+        bool enabledOnceComplete = false;
+
+        /// @return true when an asset the component refers to couldn't be loaded
+        [[nodiscard]] bool hasMissingAsset() const { return !missingMesh.empty() || !missingTexture.empty() || !missingShader.empty(); }
     private:
         bool enable = true;
     };

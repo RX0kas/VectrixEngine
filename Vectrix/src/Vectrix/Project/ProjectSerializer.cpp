@@ -8,6 +8,7 @@
 #include "Vectrix/Utils/Folders.h"
 #include "Vectrix/Utils/Json.h"
 #include "Vectrix/Settings/SettingsManager.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
 	bool ProjectSerializer::validMagicNumber(std::ifstream& stream) {
@@ -51,7 +52,7 @@ namespace Vectrix {
 	}
 
 	std::pair<VectrixResult, std::string> ProjectSerializer::createProject(const std::filesystem::path& directory, const std::string& name) {
-		VC_CORE_INFO("Creating project \"{}\" in {}", name.c_str(), directory.string().c_str());
+		VC_CORE_INFO("Creating project \"{}\" in {}", name.c_str(), toUtf8(directory).c_str());
 
 		// The name becomes the .vcproj and starting scene file names: it must not be empty or leave the project folder
 		if (name.empty() || name == "." || name == ".." || name.find_first_of("/\\") != std::string::npos) {
@@ -61,26 +62,26 @@ namespace Vectrix {
 
 		std::error_code ec;
 		if (std::filesystem::exists(directory, ec) && !std::filesystem::is_empty(directory, ec)) {
-			VC_CORE_WARN("Can't create project \"{}\": a project already exists at {}", name.c_str(), directory.string().c_str());
-			return {ALREADY_EXISTS, "A project already exists at " + directory.string()};
+			VC_CORE_WARN("Can't create project \"{}\": a project already exists at {}", name.c_str(), toUtf8(directory).c_str());
+			return {ALREADY_EXISTS, "A project already exists at " + toUtf8(directory)};
 		}
 
 		if (!std::filesystem::create_directories(directory, ec) && ec) {
-			VC_CORE_ERROR_NO_EXIT("Can't create project directory: {}", directory.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't create project directory: {}", toUtf8(directory).c_str());
 			return {UNKNOWN_ERROR, "Can't create the project directory: " + ec.message()};
 		}
 
 		createProjectFolders(directory);
 
-		const std::filesystem::path startScene = std::filesystem::path("Scenes") / (name + ".vctx");
+		const std::filesystem::path startScene = std::filesystem::path("Scenes") / fromUtf8(name + ".vctx");
 		Scene scene(name);
-		if (SceneSerializer::saveScene((directory / startScene).string(), scene) != SUCCESS) {
+		if (SceneSerializer::saveScene(toUtf8(directory / startScene), scene) != SUCCESS) {
 			return {UNKNOWN_ERROR, "Can't write the starting scene of the project"};
 		}
 
-		std::ofstream file(directory / (name + ".vcproj"), std::ios::binary);
+		std::ofstream file(directory / fromUtf8(name + ".vcproj"), std::ios::binary);
 		if (!file) {
-			VC_CORE_ERROR_NO_EXIT("Can't create project file in: {}", directory.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't create project file in: {}", toUtf8(directory).c_str());
 			return {UNKNOWN_ERROR, "Can't create the .vcProj file"};
 		}
 
@@ -89,58 +90,58 @@ namespace Vectrix {
 		file.write(reinterpret_cast<const char*>(&engineVersion), sizeof(engineVersion));
 		file.write(reinterpret_cast<const char*>(&PROJECT_VERSION), sizeof(PROJECT_VERSION));
 		writeString(file, name);
-		writeString(file, startScene.generic_string());
+		writeString(file, toGenericUtf8(startScene));
 		file.close();
 		if (!file) {
-			VC_CORE_ERROR_NO_EXIT("Failed while writing the project file in: {}", directory.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Failed while writing the project file in: {}", toUtf8(directory).c_str());
 			return {UNKNOWN_ERROR, "Can't write the .vcProj file"};
 		}
 
-		if (Json::save((directory / settingsFileName).string(), JsonObject{}) != SUCCESS) {
+		if (Json::save(toUtf8(directory / settingsFileName), JsonObject{}) != SUCCESS) {
 			return {UNKNOWN_ERROR, "Can't create the project settings file"};
 		}
 
-		VC_CORE_INFO("Project \"{}\" created successfully in {}", name.c_str(), directory.string().c_str());
+		VC_CORE_INFO("Project \"{}\" created successfully in {}", name.c_str(), toUtf8(directory).c_str());
 		return {SUCCESS, {}};
 	}
 
 	ProjectLoadResult ProjectSerializer::loadProject(const std::filesystem::path& path) {
-		VC_CORE_INFO("Loading project from {}", path.string().c_str());
+		VC_CORE_INFO("Loading project from {}", toUtf8(path).c_str());
 
 		std::ifstream file(path, std::ios::binary);
 		if (!file) {
-			VC_CORE_ERROR_NO_EXIT("Can't find file: {}", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't find file: {}", toUtf8(path).c_str());
 			return {.result = NOT_FOUND};
 		}
 
 		if (!validMagicNumber(file)) {
-			VC_CORE_ERROR_NO_EXIT("The file {} is not a Vectrix project file", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("The file {} is not a Vectrix project file", toUtf8(path).c_str());
 			return {.result = WRONG_FILE};
 		}
 
 		if (!validVectrixVersion(file).has_value()) {
-			VC_CORE_ERROR_NO_EXIT("The file {} is not made for this Vectrix version", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("The file {} is not made for this Vectrix version", toUtf8(path).c_str());
 			return {.result = OUTDATED};
 		}
 
 		if (!validProjectVersion(file).has_value()) {
-			VC_CORE_ERROR_NO_EXIT("The file {} is too old", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("The file {} is too old", toUtf8(path).c_str());
 			return {.result = OUTDATED};
 		}
 
 		const std::optional<std::string> name = getString(file);
 		if (!name.has_value()) {
-			VC_CORE_ERROR_NO_EXIT("Can't load the name of the project from file: {}", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't load the name of the project from file: {}", toUtf8(path).c_str());
 			return {.result = UNKNOWN_ERROR};
 		}
 
 		const std::optional<std::string> startScene = getString(file);
 		if (!startScene.has_value()) {
-			VC_CORE_ERROR_NO_EXIT("Can't load the starting scene of the project from file: {}", path.string().c_str());
+			VC_CORE_ERROR_NO_EXIT("Can't load the starting scene of the project from file: {}", toUtf8(path).c_str());
 			return {.result = UNKNOWN_ERROR};
 		}
 
 		VC_CORE_INFO("Project \"{}\" loaded successfully, starting scene: {}", name->c_str(), startScene->c_str());
-		return {.result = SUCCESS, .name = name.value(), .startScenePath = startScene.value()};
+		return {.result = SUCCESS, .name = name.value(), .startScenePath = fromUtf8(startScene.value())};
 	}
 } // Vectrix

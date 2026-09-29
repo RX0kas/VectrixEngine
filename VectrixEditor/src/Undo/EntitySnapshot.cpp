@@ -32,7 +32,7 @@ namespace Vectrix {
 
     MeshRendererSnapshot captureMeshRendererSnapshot(const std::shared_ptr<Entity>& entity) {
         const MeshRendererComponent& mc = entity->getComponent<MeshRendererComponent>();
-        return { mc.mesh, mc.texture, mc.shader, mc.isEnable() };
+        return { mc.mesh, mc.texture, mc.shader, mc.isEnable(), mc.missingMesh, mc.missingTexture, mc.missingShader, mc.enabledOnceComplete };
     }
 
     void applyMeshRendererSnapshot(const std::shared_ptr<Entity>& entity, const MeshRendererSnapshot& snapshot) {
@@ -43,6 +43,10 @@ namespace Vectrix {
         mc.mesh = snapshot.mesh;
         mc.texture = snapshot.texture;
         mc.shader = snapshot.shader;
+        mc.missingMesh = snapshot.missingMesh;
+        mc.missingTexture = snapshot.missingTexture;
+        mc.missingShader = snapshot.missingShader;
+        mc.enabledOnceComplete = snapshot.enabledOnceComplete;
         if (snapshot.enabled)
             mc.tryEnabling();
         else

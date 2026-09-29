@@ -32,6 +32,8 @@ namespace Vectrix {
 	VulkanRenderer::~VulkanRenderer() {
 		VC_PROFILER_FUNCTION();
 		vkDeviceWaitIdle(m_device.device());
+		for (auto& released : m_releasedAfterFrame)
+			released.clear();
 		m_maskFramebuffer.reset();
 		freeCommandBuffers();
 		cleanupSwapChain();
@@ -98,6 +100,9 @@ namespace Vectrix {
 		VC_CORE_ASSERT(!m_isFrameStarted, "Frame already started");
 
 		VkResult result = m_swapChain->acquireNextImage(&m_currentImageIndex);
+		// acquireNextImage waited on this frame slot's fence, even when it fails: the frame that last used the
+		// slot is done, and so is everything released during it
+		m_releasedAfterFrame[static_cast<size_t>(m_swapChain->getFrameIndex())].clear();
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			recreateSwapChain();
@@ -408,7 +413,9 @@ namespace Vectrix {
 
 		framebuffer->bind(false);
 		{
-			m_outlineShader->useFramebuffer(m_maskFramebuffer);
+			// The mask gets whichever slot of u_Textures is free (slot 0 is the not_found texture): the shader reads it
+			// from there
+			m_outlineShader->setUniform1u("u_MaskIndex", m_outlineShader->useFramebuffer(m_maskFramebuffer));
 			glm::vec2 texelSize = {1.0f / static_cast<float>(m_maskFramebuffer->getSpecification().width),1.0f / static_cast<float>(m_maskFramebuffer->getSpecification().height)};
 			m_outlineShader->setUniform2f("u_TexelSize", texelSize*outlineSettings.texelSize);
 			m_outlineShader->setUniform1f("u_Thickness", outlineSettings.thickness);
@@ -431,10 +438,10 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::initOutline() {
-		std::shared_ptr<Shader> ms = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/mask.vcshader", EmbeddedShaders::k_MaskShader);
+		std::shared_ptr<Shader> ms = AssetsManager::instance().getShaderManager().createShaderFromSource(VulkanShader::k_MaskShaderName, EmbeddedShaders::k_MaskShader);
 		m_maskShader = std::static_pointer_cast<VulkanShader>(ms);
 
-		std::shared_ptr<Shader> os = AssetsManager::instance().getShaderManager().createShaderFromSource("shaders/outline.vcshader", EmbeddedShaders::k_OutlineShader);
+		std::shared_ptr<Shader> os = AssetsManager::instance().getShaderManager().createShaderFromSource(VulkanShader::k_OutlineShaderName, EmbeddedShaders::k_OutlineShader);
 		m_outlineShader = std::static_pointer_cast<VulkanShader>(os);
 		if (!m_maskShader || !m_outlineShader) {
 			VC_CORE_CRITICAL("The engine's embedded outline shaders failed to compile");

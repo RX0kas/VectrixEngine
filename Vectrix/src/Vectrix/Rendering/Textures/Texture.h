@@ -49,6 +49,9 @@ namespace Vectrix {
         [[nodiscard]] virtual ImTextureID getImGuiTextureID() const = 0;
     private:
         friend class TextureManager;
+        friend class AssetsManager;
+        /// Takes the id of the file the texture was loaded from once it moved (AssetsManager::moveProjectAssets)
+        virtual void setID(std::string id) = 0;
         static std::shared_ptr<Texture> create(const std::string &name,const std::string& path);
         static std::shared_ptr<Texture> createDefaultTexture();
     };

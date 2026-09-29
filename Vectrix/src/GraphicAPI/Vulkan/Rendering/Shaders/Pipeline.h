@@ -19,6 +19,8 @@ namespace Vectrix {
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
         bool overrideVertexInput = false;
 
+        /// Formats of the attachments the pipeline draws into, set by defaultPipelineConfigInfo to the swap
+        /// chain's. depthAttachmentFormat is VK_FORMAT_UNDEFINED for a pass without a depth attachment
         VkFormat colorAttachmentFormat = VK_FORMAT_UNDEFINED;
         VkFormat depthAttachmentFormat = VK_FORMAT_UNDEFINED;
 

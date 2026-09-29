@@ -34,7 +34,7 @@ namespace Vectrix {
         static bool drawTreeNodeComponent(const std::string& text, bool& mustBeRemoved, bool removable=true);
 
         template<typename T>
-        bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc);
+        bool drawAssetDropField(const char* label,std::shared_ptr<T>& asset, std::string& missingId, const char* payloadType, const char* emptyText, MeshRendererComponent& mc);
 
         /// Pushes `command` through m_undoHistory, then re-selects whichever entity it now
         /// targets if it is a create/delete command (see EntityHandleCommand)

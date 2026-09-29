@@ -4,6 +4,7 @@
 #include "SwapChain.h"
 #include "Vectrix/Core/Window.h"
 
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -61,6 +62,22 @@ namespace Vectrix {
         [[nodiscard]] int getFrameIndex() const {
             VC_CORE_ASSERT(m_isFrameStarted, "Cannot get frame index when frame not in progress");
             return m_swapChain->getFrameIndex();
+        }
+
+        /**
+         * @brief Keep a GPU resource alive until no frame that may use it is still in flight
+         *
+         * For a resource replaced or dropped while the GPU may still use it (e.g. a mesh buffer grown by a model
+         * loaded from an ImGui panel, after the scene was drawn): its release is delayed until then.
+         * @param resource The resource, dropped once every frame recorded so far has finished executing
+         */
+        void releaseAfterFrame(std::shared_ptr<void> resource) {
+            // A slot's list is emptied when that slot's fence has been waited on again. During a frame, that is the
+            // fence of this frame; between frames, the frame just submitted (the slot before the current one) is the
+            // last that may use it
+            const size_t current = static_cast<size_t>(m_swapChain->getFrameIndex());
+            const size_t slot = m_isFrameStarted ? current : (current + SwapChain::MAX_FRAMES_IN_FLIGHT - 1) % SwapChain::MAX_FRAMES_IN_FLIGHT;
+            m_releasedAfterFrame[slot].push_back(std::move(resource));
         }
 
         VkCommandBuffer beginFrame();
@@ -134,6 +151,8 @@ namespace Vectrix {
         VkClearValue m_clearValue = { 0, 0, 0, 1.0f };
 
         Cache<std::string,BatchInfo> m_batchCache;
+        /// Resources waiting for their frame slot's fence, see releaseAfterFrame
+        std::array<std::vector<std::shared_ptr<void>>, SwapChain::MAX_FRAMES_IN_FLIGHT> m_releasedAfterFrame;
         std::shared_ptr<VulkanShader> m_maskShader;
         std::shared_ptr<VulkanShader> m_outlineShader;
         std::shared_ptr<VulkanFramebuffer> m_maskFramebuffer;

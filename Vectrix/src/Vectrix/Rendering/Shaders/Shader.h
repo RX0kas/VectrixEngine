@@ -363,6 +363,9 @@ namespace Vectrix {
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
 		friend class ShaderManager;
 		friend class Renderer;
+		friend class AssetsManager;
+		/// Takes the id of the file the shader was loaded from once it moved (AssetsManager::moveProjectAssets)
+		virtual void setID(std::string id) = 0;
 		static std::shared_ptr<Shader> create(const std::string& name, const std::string& path,const BufferLayout& bufferLayout);
 		static std::shared_ptr<Shader> createFromSource(const std::string& name, const std::string& source,const BufferLayout& bufferLayout);
 		static ShaderUniformLayout findShaderUniformLayoutFromSource(const std::string& source,bool& isAffectedByCamera);

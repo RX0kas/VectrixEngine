@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include <algorithm>
+#include <format>
 #include <utility>
 
 #include "Component.h"
@@ -51,21 +53,31 @@ namespace Vectrix {
         }
 
         /// Loads the asset a MeshRendererComponent refers to. An empty id is an asset that was never set
-        /// (the component was saved half configured): it stays null
+        /// (the component was saved half configured): it stays null. An asset that can't be loaded is reported
+        /// and its id kept in missingId, so saving writes the reference back: one moved or deleted file must
+        /// neither make the whole scene unopenable nor be dropped from it
         template<typename T>
-        VectrixResult loadComponentAsset(const std::string& id, std::shared_ptr<T>& out, const std::string& sceneName) {
-            if (id.empty()) return SUCCESS;
+        void loadComponentAsset(std::string id, std::shared_ptr<T>& out, std::string& missingId, const std::string& entityName,
+                                const std::string& sceneName, std::vector<std::string>* assetErrors) {
+            if (id.empty()) return;
+            // Scenes saved on Windows before ids were normalised hold '\' separators, a plain character elsewhere
+            std::ranges::replace(id, '\\', '/');
             auto [result, asset] = AssetsManager::load<T>(id);
             if (result != SUCCESS) {
-                VC_CORE_ERROR_NO_EXIT("Can't load {} from scene {}: {}", id, sceneName, toString(result));
-                return result;
+                VC_CORE_WARN("Can't load {} for entity {} of scene {}: {}", id, entityName, sceneName, toString(result));
+                if (assetErrors)
+                    assetErrors->push_back(std::format("{}: {} ({})", entityName, id, toString(result)));
+                missingId = std::move(id);
+                // A texture has a stand-in that shows something is missing; a mesh or shader doesn't
+                if constexpr (std::is_same_v<T, Texture>)
+                    out = TextureManager::getNotFoundTexture();
+                return;
             }
             out = asset;
-            return SUCCESS;
         }
     }
 
-    std::pair<VectrixResult, std::shared_ptr<Scene>> Scene::loadScene(SceneCreationData &creationData) {
+    std::pair<VectrixResult, std::shared_ptr<Scene>> Scene::loadScene(SceneCreationData &creationData, std::vector<std::string>* assetErrors) {
         if (creationData.result!=SUCCESS) {
             return {creationData.result,nullptr};
         }
@@ -87,14 +99,31 @@ namespace Vectrix {
                     if (!reader.readString(meshId) || !reader.readString(textureId) || !reader.readString(shaderId) || !reader.readBool(enable))
                         return malformed(creationData.name, entityData.name);
 
-                    auto& m = entity->addComponent<MeshRendererComponent>();
-                    if (const VectrixResult r = loadComponentAsset(meshId, m.mesh, creationData.name); r != SUCCESS) return {r, nullptr};
-                    if (const VectrixResult r = loadComponentAsset(textureId, m.texture, creationData.name); r != SUCCESS) return {r, nullptr};
-                    if (const VectrixResult r = loadComponentAsset(shaderId, m.shader, creationData.name); r != SUCCESS) return {r, nullptr};
+                    // Each asset's fingerprint follows in scenes saved since they exist (older ones end with the flag)
+                    std::array<AssetFingerprint, 3> fingerprints{};
+                    for (AssetFingerprint& fingerprint : fingerprints) {
+                        if (!reader.read(&fingerprint.size, sizeof(fingerprint.size)) || !reader.read(&fingerprint.hash, sizeof(fingerprint.hash))) {
+                            fingerprints = {};
+                            break;
+                        }
+                    }
 
+                    auto& m = entity->addComponent<MeshRendererComponent>();
+                    loadComponentAsset(meshId, m.mesh, m.missingMesh, entityData.name, creationData.name, assetErrors);
+                    loadComponentAsset(textureId, m.texture, m.missingTexture, entityData.name, creationData.name, assetErrors);
+                    loadComponentAsset(shaderId, m.shader, m.missingShader, entityData.name, creationData.name, assetErrors);
+
+                    // Kept for the missing ones: saved back, and what finds them again if they were moved
+                    const std::array<const std::string*, 3> missing = {&m.missingMesh, &m.missingTexture, &m.missingShader};
+                    for (size_t i = 0; i < missing.size(); ++i) {
+                        if (!missing[i]->empty() && fingerprints[i].isKnown())
+                            scene->m_missingFingerprints[*missing[i]] = fingerprints[i];
+                    }
+
+                    // Only fails when an asset it needs was left out above, which is already reported
                     if (enable && !m.tryEnabling()) {
-                        VC_CORE_ERROR_NO_EXIT("Can't enable the entity {}, from scene {}",entityData.name,creationData.name);
-                        return {UNKNOWN_ERROR,nullptr};
+                        m.enabledOnceComplete = true;
+                        VC_CORE_WARN("Entity {} of scene {} left disabled: an asset it needs is missing", entityData.name, creationData.name);
                     }
                 } else if (entt::type_hash<CameraComponent>::value()==componentData.type_id) {
                     float fov = 0.0f, camNear = 0.0f, camFar = 0.0f, aspect = -1.0f;

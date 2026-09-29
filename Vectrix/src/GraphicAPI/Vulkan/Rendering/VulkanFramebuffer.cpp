@@ -33,8 +33,6 @@ namespace Vectrix {
     }
 
     VulkanFramebuffer::~VulkanFramebuffer() {
-        // A frame still in flight may render into it or show it through ImGui (resize/updateSpecification wait too)
-        vkDeviceWaitIdle(m_device.device());
         destroyResources();
     }
 
@@ -100,18 +98,26 @@ namespace Vectrix {
     }
 
     void VulkanFramebuffer::destroyResources() {
-        destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
+        // A frame still in flight may render into these or show them through ImGui: they go once it's done, rather
+        // than waiting for the whole GPU (which every viewport resize used to do)
+        VulkanContext::destroyWhenUnused([device = &m_device, descriptorSet = m_descriptorSet, sampler = m_sampler,
+                                          imageView = m_imageView, image = m_image, allocation = m_allocation,
+                                          depthImageView = m_depthImageView, depthImage = m_depthImage, depthAllocation = m_depthAllocation] {
+            destroyImGuiTextureDescriptor(*device, descriptorSet);
+            vkDestroySampler(device->device(), sampler, nullptr);
+            vkDestroyImageView(device->device(), imageView, nullptr);
+            if (depthImage != VK_NULL_HANDLE) {
+                vkDestroyImageView(device->device(), depthImageView, nullptr);
+                device->destroyImage(depthImage, depthAllocation);
+            }
+            device->destroyImage(image, allocation);
+        });
         m_descriptorSet = VK_NULL_HANDLE;
-        vkDestroySampler(m_device.device(),m_sampler,nullptr);
-        vkDestroyImageView(m_device.device(),m_imageView,nullptr);
-        if (m_depthImage != VK_NULL_HANDLE) {
-            vkDestroyImageView(m_device.device(),m_depthImageView,nullptr);
-            m_device.destroyImage(m_depthImage,m_depthAllocation);
-            m_depthImage = VK_NULL_HANDLE;
-            m_depthImageView = VK_NULL_HANDLE;
-        }
-        m_device.destroyImage(m_image,m_allocation);
+        m_sampler = VK_NULL_HANDLE;
+        m_imageView = VK_NULL_HANDLE;
         m_image = VK_NULL_HANDLE;
+        m_depthImageView = VK_NULL_HANDLE;
+        m_depthImage = VK_NULL_HANDLE;
     }
 
     void VulkanFramebuffer::bind(bool clear) {
@@ -230,7 +236,6 @@ namespace Vectrix {
         if (m_specification.width == newWidth && m_specification.height == newHeight) return;
         VC_CORE_ASSERT(newWidth > 0 && newHeight > 0, "Framebuffer size must be greater than 0!");
 
-        vkDeviceWaitIdle(m_device.device());
         destroyResources();
         m_specification.width  = newWidth;
         m_specification.height = newHeight;
@@ -240,7 +245,6 @@ namespace Vectrix {
     void VulkanFramebuffer::updateSpecification(FramebufferSpecification &spec) {
         VC_CORE_ASSERT(!m_bind, "Cannot update a bound framebuffer, call unbind() first!");
         // Everything is rebuilt: the formats or the depth attachment may change, not only the size
-        vkDeviceWaitIdle(m_device.device());
         destroyResources();
         m_specification = spec;
         createResources();

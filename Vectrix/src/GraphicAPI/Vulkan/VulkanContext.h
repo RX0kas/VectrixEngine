@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "Enum_str.h"
 #include "VulkanSettings.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
@@ -32,6 +34,16 @@ namespace Vectrix {
 		[[nodiscard]] VmaAllocator getSSBOAllocator() const { return getDevice().getSSBOAllocator();}
 		[[nodiscard]] VmaAllocator getTextureAllocator() const { return getDevice().getTextureAllocator();}
 		static VulkanContext& instance() { return *s_instance; }
+		/// False before the context is created and once it is destroyed
+		static bool exists() { return s_instance != nullptr; }
+		/**
+		 * @brief Run destroy once no frame that may use the resource it destroys is still in flight
+		 *
+		 * Instead of waiting for the whole GPU on every destroyed texture or framebuffer: the renderer keeps it
+		 * until those frames are done. Without a renderer (not created yet, or being destroyed) the device is
+		 * waited on and destroy runs right away.
+		 */
+		static void destroyWhenUnused(std::function<void()> destroy);
 
 		/**
 		 * @brief The Vulkan backend options, loaded from the project settings in init().

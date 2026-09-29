@@ -14,19 +14,34 @@
 #include "Rendering/Textures/TextureManager.h"
 #include "Settings/SettingsManager.h"
 #include "Utils/Folders.h"
+#include "Vectrix/Utils/Path.h"
 
 
 namespace Vectrix {
 	namespace {
-		// Layers get the callback first, then overlays, so an overlay (e.g. the ImGuiLayer)
-		// always ends up drawn/updated on top. Cache is an unordered_map, so only this
-		// layers-before-overlays grouping is preserved, not a finer insertion order.
+		// From the bottom up: the layers in the order they were pushed, then the overlays, so what is pushed later
+		// draws on top. By index, re-reading the size, and holding each layer during its call: a callback that
+		// pushes or pops a layer can't invalidate the loop (a layer pushed now is called this frame too)
 		template<typename Fn>
-		void forEachLayer(LayerStack& stack, Fn&& fn) {
-			for (auto it = stack.beginLayers(); it != stack.endLayers(); ++it)
-				fn(it->second);
-			for (auto it = stack.beginOverlays(); it != stack.endOverlays(); ++it)
-				fn(it->second);
+		void forEachLayer(const LayerStack& stack, Fn&& fn) {
+			for (const std::vector<std::shared_ptr<Layer>>* group : {&stack.layers(), &stack.overlays()}) {
+				for (const auto& layer : *group) {
+						fn(layer);
+				}
+			}
+		}
+
+		// From the top down, for events: the last overlay pushed first, the first layer pushed last. Stops once
+		// the event is handled
+		void dispatchTopDown(const LayerStack& stack, Event& e) {
+			for (const std::vector<std::shared_ptr<Layer>>* group : {&stack.overlays(), &stack.layers()}) {
+				for (size_t i = group->size(); i-- > 0 && !e.Handled;) {
+					if (i >= group->size())
+						continue; // a layer removed by an earlier call
+					const std::shared_ptr<Layer> layer = (*group)[i];
+					layer->OnEvent(e);
+				}
+			}
 		}
 	}
 
@@ -47,7 +62,7 @@ namespace Vectrix {
 
 			const auto globalPath = configFolder / settingsFileName;
 			if (const auto [result, message] = m_settingsManager->loadGlobal(globalPath); result != SUCCESS)
-				VC_CORE_WARN("Global settings not loaded ({}): {}", globalPath.string(), message);
+				VC_CORE_WARN("Global settings not loaded ({}): {}", toUtf8(globalPath), message);
 		}
 
 		// Apply the settings that are consumed before the graphics backend comes up.
@@ -104,18 +119,19 @@ namespace Vectrix {
 
 	void Application::onEvent(Event& e) {
 		VC_PROFILER_FUNCTION();
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
-
 		// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the
 		// first look so it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)
-		if (!e.Handled && m_imGuiLayer)
+		if (m_imGuiLayer)
 			m_imGuiLayer->OnEvent(e);
 
-		for (auto it = m_layerStack.beginOverlays(); it != m_layerStack.endOverlays() && !e.Handled; ++it)
-			it->second->OnEvent(e);
-		for (auto it = m_layerStack.beginLayers(); it != m_layerStack.endLayers() && !e.Handled; ++it)
-			it->second->OnEvent(e);
+		dispatchTopDown(m_layerStack, e);
+
+		// Layers see a close request first: one that handles it (e.g. to ask about unsaved work) keeps the
+		// application running
+		if (!e.Handled) {
+			EventDispatcher dispatcher(e);
+			dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
+		}
 	}
 
 	void Application::run() {
@@ -130,13 +146,13 @@ namespace Vectrix {
 			if (m_hasToSwitch) {
 				// The previous frame can still be drawing with the old layer's resources, which go away with it
 				GraphicsContext::waitIdle();
-				if (const std::shared_ptr<Layer> oldLayer = m_layerStack.PopLayer(m_oldLayerDebugName))
+				// The new layer takes the old one's place, so the order of the other layers doesn't change
+				if (const std::shared_ptr<Layer> oldLayer = m_layerStack.ReplaceLayer(m_oldLayer, m_nextLayer))
 					oldLayer->OnDetach();
-				m_layerStack.PushLayer(m_nextLayer);
 				if (m_dataToNextLayer.empty()) m_nextLayer->OnAttach();
 				else m_nextLayer->OnAttach(m_dataToNextLayer);
 
-				m_oldLayerDebugName.clear();
+				m_oldLayer = nullptr;
 				m_nextLayer.reset();
 				m_dataToNextLayer = JsonObject();
 				m_hasToSwitch = false;
