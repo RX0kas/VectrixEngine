@@ -9,8 +9,18 @@
 #include "Vectrix/Assets/AssetsManager.h"
 #include "Undo/Commands.h"
 #include "Utils/Error.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
+    namespace {
+        /// An asset of MeshRendererComponent with the path it keeps while the asset is missing: one undoable value
+        template<typename T>
+        struct AssetReference {
+            std::shared_ptr<T> asset;
+            std::string missing;
+        };
+    }
+
     SceneHierarchyPanel::SceneHierarchyPanel(const std::shared_ptr<Scene> &scene) : ImGuiWidget("SceneHierarchyPanel") {
         setContext(scene);
     }
@@ -106,7 +116,7 @@ namespace Vectrix {
     }
 
     template<typename T>
-    bool SceneHierarchyPanel::drawAssetDropField(const char* label,std::shared_ptr<T>& asset, const char* payloadType, const char* emptyText, MeshRendererComponent& mc) {
+    bool SceneHierarchyPanel::drawAssetDropField(const char* label,std::shared_ptr<T>& asset, std::string& missingId, const char* payloadType, const char* emptyText, MeshRendererComponent& mc) {
         bool changed = false;
 
         ImGui::PushID(label);
@@ -124,7 +134,9 @@ namespace Vectrix {
 
         float clearButtonSize = 24.0f;
         float clearButtonPadding = 10.0f;
-        float reservedRight = asset ? clearButtonSize + clearButtonPadding * 2.0f : clearButtonPadding;
+        // A missing asset keeps its path (and a texture the not_found stand-in) until it is replaced or cleared
+        const bool missing = !missingId.empty();
+        float reservedRight = (asset || missing) ? clearButtonSize + clearButtonPadding * 2.0f : clearButtonPadding;
 
         ImGui::InvisibleButton("##DropZone",ImVec2(fullWidth - reservedRight, height));
 
@@ -148,10 +160,11 @@ namespace Vectrix {
 
                 if (result == SUCCESS && loadedAsset) {
                     asset = loadedAsset;
+                    missingId.clear();
                     changed = true;
                 } else {
                     showErrorMessage("FAILED_DRAW_ASSET_DROP_FIELD");
-                    m_lastAssetErrorMessage = std::format("Failed to load asset dropped on {}: {} ({})",label,assetPath.string(),toString(result));
+                    m_lastAssetErrorMessage = std::format("Failed to load asset dropped on {}: {} ({})",label,toUtf8(assetPath),toString(result));
                 }
             }
 
@@ -169,16 +182,16 @@ namespace Vectrix {
 
         drawList->AddRectFilled(iconMin,iconMax,ImGui::GetColorU32(ImVec4(0.20f, 0.205f, 0.23f, 1.0f)),6.0f);
 
-        const char* glyph = asset ? "A" : "+";
+        const char* glyph = missing ? "!" : asset ? "A" : "+";
         ImVec2 glyphSize = ImGui::CalcTextSize(glyph);
 
         drawList->AddText(
             ImVec2(iconMin.x + ((iconMax.x - iconMin.x) - glyphSize.x) * 0.5f,iconMin.y + ((iconMax.y - iconMin.y) - glyphSize.y) * 0.5f),
-            ImGui::GetColorU32(asset ? ImVec4(0.70f, 0.82f, 1.0f, 1.0f) : ImVec4(0.55f, 0.57f, 0.62f, 1.0f)),
+            ImGui::GetColorU32(missing ? ImVec4(1.0f, 0.55f, 0.35f, 1.0f) : asset ? ImVec4(0.70f, 0.82f, 1.0f, 1.0f) : ImVec4(0.55f, 0.57f, 0.62f, 1.0f)),
             glyph
         );
 
-        const std::string valueText = asset ? asset->getID() : emptyText;
+        const std::string valueText = missing ? missingId + " (missing)" : asset ? asset->getID() : emptyText;
 
         const float textStartX = start.x + 58.0f;
         const float textMaxX = end.x - reservedRight - 6.0f;
@@ -188,10 +201,10 @@ namespace Vectrix {
 
         ImGui::SetCursorScreenPos(ImVec2(textStartX, start.y + 31.0f));
         ImGui::PushTextWrapPos(textStartX + textWidth);
-        ImGui::TextColored(asset ? ImVec4(0.95f, 0.95f, 0.98f, 1.0f) : ImVec4(0.50f, 0.52f, 0.58f, 1.0f),"%s",valueText.c_str());
+        ImGui::TextColored(missing ? ImVec4(1.0f, 0.55f, 0.35f, 1.0f) : asset ? ImVec4(0.95f, 0.95f, 0.98f, 1.0f) : ImVec4(0.50f, 0.52f, 0.58f, 1.0f),"%s",valueText.c_str());
         ImGui::PopTextWrapPos();
 
-        if (asset) {
+        if (asset || missing) {
             ImVec2 buttonPos(end.x - clearButtonSize - clearButtonPadding,start.y + (height - clearButtonSize) * 0.5f);
 
             ImGui::SetCursorScreenPos(buttonPos);
@@ -204,6 +217,7 @@ namespace Vectrix {
             if (ImGui::Button("x", ImVec2(clearButtonSize, clearButtonSize))) {
                 mc.disable();
                 asset.reset();
+                missingId.clear();
                 changed = true;
             }
 
@@ -217,7 +231,9 @@ namespace Vectrix {
 
         ImGui::SetCursorScreenPos(ImVec2(start.x, end.y + spacingY));
 
-        if (hovered && !asset) {
+        if (hovered && missing) {
+            ImGui::SetTooltip("%s can't be found: put it back and reopen the scene, or drop another %s here", missingId.c_str(), label);
+        } else if (hovered && !asset) {
             ImGui::SetTooltip("Drop a %s here", label);
         }
 
@@ -317,33 +333,47 @@ namespace Vectrix {
 
                 renderErrorMessage("MeshRendererEnableError","Cannot enable Mesh Renderer", [&mc]{
                     ImGui::Text("Missing required data:");
-                    if (mc.shader == nullptr)  ImGui::BulletText("Shader is not set");
+                    if (!mc.missingShader.empty()) ImGui::BulletText("Shader file is missing: %s", mc.missingShader.c_str());
+                    else if (mc.shader == nullptr) ImGui::BulletText("Shader is not set");
                     if (mc.texture == nullptr) ImGui::BulletText("Texture is not set");
-                    if (mc.mesh == nullptr) ImGui::BulletText("Mesh is not set");
+                    if (!mc.missingMesh.empty()) ImGui::BulletText("Mesh file is missing: %s", mc.missingMesh.c_str());
+                    else if (mc.mesh == nullptr) ImGui::BulletText("Mesh is not set");
                 });
 
                 {
-                    auto before = mc.shader;
-                    if (drawAssetDropField("Shader",mc.shader,"CONTENT_BROWSER_SHADER","Drop Shader here",mc)) {
-                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Shader>>>(
-                            "Set Shader", before, mc.shader,
-                            [entity](const std::shared_ptr<Shader>& v) { entity->getComponent<MeshRendererComponent>().shader = v; }));
+                    AssetReference<Shader> before{mc.shader, mc.missingShader};
+                    if (drawAssetDropField("Shader",mc.shader,mc.missingShader,"CONTENT_BROWSER_SHADER","Drop Shader here",mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<AssetReference<Shader>>>(
+                            "Set Shader", before, AssetReference<Shader>{mc.shader, mc.missingShader},
+                            [entity](const AssetReference<Shader>& v) {
+                                auto& c = entity->getComponent<MeshRendererComponent>();
+                                c.shader = v.asset;
+                                c.missingShader = v.missing;
+                            }));
                     }
                 }
                 {
-                    auto before = mc.texture;
-                    if (drawAssetDropField("Texture",mc.texture,"CONTENT_BROWSER_TEXTURE","Drop texture here", mc)) {
-                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Texture>>>(
-                            "Set Texture", before, mc.texture,
-                            [entity](const std::shared_ptr<Texture>& v) { entity->getComponent<MeshRendererComponent>().texture = v; }));
+                    AssetReference<Texture> before{mc.texture, mc.missingTexture};
+                    if (drawAssetDropField("Texture",mc.texture,mc.missingTexture,"CONTENT_BROWSER_TEXTURE","Drop texture here", mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<AssetReference<Texture>>>(
+                            "Set Texture", before, AssetReference<Texture>{mc.texture, mc.missingTexture},
+                            [entity](const AssetReference<Texture>& v) {
+                                auto& c = entity->getComponent<MeshRendererComponent>();
+                                c.texture = v.asset;
+                                c.missingTexture = v.missing;
+                            }));
                     }
                 }
                 {
-                    auto before = mc.mesh;
-                    if (drawAssetDropField("Mesh",mc.mesh,"CONTENT_BROWSER_MESH","Drop mesh here", mc)) {
-                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<std::shared_ptr<Mesh>>>(
-                            "Set Mesh", before, mc.mesh,
-                            [entity](const std::shared_ptr<Mesh>& v) { entity->getComponent<MeshRendererComponent>().mesh = v; }));
+                    AssetReference<Mesh> before{mc.mesh, mc.missingMesh};
+                    if (drawAssetDropField("Mesh",mc.mesh,mc.missingMesh,"CONTENT_BROWSER_MESH","Drop mesh here", mc)) {
+                        pushAndRefreshSelection(std::make_unique<PropertyChangeCommand<AssetReference<Mesh>>>(
+                            "Set Mesh", before, AssetReference<Mesh>{mc.mesh, mc.missingMesh},
+                            [entity](const AssetReference<Mesh>& v) {
+                                auto& c = entity->getComponent<MeshRendererComponent>();
+                                c.mesh = v.asset;
+                                c.missingMesh = v.missing;
+                            }));
                     }
                 }
 

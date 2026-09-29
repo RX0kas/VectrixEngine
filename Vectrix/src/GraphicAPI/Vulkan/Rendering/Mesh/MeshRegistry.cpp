@@ -1,5 +1,8 @@
 #include "MeshRegistry.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Mesh/MeshHandle.h"
@@ -17,14 +20,11 @@ namespace Vectrix {
         VC_CORE_ASSERT(!vertices.empty(), "Cannot upload mesh with no vertices");
         VC_CORE_ASSERT(!indices.empty(), "Cannot upload mesh with no indices");
 
-        ensureVertexCapacity(static_cast<uint32_t>(vertices.size()));
-        ensureIndexCapacity(static_cast<uint32_t>(indices.size()));
-
         MeshHandle handle{};
-        handle.firstVertex = m_vertexCount;
-        handle.firstIndex = m_indexCount;
         handle.vertexCount = static_cast<uint32_t>(vertices.size());
         handle.indexCount = static_cast<uint32_t>(indices.size());
+        handle.firstVertex = allocateVertices(handle.vertexCount);
+        handle.firstIndex = allocateIndices(handle.indexCount);
 
         VkDeviceSize vertexOffset = static_cast<VkDeviceSize>(handle.firstVertex) * sizeof(Vertex);
 
@@ -38,10 +38,83 @@ namespace Vectrix {
 
         uploadToBufferOffset(indices.data(),indexDataSize,indexOffset,*m_globalIndexBuffer);
 
-        m_vertexCount += handle.vertexCount;
-        m_indexCount += handle.indexCount;
-
         return handle;
+    }
+
+    void MeshRegistry::releaseMesh(const MeshHandle& handle) {
+        // Frames in flight may still draw the mesh: a mesh uploaded into its space before they're done would be
+        // drawn in its place. The space is given back when the renderer drops this, after those frames
+        class PendingRelease {
+        public:
+            PendingRelease(MeshRegistry& registry, const MeshHandle& handle) : m_registry(registry), m_handle(handle) {}
+            PendingRelease(const PendingRelease&) = delete;
+            PendingRelease& operator=(const PendingRelease&) = delete;
+            ~PendingRelease() { m_registry.freeMeshRanges(m_handle); }
+        private:
+            MeshRegistry& m_registry;
+            MeshHandle m_handle;
+        };
+        VulkanContext::instance().getRenderer().releaseAfterFrame(std::make_shared<PendingRelease>(*this, handle));
+    }
+
+    void MeshRegistry::freeMeshRanges(const MeshHandle& handle) {
+        giveBackRange(m_freeVertices, m_vertexCount, {handle.firstVertex, handle.vertexCount});
+        giveBackRange(m_freeIndices, m_indexCount, {handle.firstIndex, handle.indexCount});
+    }
+
+    uint32_t MeshRegistry::allocateVertices(const uint32_t count) {
+        if (const auto first = takeFreeRange(m_freeVertices, count))
+            return *first;
+        ensureVertexCapacity(count);
+        const uint32_t first = m_vertexCount;
+        m_vertexCount += count;
+        return first;
+    }
+
+    uint32_t MeshRegistry::allocateIndices(const uint32_t count) {
+        if (const auto first = takeFreeRange(m_freeIndices, count))
+            return *first;
+        ensureIndexCapacity(count);
+        const uint32_t first = m_indexCount;
+        m_indexCount += count;
+        return first;
+    }
+
+    std::optional<uint32_t> MeshRegistry::takeFreeRange(std::vector<Range>& freeRanges, const uint32_t count) {
+        for (auto it = freeRanges.begin(); it != freeRanges.end(); ++it) {
+            if (it->count < count)
+                continue;
+            const uint32_t first = it->first;
+            it->first += count;
+            it->count -= count;
+            if (it->count == 0)
+                freeRanges.erase(it);
+            return first;
+        }
+        return std::nullopt;
+    }
+
+    void MeshRegistry::giveBackRange(std::vector<Range>& freeRanges, uint32_t& used, const Range range) {
+        if (range.count == 0)
+            return;
+
+        auto it = freeRanges.insert(std::ranges::lower_bound(freeRanges, range.first, {}, &Range::first), range);
+        if (const auto next = std::next(it); next != freeRanges.end() && it->first + it->count == next->first) {
+            it->count += next->count;
+            freeRanges.erase(next);
+        }
+        if (it != freeRanges.begin()) {
+            if (const auto previous = std::prev(it); previous->first + previous->count == it->first) {
+                previous->count += it->count;
+                freeRanges.erase(it);
+            }
+        }
+
+        // Free space ending where the used space does is just unused: appending starts there again
+        if (!freeRanges.empty() && freeRanges.back().first + freeRanges.back().count == used) {
+            used = freeRanges.back().first;
+            freeRanges.pop_back();
+        }
     }
 
     void MeshRegistry::ensureVertexCapacity(uint32_t additionalVertices) {
@@ -87,9 +160,6 @@ namespace Vectrix {
     void MeshRegistry::growBuffer(std::unique_ptr<VulkanBuffer>& buffer, VkDeviceSize oldSize, VkDeviceSize newSize, VkBufferUsageFlags usage) {
         VC_PROFILER_FUNCTION();
 
-        // TODO LATER: Place the old buffer in a “deletion queue” on a per-frame basis and do not destroy it until MAX_FRAMES_IN_FLIGHT has elapsed
-        vkDeviceWaitIdle(VulkanContext::instance().getDevice().device());
-
         auto newBuffer = std::make_unique<VulkanBuffer>(newSize,1,
             usage | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
@@ -97,7 +167,10 @@ namespace Vectrix {
         if (buffer && oldSize > 0)
             VulkanContext::instance().getDevice().copyBuffer(buffer->getBuffer(),newBuffer->getBuffer(),oldSize);
 
-
+        // Frames in flight, and the one being recorded, may still draw from the old buffer (a model loaded from an
+        // ImGui panel runs after the scene was drawn): destroying it now would invalidate their command buffers
+        if (buffer)
+            VulkanContext::instance().getRenderer().releaseAfterFrame(std::shared_ptr<VulkanBuffer>(std::move(buffer)));
         buffer = std::move(newBuffer);
     }
 

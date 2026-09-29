@@ -34,6 +34,7 @@ namespace Vectrix {
 		m_meshRegistry.reset();
 
 		m_device.reset();
+		s_instance = nullptr;
 	}
 
 	void VulkanContext::init() {
@@ -52,10 +53,10 @@ namespace Vectrix {
 
 		// TODO: Change make it double the size once there is no space left
 		const DescriptorPoolConfig cfg {
-			m_vkSettings.descriptorPool.uboCount,
-			m_vkSettings.descriptorPool.ssboCount,
-			m_vkSettings.descriptorPool.samplerCount,
-			m_vkSettings.descriptorPool.maxSets
+			.uboCount = m_vkSettings.descriptorPool.uboCount,
+			.ssboCount = m_vkSettings.descriptorPool.ssboCount,
+			.samplerCount = m_vkSettings.descriptorPool.samplerCount,
+			.maxSets = m_vkSettings.descriptorPool.maxSets
 		};
 
 		Device::enableValidationLayers = m_vkSettings.device.validationLayers;
@@ -67,6 +68,18 @@ namespace Vectrix {
 	void VulkanContext::swapBuffers() {
 		VC_PROFILER_FUNCTION();
 		glfwPollEvents();
+	}
+
+	void VulkanContext::destroyWhenUnused(std::function<void()> destroy) {
+		// m_renderer is already null while the renderer is being destroyed (unique_ptr::reset), and before it exists
+		if (s_instance && s_instance->m_renderer) {
+			// The deleter runs even though the pointer is null: when the renderer drops it
+			s_instance->m_renderer->releaseAfterFrame(std::shared_ptr<void>(nullptr, [destroy = std::move(destroy)](void*) { destroy(); }));
+			return;
+		}
+		if (s_instance)
+			vkDeviceWaitIdle(s_instance->m_device->device());
+		destroy();
 	}
 
 	void VulkanContext::waitIdle() {

@@ -67,6 +67,8 @@ namespace Vectrix {
 		/**
 		 * @brief Called every time an event occurre
 		 * @param event The event that occurred
+		 * @note A WindowCloseEvent reaches the layers before the application closes: setting its Handled
+		 *       flag cancels the close (e.g. to ask first about unsaved work)
 		 */
 		virtual void OnEvent(Event& event) {}
 

@@ -8,6 +8,10 @@
 #include "entt/entt.hpp"
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Utils/Memory.h"
+#include "Vectrix/Utils/Path.h"
+#include "Vectrix/Assets/AssetFingerprint.h"
+
+#include <unordered_map>
 
 /**
  * @file Scene.h
@@ -75,7 +79,7 @@ namespace Vectrix {
          * @return The scene's directory (e.g. `<project>/Scenes`), empty until the scene is loaded or saved
          * @note Not the project directory: asset paths are resolved against AssetsManager::getAssetsPath
          */
-        [[nodiscard]] std::string getDirectory() const { return m_directory.string(); }
+        [[nodiscard]] std::string getDirectory() const { return toUtf8(m_directory); }
 
         /**
          * @brief Return the name of the file the scene was loaded from
@@ -85,11 +89,16 @@ namespace Vectrix {
 
         /**
          * @brief Build a scene from what was read out of a scene file
+         *
+         * An asset that can't be loaded (moved, deleted, broken) doesn't stop the scene from loading: the
+         * component referring to it keeps its path (MeshRendererComponent::missingMesh, ...), which saving writes
+         * back, and is disabled when it needed it to be drawn.
          * @param creationData The content of the file, as returned by SceneSerializer::loadSceneFile
+         * @param assetErrors When not null, receives one line per asset left out ("entity: path (reason)")
          * @return Whether it worked, and the scene when it did
          * @see SceneSerializer::loadSceneFile
          */
-        static std::pair<VectrixResult,std::shared_ptr<Scene>> loadScene(SceneCreationData& creationData);
+        static std::pair<VectrixResult,std::shared_ptr<Scene>> loadScene(SceneCreationData& creationData, std::vector<std::string>* assetErrors = nullptr);
     private:
         friend class Entity;
         friend class SceneHierarchyPanel;
@@ -102,6 +111,9 @@ namespace Vectrix {
         entt::registry m_registry;
         std::string m_name;
         std::string m_fileName;
+        /// Fingerprints read from the scene file for the assets that couldn't be loaded, by id: written back when the
+        /// scene is saved, and used to find those assets again if they were moved outside the editor
+        std::unordered_map<std::string, AssetFingerprint> m_missingFingerprints;
         std::filesystem::path m_directory;
         std::unordered_map<entt::entity,std::shared_ptr<Entity>> m_entities{};
     };

@@ -61,12 +61,9 @@ namespace Vectrix {
         VkPipelineRenderingCreateInfoKHR renderingInfo{};
         renderingInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
         renderingInfo.colorAttachmentCount = 1;
-        const VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
-        VkFormat f = renderer.getImageFormat();
-        renderingInfo.pColorAttachmentFormats = &f;
-        // The same query the swap chain and framebuffers create their depth images with: D32_SFLOAT isn't
-        // guaranteed, and a pipeline format that doesn't match the attachment is invalid
-        renderingInfo.depthAttachmentFormat = renderer.findDepthFormat();
+        renderingInfo.pColorAttachmentFormats = &configInfo.colorAttachmentFormat;
+        // Must match the render pass instance the pipeline draws in: UNDEFINED when it has no depth attachment
+        renderingInfo.depthAttachmentFormat = configInfo.depthAttachmentFormat;
 
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -190,5 +187,11 @@ namespace Vectrix {
         configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
         configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
         configInfo.dynamicStateInfo.flags = 0;
+
+        // What the swap chain and the framebuffers are created with. The depth format is the same query their
+        // depth images use: D32_SFLOAT isn't guaranteed, and a format that doesn't match the attachment is invalid
+        const VulkanRenderer& renderer = VulkanContext::instance().getRenderer();
+        configInfo.colorAttachmentFormat = renderer.getImageFormat();
+        configInfo.depthAttachmentFormat = renderer.findDepthFormat();
     }
 }

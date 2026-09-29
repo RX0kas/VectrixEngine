@@ -24,6 +24,9 @@ namespace Vectrix {
 
     VulkanShader::~VulkanShader() {
 		VC_PROFILER_FUNCTION();
+		// The pipeline and descriptor sets may still be in use by a frame in flight. Shaders are only destroyed
+		// with their project or the application, so a full wait is fine (it used to be hidden in destroyBuffer)
+		vkDeviceWaitIdle(m_device.device());
 		m_ssbo.reset();
 		m_pipeline.reset();
 		m_layout.reset();
@@ -87,7 +90,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		auto vkTex = std::dynamic_pointer_cast<VulkanTexture>(texture);
 		VC_CORE_ASSERT(vkTex != nullptr, "Texture used by shader '{}' is not a VulkanTexture", m_name);
-		return useImage("texture:" + std::to_string(vkTex->getUniqueTextureID()), vkTex->getDescriptorInfo());
+		return useImage("texture:" + std::to_string(vkTex->getUniqueTextureID()), vkTex->getDescriptorInfo(), vkTex);
 	}
 
 	uint32_t VulkanShader::useFramebuffer(std::shared_ptr<Framebuffer> framebuffer) {
@@ -105,10 +108,10 @@ namespace Vectrix {
 		// take a new array slot while the shader keeps sampling the old slot (now pointing at a destroyed view).
 		// useImage rewrites the slot on every call, so the current view is always the one bound.
 		const auto key = "framebuffer:" + std::to_string(reinterpret_cast<std::uintptr_t>(vkFramebuffer.get()));
-		return useImage(key, imageInfo);
+		return useImage(key, imageInfo, vkFramebuffer);
 	}
 
-	uint32_t VulkanShader::useImage(const std::string& key, const VkDescriptorImageInfo& imageInfo) {
+	uint32_t VulkanShader::useImage(const std::string& key, const VkDescriptorImageInfo& imageInfo, std::weak_ptr<const void> owner) {
 		VkWriteDescriptorSet write{ VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
 		write.dstSet = m_ssbo->descriptorSet(m_renderer.getFrameIndex());
 		write.dstBinding = 1;
@@ -116,21 +119,51 @@ namespace Vectrix {
 		write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		write.pImageInfo = &imageInfo;
 
-		if (const auto it = m_imageIndexCache.find(key); it != m_imageIndexCache.end()) {
-			write.dstArrayElement = it->second;
+		if (const auto it = m_imageSlots.find(key); it != m_imageSlots.end()) {
+			// A framebuffer recreated at the same address takes over the slot of the one it replaces
+			it->second.owner = std::move(owner);
+			write.dstArrayElement = it->second.index;
 			vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
-			return it->second;
+			return it->second.index;
 		}
 
-		if (m_firstTextureIndexAvailable >= Texture::getMaxTexturePerShader()) {
-			// Writing past the u_Textures array is invalid: fall back to slot 0 (the not_found texture until something else is bound there)
-			VC_CORE_ERROR_NO_EXIT("Too many texture/framebuffer images have been set in the shader {} (max {})", m_name, Texture::getMaxTexturePerShader());
+		// The limit is on the images alive at once: the slots of destroyed ones are reused
+		if (m_freeImageSlots.empty() && m_nextImageSlot >= Texture::getMaxTexturePerShader())
+			reclaimImageSlots();
+
+		uint32_t index;
+		if (!m_freeImageSlots.empty()) {
+			index = m_freeImageSlots.back();
+			m_freeImageSlots.pop_back();
+		} else if (m_nextImageSlot < Texture::getMaxTexturePerShader()) {
+			index = m_nextImageSlot++;
+		} else {
+			// Writing past the u_Textures array is invalid: draw with the not_found texture of slot 0 instead
+			if (!m_imageSlotsFullReported) {
+				m_imageSlotsFullReported = true;
+				VC_CORE_ERROR_NO_EXIT("Too many textures/framebuffers in use at once with the shader {} (max {}): the others show the not_found texture",
+					m_name, Texture::getMaxTexturePerShader() - 1);
+			}
 			return 0;
 		}
-		write.dstArrayElement = m_firstTextureIndexAvailable;
+
+		write.dstArrayElement = index;
 		vkUpdateDescriptorSets(m_device.device(), 1, &write, 0, nullptr);
-		m_imageIndexCache.emplace(key, m_firstTextureIndexAvailable);
-		return m_firstTextureIndexAvailable++;
+		m_imageSlots.emplace(key, ImageSlot{index, std::move(owner)});
+		return index;
+	}
+
+	void VulkanShader::reclaimImageSlots() {
+		// A freed slot still names the destroyed image in the frames' descriptor sets: harmless, as the binding is
+		// partially bound and nothing samples it until useImage writes the slot's new image
+		for (auto it = m_imageSlots.begin(); it != m_imageSlots.end();) {
+			if (it->second.owner.expired()) {
+				m_freeImageSlots.push_back(it->second.index);
+				it = m_imageSlots.erase(it);
+			} else {
+				++it;
+			}
+		}
 	}
 
 	void VulkanShader::createPipeline(BufferLayout layout) {
@@ -142,12 +175,17 @@ namespace Vectrix {
 		pipelineConfig.pipelineLayout = m_pipelineLayout;
 		pipelineConfig.layout = std::move(layout);
 
-		if (m_name.ends_with("mask.vcshader")) {
+		// Exact names: matching a suffix gave any project shader named e.g. "mymask.vcshader" the mask's pipeline
+		if (m_name == k_MaskShaderName) {
 			pipelineConfig.overrideVertexInput = true;
 			pipelineConfig.bindingDescriptions = getVertexBindingDescriptions(pipelineConfig.layout);
 			pipelineConfig.attributeDescriptions = getVertexAttributeDescriptions(pipelineConfig.layout);
 			pipelineConfig.attributeDescriptions.resize(1);
-		} else if (m_name.ends_with("outline.vcshader")) {
+			// The mask framebuffer only has a color image: declaring a depth format for it is invalid
+			pipelineConfig.depthAttachmentFormat = VK_FORMAT_UNDEFINED;
+			pipelineConfig.depthStencilInfo.depthTestEnable = VK_FALSE;
+			pipelineConfig.depthStencilInfo.depthWriteEnable = VK_FALSE;
+		} else if (m_name == k_OutlineShaderName) {
 			pipelineConfig.overrideVertexInput = true;
 			pipelineConfig.bindingDescriptions.clear();
 			pipelineConfig.attributeDescriptions.clear();

@@ -8,6 +8,7 @@
 #include "Vectrix/Project/ProjectSerializer.h"
 #include "Vectrix/Settings/SettingsManager.h"
 #include "Vectrix/Utils/Folders.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
 	StartupLayer::StartupLayer(const std::filesystem::path& launchFile) : Layer("StartupLayer") {
@@ -20,9 +21,9 @@ namespace Vectrix {
 		if (m_loadNewProject) {
 			m_loadNewProject = false;
 
-			const std::filesystem::path target = m_hasCustomPath? m_projectDirectory : DefaultVectrixProjectPath / m_newProjectName;
+			const std::filesystem::path target = m_hasCustomPath? m_projectDirectory : DefaultVectrixProjectPath / fromUtf8(m_newProjectName);
 
-			VC_INFO("Create project requested: \"{}\" in {}", m_newProjectName.c_str(), target.string().c_str());
+			VC_INFO("Create project requested: \"{}\" in {}", m_newProjectName.c_str(), toUtf8(target).c_str());
 			const auto [result, message] = ProjectSerializer::createProject(target, m_newProjectName);
 			if (result != SUCCESS) {
 				showErrorMessage("ERROR_CREATING_PROJECT");
@@ -30,15 +31,15 @@ namespace Vectrix {
 				return;
 			}
 
-			addRecentProject({m_newProjectName, target / (m_newProjectName + ".vcproj")});
-			switchToEditor(target, std::filesystem::path("Scenes") / (m_newProjectName + ".vctx"));
+			addRecentProject({m_newProjectName, target / fromUtf8(m_newProjectName + ".vcproj")});
+			switchToEditor(target, std::filesystem::path("Scenes") / fromUtf8(m_newProjectName + ".vctx"));
 		}
 
 		if (!m_pendingOpenProjectPath.empty()) {
-			const std::filesystem::path projectFile = m_pendingOpenProjectPath;
+			const std::filesystem::path projectFile = fromUtf8(m_pendingOpenProjectPath);
 			m_pendingOpenProjectPath.clear();
 
-			VC_INFO("Open project requested: {}", projectFile.string().c_str());
+			VC_INFO("Open project requested: {}", toUtf8(projectFile).c_str());
 			const ProjectLoadResult loaded = ProjectSerializer::loadProject(projectFile);
 			if (loaded.result != SUCCESS) {
 				showErrorMessage("ERROR_LOADING_PROJECT");
@@ -61,16 +62,16 @@ namespace Vectrix {
 	}
 
 	void StartupLayer::switchToEditor(const std::filesystem::path& projectDirectory, const std::filesystem::path& startScenePath) {
-		VC_INFO("Switching to EditorLayer, project: {}, starting scene: {}", projectDirectory.string().c_str(), startScenePath.string().c_str());
+		VC_INFO("Switching to EditorLayer, project: {}, starting scene: {}", toUtf8(projectDirectory).c_str(), toUtf8(startScenePath).c_str());
 		JsonObject data;
-		data["scenePath"] = JsonValue((projectDirectory / startScenePath).string());
-		data["projectDirectory"] = JsonValue(projectDirectory.string());
+		data["scenePath"] = JsonValue(toUtf8(projectDirectory / startScenePath));
+		data["projectDirectory"] = JsonValue(toUtf8(projectDirectory));
 		Application::instance().switchToLayer<EditorLayer>(this, data);
 	}
 
 	void StartupLayer::openRecentProject(const RecentProject& project) {
-		VC_INFO("Recent project selected: \"{}\" ({})", project.name.c_str(), project.path.string().c_str());
-		m_pendingOpenProjectPath = project.path.string();
+		VC_INFO("Recent project selected: \"{}\" ({})", project.name.c_str(), toUtf8(project.path).c_str());
+		m_pendingOpenProjectPath = toUtf8(project.path);
 	}
 
 	void StartupLayer::showOpenDialog() {
@@ -99,13 +100,13 @@ namespace Vectrix {
 		NFD_Init();
 
 		nfdchar_t* outPath;
-		nfdresult_t result = NFD_PickFolder(&outPath,DefaultVectrixProjectPath.string().c_str());
+		nfdresult_t result = NFD_PickFolder(&outPath,toUtf8(DefaultVectrixProjectPath).c_str());
 
 		if (result == NFD_OKAY) {
-			const std::filesystem::path scenePath(outPath);
+			const std::filesystem::path scenePath = fromUtf8(outPath);
 			m_projectDirectory = scenePath;
 			m_hasCustomPath = true;
-			VC_INFO("Project folder picked: {}", scenePath.string().c_str());
+			VC_INFO("Project folder picked: {}", toUtf8(scenePath).c_str());
 			NFD_FreePath(outPath);
 		} else if (result == NFD_CANCEL) {
 			VC_INFO("User cancelled");
@@ -145,7 +146,7 @@ namespace Vectrix {
 					openRecentProject(project);
 				}
 				if (ImGui::IsItemHovered())
-					ImGui::SetTooltip("%s", project.path.string().c_str());
+					ImGui::SetTooltip("%s", toUtf8(project.path).c_str());
 				ImGui::PopID();
 			}
 		}
@@ -167,8 +168,8 @@ namespace Vectrix {
 				m_newProjectName = name;
 			}
 
-			const std::filesystem::path displayedPath = m_hasCustomPath ? m_projectDirectory : DefaultVectrixProjectPath / m_newProjectName;
-			ImGui::TextUnformatted(displayedPath.string().c_str());
+			const std::filesystem::path displayedPath = m_hasCustomPath ? m_projectDirectory : DefaultVectrixProjectPath / fromUtf8(m_newProjectName);
+			ImGui::TextUnformatted(toUtf8(displayedPath).c_str());
 			ImGui::SameLine();
 			if (ImGui::Button("Choose folder")) {
 				pickFolder();
@@ -248,7 +249,7 @@ namespace Vectrix {
 		std::vector<RecentProject> recentProjects = {};
 		if (std::filesystem::exists(recentProjectsFile)) {
 			VC_INFO("Recent project file found, loading recent projects");
-			auto result = Json::load(recentProjectsFile.string());
+			auto result = Json::load(toUtf8(recentProjectsFile));
 			if (result.first!=SUCCESS) {
 				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
 				lastLoadRecentProjectsError() = std::format("Can't load recent projects, JSON error : {}",toString(result.first));
@@ -263,8 +264,8 @@ namespace Vectrix {
 			try {
 				bool mustResave = false;
 				for (const auto& p : result.second["projects"].asArray()) {
-					if (std::filesystem::exists(std::filesystem::path(p["path"].getString())))
-						recentProjects.push_back({p["name"].getString(),p["path"].getString()});
+					if (std::filesystem::exists(fromUtf8(p["path"].getString())))
+						recentProjects.push_back({p["name"].getString(),fromUtf8(p["path"].getString())});
 					else {
 						VC_WARN("Project {} with path {} doesn't exist",p["name"].getString(),p["path"].getString());
 						const JsonObject& settings = SettingsManager::getSettings();
@@ -284,12 +285,12 @@ namespace Vectrix {
 					for (const auto&[name, path] : recentProjects) {
 						JsonObject proj;
 						proj.emplace("name",name);
-						proj.emplace("path", path.string());
+						proj.emplace("path", toUtf8(path));
 						arr.emplace_back(proj);
 					}
 
 					const JsonObject recentProjectsObj = { {"projects", arr} };
-					auto resultSaving = Json::save(recentProjectsFile.string(), recentProjectsObj);
+					auto resultSaving = Json::save(toUtf8(recentProjectsFile), recentProjectsObj);
 					if (resultSaving!=SUCCESS) {
 						showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
 						lastLoadRecentProjectsError() = std::format("Failed to overwrite recent projects file: {}", toString(resultSaving));
@@ -301,7 +302,7 @@ namespace Vectrix {
 			}
 		} else {
 			const JsonObject recentProjectsObj = { {"projects", JsonArray{}} };
-			auto result = Json::save(recentProjectsFile.string(), recentProjectsObj);
+			auto result = Json::save(toUtf8(recentProjectsFile), recentProjectsObj);
 			if (result!=SUCCESS) {
 				showErrorMessage("LOAD_RECENT_PROJECTS_ERROR");
 				lastLoadRecentProjectsError() = std::format("Error while saving recent project file: {}",toString(result));
@@ -320,7 +321,7 @@ namespace Vectrix {
 		if (file.empty()) return;
 
 		if (file.extension() == ".vcproj") {
-			m_pendingOpenProjectPath = file.string();
+			m_pendingOpenProjectPath = toUtf8(file);
 			return;
 		}
 
@@ -331,19 +332,19 @@ namespace Vectrix {
 			if (std::filesystem::exists(projectDir)) {
 				for (const auto& entry : std::filesystem::directory_iterator(projectDir)) {
 					if (entry.path().extension() == ".vcproj") {
-						m_pendingOpenProjectPath = entry.path().string();
+						m_pendingOpenProjectPath = toUtf8(entry.path());
 						m_pendingOpenScenePath = file;
 						return;
 					}
 				}
 			}
 			showErrorMessage("LAUNCH_FROM_FILE_ERROR");
-			m_lastLaunchFromFileErrorMessage = std::format("Can't find a .vcproj next to scene: {}", file.string());
+			m_lastLaunchFromFileErrorMessage = std::format("Can't find a .vcproj next to scene: {}", toUtf8(file));
 			return;
 		}
 
 		showErrorMessage("LAUNCH_FROM_FILE_ERROR");
-		m_lastLaunchFromFileErrorMessage = std::format("Don't know how to open file: {}", file.string());
+		m_lastLaunchFromFileErrorMessage = std::format("Don't know how to open file: {}", toUtf8(file));
 	}
 
 	void StartupLayer::addRecentProject(const RecentProject& project) {
@@ -354,7 +355,7 @@ namespace Vectrix {
 		if (std::filesystem::exists(recentProjectsFile)) {
 			VC_INFO("Adding project {} to recent projects file", project.name);
 
-			auto result = Json::load(recentProjectsFile.string());
+			auto result = Json::load(toUtf8(recentProjectsFile));
 			if (result.first!=SUCCESS) {
 				showErrorMessage("ADD_RECENT_PROJECT_ERROR");
 				m_lastAddRecentProjectErrorMessage = std::format("Can't load recent projects, JSON error : {}",toString(result.first));
@@ -369,10 +370,10 @@ namespace Vectrix {
 
 			root = std::move(result.second);
 		} else {
-			VC_INFO("Creating recent projects file at {}",recentProjectsFile.string());
+			VC_INFO("Creating recent projects file at {}",toUtf8(recentProjectsFile));
 		}
 
-		const std::string pathString = project.path.string();
+		const std::string pathString = toUtf8(project.path);
 		JsonArray& projects = root["projects"].asArray();
 		for (const auto& p : projects) {
 			if (p["path"].getString() == pathString) {
@@ -386,7 +387,7 @@ namespace Vectrix {
 		entry.emplace("path", pathString);
 		projects.emplace_back(entry);
 
-		const VectrixResult result = Json::save(recentProjectsFile.string(), root.asObject());
+		const VectrixResult result = Json::save(toUtf8(recentProjectsFile), root.asObject());
 		if (result!=SUCCESS) {
 			showErrorMessage("SAVE_RECENT_PROJECT_ERROR");
 			m_lastSaveRecentProjectErrorMessage = std::format("Can't add project {} to recent projects file: {}",project.name, toString(result));

@@ -8,6 +8,7 @@
 #include <variant>
 
 #include "Vectrix/Core/Log.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
     namespace {
@@ -255,7 +256,7 @@ namespace Vectrix {
     }
 
     std::pair<VectrixResult,JsonValue> Json::load(const std::string& filePath) {
-        std::ifstream file(filePath, std::ios::binary);
+        std::ifstream file(fromUtf8(filePath), std::ios::binary);
         if (!file.is_open())
             return {NOT_FOUND, JsonValue("Can't open " + filePath)};
 
@@ -270,7 +271,7 @@ namespace Vectrix {
         out += '\n';
 
         // Reported through the return value, which the callers show to the user: not an abort
-        std::ofstream file(filePath, std::ios::binary | std::ios::trunc);
+        std::ofstream file(fromUtf8(filePath), std::ios::binary | std::ios::trunc);
         if (!file.is_open()) {
             VC_CORE_ERROR_NO_EXIT("Can't open for writing: {}", filePath);
             return UNKNOWN_ERROR;

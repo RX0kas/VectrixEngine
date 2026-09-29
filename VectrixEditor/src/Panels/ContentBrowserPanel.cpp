@@ -1,6 +1,8 @@
 #include "ContentBrowserPanel.h"
 
 #include <algorithm>
+#include <cfloat>
+#include <cstring>
 #include <vector>
 
 #include "imgui.h"
@@ -9,6 +11,7 @@
 #include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Settings/SettingsManager.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
     constexpr auto colorSurface = ImVec4(0.105f, 0.110f, 0.125f, 1.00f);
@@ -64,7 +67,7 @@ namespace Vectrix {
             const wchar_t* itemPath = path.c_str();
             ImGui::SetDragDropPayload(type.c_str(), itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
 #endif
-            ImGui::TextColored(colorTextPrimary, "%s", path.filename().string().c_str());
+            ImGui::TextColored(colorTextPrimary, "%s", toUtf8(path.filename()).c_str());
             ImGui::EndDragDropSource();
         }
     }
@@ -109,13 +112,13 @@ namespace Vectrix {
             entries.push_back(entry);
 
         if (ec)
-            VC_WARN("Can't list '{}': {}", directory.string(), ec.message());
+            VC_WARN("Can't list '{}': {}", toUtf8(directory), ec.message());
 
         std::sort(entries.begin(), entries.end(),
             [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) {
                 if (a.is_directory() != b.is_directory())
                     return a.is_directory();
-                return toLower(a.path().filename().string()) < toLower(b.path().filename().string());
+                return toLower(toUtf8(a.path().filename())) < toLower(toUtf8(b.path().filename()));
             });
 
         return entries;
@@ -143,10 +146,10 @@ namespace Vectrix {
         if (!std::filesystem::exists(candidate))
             return candidate;
 
-        const std::string stem = source.stem().string();
-        const std::string extension = source.extension().string();
+        const std::string stem = toUtf8(source.stem());
+        const std::string extension = toUtf8(source.extension());
         for (int i = 1; i < 1000; ++i) {
-            candidate = targetDirectory / (stem + " (" + std::to_string(i) + ")" + extension);
+            candidate = targetDirectory / fromUtf8(stem + " (" + std::to_string(i) + ")" + extension);
             if (!std::filesystem::exists(candidate))
                 return candidate;
         }
@@ -162,26 +165,26 @@ namespace Vectrix {
 
         m_assetRoot = assetRoot;
         if (!std::filesystem::exists(m_assetRoot)) {
-            VC_WARN("Asset path '{}' does not exist, falling back to current directory", m_assetRoot.string());
+            VC_WARN("Asset path '{}' does not exist, falling back to current directory", toUtf8(m_assetRoot));
             m_assetRoot = std::filesystem::current_path();
         }
         m_currentDirectory = m_assetRoot;
 
         // These are editor built-ins, not project content, so they're taken from the
         // engine's own assets folder rather than m_assetRoot.
-        auto d = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/directory.png").string());
+        auto d = AssetsManager::load<Texture>(toUtf8((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/directory.png")));
         if (d.first != SUCCESS) {
             showErrorMessage("ERROR_LOADING_DIR_ICON");
             m_lastDirIconErrorMessage = std::format("Can't load directory icon: {}", toString(d.first));
         }
-        m_directoryIcon = d.second;
+        m_directoryIcon = d.second ? d.second : TextureManager::getNotFoundTexture();
 
-        auto f = AssetsManager::load<Texture>((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/file.png").string());
+        auto f = AssetsManager::load<Texture>(toUtf8((AssetsManager::getEngineAssetsPath() / "icons/ContentBrowser/file.png")));
         if (f.first != SUCCESS) {
             showErrorMessage("ERROR_LOADING_FILE_ICON");
             m_lastFileIconErrorMessage = std::format("Can't load file icon: {}", toString(f.first));
         }
-        m_fileIcon = f.second;
+        m_fileIcon = f.second ? f.second : TextureManager::getNotFoundTexture();
 
         m_expandedPaths.insert(m_assetRoot);
     }
@@ -219,6 +222,7 @@ namespace Vectrix {
 
         handleShortcuts();
         drawDeletePopup();
+        drawRenamePopup();
 
         ImGui::End();
         ImGui::PopStyleColor();
@@ -232,6 +236,7 @@ namespace Vectrix {
         renderErrorMessage("ERROR_FLUSH_PENDING_PASTE", m_lastFlushPendingPasteErrorMessage);
         renderErrorMessage("FAIL_DELETE", m_lastDeleteErrorMessage);
         renderErrorMessage("FLUSH_PENDING_MOVE",m_lastFlushPendingMoveErrorMessage);
+        renderErrorMessage("FAIL_RENAME", m_lastRenameErrorMessage);
     }
 
     void ContentBrowserPanel::drawToolbar() {
@@ -271,7 +276,7 @@ namespace Vectrix {
         for (size_t i = 0; i < crumbs.size(); ++i) {
             const std::filesystem::path& crumb = crumbs[i];
             const bool isLast = (i + 1 == crumbs.size());
-            const std::string label = (crumb == m_assetRoot) ? "assets" : crumb.filename().string();
+            const std::string label = (crumb == m_assetRoot) ? "assets" : toUtf8(crumb.filename());
 
             ImGui::SameLine(0.0f, 2.0f);
             ImGui::PushID(static_cast<int>(i));
@@ -327,7 +332,7 @@ namespace Vectrix {
                 break;
 
             if (std::filesystem::is_directory(source) && isSubPathOf(source, targetDirectory)) {
-                VC_WARN("Can't move '{}' inside itself", source.string());
+                VC_WARN("Can't move '{}' inside itself", toUtf8(source));
                 break;
             }
 
@@ -366,6 +371,9 @@ namespace Vectrix {
         if (contextMenuItem("Paste", "Ctrl+V", canPaste, "Nothing has been copied or cut yet"))
             pasteInto(target);
 
+        if (contextMenuItem("Rename", "F2", hasSubject, noSubjectHint))
+            startRename(subject);
+
         ImGui::Separator();
 
         if (contextMenuItem("Delete", "Del", hasSubject, noSubjectHint, colorDanger)) {
@@ -376,12 +384,12 @@ namespace Vectrix {
         // Make it obvious which entry the actions apply to when it isn't the one under the cursor.
         if (hasSubject && !isItem) {
             ImGui::Separator();
-            ImGui::TextColored(colorTextMuted, "Selected: %s", subject.filename().string().c_str());
+            ImGui::TextColored(colorTextMuted, "Selected: %s", toUtf8(subject.filename()).c_str());
         }
 
         if (canPaste) {
             ImGui::Separator();
-            ImGui::TextColored(colorTextMuted, "%s: %s", m_clipboardIsCut ? "Cut" : "Copied", m_clipboardPath.filename().string().c_str());
+            ImGui::TextColored(colorTextMuted, "%s: %s", m_clipboardIsCut ? "Cut" : "Copied", toUtf8(m_clipboardPath.filename()).c_str());
         }
     }
 
@@ -395,6 +403,9 @@ namespace Vectrix {
             m_pendingDeletePath = m_selectedPath;
             m_openDeletePopup = true;
         }
+
+        if (ImGui::IsKeyPressed(ImGuiKey_F2, false) && !m_selectedPath.empty())
+            startRename(m_selectedPath);
 
         if (!ImGui::GetIO().KeyCtrl)
             return;
@@ -421,13 +432,13 @@ namespace Vectrix {
             return;
 
         if (!std::filesystem::exists(m_clipboardPath)) {
-            VC_WARN("Clipboard entry '{}' no longer exists", m_clipboardPath.string());
+            VC_WARN("Clipboard entry '{}' no longer exists", toUtf8(m_clipboardPath));
             m_clipboardPath.clear();
             return;
         }
 
         if (std::filesystem::is_directory(m_clipboardPath) && isSubPathOf(m_clipboardPath, targetDirectory)) {
-            VC_WARN("Can't paste '{}' inside itself", m_clipboardPath.string());
+            VC_WARN("Can't paste '{}' inside itself", toUtf8(m_clipboardPath));
             return;
         }
 
@@ -462,11 +473,13 @@ namespace Vectrix {
 
         if (ec) {
             showErrorMessage("ERROR_FLUSH_PENDING_PASTE");
-            m_lastFlushPendingPasteErrorMessage = std::format("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy", source.string(), destination.string(), ec.message());
+            m_lastFlushPendingPasteErrorMessage = std::format("Failed to {} '{}' to '{}': {}", isCut ? "move" : "copy", toUtf8(source), toUtf8(destination), ec.message());
             return;
         }
 
         if (isCut) {
+            if (m_onMoved)
+                m_onMoved(source, destination);
             m_clipboardPath.clear();
             m_clipboardIsCut = false;
 
@@ -495,11 +508,11 @@ namespace Vectrix {
 
         if (ec) {
             showErrorMessage("FAIL_DELETE");
-            m_lastDeleteErrorMessage = std::format("Failed to delete '{}': {}", path.string(), ec.message());
+            m_lastDeleteErrorMessage = std::format("Failed to delete '{}': {}", toUtf8(path), ec.message());
             return;
         }
 
-        VC_INFO("Deleted '{}'", path.string());
+        VC_INFO("Deleted '{}'", toUtf8(path));
 
         if (m_selectedPath == path)
             m_selectedPath.clear();
@@ -529,7 +542,7 @@ namespace Vectrix {
 
         ImGui::TextColored(colorTextPrimary, "Delete %s?", isDirectory ? "this folder" : "this file");
         ImGui::Spacing();
-        ImGui::TextWrapped("%s", m_pendingDeletePath.filename().string().c_str());
+        ImGui::TextWrapped("%s", toUtf8(m_pendingDeletePath.filename()).c_str());
         ImGui::Spacing();
 
         if (isDirectory)
@@ -571,7 +584,7 @@ namespace Vectrix {
         m_pendingMoveTarget.clear();
 
         if (std::filesystem::exists(destination)) {
-            VC_WARN("'{}' already exists, move cancelled", destination.string());
+            VC_WARN("'{}' already exists, move cancelled", toUtf8(destination));
             return;
         }
 
@@ -579,19 +592,115 @@ namespace Vectrix {
         std::filesystem::rename(source, destination, ec);
         if (ec) {
             showErrorMessage("FLUSH_PENDING_MOVE");
-            m_lastFlushPendingMoveErrorMessage = std::format("Failed to move '{}' to '{}': {}", source.string(), destination.string(), ec.message());
+            m_lastFlushPendingMoveErrorMessage = std::format("Failed to move '{}' to '{}': {}", toUtf8(source), toUtf8(destination), ec.message());
             return;
         }
 
-        if (m_selectedPath == source)
-            m_selectedPath = destination;
+        entryMoved(source, destination);
+    }
 
-        if (std::filesystem::is_directory(destination)) {
-            if (isSubPathOf(source, m_currentDirectory))
-                m_currentDirectory = destination;
-            m_expandedPaths.erase(source);
-            ensureTreeExpanded(destination);
+    void ContentBrowserPanel::entryMoved(const std::filesystem::path& from, const std::filesystem::path& to) {
+        const auto follow = [&](std::filesystem::path& path) {
+            if (path.empty())
+                return;
+            if (path == from)
+                path = to;
+            else if (isSubPathOf(from, path))
+                path = to / path.lexically_relative(from);
+        };
+        follow(m_selectedPath);
+        follow(m_currentDirectory);
+        follow(m_clipboardPath);
+
+        if (std::filesystem::is_directory(to)) {
+            m_expandedPaths.erase(from);
+            ensureTreeExpanded(to);
         }
+
+        if (m_onMoved)
+            m_onMoved(from, to);
+    }
+
+    void ContentBrowserPanel::startRename(const std::filesystem::path& path) {
+        if (path.empty() || path == m_assetRoot)
+            return;
+        m_renamePath = path;
+        const std::string name = toUtf8(path.filename());
+        const size_t length = std::min(name.size(), sizeof(m_renameBuffer) - 1);
+        std::memcpy(m_renameBuffer, name.data(), length);
+        m_renameBuffer[length] = '\0';
+        m_openRenamePopup = true;
+    }
+
+    void ContentBrowserPanel::drawRenamePopup() {
+        if (m_openRenamePopup) {
+            ImGui::OpenPopup("Rename asset##Rename");
+            m_openRenamePopup = false;
+        }
+
+        ImGui::SetNextWindowSize(ImVec2(360, 0), ImGuiCond_Appearing);
+        if (!ImGui::BeginPopupModal("Rename asset##Rename", nullptr, ImGuiWindowFlags_NoResize))
+            return;
+
+        ImGui::TextColored(colorTextPrimary, "Rename %s", std::filesystem::is_directory(m_renamePath) ? "this folder" : "this file");
+        ImGui::Spacing();
+        if (ImGui::IsWindowAppearing())
+            ImGui::SetKeyboardFocusHere();
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        const bool submitted = ImGui::InputText("##NewName", m_renameBuffer, sizeof(m_renameBuffer),
+                                                ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll);
+        ImGui::TextColored(colorTextMuted, "The scenes that use it are updated.");
+
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+        if (ImGui::Button("Cancel", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+            m_renamePath.clear();
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SameLine(0.0f, 8.0f);
+        if (ImGui::Button("Rename", ImVec2(120, 0)) || submitted) {
+            renameEntry(m_renamePath, m_renameBuffer);
+            m_renamePath.clear();
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::PopStyleVar();
+
+        ImGui::EndPopup();
+    }
+
+    void ContentBrowserPanel::renameEntry(const std::filesystem::path& path, const std::string& newName) {
+        if (path.empty() || path == m_assetRoot)
+            return;
+
+        // A name, not a path: the entry stays in its folder
+        const std::filesystem::path newFileName = fromUtf8(newName);
+        if (newName.empty() || newName == "." || newName == ".." || newFileName != newFileName.filename()) {
+            showErrorMessage("FAIL_RENAME");
+            m_lastRenameErrorMessage = std::format("'{}' isn't a valid name: it can't be empty or contain a folder separator", newName);
+            return;
+        }
+
+        const std::filesystem::path destination = path.parent_path() / newFileName;
+        if (destination == path)
+            return;
+        if (std::filesystem::exists(destination)) {
+            showErrorMessage("FAIL_RENAME");
+            m_lastRenameErrorMessage = std::format("Can't rename '{}': '{}' already exists", toUtf8(path.filename()), newName);
+            return;
+        }
+
+        std::error_code ec;
+        std::filesystem::rename(path, destination, ec);
+        if (ec) {
+            showErrorMessage("FAIL_RENAME");
+            m_lastRenameErrorMessage = std::format("Failed to rename '{}' to '{}': {}", toUtf8(path), newName, ec.message());
+            return;
+        }
+
+        VC_INFO("Renamed '{}' to '{}'", toUtf8(path), newName);
+        entryMoved(path, destination);
     }
 
     void ContentBrowserPanel::drawFolderTree() {
@@ -608,7 +717,7 @@ namespace Vectrix {
     }
 
     void ContentBrowserPanel::drawTreeNode(const std::filesystem::path& path) {
-        std::string label = (path == m_assetRoot) ? "assets" : path.filename().string();
+        std::string label = (path == m_assetRoot) ? "assets" : toUtf8(path.filename());
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnArrow;
         if (path == m_assetRoot)
@@ -685,7 +794,7 @@ namespace Vectrix {
 
         int drawn = 0;
         for (const auto& entry : sortedEntries(m_currentDirectory)) {
-            const std::string filename = entry.path().filename().string();
+            const std::string filename = toUtf8(entry.path().filename());
             if (!filter.empty() && toLower(filename).find(filter) == std::string::npos)
                 continue;
 
@@ -713,7 +822,7 @@ namespace Vectrix {
     void ContentBrowserPanel::drawGridItem(const std::filesystem::directory_entry& entry, const ImVec2& cellSize) {
         const std::filesystem::path& path = entry.path();
         const std::filesystem::path relativePath = std::filesystem::relative(path, m_assetRoot);
-        const std::string filename = path.filename().string();
+        const std::string filename = toUtf8(path.filename());
         const bool isDirectory = entry.is_directory();
         const AssetType type = isDirectory ? AssetType::UNKNOWN : AssetsManager::getAssetType(path);
 
@@ -770,7 +879,7 @@ namespace Vectrix {
 
         std::shared_ptr<Texture> icon = isDirectory ? m_directoryIcon : m_fileIcon;
         if (type == AssetType::TEXTURE) {
-            auto t = AssetsManager::load<Texture>(relativePath.string());
+            auto t = AssetsManager::load<Texture>(toUtf8(relativePath));
             if (t.first == SUCCESS)
                 icon = t.second;
         }
@@ -786,7 +895,7 @@ namespace Vectrix {
 
         // type badge
         if (!isDirectory) {
-            std::string ext = path.extension().string();
+            std::string ext = toUtf8(path.extension());
             if (!ext.empty()) {
                 ext = toLower(ext.substr(1));
                 const ImVec2 textSize = ImGui::CalcTextSize(ext.c_str());
@@ -799,7 +908,7 @@ namespace Vectrix {
             }
         }
 
-        const std::string displayName = isDirectory ? filename : path.stem().string();
+        const std::string displayName = isDirectory ? filename : toUtf8(path.stem());
 
         const float labelWidth = cellSize.x - 8.0f;
         const std::string label = ellipsize(displayName, labelWidth);

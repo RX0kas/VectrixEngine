@@ -6,12 +6,14 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
+#include <fstream>
 #include <unordered_map>
 #include <sstream>
 #include "Vertex.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Utils/Hashing.h"
+#include "Vectrix/Utils/Path.h"
 
 /**
  * @file ObjLoader.h
@@ -57,7 +59,15 @@ namespace Vectrix {
 
         std::string err;
 
-        const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,filepath.c_str());
+        // Opened here rather than by tinyobj, which reads the name in the system code page on Windows (as its
+        // filename overload does, the .mtl files are looked for from the working directory)
+        std::ifstream stream(fromUtf8(filepath));
+        if (!stream) {
+            VC_CORE_ERROR_NO_EXIT("Failed to load OBJ {}: can't open the file",filepath);
+            return false;
+        }
+        tinyobj::MaterialFileReader materialReader("");
+        const bool ret = tinyobj::LoadObj(&attrib,&shapes,&materials,&err,&stream,&materialReader);
 
 
         // This tinyobjloader version reports warnings (e.g. a missing .mtl file) through err too,

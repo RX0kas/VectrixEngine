@@ -3,6 +3,7 @@
 
 #include <deque>
 #include <memory>
+#include <optional>
 
 #include "Command.h"
 
@@ -58,16 +59,32 @@ namespace Vectrix {
             return m_redoStack.empty() ? nullptr : m_redoStack.back()->name();
         }
 
-        /// Drop every entry in both stacks, e.g. when the active scene changes
+        /// Drop every entry in both stacks, e.g. when the active scene changes. The state left is the clean one
         void clear() {
             m_undoStack.clear();
             m_redoStack.clear();
+            m_cleanIndex = 0;
         }
+
+        /// Record the current state as the one saved on disk
+        void markClean() { m_cleanIndex = m_undoStack.size(); }
+
+        /// The scene was changed without a command (e.g. assets relinked when it was opened): no state reachable by
+        /// undo or redo is the saved one anymore, until the next markClean
+        void markModified() { m_cleanIndex.reset(); }
+
+        /**
+         * @brief Whether the current state is the one last saved (see markClean)
+         * @note Undoing or redoing back to the saved state makes it clean again
+         */
+        [[nodiscard]] bool isClean() const { return m_cleanIndex == m_undoStack.size(); }
 
     private:
         std::deque<std::unique_ptr<Command>> m_undoStack;
         std::deque<std::unique_ptr<Command>> m_redoStack;
         size_t m_maxDepth;
+        /// Undo stack size matching the saved state, nullopt once that state can't be reached anymore
+        std::optional<size_t> m_cleanIndex = 0;
     };
 } // Vectrix
 

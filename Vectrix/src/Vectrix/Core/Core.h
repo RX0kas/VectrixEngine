@@ -50,7 +50,9 @@
  * @note Compiled out on a release build, so the condition is not evaluated there
  * @ingroup core
  */
-	#define VC_ASSERT(x, ...) { if(!(x)) { VC_ERROR("Assertion Failed: {0}", __VA_ARGS__); VC_DEBUGBREAK(); } }
+	// The message is the format string, so its arguments are filled in (passing it as an argument of
+	// "Assertion Failed: {0}" printed its placeholders as is). VC_ERROR then breaks and aborts
+	#define VC_ASSERT(x, ...) do { if (!(x)) { ::Vectrix::Log::getClientLogger()->error("Assertion failed: {}", #x); VC_ERROR(__VA_ARGS__); } } while (0)
 
 /**
  * @brief Check a condition in engine code and report it when it does not hold
@@ -59,7 +61,7 @@
  * @note Compiled out on a release build, so the condition is not evaluated there
  * @ingroup core
  */
-	#define VC_CORE_ASSERT(x, ...) { if(!(x)) { VC_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); VC_DEBUGBREAK(); } }
+	#define VC_CORE_ASSERT(x, ...) do { if (!(x)) { ::Vectrix::Log::getCoreLogger()->error("Assertion failed: {}", #x); VC_CORE_ERROR(__VA_ARGS__); } } while (0)
 	#ifndef VC_PROFILER_ENABLE
 /**
  * @brief Turns the profiler instrumentation on, it defaults to on for a debug build

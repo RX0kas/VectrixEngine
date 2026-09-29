@@ -209,13 +209,13 @@ namespace Vectrix {
     void Device::destroyBuffer(VkBuffer buffer, VmaAllocation allocation,VmaAllocator allocator) {
         VC_PROFILER_FUNCTION();
         if (!allocator) allocator = m_bufferAllocator;
-        vkDeviceWaitIdle(m_device);
+        // No wait on the whole GPU here, which every destroyed resource paid for: the callers only destroy what
+        // no frame in flight uses anymore (VulkanContext::destroyWhenUnused, or after their own wait)
         vmaDestroyBuffer(allocator, buffer, allocation);
     }
 
     void Device::destroyImage(VkImage image, VmaAllocation allocation) {
         VC_PROFILER_FUNCTION();
-        vkDeviceWaitIdle(m_device);
         vmaDestroyImage(m_textureAllocator, image, allocation);
     }
 

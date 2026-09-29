@@ -13,6 +13,10 @@
 
 #if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
 
+#include <string>
+#include <vector>
+
+#include "Vectrix/Core/CommandLine.h"
 
 extern Vectrix::Application* Vectrix::createApplication(int argc, char** argv);
 
@@ -24,14 +28,22 @@ extern Vectrix::Application* Vectrix::createApplication(int argc, char** argv);
  * session file.
  * @param argc The number of command line arguments
  * @param argv The command line arguments, e.g. a project/scene file path passed by the OS
- *             when the application is launched via a file association
+ *             when the application is launched via a file association. createApplication gets
+ *             them in UTF-8 (see Vectrix::getCommandLineArguments)
  * @return 0 once the application stopped
  * @ingroup core
  */
 int main(int argc, char** argv) {
 	VC_PROFILER_BEGIN_SESSION("Startup","Profile-Startup.json");
 	Vectrix::Log::init();
-	const auto app = Vectrix::createApplication(argc, argv);
+	// Alive until main returns, as the application may keep argv's pointers
+	std::vector<std::string> arguments = Vectrix::getCommandLineArguments(argc, argv);
+	std::vector<char*> utf8Argv;
+	utf8Argv.reserve(arguments.size() + 1);
+	for (std::string& argument : arguments)
+		utf8Argv.push_back(argument.data());
+	utf8Argv.push_back(nullptr); // argv[argc] is null, as main's
+	const auto app = Vectrix::createApplication(static_cast<int>(arguments.size()), utf8Argv.data());
 	VC_PROFILER_END_SESSION();
 
 	VC_PROFILER_BEGIN_SESSION("Runtime","Profile-Runtime.json");

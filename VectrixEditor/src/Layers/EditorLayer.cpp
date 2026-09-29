@@ -19,6 +19,7 @@
 #include "Vectrix/Rendering/GraphicsContext.h"
 #include "Vectrix/Settings/Outline.h"
 #include "Vectrix/Settings/SettingsManager.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
     namespace {
@@ -63,6 +64,7 @@ namespace Vectrix {
     		static_cast<float>(settingNum({"editor", "camera", "far"}, 1000.0)));
     	m_sceneHierarchyPanel = std::make_unique<SceneHierarchyPanel>();
     	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>(AssetsManager::getAssetsPath());
+    	m_contentBrowserPanel->setOnMoved([this](const std::filesystem::path& from, const std::filesystem::path& to) { onAssetMoved(from, to); });
     	m_settingPanel = std::make_unique<SettingsPanel>();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
     	m_sceneHierarchyPanel->setUndoHistory(&m_undoHistory);
@@ -70,19 +72,24 @@ namespace Vectrix {
     	applyLiveSettings();
 
     	m_settingPanel->disable(); // opt-in via the Window menu
+    	m_baseWindowTitle = Application::instance().window().getTitle();
+    }
+
+	void EditorLayer::OnDetach() {
+    	Application::instance().window().setTitle(m_baseWindowTitle);
     }
 
 	void EditorLayer::OnAttach(const JsonObject& data) {
     	if (data.contains("projectDirectory")) {
     		if (const auto projectDirectory = data.at("projectDirectory").getAs<std::string>()) {
-    			m_projectDirectory = *projectDirectory;
+    			m_projectDirectory = fromUtf8(*projectDirectory);
     			AssetsManager::setAssetsPath(m_projectDirectory / "Assets");
     		}
     	}
     	OnAttach();
     	if (data.contains("scenePath")) {
     		if (const auto scenePath = data.at("scenePath").getAs<std::string>())
-    			openScene(*scenePath);
+    			openScene(fromUtf8(*scenePath));
     	}
     }
 
@@ -120,36 +127,30 @@ namespace Vectrix {
     }
 
 	void EditorLayer::openScene(const std::filesystem::path& path) {
-    	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(path.string());
+    	SceneCreationData sceneCreationData = SceneSerializer::loadSceneFile(toUtf8(path));
     	if (sceneCreationData.result != SUCCESS) {
     		showErrorMessage("ERROR_LOADING_SCENE_FILE");
-    		m_lastLoadSceneFileErrorMessage = std::format("Error while loading scene file {}: {}",path.string(),toString(sceneCreationData.result));
+    		m_lastLoadSceneFileErrorMessage = std::format("Error while loading scene file {}: {}",toUtf8(path),toString(sceneCreationData.result));
     		return;
     	}
 
-    	auto newScene = Scene::loadScene(sceneCreationData);
+    	std::vector<std::string> assetErrors;
+    	auto newScene = Scene::loadScene(sceneCreationData, &assetErrors);
     	if (newScene.first != SUCCESS) {
     		showErrorMessage("ERROR_LOADING_SCENE");
-    		m_lastLoadSceneErrorMessage = std::format("Error while loading scene {}: {}",path.string(),toString(newScene.first));
+    		m_lastLoadSceneErrorMessage = std::format("Error while loading scene {}: {}",toUtf8(path),toString(newScene.first));
     		return;
     	}
 
-    	GraphicsContext::waitIdle();
-
-    	m_activeScene->m_entities.clear();
-    	m_activeScene->m_registry.clear<>();
-
-    	m_activeScene = newScene.second;
+    	replaceActiveScene(newScene.second);
     	m_activeScene->m_directory = path.parent_path();
-    	m_activeScene->m_fileName = path.filename().string();
-    	m_sceneHierarchyPanel->setContext(m_activeScene);
-    	m_undoHistory.clear();
+    	m_activeScene->m_fileName = toUtf8(path.filename());
 
     	// The project tier lives at the project root, not next to the scene (scenes are in <project>/Scenes):
     	// using the scene's folder read and wrote <project>/Scenes/settings.vectrix.json instead
     	const std::filesystem::path settingsPath = m_projectDirectory.empty() ? std::filesystem::path{} : m_projectDirectory / settingsFileName;
     	if (const auto [settingsResult, settingsMessage] = Application::getSettingsManager().loadProject(settingsPath); settingsResult != SUCCESS)
-    		VC_WARN("Project settings not loaded ({}): {}", settingsPath.string(), settingsMessage);
+    		VC_WARN("Project settings not loaded ({}): {}", toUtf8(settingsPath), settingsMessage);
 
     	const JsonObject& settings = SettingsManager::getSettings();
     	if (const auto editorNode = settings.find("editor"); editorNode != settings.end())
@@ -159,11 +160,195 @@ namespace Vectrix {
     	AssetsManager::instance().getTextureManager().clear();
 
     	GraphicsContext::waitIdle();
+
+    	if (assetErrors.empty())
+    		return;
+
+    	// Missing assets may have been moved or renamed outside the editor: found again by their content, or failing
+    	// that by their name
+    	std::string moveFailures;
+    	const std::string relinked = relinkMovedAssets(moveFailures);
+
+    	// The others: the scene opened without them, but keeps their paths (MeshRendererComponent::missingMesh...)
+    	std::string stillMissing;
+    	for (const auto& [handle, entity] : m_activeScene->m_entities) {
+    		if (!entity->hasComponent<MeshRendererComponent>())
+    			continue;
+    		const auto& mc = entity->getComponent<MeshRendererComponent>();
+    		for (const std::string* missing : {&mc.missingMesh, &mc.missingTexture, &mc.missingShader}) {
+    			if (!missing->empty())
+    				stillMissing += std::format("\n  - {}: {}", entity->getComponent<InformationComponent>().name, *missing);
+    		}
+    	}
+
+    	std::string message;
+    	if (!stillMissing.empty())
+    		message = std::format("{} opened without these assets:{}\n\nThey stay in the scene, saving included: put the files back and reopen it, or replace them in the Mesh Renderer.",
+    			toUtf8(path.filename()), stillMissing);
+    	if (!relinked.empty())
+    		message += std::format("{}These assets were moved or renamed outside the editor and found again (the project's scenes now use their new paths):{}",
+    			message.empty() ? "" : "\n\n", relinked);
+    	if (!moveFailures.empty())
+    		message += std::format("\n\nThese scenes couldn't be updated and still use the old paths:{}", moveFailures);
+    	showErrorMessage("SCENE_ASSETS_MISSING");
+    	m_lastSceneAssetsMissingMessage = std::move(message);
 	}
+
+	void EditorLayer::replaceActiveScene(std::shared_ptr<Scene> scene) {
+    	GraphicsContext::waitIdle();
+
+    	m_activeScene->m_entities.clear();
+    	m_activeScene->m_registry.clear<>();
+
+    	m_activeScene = std::move(scene);
+    	m_sceneHierarchyPanel->setContext(m_activeScene);
+    	m_undoHistory.clear();
+    }
+
+	void EditorLayer::newScene() {
+    	replaceActiveScene(std::make_shared<Scene>("Untitled"));
+    	// No file yet: the first save asks for one, starting in the project's scene folder
+    	if (!m_projectDirectory.empty())
+    		m_activeScene->m_directory = m_projectDirectory / "Scenes";
+    }
+
+	void EditorLayer::onAssetMoved(const std::filesystem::path& from, const std::filesystem::path& to) {
+    	std::error_code ec;
+    	const auto normal = [&ec](const std::filesystem::path& path) { return std::filesystem::absolute(path, ec).lexically_normal(); };
+
+    	// The open scene follows its own file when that is what moved (a scene saved in the assets folder)
+    	if (!m_activeScene->m_fileName.empty()) {
+    		const std::filesystem::path sceneFile = normal(m_activeScene->m_directory / fromUtf8(m_activeScene->m_fileName));
+    		const std::filesystem::path relative = sceneFile.lexically_relative(normal(from));
+    		if (!relative.empty() && *relative.begin() != "..") {
+    			const std::filesystem::path movedScene = relative == "." ? normal(to) : normal(to) / relative;
+    			m_activeScene->m_directory = movedScene.parent_path();
+    			m_activeScene->m_fileName = toUtf8(movedScene.filename());
+    		}
+    	}
+
+    	const std::optional<std::string> oldId = AssetsManager::getProjectAssetId(from);
+    	const std::optional<std::string> newId = AssetsManager::getProjectAssetId(to);
+    	if (!oldId || !newId)
+    		return;
+
+    	// Loaded assets keep their objects under the new ids: the open scene saves the new paths
+    	AssetsManager::instance().moveProjectAssets(*oldId, *newId);
+
+    	if (const std::string failures = remapAssetInProject(*oldId, *newId); !failures.empty()) {
+    		showErrorMessage("ASSET_MOVE_SCENES_ERROR");
+    		m_lastAssetMoveErrorMessage = std::format("{} moved to {}, but these scenes couldn't be updated and still use the old path:{}", *oldId, *newId, failures);
+    	}
+    }
+
+	std::string EditorLayer::remapAssetInProject(const std::string& oldId, const std::string& newId) {
+    	const auto remap = [&](const std::string& id) { return AssetsManager::remapAssetId(id, oldId, newId); };
+    	for (const auto& [handle, entity] : m_activeScene->m_entities) {
+    		if (!entity->hasComponent<MeshRendererComponent>())
+    			continue;
+    		auto& mc = entity->getComponent<MeshRendererComponent>();
+    		for (std::string* missing : {&mc.missingMesh, &mc.missingTexture, &mc.missingShader}) {
+    			if (!missing->empty())
+    				if (std::optional<std::string> moved = remap(*missing))
+    					*missing = std::move(*moved);
+    		}
+    	}
+
+    	// Every scene file of the project, the open scene's included. Listed first: remapAssetIds replaces files
+    	std::error_code ec;
+    	std::vector<std::filesystem::path> scenes;
+    	if (!m_projectDirectory.empty()) {
+    		for (auto it = std::filesystem::recursive_directory_iterator(m_projectDirectory, std::filesystem::directory_options::skip_permission_denied, ec);
+    			 !ec && it != std::filesystem::recursive_directory_iterator(); it.increment(ec)) {
+    			if (it->is_regular_file(ec) && it->path().extension() == ".vctx")
+    				scenes.push_back(it->path());
+    		}
+    	}
+
+    	int updated = 0;
+    	std::string failures;
+    	for (const std::filesystem::path& scene : scenes) {
+    		const auto [result, rewritten] = SceneSerializer::remapAssetIds(toUtf8(scene), remap);
+    		if (result != SUCCESS)
+    			failures += std::format("\n  - {} ({})", toUtf8(scene.lexically_relative(m_projectDirectory)), toString(result));
+    		else if (rewritten)
+    			++updated;
+    	}
+    	VC_INFO("Moved {} to {}: {} scene file(s) updated", oldId, newId, updated);
+    	return failures;
+    }
+
+	std::string EditorLayer::relinkMovedAssets(std::string& failures) {
+    	// Searched once per missing id, even when several entities use it
+    	std::unordered_map<std::string, std::optional<AssetsManager::MovedAsset>> found;
+    	std::string relinked;
+    	bool relinkedByNameOnly = false;
+    	const auto relink = [&](auto& asset, std::string& missing) {
+    		using T = typename std::remove_reference_t<decltype(asset)>::element_type;
+    		if (missing.empty())
+    			return;
+    		std::error_code ec;
+    		if (std::filesystem::exists(AssetsManager::getAssetsPath() / fromUtf8(missing), ec))
+    			return; // there but broken: nothing moved
+
+    		auto it = found.find(missing);
+    		if (it == found.end()) {
+    			const auto fingerprint = m_activeScene->m_missingFingerprints.find(missing);
+    			std::optional<AssetsManager::MovedAsset> moved = AssetsManager::findMovedAsset(missing,
+    				fingerprint != m_activeScene->m_missingFingerprints.end() ? fingerprint->second : AssetFingerprint{});
+    			if (moved)
+    				relinked += std::format("\n  - {} -> {}{}", missing, moved->id, moved->byNameOnly ? " (by name only)" : "");
+    			it = found.emplace(missing, std::move(moved)).first;
+    		}
+    		if (!it->second)
+    			return;
+
+    		auto [result, loaded] = AssetsManager::load<T>(it->second->id);
+    		if (result != SUCCESS)
+    			return;
+    		asset = loaded;
+    		missing.clear();
+    		relinkedByNameOnly |= it->second->byNameOnly;
+    	};
+
+    	for (const auto& [handle, entity] : m_activeScene->m_entities) {
+    		if (!entity->hasComponent<MeshRendererComponent>())
+    			continue;
+    		auto& mc = entity->getComponent<MeshRendererComponent>();
+    		relink(mc.mesh, mc.missingMesh);
+    		relink(mc.texture, mc.missingTexture);
+    		relink(mc.shader, mc.missingShader);
+    		// Kept disabled only because of them: drawn again, as it was saved
+    		if (mc.enabledOnceComplete && !mc.hasMissingAsset() && mc.tryEnabling())
+    			mc.enabledOnceComplete = false;
+    	}
+
+    	// Found by content: like a move made in the content browser, every scene of the project follows, this one's
+    	// file included. Found by name only, it's a guess: only the open scene uses it, and only once saved
+    	for (const auto& [oldId, moved] : found) {
+    		if (!moved || moved->byNameOnly)
+    			continue;
+    		m_activeScene->m_missingFingerprints.erase(oldId);
+    		failures += remapAssetInProject(oldId, moved->id);
+    	}
+    	if (relinkedByNameOnly) {
+    		m_undoHistory.markModified(); // the scene file still names the old paths
+    		relinked += "\n\nThose marked \"by name only\" are the one file with that name, but not with the content the "
+    			"scene was saved with: they may have been edited since, or be a different file. Check them before saving "
+    			"the scene (other scenes are left as they are), and replace a wrong one in the Mesh Renderer.";
+    	}
+    	return relinked;
+    }
 
 	void EditorLayer::OnEvent(Event &event) {
     	if (event.getEventType()==EventType::WindowResize)
     		m_camera->recalculateMatrices();
+
+    	// Handling the close request keeps the application running while the user is asked about unsaved changes
+    	if (event.getEventType() == EventType::WindowClose && !m_undoHistory.isClean()) {
+    		event.Handled = true;
+    		runDiscardingScene([] { Application::instance().close(); });
+    	}
     }
 
 	void EditorLayer::showOpenDialog() {
@@ -214,7 +399,7 @@ namespace Vectrix {
     	std::string path = m_pendingScenePath;
     	m_pendingScenePath.clear();
 
-    	openScene(path);
+    	openScene(fromUtf8(path));
 	}
 
 	void EditorLayer::processPendingProjectLoad() {
@@ -228,19 +413,27 @@ namespace Vectrix {
     	Application::instance().switchToLayer<StartupLayer>(this,data);
     }
 
-	void EditorLayer::showSaveDialog() {
+	bool EditorLayer::showSaveDialog() {
     	NFD_Init();
 
     	nfdchar_t* outPath;
     	nfdfilteritem_t filters[] = { { "Vectrix Scene", "vctx" } };
 
-    	nfdresult_t result = NFD_SaveDialog(&outPath, filters, 1, nullptr, "scene.vctx");
+    	// Starts where the scene is (or will be, for a new one), with its current or future file name
+    	std::filesystem::path folder = m_activeScene->m_directory;
+    	if (folder.empty() && !m_projectDirectory.empty())
+    		folder = m_projectDirectory / "Scenes";
+    	std::error_code ec;
+    	const std::string defaultFolder = folder.empty() ? std::string{} : toUtf8(std::filesystem::absolute(folder, ec)); // NFD takes UTF-8
+    	const std::string defaultName = !m_activeScene->m_fileName.empty() ? m_activeScene->m_fileName
+    		: (m_activeScene->m_name.empty() ? std::string("Untitled") : m_activeScene->m_name) + ".vctx";
 
+    	nfdresult_t result = NFD_SaveDialog(&outPath, filters, 1,
+    		defaultFolder.empty() ? nullptr : defaultFolder.c_str(), defaultName.c_str());
+
+    	bool saved = false;
     	if (result == NFD_OKAY) {
-    		const std::filesystem::path scenePath(outPath);
-    		m_activeScene->m_directory = scenePath.parent_path();
-    		m_activeScene->m_fileName = scenePath.filename().string();
-    		SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
+    		saved = writeScene(fromUtf8(outPath));
     		NFD_FreePath(outPath);
     	} else if (result == NFD_CANCEL) {
     		VC_INFO("User cancelled");
@@ -250,6 +443,93 @@ namespace Vectrix {
     	}
 
     	NFD_Quit();
+    	return saved;
+    }
+
+	bool EditorLayer::saveScene() {
+    	if (m_activeScene->m_fileName.empty())
+    		return showSaveDialog();
+    	return writeScene(m_activeScene->m_directory / fromUtf8(m_activeScene->m_fileName));
+    }
+
+	bool EditorLayer::writeScene(const std::filesystem::path& path) {
+    	// A scene saved for the first time is named after its file, like a project's starting scene
+    	std::string previousName = m_activeScene->m_name;
+    	if (m_activeScene->m_fileName.empty())
+    		m_activeScene->m_name = toUtf8(path.stem());
+
+    	if (const VectrixResult result = SceneSerializer::saveScene(toUtf8(path), *m_activeScene); result != SUCCESS) {
+    		m_activeScene->m_name = std::move(previousName);
+    		showErrorMessage("SAVE_SCENE_ERROR");
+    		m_lastSaveSceneErrorMessage = std::format("Can't save the scene to {}: {}", toUtf8(path), toString(result));
+    		return false;
+    	}
+    	m_activeScene->m_directory = path.parent_path();
+    	m_activeScene->m_fileName = toUtf8(path.filename());
+    	m_undoHistory.markClean();
+    	return true;
+    }
+
+	void EditorLayer::runDiscardingScene(std::function<void()> action) {
+    	if (m_undoHistory.isClean()) {
+    		action();
+    		return;
+    	}
+    	// A later request replaces an unanswered one: the prompt is about whatever was asked last
+    	m_actionAfterSavePrompt = std::move(action);
+    	m_openUnsavedChangesPopup = true;
+    }
+
+	void EditorLayer::renderUnsavedChangesPopup() {
+    	constexpr const char* popupId = "Unsaved changes";
+    	if (m_openUnsavedChangesPopup) {
+    		ImGui::OpenPopup(popupId);
+    		m_openUnsavedChangesPopup = false;
+    	}
+    	if (!ImGui::BeginPopupModal(popupId, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    		return;
+
+    	ImGui::Text("Save the changes made to %s?",
+    		m_activeScene->m_fileName.empty() ? "this scene" : m_activeScene->m_fileName.c_str());
+    	ImGui::TextDisabled("Without saving, they are lost.");
+    	ImGui::Separator();
+
+    	// Run after EndPopup: the action may replace the scene or leave this layer
+    	std::function<void()> action;
+    	if (ImGui::Button("Save")) {
+    		// A failed save (reported in its own popup) or a cancelled Save As keeps the scene open
+    		if (saveScene())
+    			action = std::move(m_actionAfterSavePrompt);
+    		m_actionAfterSavePrompt = nullptr;
+    		ImGui::CloseCurrentPopup();
+    	}
+    	ImGui::SameLine();
+    	if (ImGui::Button("Don't Save")) {
+    		action = std::move(m_actionAfterSavePrompt);
+    		m_actionAfterSavePrompt = nullptr;
+    		ImGui::CloseCurrentPopup();
+    	}
+    	ImGui::SameLine();
+    	if (ImGui::Button("Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+    		m_actionAfterSavePrompt = nullptr;
+    		ImGui::CloseCurrentPopup();
+    	}
+    	ImGui::EndPopup();
+
+    	if (action)
+    		action();
+    }
+
+	void EditorLayer::updateWindowTitle() {
+    	const bool modified = !m_undoHistory.isClean();
+    	const std::string& fileName = m_activeScene->m_fileName;
+    	if (m_titleModified == modified && m_titleFileName == fileName)
+    		return; // unchanged: no string built every frame
+
+    	m_titleModified = modified;
+    	m_titleFileName = fileName;
+    	Application::instance().window().setTitle(std::format("{} - {}{}", m_baseWindowTitle,
+    		fileName.empty() ? "Untitled scene" : fileName, modified ? " *" : ""));
     }
 
     void EditorLayer::OnImGuiRender() {
@@ -290,23 +570,15 @@ namespace Vectrix {
 		// Menu Bar
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File")) {
-				if (ImGui::MenuItem("Open")) {
-					showOpenDialog();
-				}
-				if (ImGui::MenuItem("Save Scene")) {
-					if (m_activeScene->getFileName().empty()) {
-						showSaveDialog();
-					} else {
-						const std::filesystem::path scenePath =
-							std::filesystem::path(m_activeScene->getDirectory()) / m_activeScene->getFileName();
-						SceneSerializer::saveScene(scenePath.string(),*m_activeScene);
-					}
-				}
-				if (ImGui::MenuItem("Save Scene As")) showSaveDialog();
+				if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+					runDiscardingScene([this] { newScene(); });
+				if (ImGui::MenuItem("Open"))
+					runDiscardingScene([this] { showOpenDialog(); });
+				if (ImGui::MenuItem("Save Scene", "Ctrl+S")) saveScene();
+				if (ImGui::MenuItem("Save Scene As", "Ctrl+Shift+S")) showSaveDialog();
 
-				if (ImGui::MenuItem("Open Project")) {
-					showOpenProjectDialog();
-				}
+				if (ImGui::MenuItem("Open Project"))
+					runDiscardingScene([this] { showOpenProjectDialog(); });
 
 				if (ImGui::BeginMenu("Open recent project")) {
 					// Cached by StartupLayer: only re-read from disk when recentProjects.json changed
@@ -314,26 +586,27 @@ namespace Vectrix {
 						ImGui::PushID(&project);
 						const bool clicked = ImGui::MenuItem(project.name.c_str());
 						if (ImGui::IsItemHovered())
-							ImGui::SetTooltip("%s", project.path.string().c_str());
+							ImGui::SetTooltip("%s", toUtf8(project.path).c_str());
 						ImGui::PopID();
 						if (clicked) {
-							JsonObject data;
-							// path.string(), not c_str(): on Windows c_str() is a wchar_t* that would silently become a JsonValue(bool)
-							data["openProject"] = JsonValue(project.path.string());
-							Application::instance().switchToLayer<StartupLayer>(this, data);
-							// The new StartupLayer is constructed right away and may reload the list we're iterating
+							runDiscardingScene([this, projectPath = project.path] {
+								JsonObject data;
+								// toUtf8(), not c_str(): on Windows c_str() is a wchar_t* that would silently become a JsonValue(bool)
+								data["openProject"] = JsonValue(toUtf8(projectPath));
+								Application::instance().switchToLayer<StartupLayer>(this, data);
+							});
+							// The new StartupLayer may be constructed right away and reload the list we're iterating
 							break;
 						}
 					}
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::MenuItem("Close Project")) {
-					Application::instance().switchToLayer<StartupLayer>(this);
-				}
+				if (ImGui::MenuItem("Close Project"))
+					runDiscardingScene([this] { Application::instance().switchToLayer<StartupLayer>(this); });
 
-
-				if (ImGui::MenuItem("Exit")) Application::instance().close();
+				if (ImGui::MenuItem("Exit"))
+					runDiscardingScene([] { Application::instance().close(); });
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Edit")) {
@@ -382,7 +655,7 @@ namespace Vectrix {
 #else
 					const auto* path = static_cast<const wchar_t *>(payload->Data);
 #endif
-					openScene(AssetsManager::getAssetsPath()/path);
+					runDiscardingScene([this, scenePath = AssetsManager::getAssetsPath() / path] { openScene(scenePath); });
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -408,6 +681,10 @@ namespace Vectrix {
     	renderErrorMessage("OPEN_DIALOG_NFD_ERROR", m_lastNFDOpenError);
     	renderErrorMessage("OPEN_PROJECT_DIALOG_NFD_ERROR", m_lastOpenProjectNFDError);
     	renderErrorMessage("SAVE_DIALOG_NFD_ERROR", m_lastSaveSceneNFDError);
+    	renderErrorMessage("SAVE_SCENE_ERROR", m_lastSaveSceneErrorMessage);
+    	renderErrorMessage("SCENE_ASSETS_MISSING", m_lastSceneAssetsMissingMessage);
+    	renderErrorMessage("ASSET_MOVE_SCENES_ERROR", m_lastAssetMoveErrorMessage);
+    	renderUnsavedChangesPopup();
     	renderErrorMessage("LOAD_RECENT_PROJECTS_ERROR", StartupLayer::lastLoadRecentProjectsError());
     }
 
@@ -432,7 +709,12 @@ namespace Vectrix {
     	processPendingSceneLoad();
     	processPendingProjectLoad();
 
-    	if (m_viewportFocused || m_viewportHovered) {
+    	const bool ctrlDown = Input::isKeyPressed(VC_KEY_LEFT_CONTROL) || Input::isKeyPressed(VC_KEY_RIGHT_CONTROL);
+    	// The keys polled below are read from GLFW, which ImGui doesn't filter: while a text field is being typed
+    	// in (an entity name, a search box), its letters must not move the camera or switch the gizmo
+    	const bool typing = ImGui::GetIO().WantTextInput;
+
+    	if ((m_viewportFocused || m_viewportHovered) && !typing) {
     		glm::vec3 cameraRot = m_camera->getRotationDeg();
     		if (Input::isKeyPressed(VC_KEY_LEFT))
     			cameraRot.y -= m_cameraRotationSpeed * dt;
@@ -458,7 +740,8 @@ namespace Vectrix {
     		if (Input::isKeyPressed(VC_KEY_Q)) moveDir.y -= 1.0f;
     		if (Input::isKeyPressed(VC_KEY_E)) moveDir.y += 1.0f;
 
-    		if (glm::length(moveDir) > 0.0f) {
+    		// Not while Ctrl is held: those keys are then shortcuts (Ctrl+S would also move the camera back)
+    		if (glm::length(moveDir) > 0.0f && !ctrlDown) {
     			moveDir = glm::normalize(moveDir);
 
     			glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();
@@ -483,28 +766,46 @@ namespace Vectrix {
     	m_activeScene->OnUpdate(dt);
 
 
-    	bool ctrlDown = Input::isKeyPressed(VC_KEY_LEFT_CONTROL) || Input::isKeyPressed(VC_KEY_RIGHT_CONTROL);
     	bool zDown = Input::isKeyPressed(VC_KEY_Z);
     	bool yDown = Input::isKeyPressed(VC_KEY_Y);
 
-    	if (ctrlDown && zDown && !m_ctrlUndoWasDown && m_undoHistory.canUndo())
+    	// Not while typing: Ctrl+Z/Y then undo the text being edited, which the field does itself
+    	if (ctrlDown && zDown && !m_ctrlUndoWasDown && !typing && m_undoHistory.canUndo())
     		refreshSelectionAfter(m_undoHistory.undo());
     	m_ctrlUndoWasDown = ctrlDown && zDown;
 
-    	if (ctrlDown && yDown && !m_ctrlRedoWasDown && m_undoHistory.canRedo())
+    	if (ctrlDown && yDown && !m_ctrlRedoWasDown && !typing && m_undoHistory.canRedo())
     		refreshSelectionAfter(m_undoHistory.redo());
     	m_ctrlRedoWasDown = ctrlDown && yDown;
 
-    	if (!ctrlDown && zDown)
-    		m_gizmoType = -1;
-    	if (Input::isKeyPressed(VC_KEY_X))
-    		m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
-    	if (Input::isKeyPressed(VC_KEY_C))
-    		m_gizmoType = ImGuizmo::OPERATION::ROTATE;
-    	if (Input::isKeyPressed(VC_KEY_V))
-    		m_gizmoType = ImGuizmo::OPERATION::SCALE;
+    	const bool sDown = Input::isKeyPressed(VC_KEY_S);
+    	if (ctrlDown && sDown && !m_ctrlSaveWasDown) {
+    		if (Input::isKeyPressed(VC_KEY_LEFT_SHIFT) || Input::isKeyPressed(VC_KEY_RIGHT_SHIFT))
+    			showSaveDialog();
+    		else
+    			saveScene();
+    	}
+    	m_ctrlSaveWasDown = ctrlDown && sDown;
+
+    	const bool nDown = Input::isKeyPressed(VC_KEY_N);
+    	if (ctrlDown && nDown && !m_ctrlNewWasDown)
+    		runDiscardingScene([this] { newScene(); });
+    	m_ctrlNewWasDown = ctrlDown && nDown;
+
+    	// Bare keys only: with Ctrl they're undo, cut, copy and paste (the content browser's included)
+    	if (!ctrlDown && !typing) {
+    		if (zDown)
+    			m_gizmoType = -1;
+    		if (Input::isKeyPressed(VC_KEY_X))
+    			m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+    		if (Input::isKeyPressed(VC_KEY_C))
+    			m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+    		if (Input::isKeyPressed(VC_KEY_V))
+    			m_gizmoType = ImGuizmo::OPERATION::SCALE;
+    	}
 
     	m_camera->recalculateMatrices();
+    	updateWindowTitle();
     }
 	glm::vec3 EditorLayer::screenToWorldRay(glm::vec2 mousePos) {
 		glm::vec2 ndc = {

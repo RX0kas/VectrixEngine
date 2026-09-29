@@ -2,6 +2,7 @@
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "GraphicAPI/Vulkan/Rendering/Mesh/MeshRegistry.h"
+#include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Renderer.h"
 
@@ -19,5 +20,11 @@ namespace Vectrix {
                 VC_CORE_ERROR("Can't register Mesh because RendererAPI is None");
                 break;
         }
+    }
+
+    Mesh::~Mesh() {
+        // Without it the space stayed taken for the whole session, e.g. by every mesh of the projects closed since
+        if (Renderer::getAPI() == RendererAPI::API::Vulkan && VulkanContext::exists())
+            VulkanContext::instance().getMeshRegistry().releaseMesh(std::static_pointer_cast<VulkanVertexArray>(m_vertexArray)->getHandle());
     }
 } // Vectrix

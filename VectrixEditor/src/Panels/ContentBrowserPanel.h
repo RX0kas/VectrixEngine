@@ -2,6 +2,7 @@
 #define VECTRIXWORKSPACE_CONTENTBROWSERPANEL_H
 
 #include <filesystem>
+#include <functional>
 #include <set>
 #include <string>
 
@@ -20,6 +21,11 @@ namespace Vectrix {
 
         void render() override;
 
+        /// Called with the old and new path of a file or folder the panel moved or renamed, once it's done
+        using MovedCallback = std::function<void(const std::filesystem::path& from, const std::filesystem::path& to)>;
+        /// Set what follows a move (EditorLayer updates the scenes that use the asset)
+        void setOnMoved(MovedCallback callback) { m_onMoved = std::move(callback); }
+
     private:
         void drawToolbar();
         void drawFolderTree();
@@ -37,6 +43,11 @@ namespace Vectrix {
         void flushPendingPaste();
         void drawDeletePopup();
         void deleteEntry(const std::filesystem::path& path);
+        void startRename(const std::filesystem::path& path);
+        void drawRenamePopup();
+        void renameEntry(const std::filesystem::path& path, const std::string& newName);
+        /// Updates what points at a moved file or folder (selection, current folder, clipboard), then calls m_onMoved
+        void entryMoved(const std::filesystem::path& from, const std::filesystem::path& to);
         void handleDoubleClick(std::filesystem::path path);
 
         std::filesystem::path m_assetRoot;
@@ -53,6 +64,12 @@ namespace Vectrix {
         std::filesystem::path m_pendingDeletePath;
         bool m_openDeletePopup = false;
 
+        std::filesystem::path m_renamePath;
+        bool m_openRenamePopup = false;
+        char m_renameBuffer[256] = "";
+
+        MovedCallback m_onMoved;
+
         std::shared_ptr<Texture> m_directoryIcon;
         std::shared_ptr<Texture> m_fileIcon;
 
@@ -68,6 +85,7 @@ namespace Vectrix {
         std::string m_lastFlushPendingPasteErrorMessage;
         std::string m_lastDeleteErrorMessage;
         std::string m_lastFlushPendingMoveErrorMessage;
+        std::string m_lastRenameErrorMessage;
     };
 
 } // namespace Vectrix

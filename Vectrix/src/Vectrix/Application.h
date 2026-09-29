@@ -83,7 +83,7 @@ namespace Vectrix {
 		template<std::derived_from<Layer> T>
 		void switchToLayer(Layer* oldLayer, const JsonObject& data = JsonObject()) {
 			m_nextLayer = std::make_shared<T>();
-			m_oldLayerDebugName = oldLayer->getName();
+			m_oldLayer = oldLayer;
 			if (!data.empty()) m_dataToNextLayer = data;
 
 			m_hasToSwitch = true;
@@ -120,6 +120,8 @@ namespace Vectrix {
 
 		/**
 		 * @brief This function close the application
+		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a layer can cancel
+		 *       (see Layer::OnEvent)
 		 **/
 		void close() {
 			m_running = false;
@@ -143,7 +145,7 @@ namespace Vectrix {
 
 		bool m_hasToSwitch = false;
 		std::shared_ptr<Layer> m_nextLayer;
-		std::string m_oldLayerDebugName;
+		Layer* m_oldLayer = nullptr; ///< The layer switchToLayer replaces, only compared (it's still in the stack until then)
 		JsonObject m_dataToNextLayer;
 
 
@@ -167,7 +169,8 @@ namespace Vectrix {
 	 * instance to run.
 	 * @param argc The number of command line arguments
 	 * @param argv The command line arguments, e.g. a project/scene file path passed by
-	 *             the OS when the application is launched via a file association
+	 *             the OS when the application is launched via a file association. In UTF-8 on
+	 *             every platform: turn a path into a std::filesystem::path with fromUtf8
 	 * @return The application, which the engine takes ownership of
 	 * @see EntryPoint.h
 	 * @ingroup core

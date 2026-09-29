@@ -1,5 +1,6 @@
 #shader frag
 #version 450
+#extension GL_EXT_nonuniform_qualifier : enable
 
 layout(location = 0) in vec2 v_UV;
 layout(location = 0) out vec4 outColor;
@@ -10,11 +11,14 @@ layout(set = 0, binding = 0) readonly buffer FrameSSBO {
     vec2 u_TexelSize;
     float u_Thickness;
     vec4 u_Color;
+    uint u_MaskIndex;
 } frame;
 
 void main()
 {
-    float center = texture(u_Textures[0], v_UV).r;
+    // The mask's slot of u_Textures, given by useFramebuffer: slot 0 is the not_found texture
+    uint mask = frame.u_MaskIndex;
+    float center = texture(u_Textures[nonuniformEXT(mask)], v_UV).r;
 
     float edge = 0.0;
 
@@ -23,7 +27,7 @@ void main()
         for (int y = -2; y <= 2; y++)
         {
             vec2 offset = vec2(x, y) * frame.u_TexelSize * frame.u_Thickness;
-            edge = max(edge, texture(u_Textures[0], v_UV + offset).r);
+            edge = max(edge, texture(u_Textures[nonuniformEXT(mask)], v_UV + offset).r);
         }
     }
 
@@ -42,6 +46,7 @@ layout(set = 0, binding = 0) readonly buffer FrameSSBO {
     vec2 u_TexelSize;
     float u_Thickness;
     vec4 u_Color;
+    uint u_MaskIndex;
 } frame;
 
 vec2 positions[3] = vec2[]

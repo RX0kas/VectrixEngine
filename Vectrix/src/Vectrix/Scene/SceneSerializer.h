@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <functional>
 #include <optional>
 
 #include "Scene.h"
@@ -144,6 +145,17 @@ namespace Vectrix {
          * @return Whether the scene could be written
          */
         static VectrixResult saveScene(const std::string& path, Scene& scene);
+
+        /**
+         * @brief Update the asset ids a scene file refers to, without loading the scene or its assets
+         *
+         * Used when an asset (or a folder of them) moves, so the scenes that use it still find it.
+         * @param path The scene file
+         * @param remap Returns the new id for an asset id, or nullopt to keep it
+         * @return Whether it worked, and whether the file had to be rewritten
+         * @note The new content is written to a temporary file first, so a failure leaves the scene as it was
+         */
+        static std::pair<VectrixResult, bool> remapAssetIds(const std::string& path, const std::function<std::optional<std::string>(const std::string&)>& remap);
     private:
         static bool validMagicNumber(std::ifstream& stream);
         static std::optional<uint32_t> validVectrixVersion(std::ifstream& stream);

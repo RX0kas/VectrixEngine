@@ -7,10 +7,11 @@
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Rendering/Renderer.h"
 #include "Vectrix/Rendering/RendererAPI.h"
+#include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
     std::shared_ptr<Texture> Texture::create(const std::string &name,const std::string &path) {
-        if (!std::filesystem::exists(path)) {
+        if (!std::filesystem::exists(fromUtf8(path))) {
             VC_CORE_WARN("Texture {} doesn't exist, using default Texture instead",path);
             return TextureManager::getNotFoundTexture();
         }

@@ -222,15 +222,16 @@ namespace Vectrix {
 
     VulkanTexture::~VulkanTexture() {
         VC_PROFILER_FUNCTION();
-        // Wait before freeing anything: a frame still in flight may sample this texture or draw it through ImGui
-        // (destroyImage waits too, but only after the descriptor, sampler and view would already be gone)
-        vkDeviceWaitIdle(m_device.device());
-        destroyImGuiTextureDescriptor(m_device, m_descriptorSet);
-        if (m_sampler != VK_NULL_HANDLE)
-            vkDestroySampler(m_device.device(), m_sampler, nullptr);
-        if (m_imageView != VK_NULL_HANDLE)
-            vkDestroyImageView(m_device.device(), m_imageView, nullptr);
-        if (m_image != VK_NULL_HANDLE)
-            m_device.destroyImage(m_image, m_allocation);
+        // A frame still in flight may sample this texture or draw it through ImGui: its objects go once it's done
+        VulkanContext::destroyWhenUnused([device = &m_device, descriptorSet = m_descriptorSet, sampler = m_sampler,
+                                          imageView = m_imageView, image = m_image, allocation = m_allocation] {
+            destroyImGuiTextureDescriptor(*device, descriptorSet);
+            if (sampler != VK_NULL_HANDLE)
+                vkDestroySampler(device->device(), sampler, nullptr);
+            if (imageView != VK_NULL_HANDLE)
+                vkDestroyImageView(device->device(), imageView, nullptr);
+            if (image != VK_NULL_HANDLE)
+                device->destroyImage(image, allocation);
+        });
     }
 } // Vectrix
