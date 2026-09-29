@@ -1,10 +1,8 @@
 ![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.0-green.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.1-green.svg)
 
 #### An engine built to be accessible to anyone, while letting those who want it retain full control
-
-Current Working branch: [feature/editor](https://github.com/RX0kas/VectrixEngine/tree/feature/editor)
 
 ![Screenshot or demo GIF](preview.png)
 
