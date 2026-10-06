@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,7 @@ $(function(){initNavTree('classVectrix_1_1TransformComponent.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::TransformComponent Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::TransformComponent Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__ecs.html">Entity component system</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -103,14 +103,21 @@ $(function(){initNavTree('classVectrix_1_1TransformComponent.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3e21cccd98fdd45499665b3eca0c05df" id="r_a3e21cccd98fdd45499665b3eca0c05df"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3e21cccd98fdd45499665b3eca0c05df">TransformComponent</a> (std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Entity.html">Entity</a> &gt; entity)</td></tr>
+<tr class="memdesc:a3e21cccd98fdd45499665b3eca0c05df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a transform at the origin, unscaled and unrotated.  <br /></td></tr>
 <tr class="memitem:aeada3dde4104eac227539cd6541c894f" id="r_aeada3dde4104eac227539cd6541c894f"><td class="memItemLeft">glm::mat4&#160;</td><td class="memItemRight"><a class="el" href="#aeada3dde4104eac227539cd6541c894f">modelMatrix</a> () const</td></tr>
 <tr class="memdesc:aeada3dde4104eac227539cd6541c894f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the model matrix.  <br /></td></tr>
 <tr class="memitem:a234ec7454e9098d7c20d67ab1dd0464e" id="r_a234ec7454e9098d7c20d67ab1dd0464e"><td class="memItemLeft">glm::mat3&#160;</td><td class="memItemRight"><a class="el" href="#a234ec7454e9098d7c20d67ab1dd0464e">normalMatrix</a> () const</td></tr>
 <tr class="memdesc:a234ec7454e9098d7c20d67ab1dd0464e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return a matrix that is the equivalent of "glm::transpose(glm::inverse(modelMatrix))".  <br /></td></tr>
-<tr class="memitem:a622fc6cb032a80f978dd139808058ccc" id="r_a622fc6cb032a80f978dd139808058ccc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a622fc6cb032a80f978dd139808058ccc">setRotationDeg</a> (const glm::vec3 newRotation)</td></tr>
-<tr class="memdesc:a622fc6cb032a80f978dd139808058ccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the rotation of the model in degrees.  <br /></td></tr>
+<tr class="memitem:ad6c47041cf12b4d77d7e60a2e7a594d6" id="r_ad6c47041cf12b4d77d7e60a2e7a594d6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad6c47041cf12b4d77d7e60a2e7a594d6">setRotationDeg</a> (glm::vec3 newRotation)</td></tr>
+<tr class="memdesc:ad6c47041cf12b4d77d7e60a2e7a594d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the rotation of the model in degrees.  <br /></td></tr>
 <tr class="memitem:a61941f3f5065c6e4eafba7551ac48f28" id="r_a61941f3f5065c6e4eafba7551ac48f28"><td class="memItemLeft">glm::vec3&#160;</td><td class="memItemRight"><a class="el" href="#a61941f3f5065c6e4eafba7551ac48f28">getRotationDeg</a> () const</td></tr>
 <tr class="memdesc:a61941f3f5065c6e4eafba7551ac48f28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the rotation of the model in degrees.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Public Static Functions</h2></td></tr>
+<tr class="memitem:ad55d99ebf6b54a6d9a668e7ae60582eb" id="r_ad55d99ebf6b54a6d9a668e7ae60582eb"><td class="memItemLeft">static glm::mat4&#160;</td><td class="memItemRight"><a class="el" href="#ad55d99ebf6b54a6d9a668e7ae60582eb">modelMatrix</a> (glm::vec3 pos, glm::vec3 <a class="el" href="#af70f008ecc17975d1df8900544ed70aa">scale</a>, glm::quat <a class="el" href="#af3cced62fdb092a3626be5ad3ea2c8fa">rotation</a>)</td></tr>
+<tr class="memdesc:ad55d99ebf6b54a6d9a668e7ae60582eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a model matrix out of loose values, without needing a component.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -118,14 +125,51 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a7175ecdf11519a9453144a569fcf7f23"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the world position.  <br /></td></tr>
 <tr class="memitem:af70f008ecc17975d1df8900544ed70aa" id="r_af70f008ecc17975d1df8900544ed70aa"><td class="memItemLeft">glm::vec3&#160;</td><td class="memItemRight"><a class="el" href="#af70f008ecc17975d1df8900544ed70aa">scale</a> { 1.f, 1.f, 1.f }</td></tr>
 <tr class="memdesc:af70f008ecc17975d1df8900544ed70aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the scale or the size.  <br /></td></tr>
-<tr class="memitem:ad171e843ee3daa414be390fc158920af" id="r_ad171e843ee3daa414be390fc158920af"><td class="memItemLeft">glm::vec3&#160;</td><td class="memItemRight"><a class="el" href="#ad171e843ee3daa414be390fc158920af">rotation</a> { 0 }</td></tr>
-<tr class="memdesc:ad171e843ee3daa414be390fc158920af"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the rotation (radians).  <br /></td></tr>
+<tr class="memitem:af3cced62fdb092a3626be5ad3ea2c8fa" id="r_af3cced62fdb092a3626be5ad3ea2c8fa"><td class="memItemLeft">glm::quat&#160;</td><td class="memItemRight"><a class="el" href="#af3cced62fdb092a3626be5ad3ea2c8fa">rotation</a> = glm::identity&lt;glm::quat&gt;()</td></tr>
+<tr class="memdesc:af3cced62fdb092a3626be5ad3ea2c8fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the rotation (quaternion).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class represent the 3D information about an object. </p>
+<p>Every entity has one, and it is what places the entity in the world. The rotation is kept as a quaternion, use setRotationDeg and getRotationDeg to work in degrees. </p>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00018">18</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00024">24</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
+<a id="a3e21cccd98fdd45499665b3eca0c05df" name="a3e21cccd98fdd45499665b3eca0c05df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e21cccd98fdd45499665b3eca0c05df">&#9670;&#160;</a></span>TransformComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::TransformComponent::TransformComponent </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Entity.html">Entity</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>entity</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build a transform at the origin, unscaled and unrotated. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>The entity the component is added to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00030">30</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
 <a id="a61941f3f5065c6e4eafba7551ac48f28" name="a61941f3f5065c6e4eafba7551ac48f28"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a61941f3f5065c6e4eafba7551ac48f28">&#9670;&#160;</a></span>getRotationDeg()</h2>
 
@@ -150,15 +194,17 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the rotation of the model in degrees. </p>
+<dl class="section return"><dt>Returns</dt><dd>The rotation as Euler angles in degrees </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ad6c47041cf12b4d77d7e60a2e7a594d6" title="Sets the rotation of the model in degrees.">setRotationDeg</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00061">61</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00082">82</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
 
-<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00031">rotation</a>.</p>
+<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00042">rotation</a>.</p>
 
 </div>
 </div>
 <a id="aeada3dde4104eac227539cd6541c894f" name="aeada3dde4104eac227539cd6541c894f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeada3dde4104eac227539cd6541c894f">&#9670;&#160;</a></span>modelMatrix()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aeada3dde4104eac227539cd6541c894f">&#9670;&#160;</a></span>modelMatrix() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +231,58 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="TransformComponent_8cpp_source.html#l00004">4</a> of file <a class="el" href="TransformComponent_8cpp_source.html">TransformComponent.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00023">position</a>, <a class="el" href="TransformComponent_8h_source.html#l00031">rotation</a>, and <a class="el" href="TransformComponent_8h_source.html#l00027">scale</a>.</p>
+<p class="reference">References <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, <a class="el" href="TransformComponent_8h_source.html#l00034">position</a>, <a class="el" href="TransformComponent_8h_source.html#l00042">rotation</a>, and <a class="el" href="TransformComponent_8h_source.html#l00038">scale</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, and <a class="el" href="TransformComponent_8cpp_source.html#l00013">normalMatrix()</a>.</p>
+
+</div>
+</div>
+<a id="ad55d99ebf6b54a6d9a668e7ae60582eb" name="ad55d99ebf6b54a6d9a668e7ae60582eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad55d99ebf6b54a6d9a668e7ae60582eb">&#9670;&#160;</a></span>modelMatrix() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::mat4 Vectrix::TransformComponent::modelMatrix </td>
+          <td>(</td>
+          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>pos</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>scale</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">glm::quat</td>          <td class="paramname"><span class="paramname"><em>rotation</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build a model matrix out of loose values, without needing a component. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pos</td><td>The world position </td></tr>
+    <tr><td class="paramname"><a class="el" href="#af70f008ecc17975d1df8900544ed70aa" title="This is the scale or the size.">scale</a></td><td>The scale on each axis </td></tr>
+    <tr><td class="paramname"><a class="el" href="#af3cced62fdb092a3626be5ad3ea2c8fa" title="This is the rotation (quaternion).">rotation</a></td><td>The rotation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The matching model matrix </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8cpp_source.html#l00008">8</a> of file <a class="el" href="TransformComponent_8cpp_source.html">TransformComponent.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00042">rotation</a>, and <a class="el" href="TransformComponent_8h_source.html#l00038">scale</a>.</p>
 
 </div>
 </div>
@@ -215,14 +312,14 @@ Public Attributes</h2></td></tr>
 <p>This function return a matrix that is the equivalent of "glm::transpose(glm::inverse(modelMatrix))". </p>
 <dl class="section return"><dt>Returns</dt><dd>The normal matrix of an object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8cpp_source.html#l00033">33</a> of file <a class="el" href="TransformComponent_8cpp_source.html">TransformComponent.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8cpp_source.html#l00013">13</a> of file <a class="el" href="TransformComponent_8cpp_source.html">TransformComponent.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00031">rotation</a>, and <a class="el" href="TransformComponent_8h_source.html#l00027">scale</a>.</p>
+<p class="reference">References <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>.</p>
 
 </div>
 </div>
-<a id="a622fc6cb032a80f978dd139808058ccc" name="a622fc6cb032a80f978dd139808058ccc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a622fc6cb032a80f978dd139808058ccc">&#9670;&#160;</a></span>setRotationDeg()</h2>
+<a id="ad6c47041cf12b4d77d7e60a2e7a594d6" name="ad6c47041cf12b4d77d7e60a2e7a594d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6c47041cf12b4d77d7e60a2e7a594d6">&#9670;&#160;</a></span>setRotationDeg()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,7 +330,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::TransformComponent::setRotationDeg </td>
           <td>(</td>
-          <td class="paramtype">const glm::vec3</td>          <td class="paramname"><span class="paramname"><em>newRotation</em></span></td><td>)</td>
+          <td class="paramtype">glm::vec3</td>          <td class="paramname"><span class="paramname"><em>newRotation</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -252,9 +349,9 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00052">52</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00072">72</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
 
-<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00031">rotation</a>.</p>
+<p class="reference">References <a class="el" href="TransformComponent_8h_source.html#l00042">rotation</a>.</p>
 
 </div>
 </div>
@@ -273,29 +370,29 @@ Public Attributes</h2></td></tr>
 
 <p>This is the world position. </p>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00023">23</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00034">34</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>.</p>
 
 </div>
 </div>
-<a id="ad171e843ee3daa414be390fc158920af" name="ad171e843ee3daa414be390fc158920af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad171e843ee3daa414be390fc158920af">&#9670;&#160;</a></span>rotation</h2>
+<a id="af3cced62fdb092a3626be5ad3ea2c8fa" name="af3cced62fdb092a3626be5ad3ea2c8fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3cced62fdb092a3626be5ad3ea2c8fa">&#9670;&#160;</a></span>rotation</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">glm::vec3 Vectrix::TransformComponent::rotation { 0 }</td>
+          <td class="memname">glm::quat Vectrix::TransformComponent::rotation = glm::identity&lt;glm::quat&gt;()</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>This is the rotation (radians). </p>
+<p>This is the rotation (quaternion). </p>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00031">31</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00042">42</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="TransformComponent_8h_source.html#l00061">getRotationDeg()</a>, <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, <a class="el" href="TransformComponent_8cpp_source.html#l00033">normalMatrix()</a>, and <a class="el" href="TransformComponent_8h_source.html#l00052">setRotationDeg()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="TransformComponent_8h_source.html#l00082">getRotationDeg()</a>, <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, <a class="el" href="TransformComponent_8cpp_source.html#l00008">modelMatrix()</a>, and <a class="el" href="TransformComponent_8h_source.html#l00072">setRotationDeg()</a>.</p>
 
 </div>
 </div>
@@ -313,9 +410,9 @@ Public Attributes</h2></td></tr>
 
 <p>This is the scale or the size. </p>
 
-<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00027">27</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TransformComponent_8h_source.html#l00038">38</a> of file <a class="el" href="TransformComponent_8h_source.html">TransformComponent.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, and <a class="el" href="TransformComponent_8cpp_source.html#l00033">normalMatrix()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="TransformComponent_8cpp_source.html#l00004">modelMatrix()</a>, and <a class="el" href="TransformComponent_8cpp_source.html#l00008">modelMatrix()</a>.</p>
 
 </div>
 </div>

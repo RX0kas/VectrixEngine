@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,21 +92,35 @@ $(function(){initNavTree('classVectrix_1_1Input.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::Input Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::Input Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__input.html">Input</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Reads the state of the keyboard and the mouse, whenever it is needed.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Input_8h_source.html">Input.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:a14a9a7411c5fca79b5093ae54e56d7a7" id="r_a14a9a7411c5fca79b5093ae54e56d7a7"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a14a9a7411c5fca79b5093ae54e56d7a7">isKeyPressed</a> (int keycode)</td></tr>
+<tr class="memdesc:a14a9a7411c5fca79b5093ae54e56d7a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if a key is currently held down.  <br /></td></tr>
 <tr class="memitem:a209efd706f9efad5b4d6f7245fa0376a" id="r_a209efd706f9efad5b4d6f7245fa0376a"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#a209efd706f9efad5b4d6f7245fa0376a">isMouseButtonPressed</a> (int button)</td></tr>
+<tr class="memdesc:a209efd706f9efad5b4d6f7245fa0376a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if a mouse button is currently held down.  <br /></td></tr>
 <tr class="memitem:a27a24675668ffc54dc35fd80d47feee8" id="r_a27a24675668ffc54dc35fd80d47feee8"><td class="memItemLeft">static std::pair&lt; float, float &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a27a24675668ffc54dc35fd80d47feee8">getMousePosition</a> ()</td></tr>
+<tr class="memdesc:a27a24675668ffc54dc35fd80d47feee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return where the cursor is inside the window.  <br /></td></tr>
 <tr class="memitem:ae3db582b87f82f7bf6e603b39ab87f32" id="r_ae3db582b87f82f7bf6e603b39ab87f32"><td class="memItemLeft">static float&#160;</td><td class="memItemRight"><a class="el" href="#ae3db582b87f82f7bf6e603b39ab87f32">getMouseX</a> ()</td></tr>
+<tr class="memdesc:ae3db582b87f82f7bf6e603b39ab87f32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the horizontal position of the cursor.  <br /></td></tr>
 <tr class="memitem:a39ce2c3fd8bcfaf0cbb54e2ff21ba964" id="r_a39ce2c3fd8bcfaf0cbb54e2ff21ba964"><td class="memItemLeft">static float&#160;</td><td class="memItemRight"><a class="el" href="#a39ce2c3fd8bcfaf0cbb54e2ff21ba964">getMouseY</a> ()</td></tr>
+<tr class="memdesc:a39ce2c3fd8bcfaf0cbb54e2ff21ba964"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the vertical position of the cursor.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00004">4</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<div class="textblock"><p>Reads the state of the keyboard and the mouse, whenever it is needed. </p>
+<p>Every function is static and answers about the current state, which makes it the counterpart of the event system: use an <a class="el" href="classVectrix_1_1Event.html" title="Base class of everything the engine, or the application, reports to the event listeners.">Event</a> to react to the moment something changed, and <a class="el" href="classVectrix_1_1Input.html" title="Reads the state of the keyboard and the mouse, whenever it is needed.">Input</a> to ask whether a key is held right now. The platform provides the implementation, so nothing has to be created by hand. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1KeyPressedEvent.html" title="Sent when a key goes down, and again while it is held (repeat).">KeyPressedEvent</a> </dd>
+<dd>
+MouseEvent </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00021">21</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
 <a id="a27a24675668ffc54dc35fd80d47feee8" name="a27a24675668ffc54dc35fd80d47feee8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a27a24675668ffc54dc35fd80d47feee8">&#9670;&#160;</a></span>getMousePosition()</h2>
@@ -131,7 +145,10 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00011">11</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<p>Return where the cursor is inside the window. </p>
+<dl class="section return"><dt>Returns</dt><dd>The horizontal and vertical position, in pixel from the top left corner </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00045">45</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 
 </div>
 </div>
@@ -158,7 +175,10 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00012">12</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<p>Return the horizontal position of the cursor. </p>
+<dl class="section return"><dt>Returns</dt><dd>The position in pixel from the left of the window </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00051">51</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 
 </div>
 </div>
@@ -185,7 +205,10 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00013">13</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<p>Return the vertical position of the cursor. </p>
+<dl class="section return"><dt>Returns</dt><dd>The position in pixel from the top of the window </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00057">57</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 
 </div>
 </div>
@@ -212,7 +235,17 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00008">8</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<p>Tell if a key is currently held down. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">keycode</td><td>The key to test, one of the <span class="tt">VC_KEY_*</span> values </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true while the key is down </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="KeyCodes_8h.html" title="The key codes understood by Input::isKeyPressed and carried by the keyboard events.">KeyCodes.h</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00031">31</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 
 </div>
 </div>
@@ -239,7 +272,17 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00010">10</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
+<p>Tell if a mouse button is currently held down. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">button</td><td>The button to test, one of the <span class="tt">VC_MOUSE_BUTTON_*</span> values </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true while the button is down </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="MouseCodes_8h.html" title="The mouse button codes understood by Input::isMouseButtonPressed.">MouseCodes.h</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Input_8h_source.html#l00039">39</a> of file <a class="el" href="Input_8h_source.html">Input.h</a>.</p>
 
 </div>
 </div>

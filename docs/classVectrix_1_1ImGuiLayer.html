@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,7 @@ $(function(){initNavTree('classVectrix_1_1ImGuiLayer.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::ImGuiLayer Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::ImGuiLayer Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__rendering.html">Graphic rendering</a> &raquo; <a class="el" href="group__imgui.html">ImGui</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -106,21 +106,27 @@ Inheritance diagram for Vectrix::ImGuiLayer:</div>
  <div class="center">
   <img src="classVectrix_1_1ImGuiLayer.png" usemap="#Vectrix_3A_3AImGuiLayer_map" alt=""/>
   <map id="Vectrix_3A_3AImGuiLayer_map" name="Vectrix_3A_3AImGuiLayer_map">
-<area href="classVectrix_1_1Layer.html" alt="Vectrix::Layer" shape="rect" coords="0,0,122,24"/>
+<area href="classVectrix_1_1Layer.html" title="One slice of the application, receiving the update and render callbacks, and the events it subscribes..." alt="Vectrix::Layer" shape="rect" coords="0,56,135,80"/>
+<area href="classVectrix_1_1EventListener.html" title="Receives the events it subscribed to." alt="Vectrix::EventListener" shape="rect" coords="0,0,135,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1b32306732027d3cab8925f11485313b" id="r_a1b32306732027d3cab8925f11485313b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1b32306732027d3cab8925f11485313b">addWidget</a> (const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;widget)</td></tr>
-<tr class="memdesc:a1b32306732027d3cab8925f11485313b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a new <a class="el" href="classVectrix_1_1ImGuiWidget.html" title="This function represent an ImGui widget.">ImGuiWidget</a>.  <br /></td></tr>
+<tr class="memitem:a995128c5e85aa01f00843e69f5034d4a" id="r_a995128c5e85aa01f00843e69f5034d4a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a995128c5e85aa01f00843e69f5034d4a">addWidget</a> (<a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> *widget)</td></tr>
+<tr class="memdesc:a995128c5e85aa01f00843e69f5034d4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a new <a class="el" href="classVectrix_1_1ImGuiWidget.html" title="This function represent an ImGui widget.">ImGuiWidget</a>.  <br /></td></tr>
+<tr class="memitem:a7daa63a4013f3e3192169684746a6497" id="r_a7daa63a4013f3e3192169684746a6497"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7daa63a4013f3e3192169684746a6497">removeWidget</a> (<a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> *widget)</td></tr>
+<tr class="memdesc:a7daa63a4013f3e3192169684746a6497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop drawing a widget that was added before.  <br /></td></tr>
 <tr class="memitem:affd22d0b7274bc9850d5531e2ab5d184" id="r_affd22d0b7274bc9850d5531e2ab5d184"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#affd22d0b7274bc9850d5531e2ab5d184">startBlockEvents</a> ()</td></tr>
+<tr class="memdesc:affd22d0b7274bc9850d5531e2ab5d184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep the events handled by ImGui from reaching the layers below.  <br /></td></tr>
 <tr class="memitem:aa31119173379688e65aff213a3442c24" id="r_aa31119173379688e65aff213a3442c24"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aa31119173379688e65aff213a3442c24">stopBlockEvents</a> ()</td></tr>
+<tr class="memdesc:aa31119173379688e65aff213a3442c24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Let every event through, even the ones ImGui handled.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classVectrix_1_1Layer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1Layer')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1Layer.html">Vectrix::Layer</a></td></tr>
 <tr class="memitem:aa574de23b396df49ed5657c60fd2e385 inherit pub_methods_classVectrix_1_1Layer" id="r_aa574de23b396df49ed5657c60fd2e385"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#aa574de23b396df49ed5657c60fd2e385">Layer</a> (const std::string &amp;name=&quot;Layer&quot;)</td></tr>
-<tr class="memdesc:aa574de23b396df49ed5657c60fd2e385 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classVectrix_1_1Layer.html">Layer</a> constructor.  <br /></td></tr>
+<tr class="memdesc:aa574de23b396df49ed5657c60fd2e385 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classVectrix_1_1Layer.html" title="One slice of the application, receiving the update and render callbacks, and the events it subscribes...">Layer</a> constructor.  <br /></td></tr>
 <tr class="memitem:a93c0b71eb7f61b131c53969c8ad0acac inherit pub_methods_classVectrix_1_1Layer" id="r_a93c0b71eb7f61b131c53969c8ad0acac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a93c0b71eb7f61b131c53969c8ad0acac">OnAttach</a> ()</td></tr>
-<tr class="memdesc:a93c0b71eb7f61b131c53969c8ad0acac inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function called when the <a class="el" href="classVectrix_1_1Layer.html">Layer</a> is added to the layer stack.  <br /></td></tr>
+<tr class="memdesc:a93c0b71eb7f61b131c53969c8ad0acac inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function called when the <a class="el" href="classVectrix_1_1Layer.html" title="One slice of the application, receiving the update and render callbacks, and the events it subscribes...">Layer</a> is added to the layer stack.  <br /></td></tr>
+<tr class="memitem:a977d43b81ea2b070c0335ecfb08cacde inherit pub_methods_classVectrix_1_1Layer" id="r_a977d43b81ea2b070c0335ecfb08cacde"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a977d43b81ea2b070c0335ecfb08cacde">OnAttach</a> (const <a class="el" href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">JsonObject</a> &amp;data)</td></tr>
 <tr class="memitem:a63f0dfe30e621ab02f4a0b928a843dd5 inherit pub_methods_classVectrix_1_1Layer" id="r_a63f0dfe30e621ab02f4a0b928a843dd5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a63f0dfe30e621ab02f4a0b928a843dd5">OnDetach</a> ()</td></tr>
 <tr class="memdesc:a63f0dfe30e621ab02f4a0b928a843dd5 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function called when the layer is removed from the layer stack.  <br /></td></tr>
 <tr class="memitem:a5882d4e2be086fb0c10fbe111e5f7ea2 inherit pub_methods_classVectrix_1_1Layer" id="r_a5882d4e2be086fb0c10fbe111e5f7ea2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a5882d4e2be086fb0c10fbe111e5f7ea2">OnUpdate</a> (const <a class="el" href="classVectrix_1_1DeltaTime.html">DeltaTime</a> &amp;deltaTime)</td></tr>
@@ -131,15 +137,38 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7ba346796182ccb296c7a20f90b8b267 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function called every frame before <a class="el" href="classVectrix_1_1Layer.html#a1aa34422ce3bb128f7a61d17083bd50f" title="The function called every frame.">Layer::OnRender</a>.  <br /></td></tr>
 <tr class="memitem:aac9467056a1c586e6b8b4e1cbbb61fe2 inherit pub_methods_classVectrix_1_1Layer" id="r_aac9467056a1c586e6b8b4e1cbbb61fe2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#aac9467056a1c586e6b8b4e1cbbb61fe2">OnImGuiRender</a> ()</td></tr>
 <tr class="memdesc:aac9467056a1c586e6b8b4e1cbbb61fe2 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function called every time we draw all the ImGui widget.  <br /></td></tr>
-<tr class="memitem:a8fa29f02cb8f28b2489fc91ae84ea473 inherit pub_methods_classVectrix_1_1Layer" id="r_a8fa29f02cb8f28b2489fc91ae84ea473"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#a8fa29f02cb8f28b2489fc91ae84ea473">OnEvent</a> (<a class="el" href="classVectrix_1_1Event.html">Event</a> &amp;event)</td></tr>
-<tr class="memdesc:a8fa29f02cb8f28b2489fc91ae84ea473 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time an event occurre.  <br /></td></tr>
 <tr class="memitem:abea43c0560660e64c8b1cdc7ff8a1666 inherit pub_methods_classVectrix_1_1Layer" id="r_abea43c0560660e64c8b1cdc7ff8a1666"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Layer.html#abea43c0560660e64c8b1cdc7ff8a1666">getName</a> () const</td></tr>
-<tr class="memdesc:abea43c0560660e64c8b1cdc7ff8a1666 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the name of the <a class="el" href="classVectrix_1_1Layer.html">Layer</a>.  <br /></td></tr>
+<tr class="memdesc:abea43c0560660e64c8b1cdc7ff8a1666 inherit pub_methods_classVectrix_1_1Layer"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the name of the <a class="el" href="classVectrix_1_1Layer.html" title="One slice of the application, receiving the update and render callbacks, and the events it subscribes...">Layer</a>.  <br /></td></tr>
+<tr class="inherit_header pub_methods_classVectrix_1_1EventListener"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1EventListener')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1EventListener.html">Vectrix::EventListener</a></td></tr>
+<tr class="memitem:adcdc5061ec0326596fbda46796317cb3 inherit pub_methods_classVectrix_1_1EventListener" id="r_adcdc5061ec0326596fbda46796317cb3"><td class="memItemLeft">
+&#160;</td><td class="memItemRight"><b>EventListener</b> (const EventListener &amp;)=delete</td></tr>
+<tr class="memitem:a6ece656c193d2609bd030c51b09f795e inherit pub_methods_classVectrix_1_1EventListener" id="r_a6ece656c193d2609bd030c51b09f795e"><td class="memItemLeft">
+EventListener &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (const EventListener &amp;)=delete</td></tr>
+<tr class="memitem:aee0b12ba3f355dfd41d08152f3a074f0 inherit pub_methods_classVectrix_1_1EventListener" id="r_aee0b12ba3f355dfd41d08152f3a074f0"><td class="memTemplParams" colspan="2">template&lt;std::derived_from&lt; <a class="el" href="classVectrix_1_1Event.html">Event</a> &gt; T, typename F&gt; </td></tr>
+<tr class="memitem:aee0b12ba3f355dfd41d08152f3a074f0 inherit pub_methods_classVectrix_1_1EventListener template"><td class="memItemLeft"><a class="el" href="group__events.html#ga51cece35fe834ad72e016e0a6957a8f5">SubscriptionId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#aee0b12ba3f355dfd41d08152f3a074f0">subscribe</a> (F &amp;&amp;handler)</td></tr>
+<tr class="memdesc:aee0b12ba3f355dfd41d08152f3a074f0 inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call a handler for every T event.  <br /></td></tr>
+<tr class="memitem:a90939fc47b9baf24af505e7aeac2a9f5 inherit pub_methods_classVectrix_1_1EventListener" id="r_a90939fc47b9baf24af505e7aeac2a9f5"><td class="memTemplParams" colspan="2">template&lt;std::derived_from&lt; <a class="el" href="classVectrix_1_1Event.html">Event</a> &gt; T, typename F&gt; </td></tr>
+<tr class="memitem:a90939fc47b9baf24af505e7aeac2a9f5 inherit pub_methods_classVectrix_1_1EventListener template"><td class="memItemLeft"><a class="el" href="classVectrix_1_1ScopedSubscription.html">ScopedSubscription</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#a90939fc47b9baf24af505e7aeac2a9f5">subscribeScoped</a> (F &amp;&amp;handler)</td></tr>
+<tr class="memdesc:a90939fc47b9baf24af505e7aeac2a9f5 inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like subscribe, but the subscription is removed when the returned handle is destroyed.  <br /></td></tr>
+<tr class="memitem:a6935147725899e0e7409f5476bd2e5fa inherit pub_methods_classVectrix_1_1EventListener" id="r_a6935147725899e0e7409f5476bd2e5fa"><td class="memTemplParams" colspan="2">template&lt;std::derived_from&lt; <a class="el" href="classVectrix_1_1Event.html">Event</a> &gt; T, std::derived_from&lt; EventListener &gt; C, typename R&gt; </td></tr>
+<tr class="memitem:a6935147725899e0e7409f5476bd2e5fa inherit pub_methods_classVectrix_1_1EventListener template"><td class="memItemLeft"><a class="el" href="group__events.html#ga51cece35fe834ad72e016e0a6957a8f5">SubscriptionId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#a6935147725899e0e7409f5476bd2e5fa">subscribe</a> (R(C::*method)(const T &amp;))</td></tr>
+<tr class="memdesc:a6935147725899e0e7409f5476bd2e5fa inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call a member function of this listener for every T event.  <br /></td></tr>
+<tr class="memitem:ae77e89e8241ff8ccf5501daa5d7cdee6 inherit pub_methods_classVectrix_1_1EventListener" id="r_ae77e89e8241ff8ccf5501daa5d7cdee6"><td class="memTemplParams" colspan="2">template&lt;std::derived_from&lt; <a class="el" href="classVectrix_1_1Event.html">Event</a> &gt; T, std::derived_from&lt; EventListener &gt; C, typename R&gt; </td></tr>
+<tr class="memitem:ae77e89e8241ff8ccf5501daa5d7cdee6 inherit pub_methods_classVectrix_1_1EventListener template"><td class="memItemLeft"><a class="el" href="group__events.html#ga51cece35fe834ad72e016e0a6957a8f5">SubscriptionId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#ae77e89e8241ff8ccf5501daa5d7cdee6">subscribe</a> (R(C::*method)(const T &amp;) const)</td></tr>
+<tr class="memdesc:ae77e89e8241ff8ccf5501daa5d7cdee6 inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call a member function of this listener for every T event.     <br /></td></tr>
+<tr class="memitem:a047e835c52facbc0e606cc5d998f9a8b inherit pub_methods_classVectrix_1_1EventListener" id="r_a047e835c52facbc0e606cc5d998f9a8b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#a047e835c52facbc0e606cc5d998f9a8b">unsubscribe</a> (<a class="el" href="group__events.html#ga51cece35fe834ad72e016e0a6957a8f5">SubscriptionId</a> id)</td></tr>
+<tr class="memdesc:a047e835c52facbc0e606cc5d998f9a8b inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove one subscription.  <br /></td></tr>
+<tr class="memitem:a145c86925e441b95039ad738c599fc90 inherit pub_methods_classVectrix_1_1EventListener" id="r_a145c86925e441b95039ad738c599fc90"><td class="memTemplParams" colspan="2">template&lt;std::derived_from&lt; <a class="el" href="classVectrix_1_1Event.html">Event</a> &gt; T&gt; </td></tr>
+<tr class="memitem:a145c86925e441b95039ad738c599fc90 inherit pub_methods_classVectrix_1_1EventListener template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#a145c86925e441b95039ad738c599fc90">unsubscribe</a> ()</td></tr>
+<tr class="memdesc:a145c86925e441b95039ad738c599fc90 inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove every subscription to T events (not those to every event).  <br /></td></tr>
+<tr class="memitem:abab9af71a32d9cba188b83670170e7b4 inherit pub_methods_classVectrix_1_1EventListener" id="r_abab9af71a32d9cba188b83670170e7b4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventListener.html#abab9af71a32d9cba188b83670170e7b4">unsubscribeAll</a> ()</td></tr>
+<tr class="memdesc:abab9af71a32d9cba188b83670170e7b4 inherit pub_methods_classVectrix_1_1EventListener"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove every subscription of this listener.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This function is the layer responsible for drawing Dear ImGui. </p>
+<p>The <a class="el" href="classVectrix_1_1Application.html" title="The application itself, owning the window, the assets and the layers.">Application</a> creates it and keeps it as an overlay, so it draws on top of everything and gets the events first: the mouse and keyboard events ImGui wants don't reach the layers below (see startBlockEvents). Widgets registered through addWidget are rendered by this layer every frame. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1ImGuiWidget.html" title="This function represent an ImGui widget.">ImGuiWidget</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00016">16</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00023">23</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="aa5630d2b85939cfe52878b4c8771fc88" name="aa5630d2b85939cfe52878b4c8771fc88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5630d2b85939cfe52878b4c8771fc88">&#9670;&#160;</a></span>~ImGuiLayer()</h2>
@@ -164,13 +193,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00013">13</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00012">12</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a1b32306732027d3cab8925f11485313b" name="a1b32306732027d3cab8925f11485313b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b32306732027d3cab8925f11485313b">&#9670;&#160;</a></span>addWidget()</h2>
+<a id="a995128c5e85aa01f00843e69f5034d4a" name="a995128c5e85aa01f00843e69f5034d4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a995128c5e85aa01f00843e69f5034d4a">&#9670;&#160;</a></span>addWidget()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -181,7 +210,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void Vectrix::ImGuiLayer::addWidget </td>
           <td>(</td>
-          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -200,7 +229,41 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00032">32</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00038">38</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ImGuiWidget_8cpp_source.html#l00009">Vectrix::ImGuiWidget::ImGuiWidget()</a>.</p>
+
+</div>
+</div>
+<a id="a7daa63a4013f3e3192169684746a6497" name="a7daa63a4013f3e3192169684746a6497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7daa63a4013f3e3192169684746a6497">&#9670;&#160;</a></span>removeWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::ImGuiLayer::removeWidget </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classVectrix_1_1ImGuiWidget.html">ImGuiWidget</a> *</td>          <td class="paramname"><span class="paramname"><em>widget</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stop drawing a widget that was added before. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">widget</td><td>The widget to remove </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Does nothing when the widget was never added </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8cpp_source.html#l00066">66</a> of file <a class="el" href="ImGuiLayer_8cpp_source.html">ImGuiLayer.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="ImGuiLayer_8cpp_source.html#l00066">removeWidget()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ImGuiLayer_8cpp_source.html#l00066">removeWidget()</a>.</p>
 
 </div>
 </div>
@@ -227,7 +290,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00035">35</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<p>Keep the events handled by ImGui from reaching the layers below. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#aa31119173379688e65aff213a3442c24" title="Let every event through, even the ones ImGui handled.">stopBlockEvents</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00052">52</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
 
 </div>
 </div>
@@ -254,7 +320,10 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00036">36</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
+<p>Let every event through, even the ones ImGui handled. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#affd22d0b7274bc9850d5531e2ab5d184" title="Keep the events handled by ImGui from reaching the layers below.">startBlockEvents</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiLayer_8h_source.html#l00058">58</a> of file <a class="el" href="ImGuiLayer_8h_source.html">ImGuiLayer.h</a>.</p>
 
 </div>
 </div>

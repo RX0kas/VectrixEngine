@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -98,14 +98,22 @@ $(function(){initNavTree('Scene_8h.html','',''); });
 
 <p>Definition of the Scene class.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;entt/entt.hpp&quot;</code><br />
+<div class="textblock"><code>#include &lt;filesystem&gt;</code><br />
+<code>#include &quot;<a class="el" href="Result_8h_source.html">Vectrix/Utils/Result.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SceneSerializer_8h_source.html">SceneSerializer.h</a>&quot;</code><br />
+<code>#include &quot;entt/entt.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="DeltaTime_8h_source.html">Vectrix/Core/DeltaTime.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Memory_8h_source.html">Vectrix/Utils/Memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Path_8h_source.html">Vectrix/Utils/Path.h</a>&quot;</code><br />
+<code>#include &quot;Vectrix/Assets/AssetFingerprint.h&quot;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
 </div>
 <p><a href="Scene_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:Vectrix_3A_3AScene" id="r_Vectrix_3A_3AScene"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Scene.html">Vectrix::Scene</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds every entity of a level, and drives them each frame.  <a href="classVectrix_1_1Scene.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>

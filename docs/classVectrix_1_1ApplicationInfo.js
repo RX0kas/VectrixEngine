@@ -1,5 +1,7 @@
 var classVectrix_1_1ApplicationInfo =
 [
+    [ "ApplicationInfo", "classVectrix_1_1ApplicationInfo.html#a5a40f3ebda1ed60dd34b06ed8da2b113", null ],
+    [ "ApplicationInfo", "classVectrix_1_1ApplicationInfo.html#a6890fd2ba50132a52a97b40a1ed614b2", null ],
     [ "getAppName", "classVectrix_1_1ApplicationInfo.html#a6a0a8c547e8a5f56ae54b238afe19689", null ],
     [ "getAppVersion", "classVectrix_1_1ApplicationInfo.html#a41686b59e3f302d7b1b0cee5f4b114c3", null ],
     [ "getEngineName", "classVectrix_1_1ApplicationInfo.html#aa28cb92091b054135c856af742376a75", null ],

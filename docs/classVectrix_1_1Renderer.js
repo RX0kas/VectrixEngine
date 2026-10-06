@@ -5,5 +5,7 @@ var classVectrix_1_1Renderer =
     [ "getAPI", "classVectrix_1_1Renderer.html#a4b8aa3aeb37890d0eb26359159c78f9e", null ],
     [ "getSceneData", "classVectrix_1_1Renderer.html#a98deb2af2903de6d61b2738bace652fb", null ],
     [ "isASceneInProgress", "classVectrix_1_1Renderer.html#a13b9f60f825ce3d9b193f2382f706ded", null ],
+    [ "renderOutline", "classVectrix_1_1Renderer.html#a14157c92c39cfaddeffcb7256e47b889", null ],
+    [ "resizeMask", "classVectrix_1_1Renderer.html#ab7011b2149caabc029077308a4152e6e", null ],
     [ "submit", "classVectrix_1_1Renderer.html#aa2fccec179f71dbd3c75ec7cebde91d9", null ]
 ];

@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -103,16 +103,124 @@ $(function(){initNavTree('group__mesh.html','',''); });
 Files</h2></td></tr>
 <tr class="memitem:Buffer_2Eh" id="r_Buffer_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Buffer_8h.html">Buffer.h</a></td></tr>
 <tr class="memdesc:Buffer_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of all the buffers class and internal struct related. <br /></td></tr>
+<tr class="memitem:Mesh_2Eh" id="r_Mesh_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Mesh_8h.html">Mesh.h</a></td></tr>
+<tr class="memdesc:Mesh_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the Mesh class. <br /></td></tr>
+<tr class="memitem:MeshManager_2Eh" id="r_MeshManager_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="MeshManager_8h.html">MeshManager.h</a></td></tr>
+<tr class="memdesc:MeshManager_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the MeshManager class. <br /></td></tr>
+<tr class="memitem:ObjLoader_2Eh" id="r_ObjLoader_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="ObjLoader_8h.html">ObjLoader.h</a></td></tr>
+<tr class="memdesc:ObjLoader_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reading of a Wavefront OBJ file into vertices and indices. <br /></td></tr>
 <tr class="memitem:Vertex_2Eh" id="r_Vertex_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Vertex_8h.html">Vertex.h</a></td></tr>
 <tr class="memdesc:Vertex_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the vertex struct. <br /></td></tr>
 <tr class="memitem:VertexArray_2Eh" id="r_VertexArray_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="VertexArray_8h.html">VertexArray.h</a></td></tr>
 <tr class="memdesc:VertexArray_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the VertexArray class. <br /></td></tr>
 <tr class="memitem:TransformComponent_2Eh" id="r_TransformComponent_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="TransformComponent_8h.html">TransformComponent.h</a></td></tr>
 <tr class="memdesc:TransformComponent_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the Transform class. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:Vectrix_3A_3AMesh" id="r_Vectrix_3A_3AMesh"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Mesh.html">Vectrix::Mesh</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The geometry of an object, ready to be drawn.  <a href="classVectrix_1_1Mesh.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AMeshManager" id="r_Vectrix_3A_3AMeshManager"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1MeshManager.html">Vectrix::MeshManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keeps the loaded meshes, so the same model is only uploaded once.  <a href="classVectrix_1_1MeshManager.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gafca0b4d343ae0e4641178c091e29bde4" id="r_gafca0b4d343ae0e4641178c091e29bde4"><td class="memItemLeft"><a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a>&#160;</td><td class="memItemRight"><a class="el" href="#gafca0b4d343ae0e4641178c091e29bde4">Vectrix::getTinyObjLayout</a> ()</td></tr>
+<tr class="memdesc:gafca0b4d343ae0e4641178c091e29bde4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the vertex layout an OBJ file is loaded into.  <br /></td></tr>
+<tr class="memitem:ga15467dd00a6f4a9a3dfb27477056e42b" id="r_ga15467dd00a6f4a9a3dfb27477056e42b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ga15467dd00a6f4a9a3dfb27477056e42b">Vectrix::loadOBJ</a> (const std::string &amp;filepath, std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;outVertices, std::vector&lt; uint32_t &gt; &amp;outIndices)</td></tr>
+<tr class="memdesc:ga15467dd00a6f4a9a3dfb27477056e42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a Wavefront OBJ file into vertices and indices.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Mesh management. </p>
-</div></div><!-- contents -->
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gafca0b4d343ae0e4641178c091e29bde4" name="gafca0b4d343ae0e4641178c091e29bde4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafca0b4d343ae0e4641178c091e29bde4">&#9670;&#160;</a></span>getTinyObjLayout()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVectrix_1_1BufferLayout.html">BufferLayout</a> Vectrix::getTinyObjLayout </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the vertex layout an OBJ file is loaded into. </p>
+<p>Position, normal and texture coordinates, in that order, which is what the shaders drawing a loaded model expect. </p><dl class="section return"><dt>Returns</dt><dd>The layout matching what loadOBJ produces </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga15467dd00a6f4a9a3dfb27477056e42b" title="Read a Wavefront OBJ file into vertices and indices.">loadOBJ</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ObjLoader_8h_source.html#l00034">34</a> of file <a class="el" href="ObjLoader_8h_source.html">ObjLoader.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Buffer_8h_source.html#l00023">Float2</a>, and <a class="el" href="Buffer_8h_source.html#l00024">Float3</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ShaderManager_8cpp_source.html#l00016">Vectrix::ShaderManager::createShader()</a>, and <a class="el" href="ShaderManager_8cpp_source.html#l00024">Vectrix::ShaderManager::createShaderFromSource()</a>.</p>
+
+</div>
+</div>
+<a id="ga15467dd00a6f4a9a3dfb27477056e42b" name="ga15467dd00a6f4a9a3dfb27477056e42b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga15467dd00a6f4a9a3dfb27477056e42b">&#9670;&#160;</a></span>loadOBJ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::loadOBJ </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>filepath</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>outVertices</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; uint32_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>outIndices</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read a Wavefront OBJ file into vertices and indices. </p>
+<p>Vertices repeated across faces are merged, so the same position, normal and texture coordinate triple is only stored once and referred to by index. A missing normal or texture coordinate becomes zero rather than failing the load. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filepath</td><td>The path of the OBJ file to read </td></tr>
+    <tr><td class="paramname">outVertices</td><td>Receives the vertices, appended to what is already there </td></tr>
+    <tr><td class="paramname">outIndices</td><td>Receives the indices, appended to what is already there </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when the file could be read </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gafca0b4d343ae0e4641178c091e29bde4" title="Return the vertex layout an OBJ file is loaded into.">getTinyObjLayout</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ObjLoader_8h_source.html#l00055">55</a> of file <a class="el" href="ObjLoader_8h_source.html">ObjLoader.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Path_8h_source.html#l00041">fromUtf8()</a>, <a class="el" href="Vertex_8h_source.html#l00023">Vectrix::Vertex::normal</a>, <a class="el" href="Vertex_8h_source.html#l00019">Vectrix::Vertex::position</a>, <a class="el" href="Vertex_8h_source.html#l00027">Vectrix::Vertex::uv</a>, <a class="el" href="Log_8h_source.html#l00082">VC_CORE_ERROR_NO_EXIT</a>, and <a class="el" href="Log_8h_source.html#l00089">VC_CORE_WARN</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MeshManager_8cpp_source.html#l00016">Vectrix::MeshManager::createMesh()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

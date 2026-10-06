@@ -1,6 +1,7 @@
 var classVectrix_1_1Shader =
 [
     [ "bind", "classVectrix_1_1Shader.html#ac40fc14b31e3fbb0f93b2eb601789728", null ],
+    [ "getID", "classVectrix_1_1Shader.html#a268bafd3147d9e85a682ec136a2d22d7", null ],
     [ "isAffectedByCamera", "classVectrix_1_1Shader.html#af7c6d680a5472ae797ee35630f9908f4", null ],
     [ "setUniform", "classVectrix_1_1Shader.html#a8dd177a44c4bb9f2428af2f2296e6472", null ],
     [ "setUniform1f", "classVectrix_1_1Shader.html#a738df3c14f333433c66db81b63c1876f", null ],
@@ -11,5 +12,6 @@ var classVectrix_1_1Shader =
     [ "setUniform4f", "classVectrix_1_1Shader.html#abfdcda5aad42649875ee2198b85f1fd3", null ],
     [ "setUniformBool", "classVectrix_1_1Shader.html#a07c2173d805ed9b187ec7bd8e5917d54", null ],
     [ "setUniformMat4f", "classVectrix_1_1Shader.html#a929f30f7607470db78def08a69f4d6e8", null ],
+    [ "useFramebuffer", "classVectrix_1_1Shader.html#a6bb1a1bf6a07bf7e68a45d99d9529cdd", null ],
     [ "useTexture", "classVectrix_1_1Shader.html#a94d77fe2b9bf322a5b69f5e024e39c17", null ]
 ];

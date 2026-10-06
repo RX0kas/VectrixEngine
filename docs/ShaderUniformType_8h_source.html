@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -111,7 +111,7 @@ $(function(){initNavTree('ShaderUniformType_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c">   14</a></span>    <span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c">ShaderUniformType</a> {</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        Int,</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        Float,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <a class="code hl_enumvalue" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b">Float</a>,</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        Vec2,</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        Vec3,</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        Vec4,</div>
@@ -134,7 +134,7 @@ $(function(){initNavTree('ShaderUniformType_8h_source.html','',''); });
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keywordflow">case</span> ShaderUniformType::Uint:</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">case</span> ShaderUniformType::Bool:  <span class="keywordflow">return</span> 4;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keywordflow">case</span> ShaderUniformType::Vec2:  <span class="keywordflow">return</span> 8;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">case</span> ShaderUniformType::Vec3:  <span class="comment">// vec3 occupies vec4 slot</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">case</span> ShaderUniformType::Vec3:  <span class="comment">// vec3 is aligned like a vec4 (it only occupies 12 bytes)</span></div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">case</span> ShaderUniformType::Vec4:</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordflow">case</span> ShaderUniformType::Mat4:  <span class="keywordflow">return</span> 16;</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keywordflow">default</span>: <span class="keywordflow">return</span> 4;</div>
@@ -185,11 +185,12 @@ $(function(){initNavTree('ShaderUniformType_8h_source.html','',''); });
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_SHADERUNIFORM_H</span></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="agroup__buffers_html_gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b"><div class="ttname"><a href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b">Vectrix::ShaderDataType::Float</a></div><div class="ttdeci">@ Float</div><div class="ttdoc">A single float.</div><div class="ttdef"><b>Definition</b> <a href="Buffer_8h_source.html#l00022">Buffer.h:22</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00020">Application.cpp:20</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html_a3a908b976ab6090113b25da77b7f8f6c"><div class="ttname"><a href="namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c">Vectrix::ShaderUniformType</a></div><div class="ttdeci">ShaderUniformType</div><div class="ttdoc">This is an Enum that stores every type of data that can be sent to the GPU.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">ShaderUniformType.h:14</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html_aa98fdc13824ee10e019b88443a9bce40"><div class="ttname"><a href="namespaceVectrix.html#aa98fdc13824ee10e019b88443a9bce40">Vectrix::uniformSizeInBytes</a></div><div class="ttdeci">uint32_t uniformSizeInBytes(ShaderUniformType t)</div><div class="ttdoc">This function returns the bytes size for the ShaderUniformType given (std430 rules).</div><div class="ttdef"><b>Definition</b> <a href="#l00048">ShaderUniformType.h:48</a></div></div>
 <div class="ttc" id="anamespaceVectrix_html_add762e9c3c2f921ca240998c51b098a2"><div class="ttname"><a href="namespaceVectrix.html#add762e9c3c2f921ca240998c51b098a2">Vectrix::uniformAlignment</a></div><div class="ttdeci">uint32_t uniformAlignment(ShaderUniformType t)</div><div class="ttdoc">This function returns the bytes alignment for the ShaderUniformType given (std430 rules).</div><div class="ttdef"><b>Definition</b> <a href="#l00030">ShaderUniformType.h:30</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html_ae70f210e8290ec11f81695b01761853a"><div class="ttname"><a href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">Vectrix::toString</a></div><div class="ttdeci">static std::string toString(const Version version)</div><div class="ttdoc">This function return in text the version.</div><div class="ttdef"><b>Definition</b> <a href="AppInfo_8h_source.html#l00072">AppInfo.h:72</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html_ae70f210e8290ec11f81695b01761853a"><div class="ttname"><a href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">Vectrix::toString</a></div><div class="ttdeci">static std::string toString(const Version version)</div><div class="ttdoc">This function return in text the version.</div><div class="ttdef"><b>Definition</b> <a href="AppInfo_8h_source.html#l00088">AppInfo.h:88</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

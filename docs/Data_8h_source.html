@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -95,51 +95,90 @@ $(function(){initNavTree('Data_8h_source.html','',''); });
   <div class="headertitle"><div class="title">Data.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_DATA_H</span></div>
+<a href="Data_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_DATA_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_DATA_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> Byte;</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// Created using hexembed from Lewis Van Winkle (CodePlea)</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">constexpr</span> <span class="keywordtype">int</span> notFoundTextureSize = 350;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">constexpr</span> Byte notFoundTextureData[notFoundTextureSize] = {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    0x00,0x00,0x00,0x64,0x00,0x00,0x00,0x64,0x08,0x06,0x00,0x00,0x00,0x70,0xe2,0x95,</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    0x54,0x00,0x00,0x00,0x04,0x73,0x42,0x49,0x54,0x08,0x08,0x08,0x08,0x7c,0x08,0x64,</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    0x88,0x00,0x00,0x01,0x15,0x49,0x44,0x41,0x54,0x78,0x9c,0xed,0xdc,0xb1,0x0d,0xc3,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    0x30,0x0c,0x00,0x41,0x29,0x5b,0xc6,0x03,0x66,0x4d,0xba,0x4e,0x6f,0xc0,0x0f,0xe1,</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    0x6e,0x02,0x12,0x0f,0xb6,0xdc,0xb3,0x66,0xd6,0x01,0xae,0xd9,0x6f,0x8f,0xf0,0x88,</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    0xcf,0xdb,0x03,0xf0,0x4f,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    0x66,0x7f,0x67,0x1d,0xf1,0x51,0xee,0xb7,0x8f,0x58,0xc3,0x85,0xd4,0x08,0x12,0x23,</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0xdc,0x78,0x72,0x09,0x1b,0x74,0xeb,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    0x01,0x79,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> getNotFoundTextureSize() { <span class="keywordflow">return</span> notFoundTextureSize; }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">constexpr</span> <span class="keyword">const</span> Byte *getNotFoundTextureData() {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">return</span> notFoundTextureData;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_DATA_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"></span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * @file Data.h</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * @brief The placeholder texture, embedded in the binary</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * @ingroup utils</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * Keeping it in the executable means the engine always has something to show when a</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * texture cannot be loaded, even if no asset at all is reachable.</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"></span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">/// A single byte of raw data</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">   14</a></span><span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code hl_typedef" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">// Created using hexembed from Lewis Van Winkle (CodePlea)</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"></span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * @brief The size of the embedded placeholder texture, in bytes</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * @ingroup utils</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="group__utils.html#ga7e35b07b8223fa794ed6210c3a4f06d9">   21</a></span><span class="keyword">constexpr</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="group__utils.html#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a> = 350;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"></span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> * @brief The placeholder texture itself, as a PNG file held in memory</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> * @ingroup utils</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="group__utils.html#ga20bf947c24233974b7fa3a99affa366a">   27</a></span><span class="keyword">constexpr</span> <a class="code hl_typedef" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a> <a class="code hl_variable" href="group__utils.html#ga20bf947c24233974b7fa3a99affa366a">notFoundTextureData</a>[<a class="code hl_variable" href="group__utils.html#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a>] = {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    0x00,0x00,0x00,0x64,0x00,0x00,0x00,0x64,0x08,0x06,0x00,0x00,0x00,0x70,0xe2,0x95,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    0x54,0x00,0x00,0x00,0x04,0x73,0x42,0x49,0x54,0x08,0x08,0x08,0x08,0x7c,0x08,0x64,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    0x88,0x00,0x00,0x01,0x15,0x49,0x44,0x41,0x54,0x78,0x9c,0xed,0xdc,0xb1,0x0d,0xc3,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    0x30,0x0c,0x00,0x41,0x29,0x5b,0xc6,0x03,0x66,0x4d,0xba,0x4e,0x6f,0xc0,0x0f,0xe1,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    0x6e,0x02,0x12,0x0f,0xb6,0xdc,0xb3,0x66,0xd6,0x01,0xae,0xd9,0x6f,0x8f,0xf0,0x88,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    0xcf,0xdb,0x03,0xf0,0x4f,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    0x66,0x7f,0x67,0x1d,0xf1,0x51,0xee,0xb7,0x8f,0x58,0xc3,0x85,0xd4,0x08,0x12,0x23,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0xdc,0x78,0x72,0x09,0x1b,0x74,0xeb,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    0x01,0x79,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>};</div>
+</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment"></span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"> * @brief Return how many bytes the placeholder texture takes</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment"> * @return The size in bytes</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment"> * @ingroup utils</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="group__utils.html#ga76be6b3a011f9cdb2628fff4ec5154a0">   57</a></span><span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_function" href="group__utils.html#ga76be6b3a011f9cdb2628fff4ec5154a0">getNotFoundTextureSize</a>() { <span class="keywordflow">return</span> <a class="code hl_variable" href="group__utils.html#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a>; }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment"></span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment"> * @brief Return the bytes of the placeholder texture</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment"> * @return A pointer to the embedded PNG, valid for the whole run</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment"> * @ingroup utils</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00064" data-start="{" data-end="}">
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="group__utils.html#ga4ac7128cfcec40d3e34511f84ab9a86d">   64</a></span><span class="keyword">constexpr</span> <span class="keyword">const</span> <a class="code hl_typedef" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a> *<a class="code hl_function" href="group__utils.html#ga4ac7128cfcec40d3e34511f84ab9a86d">getNotFoundTextureData</a>() {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="group__utils.html#ga20bf947c24233974b7fa3a99affa366a">notFoundTextureData</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
+</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_DATA_H</span></div>
+<div class="ttc" id="aData_8h_html_ae3a497195d617519e5353ea7b417940f"><div class="ttname"><a href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a></div><div class="ttdeci">unsigned char Byte</div><div class="ttdoc">A single byte of raw data.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">Data.h:14</a></div></div>
+<div class="ttc" id="agroup__utils_html_ga20bf947c24233974b7fa3a99affa366a"><div class="ttname"><a href="group__utils.html#ga20bf947c24233974b7fa3a99affa366a">notFoundTextureData</a></div><div class="ttdeci">constexpr Byte notFoundTextureData[notFoundTextureSize]</div><div class="ttdoc">The placeholder texture itself, as a PNG file held in memory.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">Data.h:27</a></div></div>
+<div class="ttc" id="agroup__utils_html_ga4ac7128cfcec40d3e34511f84ab9a86d"><div class="ttname"><a href="group__utils.html#ga4ac7128cfcec40d3e34511f84ab9a86d">getNotFoundTextureData</a></div><div class="ttdeci">constexpr const Byte * getNotFoundTextureData()</div><div class="ttdoc">Return the bytes of the placeholder texture.</div><div class="ttdef"><b>Definition</b> <a href="#l00064">Data.h:64</a></div></div>
+<div class="ttc" id="agroup__utils_html_ga76be6b3a011f9cdb2628fff4ec5154a0"><div class="ttname"><a href="group__utils.html#ga76be6b3a011f9cdb2628fff4ec5154a0">getNotFoundTextureSize</a></div><div class="ttdeci">constexpr unsigned int getNotFoundTextureSize()</div><div class="ttdoc">Return how many bytes the placeholder texture takes.</div><div class="ttdef"><b>Definition</b> <a href="#l00057">Data.h:57</a></div></div>
+<div class="ttc" id="agroup__utils_html_ga7e35b07b8223fa794ed6210c3a4f06d9"><div class="ttname"><a href="group__utils.html#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a></div><div class="ttdeci">constexpr int notFoundTextureSize</div><div class="ttdoc">The size of the embedded placeholder texture, in bytes.</div><div class="ttdef"><b>Definition</b> <a href="#l00021">Data.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Utils</b></li><li class="navelem"><b>Data.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Utils</b></li><li class="navelem"><a href="Data_8h.html">Data.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

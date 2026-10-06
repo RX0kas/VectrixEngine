@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,47 +92,74 @@ $(function(){initNavTree('classVectrix_1_1MouseMovedEvent.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::MouseMovedEvent Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::MouseMovedEvent Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__events.html">Events</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Sent when the cursor moved over the window.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Vectrix::MouseMovedEvent:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classVectrix_1_1MouseMovedEvent.png" usemap="#Vectrix_3A_3AMouseMovedEvent_map" alt=""/>
   <map id="Vectrix_3A_3AMouseMovedEvent_map" name="Vectrix_3A_3AMouseMovedEvent_map">
-<area href="classVectrix_1_1Event.html" alt="Vectrix::Event" shape="rect" coords="0,0,167,24"/>
+<area href="classVectrix_1_1EventBase.html" alt="Vectrix::EventBase&lt; MouseMovedEvent, &quot;MouseMoved&quot;, EventCategory::Mouse|EventCategory::Input &gt;" shape="rect" coords="0,56,604,80"/>
+<area href="classVectrix_1_1Event.html" title="Base class of everything the engine, or the application, reports to the event listeners." alt="Vectrix::Event" shape="rect" coords="0,0,604,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abbe08f62e01c38d0c73000fa304cf404" id="r_abbe08f62e01c38d0c73000fa304cf404"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#abbe08f62e01c38d0c73000fa304cf404">MouseMovedEvent</a> (float x, float y)</td></tr>
-<tr class="memitem:a86a38fcb6a10fb0b7160e814329ad5b6" id="r_a86a38fcb6a10fb0b7160e814329ad5b6"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a86a38fcb6a10fb0b7160e814329ad5b6">getX</a> () const</td></tr>
-<tr class="memitem:a205dfce41c36cbb7b8dea3081c144865" id="r_a205dfce41c36cbb7b8dea3081c144865"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a205dfce41c36cbb7b8dea3081c144865">getY</a> () const</td></tr>
+<tr class="memitem:a640307d026dff79125e2aefc200d3ab0" id="r_a640307d026dff79125e2aefc200d3ab0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a640307d026dff79125e2aefc200d3ab0">MouseMovedEvent</a> (float <a class="el" href="#a04e4f9eefd6eefa449533f48acaf2076">x</a>, float <a class="el" href="#a7cc4ef450b8c046ea6d0582401fb4a18">y</a>, float dx.0f, float dy.0f)</td></tr>
 <tr class="memitem:af83f2e93cd39c6a57df3348642bd4226" id="r_af83f2e93cd39c6a57df3348642bd4226"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#af83f2e93cd39c6a57df3348642bd4226">toString</a> () const override</td></tr>
+<tr class="inherit_header pub_methods_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; MouseMovedEvent, &quot;MouseMoved&quot;, EventCategory::Mouse|EventCategory::Input &gt;</a></td></tr>
+<tr class="memitem:ad0970ae57b37486df5f799b3f546ea74 inherit pub_methods_classVectrix_1_1EventBase" id="r_ad0970ae57b37486df5f799b3f546ea74"><td class="memItemLeft">std::string_view&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#ad0970ae57b37486df5f799b3f546ea74">getName</a> () const override</td></tr>
 <tr class="inherit_header pub_methods_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:af1163e5f0503b6d42f7a22e122541248 inherit pub_methods_classVectrix_1_1Event" id="r_af1163e5f0503b6d42f7a22e122541248"><td class="memItemLeft">
-EventType&#160;</td><td class="memItemRight"><b>getEventType</b> () const</td></tr>
-<tr class="memitem:a52882006e00df62acd43d7a154c05391 inherit pub_methods_classVectrix_1_1Event" id="r_a52882006e00df62acd43d7a154c05391"><td class="memItemLeft">
-const char *&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
-<tr class="memitem:ae24840455eb575198da37053bed2af58 inherit pub_methods_classVectrix_1_1Event" id="r_ae24840455eb575198da37053bed2af58"><td class="memItemLeft">
-int&#160;</td><td class="memItemRight"><b>getCategoryFlags</b> () const</td></tr>
-<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">
-std::string&#160;</td><td class="memItemRight"><b>toString</b> () const</td></tr>
-<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (EventCategory category) const</td></tr>
+<tr class="memitem:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event" id="r_a5264e04e8880276f9d8deaa785072f20"><td class="memItemLeft"><a class="el" href="group__events.html#ga7f2a1f8dd3e0e2d3d979ee380a4400e9">EventTypeId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a5264e04e8880276f9d8deaa785072f20">getType</a> () const</td></tr>
+<tr class="memdesc:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the id of the event's class, the value eventTypeId gives for it.  <br /></td></tr>
+<tr class="memitem:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event" id="r_ab6bb70663338445a7f4bd5495a7b61f3"><td class="memItemLeft">
+std::string_view&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
+<tr class="memdesc:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the event's class, for logging (e.g. "KeyPressed"). <br /></td></tr>
+<tr class="memitem:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event" id="r_a7fce7c15adbb6b1cd9dbe41bb7fc3935"><td class="memItemLeft"><a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a7fce7c15adbb6b1cd9dbe41bb7fc3935">getCategories</a> () const</td></tr>
+<tr class="memdesc:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return every category the event belongs to.  <br /></td></tr>
+<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (<a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a> category) const</td></tr>
+<tr class="memdesc:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event belongs to one of the given categories.  <br /></td></tr>
+<tr class="memitem:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event" id="r_a1d8d2ca52a93c5e7e5a273f37a79e27f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a1d8d2ca52a93c5e7e5a273f37a79e27f">isHandled</a> () const</td></tr>
+<tr class="memdesc:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if a listener consumed the event.  <br /></td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event" id="r_a800a061d9c689ac3e78d546cf9e78b26"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a800a061d9c689ac3e78d546cf9e78b26">is</a> () const</td></tr>
+<tr class="memdesc:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event is a T.  <br /></td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event" id="r_a412817a45a4353b7b08a955b57d5a803"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">const T *&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a412817a45a4353b7b08a955b57d5a803">as</a> () const</td></tr>
+<tr class="memdesc:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the event as a T, or nullptr when it is another event.  <br /></td></tr>
+<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a40ea5b48fbe3985f7a40fad605b2c32b">toString</a> () const</td></tr>
+<tr class="memdesc:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the event and its payload, for logging.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a04e4f9eefd6eefa449533f48acaf2076" id="r_a04e4f9eefd6eefa449533f48acaf2076"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a04e4f9eefd6eefa449533f48acaf2076">x</a></td></tr>
+<tr class="memdesc:a04e4f9eefd6eefa449533f48acaf2076"><td class="mdescLeft">&#160;</td><td class="mdescRight">The horizontal position, in screen coordinates from the left of the window.  <br /></td></tr>
+<tr class="memitem:a7cc4ef450b8c046ea6d0582401fb4a18" id="r_a7cc4ef450b8c046ea6d0582401fb4a18"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a7cc4ef450b8c046ea6d0582401fb4a18">y</a></td></tr>
+<tr class="memitem:a4c95908968ab213ac20f135083870379" id="r_a4c95908968ab213ac20f135083870379"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a4c95908968ab213ac20f135083870379">dx</a></td></tr>
+<tr class="memitem:a5073f24a2be83d5832da0f359c83e1ea" id="r_a5073f24a2be83d5832da0f359c83e1ea"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a5073f24a2be83d5832da0f359c83e1ea">dy</a></td></tr>
+<tr class="memdesc:a5073f24a2be83d5832da0f359c83e1ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">How far the cursor moved since the previous <a class="el" href="classVectrix_1_1MouseMovedEvent.html" title="Sent when the cursor moved over the window.">MouseMovedEvent</a>, positive downwards (see dx).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Attributes inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:a887d8d1a1c640c84eb7daf3049db7cb4 inherit pub_attribs_classVectrix_1_1Event" id="r_a887d8d1a1c640c84eb7daf3049db7cb4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a887d8d1a1c640c84eb7daf3049db7cb4">Handled</a> = false</td></tr>
+<tr class="inherit_header pub_static_attribs_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; MouseMovedEvent, &quot;MouseMoved&quot;, EventCategory::Mouse|EventCategory::Input &gt;</a></td></tr>
+<tr class="memitem:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase" id="r_a6cbcb7fa15e29691a317d3e8f28ac8e4"><td class="memItemLeft">static constexpr <a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#a6cbcb7fa15e29691a317d3e8f28ac8e4">staticCategories</a></td></tr>
+<tr class="memdesc:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">The categories every event of this class belongs to.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00007">7</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<div class="textblock"><p>Sent when the cursor moved over the window. </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00017">17</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
-<a id="abbe08f62e01c38d0c73000fa304cf404" name="abbe08f62e01c38d0c73000fa304cf404"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbe08f62e01c38d0c73000fa304cf404">&#9670;&#160;</a></span>MouseMovedEvent()</h2>
+<a id="a640307d026dff79125e2aefc200d3ab0" name="a640307d026dff79125e2aefc200d3ab0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a640307d026dff79125e2aefc200d3ab0">&#9670;&#160;</a></span>MouseMovedEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,7 +175,17 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span>&#160;)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>y</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float dx.</td>          <td class="paramname"><span class="paramname"><em>0f</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float dy.</td>          <td class="paramname"><span class="paramname"><em>0f</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -157,66 +194,23 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="#a04e4f9eefd6eefa449533f48acaf2076" title="The horizontal position, in screen coordinates from the left of the window.">x</a></td><td>The horizontal position, from the left of the window </td></tr>
+    <tr><td class="paramname"><a class="el" href="#a7cc4ef450b8c046ea6d0582401fb4a18">y</a></td><td>The vertical position, from the top of the window </td></tr>
+    <tr><td class="paramname"><a class="el" href="#a4c95908968ab213ac20f135083870379">dx</a></td><td>How far the cursor moved horizontally since the previous <a class="el" href="classVectrix_1_1MouseMovedEvent.html" title="Sent when the cursor moved over the window.">MouseMovedEvent</a> </td></tr>
+    <tr><td class="paramname"><a class="el" href="#a5073f24a2be83d5832da0f359c83e1ea" title="How far the cursor moved since the previous MouseMovedEvent, positive downwards (see dx).">dy</a></td><td>How far the cursor moved vertically since the previous <a class="el" href="classVectrix_1_1MouseMovedEvent.html" title="Sent when the cursor moved over the window.">MouseMovedEvent</a> </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00009">9</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00025">25</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">References <a class="el" href="MouseEvent_8h_source.html#l00031">dx</a>, <a class="el" href="MouseEvent_8h_source.html#l00032">dy</a>, <a class="el" href="MouseEvent_8h_source.html#l00027">x</a>, and <a class="el" href="MouseEvent_8h_source.html#l00028">y</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a86a38fcb6a10fb0b7160e814329ad5b6" name="a86a38fcb6a10fb0b7160e814329ad5b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86a38fcb6a10fb0b7160e814329ad5b6">&#9670;&#160;</a></span>getX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Vectrix::MouseMovedEvent::getX </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00011">11</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
-
-</div>
-</div>
-<a id="a205dfce41c36cbb7b8dea3081c144865" name="a205dfce41c36cbb7b8dea3081c144865"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a205dfce41c36cbb7b8dea3081c144865">&#9670;&#160;</a></span>getY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Vectrix::MouseMovedEvent::getY </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00012">12</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
-
-</div>
-</div>
 <a id="af83f2e93cd39c6a57df3348642bd4226" name="af83f2e93cd39c6a57df3348642bd4226"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af83f2e93cd39c6a57df3348642bd4226">&#9670;&#160;</a></span>toString()</h2>
 
@@ -235,12 +229,91 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00014">14</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00034">34</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Variables</h2>
+<a id="a4c95908968ab213ac20f135083870379" name="a4c95908968ab213ac20f135083870379"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c95908968ab213ac20f135083870379">&#9670;&#160;</a></span>dx</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Vectrix::MouseMovedEvent::dx</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>How far the cursor moved since the previous <a class="el" href="classVectrix_1_1MouseMovedEvent.html" title="Sent when the cursor moved over the window.">MouseMovedEvent</a>, positive to the right. 0 for the first move after the cursor entered the window, so coming back in at another place isn't a jump </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00031">31</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00025">MouseMovedEvent()</a>.</p>
+
+</div>
+</div>
+<a id="a5073f24a2be83d5832da0f359c83e1ea" name="a5073f24a2be83d5832da0f359c83e1ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5073f24a2be83d5832da0f359c83e1ea">&#9670;&#160;</a></span>dy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Vectrix::MouseMovedEvent::dy</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>How far the cursor moved since the previous <a class="el" href="classVectrix_1_1MouseMovedEvent.html" title="Sent when the cursor moved over the window.">MouseMovedEvent</a>, positive downwards (see dx). </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00032">32</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00025">MouseMovedEvent()</a>.</p>
+
+</div>
+</div>
+<a id="a04e4f9eefd6eefa449533f48acaf2076" name="a04e4f9eefd6eefa449533f48acaf2076"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04e4f9eefd6eefa449533f48acaf2076">&#9670;&#160;</a></span>x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Vectrix::MouseMovedEvent::x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The horizontal position, in screen coordinates from the left of the window. </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00027">27</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00025">MouseMovedEvent()</a>.</p>
+
+</div>
+</div>
+<a id="a7cc4ef450b8c046ea6d0582401fb4a18" name="a7cc4ef450b8c046ea6d0582401fb4a18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cc4ef450b8c046ea6d0582401fb4a18">&#9670;&#160;</a></span>y</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Vectrix::MouseMovedEvent::y</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The vertical position, in screen coordinates from the top of the window </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00028">28</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00025">MouseMovedEvent()</a>.</p>
 
 </div>
 </div>

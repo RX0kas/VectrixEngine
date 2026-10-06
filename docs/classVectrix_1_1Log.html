@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,18 +92,98 @@ $(function(){initNavTree('classVectrix_1_1Log.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::Log Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::Log Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Owns the two loggers used across the engine.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Log_8h_source.html">Log.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:a86f8809826415e9b42949ee4557d2ae4" id="r_a86f8809826415e9b42949ee4557d2ae4"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a86f8809826415e9b42949ee4557d2ae4">init</a> ()</td></tr>
+<tr class="memdesc:a86f8809826415e9b42949ee4557d2ae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the loggers and install their sinks.  <br /></td></tr>
+<tr class="memitem:a72376cbcfa92633ab836f409bb84656e" id="r_a72376cbcfa92633ab836f409bb84656e"><td class="memItemLeft">static std::shared_ptr&lt; spdlog::logger &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a72376cbcfa92633ab836f409bb84656e">getCoreLogger</a> ()</td></tr>
+<tr class="memdesc:a72376cbcfa92633ab836f409bb84656e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the logger the engine writes to.  <br /></td></tr>
+<tr class="memitem:af784bd634d9c764ef60f7a0dc66641a2" id="r_af784bd634d9c764ef60f7a0dc66641a2"><td class="memItemLeft">static std::shared_ptr&lt; spdlog::logger &gt; &amp;&#160;</td><td class="memItemRight"><a class="el" href="#af784bd634d9c764ef60f7a0dc66641a2">getClientLogger</a> ()</td></tr>
+<tr class="memdesc:af784bd634d9c764ef60f7a0dc66641a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the logger the application writes to.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Log_8h_source.html#l00009">9</a> of file <a class="el" href="Log_8h_source.html">Log.h</a>.</p>
+<div class="textblock"><p>Owns the two loggers used across the engine. </p>
+<p>One logger is for the engine itself and one is for the application built on top of it, which is what lets the output tell them apart. Rather than using this class directly, prefer the <span class="tt">VC_CORE_*</span> and <span class="tt">VC_*</span> macros. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__core.html#gadea45cb32dce9c4d11c81f11d9a3390f" title="Report a normal engine event worth knowing about.">VC_CORE_INFO</a> </dd>
+<dd>
+<a class="el" href="group__core.html#gafcfc14d84ede0c9e61575223a710cbeb" title="Report a normal application event worth knowing about.">VC_INFO</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Log_8h_source.html#l00028">28</a> of file <a class="el" href="Log_8h_source.html">Log.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="af784bd634d9c764ef60f7a0dc66641a2" name="af784bd634d9c764ef60f7a0dc66641a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af784bd634d9c764ef60f7a0dc66641a2">&#9670;&#160;</a></span>getClientLogger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; spdlog::logger &gt; &amp; Vectrix::Log::getClientLogger </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the logger the application writes to. </p>
+<dl class="section return"><dt>Returns</dt><dd>The shared client logger </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Only available on a debug build </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Log_8h_source.html#l00048">48</a> of file <a class="el" href="Log_8h_source.html">Log.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Application_8cpp_source.html#l00037">Vectrix::Application::Application()</a>.</p>
+
+</div>
+</div>
+<a id="a72376cbcfa92633ab836f409bb84656e" name="a72376cbcfa92633ab836f409bb84656e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72376cbcfa92633ab836f409bb84656e">&#9670;&#160;</a></span>getCoreLogger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; spdlog::logger &gt; &amp; Vectrix::Log::getCoreLogger </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the logger the engine writes to. </p>
+<dl class="section return"><dt>Returns</dt><dd>The shared engine logger </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Only available on a debug build </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Log_8h_source.html#l00041">41</a> of file <a class="el" href="Log_8h_source.html">Log.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Application_8cpp_source.html#l00037">Vectrix::Application::Application()</a>.</p>
+
+</div>
+</div>
 <a id="a86f8809826415e9b42949ee4557d2ae4" name="a86f8809826415e9b42949ee4557d2ae4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a86f8809826415e9b42949ee4557d2ae4">&#9670;&#160;</a></span>init()</h2>
 
@@ -127,7 +207,14 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Log_8cpp_source.html#l00008">8</a> of file <a class="el" href="Log_8cpp_source.html">Log.cpp</a>.</p>
+<p>Create the loggers and install their sinks. </p>
+<dl class="section pre"><dt>Precondition</dt><dd>Has to be called once before any logging macro, the entry point does it </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Log_8cpp_source.html#l00010">10</a> of file <a class="el" href="Log_8cpp_source.html">Log.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Application_8h_source.html#l00177">Vectrix::Application::getAppInfo()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="EntryPoint_8h_source.html#l00036">main()</a>.</p>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['buffers_0',['Buffers',['../group__buffers.html',1,'']]]
+  ['assets_0',['Assets',['../group__assets.html',1,'']]]
 ];

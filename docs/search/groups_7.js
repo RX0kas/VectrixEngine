@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['renderer_0',['Renderer',['../group__renderer.html',1,'']]],
-  ['rendering_1',['Graphic rendering',['../group__rendering.html',1,'']]]
+  ['layers_0',['Layers',['../group__layers.html',1,'']]]
 ];

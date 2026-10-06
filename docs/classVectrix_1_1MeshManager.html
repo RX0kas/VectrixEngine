@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.2</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,39 +92,33 @@ $(function(){initNavTree('classVectrix_1_1MeshManager.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::MeshManager Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::MeshManager Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__rendering.html">Graphic rendering</a> &raquo; <a class="el" href="group__mesh.html">Mesh</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Manages Mesh.  
+<p>Keeps the loaded meshes, so the same model is only uploaded once.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af01a940e0680083390dd9f298972a0ab" id="r_af01a940e0680083390dd9f298972a0ab"><td class="memItemLeft">std::shared_ptr&lt; Model &gt;&#160;</td><td class="memItemRight"><a class="el" href="#af01a940e0680083390dd9f298972a0ab">get</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:af01a940e0680083390dd9f298972a0ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get a mesh previously created.  <br /></td></tr>
-<tr class="memitem:a4841a3cecae60fe4755c7ef8aea972b4" id="r_a4841a3cecae60fe4755c7ef8aea972b4"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; Model &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4841a3cecae60fe4755c7ef8aea972b4">getAll</a> ()</td></tr>
-<tr class="memdesc:a4841a3cecae60fe4755c7ef8aea972b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the mesh previously created.  <br /></td></tr>
-<tr class="memitem:afd1ada0988bfdd25af0b98a61fd62714" id="r_afd1ada0988bfdd25af0b98a61fd62714"><td class="memItemLeft">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; Model &gt; &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#afd1ada0988bfdd25af0b98a61fd62714">getAllWithName</a> ()</td></tr>
-<tr class="memdesc:afd1ada0988bfdd25af0b98a61fd62714"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the mesh previously created with their names.  <br /></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Public Static Functions</h2></td></tr>
-<tr class="memitem:aefa812f7849848c21f33700d9d9468e6" id="r_aefa812f7849848c21f33700d9d9468e6"><td class="memItemLeft">static MeshManager &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aefa812f7849848c21f33700d9d9468e6">instance</a> ()</td></tr>
-<tr class="memdesc:aefa812f7849848c21f33700d9d9468e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference to the instance of this class.  <br /></td></tr>
-<tr class="memitem:a0843ab894d53fa92ce56d85e22534b23" id="r_a0843ab894d53fa92ce56d85e22534b23"><td class="memItemLeft">static std::shared_ptr&lt; Model &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a0843ab894d53fa92ce56d85e22534b23">loadModel</a> (const std::string &amp;name, const std::string &amp;path)</td></tr>
-<tr class="memdesc:a0843ab894d53fa92ce56d85e22534b23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to load a new mesh.  <br /></td></tr>
-<tr class="memitem:a62aff1415413968f6fd33a0a0f7654de" id="r_a62aff1415413968f6fd33a0a0f7654de"><td class="memItemLeft">static std::shared_ptr&lt; Model &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a62aff1415413968f6fd33a0a0f7654de">createModel</a> (const std::string &amp;name, const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices, const std::vector&lt; uint32_t &gt; &amp;indices)</td></tr>
-<tr class="memdesc:a62aff1415413968f6fd33a0a0f7654de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new mesh.  <br /></td></tr>
-<tr class="memitem:a787c167585760f48daaa0a5c18cfbaf6" id="r_a787c167585760f48daaa0a5c18cfbaf6"><td class="memItemLeft">static std::shared_ptr&lt; Model &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a787c167585760f48daaa0a5c18cfbaf6">createModel</a> (const std::string &amp;name, const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;vertices)</td></tr>
-<tr class="memdesc:a787c167585760f48daaa0a5c18cfbaf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new mesh.  <br /></td></tr>
+<tr class="memitem:a7a32bed730c21f986e40321020e12d99" id="r_a7a32bed730c21f986e40321020e12d99"><td class="memItemLeft">std::shared_ptr&lt; Mesh &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a7a32bed730c21f986e40321020e12d99">get</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a7a32bed730c21f986e40321020e12d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get a mesh previously created.  <br /></td></tr>
+<tr class="memitem:a690c3f85df00369016b366b6621a2b31" id="r_a690c3f85df00369016b366b6621a2b31"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a690c3f85df00369016b366b6621a2b31">exist</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a690c3f85df00369016b366b6621a2b31"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to know if a mesh with the name given exist.  <br /></td></tr>
+<tr class="memitem:a8059f71e291076c0e1123b1b3d8f7d8a" id="r_a8059f71e291076c0e1123b1b3d8f7d8a"><td class="memItemLeft">std::vector&lt; std::shared_ptr&lt; Mesh &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a8059f71e291076c0e1123b1b3d8f7d8a">getAll</a> ()</td></tr>
+<tr class="memdesc:a8059f71e291076c0e1123b1b3d8f7d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the mesh previously created.  <br /></td></tr>
+<tr class="memitem:ab09cb3b84097508b01dd367e57f4c471" id="r_ab09cb3b84097508b01dd367e57f4c471"><td class="memItemLeft">std::shared_ptr&lt; Mesh &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab09cb3b84097508b01dd367e57f4c471">createMesh</a> (const std::string &amp;name, const std::string &amp;path)</td></tr>
+<tr class="memdesc:ab09cb3b84097508b01dd367e57f4c471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new mesh.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Manages Mesh. </p>
+<div class="textblock"><p>Keeps the loaded meshes, so the same model is only uploaded once. </p>
+<p>The <a class="el" href="classVectrix_1_1AssetsManager.html" title="Loads the assets of the project, and hands back the ones already loaded.">AssetsManager</a> owns it and goes through it to load a mesh, reach it with <a class="el" href="classVectrix_1_1AssetsManager.html#aecb9a27a2ec61e71c5f6bf92b88731ea" title="Return the manager dealing with the meshes.">AssetsManager::getMeshManager</a>. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1AssetsManager.html" title="Loads the assets of the project, and hands back the ones already loaded.">AssetsManager</a> </dd>
+<dd>
+<a class="el" href="classVectrix_1_1Mesh.html" title="The geometry of an object, ready to be drawn.">Mesh</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00020">20</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00024">24</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a44a9cee10142cefffb4b67a702883594" name="a44a9cee10142cefffb4b67a702883594"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a44a9cee10142cefffb4b67a702883594">&#9670;&#160;</a></span>~MeshManager()</h2>
@@ -141,13 +135,49 @@ Public Static Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00020">20</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00032">32</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a787c167585760f48daaa0a5c18cfbaf6" name="a787c167585760f48daaa0a5c18cfbaf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a787c167585760f48daaa0a5c18cfbaf6">&#9670;&#160;</a></span>createModel() <span class="overload">[1/2]</span></h2>
+<a id="ab09cb3b84097508b01dd367e57f4c471" name="ab09cb3b84097508b01dd367e57f4c471"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab09cb3b84097508b01dd367e57f4c471">&#9670;&#160;</a></span>createMesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; Mesh &gt; Vectrix::MeshManager::createMesh </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to create a new mesh. </p>
+<dl class="section pre"><dt>Precondition</dt><dd>A mesh with the name given should not already exist </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name given to the mesh </td></tr>
+    <tr><td class="paramname">path</td><td>Path of the mesh source file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The mesh, registered under name, or nullptr when the file can't be read as an OBJ </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00016">16</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="MeshManager_8h_source.html#l00039">exist()</a>, <a class="el" href="ObjLoader_8h_source.html#l00055">Vectrix::loadOBJ()</a>, <a class="el" href="Core_8h_source.html#l00064">VC_CORE_ASSERT</a>, and <a class="el" href="Profiler_8h_source.html#l00236">VC_PROFILER_FUNCTION</a>.</p>
+
+</div>
+</div>
+<a id="a690c3f85df00369016b366b6621a2b31" name="a690c3f85df00369016b366b6621a2b31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a690c3f85df00369016b366b6621a2b31">&#9670;&#160;</a></span>exist()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,96 +186,42 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; Model &gt; Vectrix::MeshManager::createModel </td>
+          <td class="memname">bool Vectrix::MeshManager::exist </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Function to create a new mesh. </p>
+<p>This function is used to know if a mesh with the name given exist. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>Name given to the mesh </td></tr>
-    <tr><td class="paramname">vertices</td><td>The vertices of the mesh </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the mesh </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the model that was created </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the mesh exist in the cache </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00042">42</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00039">39</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
 
-<p class="reference">References <a class="el" href="Application_8h_source.html#l00071">Vectrix::Application::instance()</a>, <a class="el" href="MeshManager_8h_source.html#l00052">instance()</a>, <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>, and <a class="el" href="Application_8h_source.html#l00058">Vectrix::Application::window()</a>.</p>
-
-</div>
-</div>
-<a id="a62aff1415413968f6fd33a0a0f7654de" name="a62aff1415413968f6fd33a0a0f7654de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62aff1415413968f6fd33a0a0f7654de">&#9670;&#160;</a></span>createModel() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; Model &gt; Vectrix::MeshManager::createModel </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structVectrix_1_1Vertex.html">Vertex</a> &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>vertices</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; uint32_t &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>indices</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Function to create a new mesh. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Name given to the mesh </td></tr>
-    <tr><td class="paramname">vertices</td><td>The vertices of the model </td></tr>
-    <tr><td class="paramname">indices</td><td>The indices of the model </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the model that was created </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00035">35</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="Application_8h_source.html#l00071">Vectrix::Application::instance()</a>, <a class="el" href="MeshManager_8h_source.html#l00052">instance()</a>, <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>, and <a class="el" href="Application_8h_source.html#l00058">Vectrix::Application::window()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="MeshManager_8cpp_source.html#l00016">createMesh()</a>.</p>
 
 </div>
 </div>
-<a id="af01a940e0680083390dd9f298972a0ab" name="af01a940e0680083390dd9f298972a0ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af01a940e0680083390dd9f298972a0ab">&#9670;&#160;</a></span>get()</h2>
+<a id="a7a32bed730c21f986e40321020e12d99" name="a7a32bed730c21f986e40321020e12d99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a32bed730c21f986e40321020e12d99">&#9670;&#160;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::shared_ptr&lt; Model &gt; Vectrix::MeshManager::get </td>
+          <td class="memname">std::shared_ptr&lt; Mesh &gt; Vectrix::MeshManager::get </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
@@ -261,14 +237,16 @@ Public Static Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The mesh program with the name you entered </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The mesh with the name you entered </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00055">55</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00046">46</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Log_8h_source.html#l00075">VC_CORE_ERROR</a>.</p>
 
 </div>
 </div>
-<a id="a4841a3cecae60fe4755c7ef8aea972b4" name="a4841a3cecae60fe4755c7ef8aea972b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4841a3cecae60fe4755c7ef8aea972b4">&#9670;&#160;</a></span>getAll()</h2>
+<a id="a8059f71e291076c0e1123b1b3d8f7d8a" name="a8059f71e291076c0e1123b1b3d8f7d8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8059f71e291076c0e1123b1b3d8f7d8a">&#9670;&#160;</a></span>getAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,7 +255,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::shared_ptr&lt; Model &gt; &gt; Vectrix::MeshManager::getAll </td>
+          <td class="memname">std::vector&lt; std::shared_ptr&lt; Mesh &gt; &gt; Vectrix::MeshManager::getAll </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -291,114 +269,8 @@ Public Static Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function is used to get all the mesh previously created. </p>
-<dl class="section return"><dt>Returns</dt><dd>The mesh programs created </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00036">36</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
-
-</div>
-</div>
-<a id="afd1ada0988bfdd25af0b98a61fd62714" name="afd1ada0988bfdd25af0b98a61fd62714"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd1ada0988bfdd25af0b98a61fd62714">&#9670;&#160;</a></span>getAllWithName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; Model &gt; &gt; &gt; Vectrix::MeshManager::getAllWithName </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>This function is used to get all the mesh previously created with their names. </p>
-<dl class="section return"><dt>Returns</dt><dd>The mesh programs created </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00044">44</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
-
-</div>
-</div>
-<a id="aefa812f7849848c21f33700d9d9468e6" name="aefa812f7849848c21f33700d9d9468e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefa812f7849848c21f33700d9d9468e6">&#9670;&#160;</a></span>instance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">MeshManager &amp; Vectrix::MeshManager::instance </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return a reference to the instance of this class. </p>
-<dl class="section return"><dt>Returns</dt><dd>The instance of the class <a class="el" href="classVectrix_1_1MeshManager.html" title="Manages Mesh.">MeshManager</a> </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00052">52</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="MeshManager_8cpp_source.html#l00042">createModel()</a>, <a class="el" href="MeshManager_8cpp_source.html#l00035">createModel()</a>, and <a class="el" href="MeshManager_8cpp_source.html#l00027">loadModel()</a>.</p>
-
-</div>
-</div>
-<a id="a0843ab894d53fa92ce56d85e22534b23" name="a0843ab894d53fa92ce56d85e22534b23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0843ab894d53fa92ce56d85e22534b23">&#9670;&#160;</a></span>loadModel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::shared_ptr&lt; Model &gt; Vectrix::MeshManager::loadModel </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Function to load a new mesh. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Name given to the mesh </td></tr>
-    <tr><td class="paramname">path</td><td>Path of the mesh file (OBJ file) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the model that was loaded </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="MeshManager_8cpp_source.html#l00027">27</a> of file <a class="el" href="MeshManager_8cpp_source.html">MeshManager.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="Application_8h_source.html#l00071">Vectrix::Application::instance()</a>, <a class="el" href="MeshManager_8h_source.html#l00052">instance()</a>, <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>, and <a class="el" href="Application_8h_source.html#l00058">Vectrix::Application::window()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MeshManager_8h_source.html#l00046">46</a> of file <a class="el" href="MeshManager_8h_source.html">MeshManager.h</a>.</p>
 
 </div>
 </div>

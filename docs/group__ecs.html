@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -101,14 +101,109 @@ $(function(){initNavTree('group__ecs.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
 Files</h2></td></tr>
+<tr class="memitem:Component_2Eh" id="r_Component_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Component_8h.html">Component.h</a></td></tr>
+<tr class="memdesc:Component_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of InformationComponent, and umbrella include of every component. <br /></td></tr>
+<tr class="memitem:CameraComponent_2Eh" id="r_CameraComponent_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="CameraComponent_8h.html">CameraComponent.h</a></td></tr>
+<tr class="memdesc:CameraComponent_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the component giving an entity a point of view. <br /></td></tr>
+<tr class="memitem:MeshRendererComponent_2Eh" id="r_MeshRendererComponent_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="MeshRendererComponent_8h.html">MeshRendererComponent.h</a></td></tr>
+<tr class="memdesc:MeshRendererComponent_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the component that makes an entity visible. <br /></td></tr>
 <tr class="memitem:Entity_2Eh" id="r_Entity_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Entity_8h.html">Entity.h</a></td></tr>
 <tr class="memdesc:Entity_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the Entity class. <br /></td></tr>
 <tr class="memitem:Scene_2Eh" id="r_Scene_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Scene_8h.html">Scene.h</a></td></tr>
 <tr class="memdesc:Scene_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the Scene class. <br /></td></tr>
+<tr class="memitem:SceneSerializer_2Eh" id="r_SceneSerializer_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="SceneSerializer_8h.html">SceneSerializer.h</a></td></tr>
+<tr class="memdesc:SceneSerializer_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reading and writing of the binary scene files. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:Vectrix_3A_3AInformationComponent" id="r_Vectrix_3A_3AInformationComponent"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1InformationComponent.html">Vectrix::InformationComponent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This component is a mandatory component of all entity.  <a href="structVectrix_1_1InformationComponent.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3ACameraComponent" id="r_Vectrix_3A_3ACameraComponent"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1CameraComponent.html">Vectrix::CameraComponent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives an entity a camera, so the scene can be rendered from it.  <a href="structVectrix_1_1CameraComponent.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AMeshRendererComponent" id="r_Vectrix_3A_3AMeshRendererComponent"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1MeshRendererComponent.html">Vectrix::MeshRendererComponent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives an entity the geometry, the material and the texture needed to draw it.  <a href="classVectrix_1_1MeshRendererComponent.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3ATransformComponent" id="r_Vectrix_3A_3ATransformComponent"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1TransformComponent.html">Vectrix::TransformComponent</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class represent the 3D information about an object.  <a href="classVectrix_1_1TransformComponent.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AEntity" id="r_Vectrix_3A_3AEntity"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Entity.html">Vectrix::Entity</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A handle on one object of a <a class="el" href="classVectrix_1_1Scene.html" title="Holds every entity of a level, and drives them each frame.">Scene</a>, and on the components it owns.  <a href="classVectrix_1_1Entity.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AScene" id="r_Vectrix_3A_3AScene"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Scene.html">Vectrix::Scene</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds every entity of a level, and drives them each frame.  <a href="classVectrix_1_1Scene.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AComponentCreationData" id="r_Vectrix_3A_3AComponentCreationData"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1ComponentCreationData.html">Vectrix::ComponentCreationData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One component read from a scene file, still in its raw form.  <a href="structVectrix_1_1ComponentCreationData.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3AEntityCreationData" id="r_Vectrix_3A_3AEntityCreationData"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1EntityCreationData.html">Vectrix::EntityCreationData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">One entity read from a scene file, with the components it owns.  <a href="structVectrix_1_1EntityCreationData.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3ASceneCreationData" id="r_Vectrix_3A_3ASceneCreationData"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1SceneCreationData.html">Vectrix::SceneCreationData</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Everything a scene file contains, once it has been read.  <a href="structVectrix_1_1SceneCreationData.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3ASceneSerializer" id="r_Vectrix_3A_3ASceneSerializer"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1SceneSerializer.html">Vectrix::SceneSerializer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a <a class="el" href="classVectrix_1_1Scene.html" title="Holds every entity of a level, and drives them each frame.">Scene</a> to a file, and reads one back.  <a href="classVectrix_1_1SceneSerializer.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gac1973ed3eec71b4441801810ab15ba79" id="r_gac1973ed3eec71b4441801810ab15ba79"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gac1973ed3eec71b4441801810ab15ba79">SCENE_VERSION_MAJOR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:gac1973ed3eec71b4441801810ab15ba79"><td class="mdescLeft">&#160;</td><td class="mdescRight">The major part of the scene file format version, bumped by a breaking change.  <br /></td></tr>
+<tr class="memitem:ga319f856085084f72718ee8435a858ae6" id="r_ga319f856085084f72718ee8435a858ae6"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga319f856085084f72718ee8435a858ae6">SCENE_VERSION_MINOR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:ga319f856085084f72718ee8435a858ae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The minor part of the scene file format version, bumped by an addition.  <br /></td></tr>
+<tr class="memitem:ga03295d3937f803d9f3c4cd6c4ed1a66c" id="r_ga03295d3937f803d9f3c4cd6c4ed1a66c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga03295d3937f803d9f3c4cd6c4ed1a66c">SCENE_VERSION_PATCH</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:ga03295d3937f803d9f3c4cd6c4ed1a66c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The patch part of the scene file format version, bumped by a fix.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The entity component system of the engine. </p>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="gac1973ed3eec71b4441801810ab15ba79" name="gac1973ed3eec71b4441801810ab15ba79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1973ed3eec71b4441801810ab15ba79">&#9670;&#160;</a></span>SCENE_VERSION_MAJOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCENE_VERSION_MAJOR&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The major part of the scene file format version, bumped by a breaking change. </p>
+
+<p class="definition">Definition at line <a class="el" href="SceneSerializer_8h_source.html#l00026">26</a> of file <a class="el" href="SceneSerializer_8h_source.html">SceneSerializer.h</a>.</p>
+
+</div>
+</div>
+<a id="ga319f856085084f72718ee8435a858ae6" name="ga319f856085084f72718ee8435a858ae6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga319f856085084f72718ee8435a858ae6">&#9670;&#160;</a></span>SCENE_VERSION_MINOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCENE_VERSION_MINOR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The minor part of the scene file format version, bumped by an addition. </p>
+
+<p class="definition">Definition at line <a class="el" href="SceneSerializer_8h_source.html#l00032">32</a> of file <a class="el" href="SceneSerializer_8h_source.html">SceneSerializer.h</a>.</p>
+
+</div>
+</div>
+<a id="ga03295d3937f803d9f3c4cd6c4ed1a66c" name="ga03295d3937f803d9f3c4cd6c4ed1a66c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga03295d3937f803d9f3c4cd6c4ed1a66c">&#9670;&#160;</a></span>SCENE_VERSION_PATCH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCENE_VERSION_PATCH&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The patch part of the scene file format version, bumped by a fix. </p>
+
+<p class="definition">Definition at line <a class="el" href="SceneSerializer_8h_source.html#l00038">38</a> of file <a class="el" href="SceneSerializer_8h_source.html">SceneSerializer.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
