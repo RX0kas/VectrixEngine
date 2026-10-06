@@ -16,6 +16,10 @@
  * - EventBase, to define an application's own events, and Application::postEvent to send them
  * - KeyTypedEvent, WindowFocusEvent, WindowMovedEvent, WindowMinimizeEvent and FilesDroppedEvent
  * - Event::is<T> and Event::as<T>, for the handlers subscribed to every event (subscribe<Event>)
+ * - KeyMods: the modifier keys held, in KeyPressedEvent/KeyReleasedEvent (with the scancode) and in the mouse
+ *   button events
+ * - MouseMovedEvent::dx and MouseMovedEvent::dy, the movement since the previous MouseMovedEvent
+ * - FramebufferResizeEvent (size in pixels), WindowContentScaleEvent and MouseEnterEvent
  * @subsection v0_5_2_removed Removed
  * - Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros
  * - The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types

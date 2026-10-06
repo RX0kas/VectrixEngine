@@ -48,6 +48,19 @@ namespace Vectrix {
 		shutdown();
 	}
 
+	/// @cond INTERNAL
+	static KeyMods toKeyMods(int glfwMods) {
+		return {
+			.shift    = (glfwMods & GLFW_MOD_SHIFT) != 0,
+			.ctrl     = (glfwMods & GLFW_MOD_CONTROL) != 0,
+			.alt      = (glfwMods & GLFW_MOD_ALT) != 0,
+			.super    = (glfwMods & GLFW_MOD_SUPER) != 0,
+			.capsLock = (glfwMods & GLFW_MOD_CAPS_LOCK) != 0,
+			.numLock  = (glfwMods & GLFW_MOD_NUM_LOCK) != 0,
+		};
+	}
+	/// @endcond
+
 	template<std::derived_from<Event> T, typename... Args>
 	void Window::postEvent(GLFWwindow* window, Args&&... args) {
 		const auto* data = static_cast<const WindowData*>(glfwGetWindowUserPointer(window));
@@ -87,6 +100,9 @@ namespace Vectrix {
 		// Set some callbacks
 		glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
+		// Without it GLFW never reports Caps Lock and Num Lock in the modifiers
+		glfwSetInputMode(m_window, GLFW_LOCK_KEY_MODS, GLFW_TRUE);
+
 		// Set before ImGui installs its own callbacks, which forward to these
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
 			postEvent<WindowResizeEvent>(window, static_cast<unsigned int>(width), static_cast<unsigned int>(height));
@@ -94,6 +110,10 @@ namespace Vectrix {
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
 			postEvent<WindowCloseEvent>(window);
+		});
+
+		glfwSetWindowContentScaleCallback(m_window, [](GLFWwindow* window, float xScale, float yScale) {
+			postEvent<WindowContentScaleEvent>(window, xScale, yScale);
 		});
 
 		glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focused) {
@@ -115,9 +135,9 @@ namespace Vectrix {
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			switch (action) {
-				case GLFW_PRESS:   postEvent<KeyPressedEvent>(window, key, false); break;
-				case GLFW_REPEAT:  postEvent<KeyPressedEvent>(window, key, true); break;
-				case GLFW_RELEASE: postEvent<KeyReleasedEvent>(window, key); break;
+				case GLFW_PRESS:   postEvent<KeyPressedEvent>(window, key, false, toKeyMods(mods), scancode); break;
+				case GLFW_REPEAT:  postEvent<KeyPressedEvent>(window, key, true, toKeyMods(mods), scancode); break;
+				case GLFW_RELEASE: postEvent<KeyReleasedEvent>(window, key, toKeyMods(mods), scancode); break;
 				default: VC_CORE_ERROR_NO_EXIT("Unknown key action: {}", action);
 			}
 		});
@@ -128,8 +148,8 @@ namespace Vectrix {
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
 			switch (action) {
-				case GLFW_PRESS:   postEvent<MouseButtonPressedEvent>(window, button); break;
-				case GLFW_RELEASE: postEvent<MouseButtonReleasedEvent>(window, button); break;
+				case GLFW_PRESS:   postEvent<MouseButtonPressedEvent>(window, button, toKeyMods(mods)); break;
+				case GLFW_RELEASE: postEvent<MouseButtonReleasedEvent>(window, button, toKeyMods(mods)); break;
 				default: VC_CORE_ERROR_NO_EXIT("Unknown mouse button action: {}", action);
 			}
 		});
@@ -139,7 +159,20 @@ namespace Vectrix {
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-			postEvent<MouseMovedEvent>(window, static_cast<float>(xPos), static_cast<float>(yPos));
+			WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+			const double dx = data.hasCursorPosition ? xPos - data.cursorX : 0.0;
+			const double dy = data.hasCursorPosition ? yPos - data.cursorY : 0.0;
+			data.cursorX = xPos;
+			data.cursorY = yPos;
+			data.hasCursorPosition = true;
+			postEvent<MouseMovedEvent>(window, static_cast<float>(xPos), static_cast<float>(yPos),
+				static_cast<float>(dx), static_cast<float>(dy));
+		});
+
+		glfwSetCursorEnterCallback(m_window, [](GLFWwindow* window, int entered) {
+			if (entered == GLFW_FALSE)
+				static_cast<WindowData*>(glfwGetWindowUserPointer(window))->hasCursorPosition = false;
+			postEvent<MouseEnterEvent>(window, entered == GLFW_TRUE);
 		});
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
@@ -155,6 +188,7 @@ namespace Vectrix {
 		data.width = width;
 		data.height = height;
 		data.windowResized = true; // VulkanRenderer::endFrame recreates the swap chain on it
+		postEvent<FramebufferResizeEvent>(window, static_cast<unsigned int>(width), static_cast<unsigned int>(height));
 	}
 
 	Window* Window::create() {

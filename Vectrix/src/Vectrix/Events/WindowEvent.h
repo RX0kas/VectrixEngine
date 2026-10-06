@@ -45,6 +45,53 @@ namespace Vectrix {
 	};
 
 	/**
+	 * @brief Sent when the window's framebuffer changed size, in pixels
+	 *
+	 * It is the size to give a viewport or an offscreen framebuffer matching the window. It differs from
+	 * WindowResizeEvent's on a scaled display (HiDPI, Wayland scale factor).
+	 * @note 0x0 while the window is minimized. The renderer recreates its swap chain by itself
+	 * @ingroup events
+	 */
+	class FramebufferResizeEvent : public EventBase<FramebufferResizeEvent, "FramebufferResize", EventCategory::Window> {
+	public:
+		/**
+		 * @param width The new width in pixels
+		 * @param height The new height in pixels
+		 */
+		FramebufferResizeEvent(unsigned int width, unsigned int height) : width(width), height(height) {}
+
+		unsigned int width;  ///< The new width, in pixels
+		unsigned int height; ///< The new height, in pixels
+
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("FramebufferResize: {}, {}", width, height);
+		}
+	};
+
+	/**
+	 * @brief Sent when the window's content scale changed, e.g. moved to a screen with another scaling
+	 *
+	 * The scale is the ratio between the screen's DPI and the platform's default one: 1.0 on a regular
+	 * screen, 2.0 on a 200% HiDPI one. Use it to scale the UI and fonts.
+	 * @ingroup events
+	 */
+	class WindowContentScaleEvent : public EventBase<WindowContentScaleEvent, "WindowContentScale", EventCategory::Window> {
+	public:
+		/**
+		 * @param xScale The new horizontal scale
+		 * @param yScale The new vertical scale
+		 */
+		WindowContentScaleEvent(float xScale, float yScale) : xScale(xScale), yScale(yScale) {}
+
+		float xScale; ///< The new horizontal content scale, 1.0 being the platform's default
+		float yScale; ///< The new vertical content scale, 1.0 being the platform's default
+
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("WindowContentScale: {}, {}", xScale, yScale);
+		}
+	};
+
+	/**
 	 * @brief Sent when the window gains or loses the keyboard focus
 	 * @ingroup events
 	 */

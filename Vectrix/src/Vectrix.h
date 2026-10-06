@@ -32,6 +32,7 @@
 #include "Vectrix/Input/Input.h"
 #include "Vectrix/Input/KeyCodes.h"
 #include "Vectrix/Input/MouseCodes.h"
+#include "Vectrix/Input/KeyMods.h"
 
 #include "Vectrix/ImGui/ImGuiLayer.h"
 #include "Vectrix/ImGui/ImGuiWidget.h"

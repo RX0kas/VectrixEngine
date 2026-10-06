@@ -188,6 +188,10 @@ namespace Vectrix {
 			EventQueue* eventQueue = nullptr;
 			bool visible;
 			DisplayServer displayServer;
+			// The last cursor position, for MouseMovedEvent's delta. Forgotten when the cursor leaves, so its
+			// first move back in has no delta
+			bool hasCursorPosition = false;
+			double cursorX = 0.0, cursorY = 0.0;
 		};
 		
 		void shutdown();
