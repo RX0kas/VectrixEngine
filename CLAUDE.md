@@ -110,6 +110,12 @@ Adjust the binary directory for the actual build type, OS, processor, and build 
 
 - Match nearby style. This codebase currently mixes tabs and spaces in older files; avoid broad whitespace-only churn.
 - Use namespace `Vectrix` for engine/editor code.
+- Naming prefixes (the user's convention, follow it in new code):
+  - `m_` for private/protected member variables of a class (`m_window`, `m_eventQueue`).
+  - `s_` for static variables, static members and file-scope `static` variables (`s_instance`, `s_GLFWWindowCount`).
+  - `k_` for constants (`static constexpr` members, named constants: `k_maxEntries`, `k_initialCapacity`).
+  - `g_` for globals (`g_getAppInfo`).
+  - No prefix for the public data members of plain structs and events (`KeyMods::ctrl`, `WindowResizeEvent::width`).
 - Use the existing `VC_` macro family for platform, logging, assertions, profiling, and app metadata.
 - Use `VC_CORE_*` logging for engine/internal messages and `VC_*` logging for client-facing/application messages.
 - Use `VC_CORE_ASSERT` / `VC_ASSERT` where nearby code uses assertions. Assertions and logging behavior differ between Debug and Release.
