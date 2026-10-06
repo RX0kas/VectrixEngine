@@ -23,12 +23,12 @@ namespace Vectrix {
 		m_manager->render();
 	}
 
-	void ImGuiLayer::OnEvent(Event &event) {
-		if (m_blockEvents)	{
-			ImGuiIO& io = ImGui::GetIO();
-			event.Handled |= event.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-			event.Handled |= event.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
-		}
+	bool ImGuiLayer::capturesEvent(const Event& event) const {
+		if (!m_blockEvents)
+			return false;
+		const ImGuiIO& io = ImGui::GetIO();
+		return (event.isInCategory(EventCategory::Mouse) && io.WantCaptureMouse)
+			|| (event.isInCategory(EventCategory::Keyboard) && io.WantCaptureKeyboard);
 	}
 
 	void ImGuiLayer::OnUpdate(const DeltaTime& deltaTime) {

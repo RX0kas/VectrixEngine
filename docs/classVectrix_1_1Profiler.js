@@ -1,4 +1,4 @@
 var classVectrix_1_1Profiler =
 [
-    [ "isCompatible", "classVectrix_1_1Profiler.html#a06e52b7beb083c13971da84b91be674b", null ]
+    [ "get", "group__debugtools.html#ga145116055a4f4995c619d6b26cbbe65f", null ]
 ];

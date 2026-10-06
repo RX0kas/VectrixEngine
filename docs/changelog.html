@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -96,6 +96,44 @@ $(function(){initNavTree('changelog.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>History of changes, fixes and new features across all versions.</p>
+<h1 class="doxsection"><a class="anchor" id="v0_5_2"></a>
+v0.5.2 - (06-10-2026)</h1>
+<h2 class="doxsection"><a class="anchor" id="v0_5_2_changed"></a>
+Changed</h2>
+<ul>
+<li>Reworked the event system around subscriptions: a Layer (or the Application) calls EventListener::subscribe&lt;T&gt;(handler) once, e.g. from its constructor, instead of overriding OnEvent. A handler returning true consumes the event</li>
+<li>Events are queued and sent once per frame, before Layer::OnUpdate, instead of from inside the GLFW callbacks</li>
+<li>Events carry their data as public members (KeyPressedEvent::key, WindowResizeEvent::width...) and KeyPressedEvent::repeat is a bool</li>
+<li>EventCategory is an enum class (EventCategory::Keyboard instead of EventCategoryKeyboard) </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_2_added"></a>
+Added</h2>
+<ul>
+<li>EventBase, to define an application's own events, and Application::postEvent to send them</li>
+<li>KeyTypedEvent, WindowFocusEvent, WindowMovedEvent, WindowMinimizeEvent and FilesDroppedEvent</li>
+<li>Event::is&lt;T&gt; and Event::as&lt;T&gt;, for the handlers subscribed to every event (subscribe&lt;Event&gt;)</li>
+<li>KeyMods: the modifier keys held, in KeyPressedEvent/KeyReleasedEvent (with the scancode) and in the mouse button events</li>
+<li>MouseMovedEvent::dx and MouseMovedEvent::dy, the movement since the previous MouseMovedEvent</li>
+<li>FramebufferResizeEvent (size in pixels), WindowContentScaleEvent and MouseEnterEvent</li>
+<li>ScopedSubscription and EventListener::subscribeScoped: a subscription removed when its handle is destroyed</li>
+<li>Application::sendEvent, to send an event right away and know whether a listener consumed it</li>
+<li>Application::postEvent can be called from any thread; the event is still sent on the main thread</li>
+<li>Application::observeEvents: a function called after every event, consumed or not, with who consumed it </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_2_editor_added"></a>
+Editor Addition</h2>
+<ul>
+<li>Window &gt; Event Log: the last events sent, filtered by category or text, and who consumed each</li>
+<li>Files and folders dropped onto the editor are copied into the content browser's current folder</li>
+<li>The editor's own events: AssetMovedEvent (replaces ContentBrowserPanel::setOnMoved), SceneOpenedEvent and SelectionChangedEvent </li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="v0_5_2_removed"></a>
+Removed</h2>
+<ul>
+<li>Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros</li>
+<li>The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types</li>
+</ul>
+<hr  />
 <h1 class="doxsection"><a class="anchor" id="v0_5_0"></a>
 v0.5.0 — (24-05-2026)</h1>
 <h2 class="doxsection"><a class="anchor" id="v0_5_0_added"></a>

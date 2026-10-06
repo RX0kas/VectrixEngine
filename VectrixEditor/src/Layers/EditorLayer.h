@@ -9,6 +9,7 @@
 #include "StartupLayer.h"
 #include "Vectrix.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/EventLogPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/SettingsPanel.h"
 #include "Undo/UndoHistory.h"
@@ -23,8 +24,6 @@ namespace Vectrix {
 		void OnRender() override;
 
 		void OnRenderOffscreen() override;
-
-		void OnEvent(Event &event) override;
 
 		void OnImGuiRender() override;
 
@@ -87,6 +86,7 @@ namespace Vectrix {
     	std::unique_ptr<SceneHierarchyPanel> m_sceneHierarchyPanel;
     	std::unique_ptr<ContentBrowserPanel> m_contentBrowserPanel;
     	std::unique_ptr<SettingsPanel> m_settingPanel;
+    	std::unique_ptr<EventLogPanel> m_eventLogPanel;
     	bool m_graphicDebugWidgetEnable = false;
 
     	UndoHistory m_undoHistory;
@@ -103,6 +103,7 @@ namespace Vectrix {
     	std::string m_titleFileName;
 
     	void refreshSelectionAfter(Command* command);
+    	std::weak_ptr<Entity> m_notifiedSelection; ///< The selection last posted in a SelectionChangedEvent
 
     	// Errors
     	std::string m_lastLoadSceneFileErrorMessage;

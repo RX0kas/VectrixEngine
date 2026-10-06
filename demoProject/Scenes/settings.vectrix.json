@@ -1,0 +1,33 @@
+{
+  "editor": {
+    "general": {
+      "autoProjectRemove": true
+    },
+    "ui": {
+      "settingsCategory": 13
+    }
+  },
+  "engine": {
+    "graphicAPI": {
+      "vulkan": {
+        "rendering": {
+          "wireframe": false
+        }
+      }
+    },
+    "rendering": {
+      "clearColor": [
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "window": {
+    "height": 720,
+    "resizable": true,
+    "title": "VectrixEditor - Test",
+    "width": 1280
+  }
+}

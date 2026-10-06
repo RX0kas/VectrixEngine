@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -98,27 +98,29 @@ $(function(){initNavTree('GraphicsContext_8h_source.html','',''); });
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;GLFW/glfw3.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;Vectrix/Scene/Components/MeshComponent.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="MeshRendererComponent_8h.html">Vectrix/Scene/Components/MeshRendererComponent.h</a>&quot;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">    /// @cond INTERNAL</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">class </span>GraphicsContext {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>        <span class="keyword">virtual</span> ~GraphicsContext() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> registerMesh(MeshComponent* model) = 0;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> waitIdle();</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keyword">friend</span> <span class="keyword">class </span>Application;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> uploadAllMeshData();</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">friend</span> <span class="keyword">class </span>EditorLayer;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keyword">virtual</span> <span class="keywordtype">float</span> getAspect() = 0;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> swapBuffers() = 0;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> init() = 0;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keyword">static</span> <span class="keywordtype">void</span> setClientAPI();</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">friend</span> <span class="keyword">class </span>Window;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_enumvalue" href="group__events.html#gga6a12dfd75c3b1e889ec3eb377c101fabac89686a387d2b12b3c729ce35a0bcb5b">Window</a>;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keyword">static</span> GraphicsContext *create(GLFWwindow *windowHandle);</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    };<span class="comment"></span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">    ///  @endcond</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}</div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="aMeshRendererComponent_8h_html"><div class="ttname"><a href="MeshRendererComponent_8h.html">MeshRendererComponent.h</a></div><div class="ttdoc">Definition of the component that makes an entity visible.</div></div>
+<div class="ttc" id="agroup__events_html_gga6a12dfd75c3b1e889ec3eb377c101fabac89686a387d2b12b3c729ce35a0bcb5b"><div class="ttname"><a href="group__events.html#gga6a12dfd75c3b1e889ec3eb377c101fabac89686a387d2b12b3c729ce35a0bcb5b">Vectrix::EventCategory::Window</a></div><div class="ttdeci">@ Window</div><div class="ttdoc">Sent by the window itself (resize, close, move, focus, files dropped).</div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00028">Event.h:28</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00020">Application.cpp:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

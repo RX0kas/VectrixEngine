@@ -7,7 +7,9 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"   // for ImGui::GetWindowDrawList()
+#include "Events/EditorEvents.h"
 #include "Utils/Error.h"
+#include "Vectrix/Application.h"
 #include "Vectrix/Assets/AssetsManager.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Settings/SettingsManager.h"
@@ -156,7 +158,12 @@ namespace Vectrix {
         return candidate;
     }
 
-    ContentBrowserPanel::ContentBrowserPanel(const std::filesystem::path& assetRoot) : ImGuiWidget("ContentBrowserPanel") {
+    ContentBrowserPanel::ContentBrowserPanel(const std::filesystem::path& assetRoot, EventListener& events) : ImGuiWidget("ContentBrowserPanel") {
+        m_onFilesDropped = events.subscribeScoped<FilesDroppedEvent>([this](const FilesDroppedEvent& e) {
+            importFiles(e.paths);
+            return true;
+        });
+
         if (const JsonObject& s = SettingsManager::getSettings(); s.contains("editor")) {
             const JsonValue& cb = s.at("editor")["contentBrowser"];
             m_thumbnailSize = static_cast<float>(cb["thumbnailSize"].getAs<double>().value_or(m_thumbnailSize));
@@ -237,6 +244,7 @@ namespace Vectrix {
         renderErrorMessage("FAIL_DELETE", m_lastDeleteErrorMessage);
         renderErrorMessage("FLUSH_PENDING_MOVE",m_lastFlushPendingMoveErrorMessage);
         renderErrorMessage("FAIL_RENAME", m_lastRenameErrorMessage);
+        renderErrorMessage("FAIL_IMPORT", m_lastImportErrorMessage);
     }
 
     void ContentBrowserPanel::drawToolbar() {
@@ -478,8 +486,7 @@ namespace Vectrix {
         }
 
         if (isCut) {
-            if (m_onMoved)
-                m_onMoved(source, destination);
+            Application::instance().sendEvent<AssetMovedEvent>(source, destination);
             m_clipboardPath.clear();
             m_clipboardIsCut = false;
 
@@ -493,6 +500,54 @@ namespace Vectrix {
         m_selectedPath = destination;
         if (std::filesystem::is_directory(destination))
             ensureTreeExpanded(destination);
+    }
+
+    void ContentBrowserPanel::importFiles(const std::vector<std::string>& paths) {
+        std::error_code ec;
+        const std::filesystem::path target = std::filesystem::weakly_canonical(m_currentDirectory, ec);
+        if (ec) {
+            showErrorMessage("FAIL_IMPORT");
+            m_lastImportErrorMessage = std::format("Can't import into '{}': {}", toUtf8(m_currentDirectory), ec.message());
+            return;
+        }
+
+        int imported = 0;
+        std::string failures;
+        for (const std::string& dropped : paths) {
+            const std::filesystem::path source = std::filesystem::weakly_canonical(fromUtf8(dropped), ec);
+            if (ec) {
+                failures += std::format("\n  - {}: {}", dropped, ec.message());
+                continue;
+            }
+            if (source.parent_path() == target)
+                continue; // already here: a copy would only duplicate it
+            const bool isDirectory = std::filesystem::is_directory(source, ec);
+            if (isDirectory && isSubPathOf(source, target)) {
+                failures += std::format("\n  - {}: can't be copied inside itself", toUtf8(source.filename()));
+                continue;
+            }
+
+            const std::filesystem::path destination = uniqueDestination(target, source);
+            if (isDirectory)
+                std::filesystem::copy(source, destination, std::filesystem::copy_options::recursive, ec);
+            else
+                std::filesystem::copy_file(source, destination, ec);
+            if (ec) {
+                failures += std::format("\n  - {}: {}", toUtf8(source.filename()), ec.message());
+                continue;
+            }
+            ++imported;
+            m_selectedPath = destination;
+            if (isDirectory)
+                ensureTreeExpanded(destination);
+        }
+
+        if (imported > 0)
+            VC_INFO("Imported {} file(s) or folder(s) into '{}'", imported, toUtf8(target));
+        if (!failures.empty()) {
+            showErrorMessage("FAIL_IMPORT");
+            m_lastImportErrorMessage = std::format("These couldn't be imported into '{}':{}", toUtf8(target), failures);
+        }
     }
 
     void ContentBrowserPanel::deleteEntry(const std::filesystem::path& path) {
@@ -617,8 +672,7 @@ namespace Vectrix {
             ensureTreeExpanded(to);
         }
 
-        if (m_onMoved)
-            m_onMoved(from, to);
+        Application::instance().sendEvent<AssetMovedEvent>(from, to);
     }
 
     void ContentBrowserPanel::startRename(const std::filesystem::path& path) {

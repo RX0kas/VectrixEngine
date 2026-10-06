@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -124,19 +124,24 @@ This function tell the GPU that this shader will be used for all subsequent draw
 <tr class="memdesc:a929f30f7607470db78def08a69f4d6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of a 4x4 matrix uniform in the shader.  <br /></td></tr>
 <tr class="memitem:a94d77fe2b9bf322a5b69f5e024e39c17" id="r_a94d77fe2b9bf322a5b69f5e024e39c17"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a94d77fe2b9bf322a5b69f5e024e39c17">useTexture</a> (std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Texture.html">Texture</a> &gt; texture)</td></tr>
 <tr class="memdesc:a94d77fe2b9bf322a5b69f5e024e39c17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of the current texture in the shader.  <br /></td></tr>
+<tr class="memitem:a6bb1a1bf6a07bf7e68a45d99d9529cdd" id="r_a6bb1a1bf6a07bf7e68a45d99d9529cdd"><td class="memItemLeft">uint32_t&#160;</td><td class="memItemRight"><a class="el" href="#a6bb1a1bf6a07bf7e68a45d99d9529cdd">useFramebuffer</a> (std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> &gt; framebuffer)</td></tr>
+<tr class="memdesc:a6bb1a1bf6a07bf7e68a45d99d9529cdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of the current framebuffer in the shader.  <br /></td></tr>
 <tr class="memitem:a8dd177a44c4bb9f2428af2f2296e6472" id="r_a8dd177a44c4bb9f2428af2f2296e6472"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a8dd177a44c4bb9f2428af2f2296e6472 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a8dd177a44c4bb9f2428af2f2296e6472">setUniform</a> (const std::string &amp;name, const T &amp;value) const</td></tr>
 <tr class="memdesc:a8dd177a44c4bb9f2428af2f2296e6472"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the value of a uniform in the shader, without needing to think about the type.  <br /></td></tr>
 <tr class="memitem:af7c6d680a5472ae797ee35630f9908f4" id="r_af7c6d680a5472ae797ee35630f9908f4"><td class="memItemLeft"><a id="af7c6d680a5472ae797ee35630f9908f4" name="af7c6d680a5472ae797ee35630f9908f4"></a>
 bool&#160;</td><td class="memItemRight"><b>isAffectedByCamera</b> () const</td></tr>
 <tr class="memdesc:af7c6d680a5472ae797ee35630f9908f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return if the shader is set up to receives the camera. <br /></td></tr>
+<tr class="memitem:a268bafd3147d9e85a682ec136a2d22d7" id="r_a268bafd3147d9e85a682ec136a2d22d7"><td class="memItemLeft"><a id="a268bafd3147d9e85a682ec136a2d22d7" name="a268bafd3147d9e85a682ec136a2d22d7"></a>
+std::string&#160;</td><td class="memItemRight"><b>getID</b> () const</td></tr>
+<tr class="memdesc:a268bafd3147d9e85a682ec136a2d22d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the shader. <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class represent a shader. </p>
-<p>This class represent a shader that can be created with <a class="el" href="classVectrix_1_1ShaderManager.html#a54d6b7858b33a9b702d4b81b8e0e6819" title="Function to create a new shader.">Vectrix::ShaderManager::createShader()</a> <br  />
+<p>This class represent a shader that can be created with <a class="el" href="classVectrix_1_1ShaderManager.html#a28f7e09a50ecf845e620887bb72f6917" title="Function to create a new shader.">Vectrix::ShaderManager::createShader()</a> <br  />
  And <a class="el" href="classVectrix_1_1ShaderManager.html#a6efb97078fafae406b8dbd4d6c130a0a" title="This function is used to get a shader previously created.">Vectrix::ShaderManager::get()</a> can be used to obtain a shader already created </p><dl class="section version"><dt>Version</dt><dd>0.1.0 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00028">28</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00037">37</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
 <a id="ac40fc14b31e3fbb0f93b2eb601789728" name="ac40fc14b31e3fbb0f93b2eb601789728"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac40fc14b31e3fbb0f93b2eb601789728">&#9670;&#160;</a></span>bind()</h2>
@@ -234,7 +239,7 @@ The name of the uniform is case-sensitive</dd></dl>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00312">312</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00339">339</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
 
 </div>
 </div>
@@ -707,6 +712,39 @@ The name of the uniform is case-sensitive</dd></dl>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a6bb1a1bf6a07bf7e68a45d99d9529cdd" name="a6bb1a1bf6a07bf7e68a45d99d9529cdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb1a1bf6a07bf7e68a45d99d9529cdd">&#9670;&#160;</a></span>useFramebuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t Vectrix::Shader::useFramebuffer </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Framebuffer.html">Framebuffer</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>framebuffer</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Define the value of the current framebuffer in the shader. </p>
+<p>This function permit to modify the value of the current framebuffer in this shader and return the index it has been set to</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">framebuffer</td><td>the framebuffer that is sent</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>The shader must be bind before</dd></dl>
+<dl class="section post"><dt>Postcondition</dt><dd>The value is set until another one is given, even for upcoming frames</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>Don't call this function before the initialization of the window </dd>
+<dd>
+The name of the uniform is case-sensitive</dd>
+<dd>
+There is a limited number of texture/framebuffer allowed per shader <a class="el" href="classVectrix_1_1Texture.html#a769130d3cbee3826ac2ee6616c51bb2b" title="This function return the maximal number of Texture allowed per Shader.">Texture::getMaxTexturePerShader()</a> </dd></dl>
 
 </div>
 </div>

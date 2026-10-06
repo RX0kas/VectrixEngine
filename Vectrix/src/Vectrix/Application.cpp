@@ -30,19 +30,6 @@ namespace Vectrix {
 				}
 			}
 		}
-
-		// From the top down, for events: the last overlay pushed first, the first layer pushed last. Stops once
-		// the event is handled
-		void dispatchTopDown(const LayerStack& stack, Event& e) {
-			for (const std::vector<std::shared_ptr<Layer>>* group : {&stack.overlays(), &stack.layers()}) {
-				for (size_t i = group->size(); i-- > 0 && !e.Handled;) {
-					if (i >= group->size())
-						continue; // a layer removed by an earlier call
-					const std::shared_ptr<Layer> layer = (*group)[i];
-					layer->OnEvent(e);
-				}
-			}
-		}
 	}
 
 	Application* Application::s_instance = nullptr;
@@ -91,7 +78,7 @@ namespace Vectrix {
 #endif
 
 		m_window = std::unique_ptr<Window>(Window::create());
-		m_window->setEventCallback(VC_BIND_EVENT_FN(onEvent));
+		m_window->setEventQueue(&m_eventQueue);
 		m_window->init(windowAttributes);
 		if (!windowTitle.empty())
 			m_window->setTitle(windowTitle);
@@ -117,21 +104,47 @@ namespace Vectrix {
 		m_window.reset();
 	}
 
-	void Application::onEvent(Event& e) {
+	void Application::dispatchEvent(Event& event) {
 		VC_PROFILER_FUNCTION();
-		// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the
-		// first look so it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)
-		if (m_imGuiLayer)
-			m_imGuiLayer->OnEvent(e);
+		// Who consumed the event, for the observers. A copy: the layer that did can be popped by its own handler
+		std::string consumedBy;
 
-		dispatchTopDown(m_layerStack, e);
-
-		// Layers see a close request first: one that handles it (e.g. to ask about unsaved work) keeps the
-		// application running
-		if (!e.Handled) {
-			EventDispatcher dispatcher(e);
-			dispatcher.Dispatch<WindowCloseEvent>(VC_BIND_EVENT_FN_RETURN(onWindowClose));
+		// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the first look so
+		// it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)
+		if (m_imGuiLayer) {
+			if (m_imGuiLayer->capturesEvent(event))
+				event.m_handled = true;
+			m_imGuiLayer->notify(event);
+			if (event.m_handled)
+				consumedBy = "ImGui";
 		}
+
+		// From the top down: the last overlay pushed first, the first layer pushed last. By index, re-reading the
+		// size, and holding each layer during its call: a handler that pops a layer can't invalidate the loop
+		for (const std::vector<std::shared_ptr<Layer>>* group : {&m_layerStack.overlays(), &m_layerStack.layers()}) {
+			for (size_t i = group->size(); i-- > 0 && !event.m_handled;) {
+				if (i >= group->size())
+					continue; // a layer removed by an earlier handler
+				const std::shared_ptr<Layer> layer = (*group)[i];
+				layer->notify(event);
+				if (event.m_handled)
+					consumedBy = layer->getName();
+			}
+		}
+
+		if (!event.m_handled) {
+			notify(event);
+			if (event.m_handled)
+				consumedBy = "Application";
+		}
+
+		// Every listener sees a close request first: one that consumes it (e.g. to ask about unsaved work) keeps
+		// the application running
+		if (!event.m_handled && event.is<WindowCloseEvent>())
+			m_running = false;
+
+		detail::EventDispatchedEvent dispatched(event, consumedBy);
+		m_eventObservers.notify(dispatched);
 	}
 
 	void Application::run() {
@@ -158,6 +171,11 @@ namespace Vectrix {
 				m_hasToSwitch = false;
 			}
 
+			// What was posted since the last frame, the input polled at its end included
+			m_eventQueue.dispatch([this](Event& event) { dispatchEvent(event); });
+			if (!m_running)
+				break;
+
 			forEachLayer(m_layerStack, [this](const std::shared_ptr<Layer>& layer) { layer->OnUpdate(m_deltaTime); });
 			if (RenderCommand::canRender()) {
 				forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnRenderOffscreen(); });
@@ -174,12 +192,6 @@ namespace Vectrix {
 
 			m_window->onUpdate();
 		}
-	}
-
-	bool Application::onWindowClose(WindowCloseEvent& e) {
-		VC_PROFILER_FUNCTION();
-		m_running = false;
-		return true;
 	}
 
 	void Application::PushLayer(const std::shared_ptr<Layer>& layer) {

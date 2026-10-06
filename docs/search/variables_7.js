@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['type_0',['type',['../structVectrix_1_1BufferElement.html#af9cad1928b9df20c14b0cda89002cbbd',1,'Vectrix::BufferElement::type'],['../structVectrix_1_1UniformElement.html#a472167c52a9aea18e1723f0ef4aa9272',1,'Vectrix::UniformElement::type']]]
+  ['id_0',['id',['../structVectrix_1_1AssetsManager_1_1MovedAsset.html#ac00250efaf6176fc1c50a2b2e7a9e99b',1,'Vectrix::AssetsManager::MovedAsset']]],
+  ['imageformat_1',['imageFormat',['../structVectrix_1_1FramebufferSpecification.html#a55c09d6359ea9a8a28822cc901f10e2e',1,'Vectrix::FramebufferSpecification']]]
 ];

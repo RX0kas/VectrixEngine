@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,48 +92,72 @@ $(function(){initNavTree('classVectrix_1_1MouseButtonReleasedEvent.html','','');
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::MouseButtonReleasedEvent Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::MouseButtonReleasedEvent Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__events.html">Events</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Sent when a mouse button goes back up.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Vectrix::MouseButtonReleasedEvent:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classVectrix_1_1MouseButtonReleasedEvent.png" usemap="#Vectrix_3A_3AMouseButtonReleasedEvent_map" alt=""/>
   <map id="Vectrix_3A_3AMouseButtonReleasedEvent_map" name="Vectrix_3A_3AMouseButtonReleasedEvent_map">
-<area href="classVectrix_1_1MouseButtonEvent.html" alt="Vectrix::MouseButtonEvent" shape="rect" coords="0,56,215,80"/>
-<area href="classVectrix_1_1Event.html" alt="Vectrix::Event" shape="rect" coords="0,0,215,24"/>
+<area href="classVectrix_1_1EventBase.html" alt="Vectrix::EventBase&lt; MouseButtonReleasedEvent, &quot;MouseButtonReleased&quot;, EventCategory::Mouse|EventCategory::MouseButton|EventCategory::Input &gt;" shape="rect" coords="0,56,866,80"/>
+<area href="classVectrix_1_1Event.html" title="Base class of everything the engine, or the application, reports to the event listeners." alt="Vectrix::Event" shape="rect" coords="0,0,866,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0c0c1354586d5ec0c118319d40187dc2" id="r_a0c0c1354586d5ec0c118319d40187dc2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a0c0c1354586d5ec0c118319d40187dc2">MouseButtonReleasedEvent</a> (int button)</td></tr>
+<tr class="memitem:ae5853a0c9383c29f940ea4394662a54c" id="r_ae5853a0c9383c29f940ea4394662a54c"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ae5853a0c9383c29f940ea4394662a54c">MouseButtonReleasedEvent</a> (int <a class="el" href="#a3f6d1deb176ebf723c974eb3eb731d23">button</a>, <a class="el" href="structVectrix_1_1KeyMods.html">KeyMods</a> <a class="el" href="#a9b4b521aad9d2e08766ec12711767633">mods</a>={})</td></tr>
 <tr class="memitem:a1cdfc8a0903b2092ffadf4442fbd4b4b" id="r_a1cdfc8a0903b2092ffadf4442fbd4b4b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a1cdfc8a0903b2092ffadf4442fbd4b4b">toString</a> () const override</td></tr>
-<tr class="inherit_header pub_methods_classVectrix_1_1MouseButtonEvent"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1MouseButtonEvent')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1MouseButtonEvent.html">Vectrix::MouseButtonEvent</a></td></tr>
-<tr class="memitem:adba08b29318c08220b5c444b2ec42fea inherit pub_methods_classVectrix_1_1MouseButtonEvent" id="r_adba08b29318c08220b5c444b2ec42fea"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1MouseButtonEvent.html#adba08b29318c08220b5c444b2ec42fea">getMouseButton</a> () const</td></tr>
+<tr class="inherit_header pub_methods_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; MouseButtonReleasedEvent, &quot;MouseButtonReleased&quot;, EventCategory::Mouse|EventCategory::MouseButton|EventCategory::Input &gt;</a></td></tr>
+<tr class="memitem:ad0970ae57b37486df5f799b3f546ea74 inherit pub_methods_classVectrix_1_1EventBase" id="r_ad0970ae57b37486df5f799b3f546ea74"><td class="memItemLeft">std::string_view&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#ad0970ae57b37486df5f799b3f546ea74">getName</a> () const override</td></tr>
 <tr class="inherit_header pub_methods_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:af1163e5f0503b6d42f7a22e122541248 inherit pub_methods_classVectrix_1_1Event" id="r_af1163e5f0503b6d42f7a22e122541248"><td class="memItemLeft">
-EventType&#160;</td><td class="memItemRight"><b>getEventType</b> () const</td></tr>
-<tr class="memitem:a52882006e00df62acd43d7a154c05391 inherit pub_methods_classVectrix_1_1Event" id="r_a52882006e00df62acd43d7a154c05391"><td class="memItemLeft">
-const char *&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
-<tr class="memitem:ae24840455eb575198da37053bed2af58 inherit pub_methods_classVectrix_1_1Event" id="r_ae24840455eb575198da37053bed2af58"><td class="memItemLeft">
-int&#160;</td><td class="memItemRight"><b>getCategoryFlags</b> () const</td></tr>
-<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">
-std::string&#160;</td><td class="memItemRight"><b>toString</b> () const</td></tr>
-<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (EventCategory category) const</td></tr>
+<tr class="memitem:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event" id="r_a5264e04e8880276f9d8deaa785072f20"><td class="memItemLeft"><a class="el" href="group__events.html#ga7f2a1f8dd3e0e2d3d979ee380a4400e9">EventTypeId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a5264e04e8880276f9d8deaa785072f20">getType</a> () const</td></tr>
+<tr class="memdesc:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the id of the event's class, the value eventTypeId gives for it.  <br /></td></tr>
+<tr class="memitem:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event" id="r_ab6bb70663338445a7f4bd5495a7b61f3"><td class="memItemLeft">
+std::string_view&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
+<tr class="memdesc:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the event's class, for logging (e.g. "KeyPressed"). <br /></td></tr>
+<tr class="memitem:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event" id="r_a7fce7c15adbb6b1cd9dbe41bb7fc3935"><td class="memItemLeft"><a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a7fce7c15adbb6b1cd9dbe41bb7fc3935">getCategories</a> () const</td></tr>
+<tr class="memdesc:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return every category the event belongs to.  <br /></td></tr>
+<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (<a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a> category) const</td></tr>
+<tr class="memdesc:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event belongs to one of the given categories.  <br /></td></tr>
+<tr class="memitem:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event" id="r_a1d8d2ca52a93c5e7e5a273f37a79e27f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a1d8d2ca52a93c5e7e5a273f37a79e27f">isHandled</a> () const</td></tr>
+<tr class="memdesc:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if a listener consumed the event.  <br /></td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event" id="r_a800a061d9c689ac3e78d546cf9e78b26"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a800a061d9c689ac3e78d546cf9e78b26">is</a> () const</td></tr>
+<tr class="memdesc:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event is a T.  <br /></td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event" id="r_a412817a45a4353b7b08a955b57d5a803"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">const T *&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a412817a45a4353b7b08a955b57d5a803">as</a> () const</td></tr>
+<tr class="memdesc:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the event as a T, or nullptr when it is another event.  <br /></td></tr>
+<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a40ea5b48fbe3985f7a40fad605b2c32b">toString</a> () const</td></tr>
+<tr class="memdesc:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the event and its payload, for logging.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a3f6d1deb176ebf723c974eb3eb731d23" id="r_a3f6d1deb176ebf723c974eb3eb731d23"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a3f6d1deb176ebf723c974eb3eb731d23">button</a></td></tr>
+<tr class="memdesc:a3f6d1deb176ebf723c974eb3eb731d23"><td class="mdescLeft">&#160;</td><td class="mdescRight">The button, matching the <span class="tt">VC_MOUSE_BUTTON_*</span> values (see <a class="el" href="MouseCodes_8h.html" title="The mouse button codes understood by Input::isMouseButtonPressed.">MouseCodes.h</a>).  <br /></td></tr>
+<tr class="memitem:a9b4b521aad9d2e08766ec12711767633" id="r_a9b4b521aad9d2e08766ec12711767633"><td class="memItemLeft"><a class="el" href="structVectrix_1_1KeyMods.html">KeyMods</a>&#160;</td><td class="memItemRight"><a class="el" href="#a9b4b521aad9d2e08766ec12711767633">mods</a></td></tr>
+<tr class="memdesc:a9b4b521aad9d2e08766ec12711767633"><td class="mdescLeft">&#160;</td><td class="mdescRight">The modifier keys still held.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Attributes inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:a887d8d1a1c640c84eb7daf3049db7cb4 inherit pub_attribs_classVectrix_1_1Event" id="r_a887d8d1a1c640c84eb7daf3049db7cb4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a887d8d1a1c640c84eb7daf3049db7cb4">Handled</a> = false</td></tr>
+<tr class="inherit_header pub_static_attribs_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; MouseButtonReleasedEvent, &quot;MouseButtonReleased&quot;, EventCategory::Mouse|EventCategory::MouseButton|EventCategory::Input &gt;</a></td></tr>
+<tr class="memitem:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase" id="r_a6cbcb7fa15e29691a317d3e8f28ac8e4"><td class="memItemLeft">static constexpr <a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#a6cbcb7fa15e29691a317d3e8f28ac8e4">staticCategories</a></td></tr>
+<tr class="memdesc:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">The categories every event of this class belongs to.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00069">69</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<div class="textblock"><p>Sent when a mouse button goes back up. </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00084">84</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
-<a id="a0c0c1354586d5ec0c118319d40187dc2" name="a0c0c1354586d5ec0c118319d40187dc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c0c1354586d5ec0c118319d40187dc2">&#9670;&#160;</a></span>MouseButtonReleasedEvent()</h2>
+<a id="ae5853a0c9383c29f940ea4394662a54c" name="ae5853a0c9383c29f940ea4394662a54c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5853a0c9383c29f940ea4394662a54c">&#9670;&#160;</a></span>MouseButtonReleasedEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,18 +168,31 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">Vectrix::MouseButtonReleasedEvent::MouseButtonReleasedEvent </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>button</em></span></td><td>)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>button</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structVectrix_1_1KeyMods.html">KeyMods</a></td>          <td class="paramname"><span class="paramname"><em>mods</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="#a3f6d1deb176ebf723c974eb3eb731d23" title="The button, matching the VC_MOUSE_BUTTON_* values (see MouseCodes.h).">button</a></td><td>The button that went up </td></tr>
+    <tr><td class="paramname"><a class="el" href="#a9b4b521aad9d2e08766ec12711767633" title="The modifier keys still held.">mods</a></td><td>The modifier keys held </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00071">71</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00091">91</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">References <a class="el" href="MouseEvent_8h_source.html#l00093">button</a>, and <a class="el" href="MouseEvent_8h_source.html#l00094">mods</a>.</p>
 
 </div>
 </div>
@@ -178,12 +215,53 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00073">73</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00096">96</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Variables</h2>
+<a id="a3f6d1deb176ebf723c974eb3eb731d23" name="a3f6d1deb176ebf723c974eb3eb731d23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f6d1deb176ebf723c974eb3eb731d23">&#9670;&#160;</a></span>button</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Vectrix::MouseButtonReleasedEvent::button</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The button, matching the <span class="tt">VC_MOUSE_BUTTON_*</span> values (see <a class="el" href="MouseCodes_8h.html" title="The mouse button codes understood by Input::isMouseButtonPressed.">MouseCodes.h</a>). </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00093">93</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00091">MouseButtonReleasedEvent()</a>.</p>
+
+</div>
+</div>
+<a id="a9b4b521aad9d2e08766ec12711767633" name="a9b4b521aad9d2e08766ec12711767633"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b4b521aad9d2e08766ec12711767633">&#9670;&#160;</a></span>mods</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structVectrix_1_1KeyMods.html">KeyMods</a> Vectrix::MouseButtonReleasedEvent::mods</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The modifier keys still held. </p>
+
+<p class="definition">Definition at line <a class="el" href="MouseEvent_8h_source.html#l00094">94</a> of file <a class="el" href="MouseEvent_8h_source.html">MouseEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="MouseEvent_8h_source.html#l00091">MouseButtonReleasedEvent()</a>.</p>
 
 </div>
 </div>

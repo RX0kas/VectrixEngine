@@ -2,6 +2,39 @@
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
  *
+ * @section v0_5_2 v0.5.2 - (06-10-2026)
+ *
+ * @subsection v0_5_2_changed Changed
+ * - Reworked the event system around subscriptions: a Layer (or the Application) calls
+ *   EventListener::subscribe<T>(handler) once, e.g. from its constructor, instead of overriding OnEvent.
+ *   A handler returning true consumes the event
+ * - Events are queued and sent once per frame, before Layer::OnUpdate, instead of from inside the GLFW callbacks
+ * - Events carry their data as public members (KeyPressedEvent::key, WindowResizeEvent::width...) and
+ *   KeyPressedEvent::repeat is a bool
+ * - EventCategory is an enum class (EventCategory::Keyboard instead of EventCategoryKeyboard)
+ * @subsection v0_5_2_added Added
+ * - EventBase, to define an application's own events, and Application::postEvent to send them
+ * - KeyTypedEvent, WindowFocusEvent, WindowMovedEvent, WindowMinimizeEvent and FilesDroppedEvent
+ * - Event::is<T> and Event::as<T>, for the handlers subscribed to every event (subscribe<Event>)
+ * - KeyMods: the modifier keys held, in KeyPressedEvent/KeyReleasedEvent (with the scancode) and in the mouse
+ *   button events
+ * - MouseMovedEvent::dx and MouseMovedEvent::dy, the movement since the previous MouseMovedEvent
+ * - FramebufferResizeEvent (size in pixels), WindowContentScaleEvent and MouseEnterEvent
+ * - ScopedSubscription and EventListener::subscribeScoped: a subscription removed when its handle is destroyed
+ * - Application::sendEvent, to send an event right away and know whether a listener consumed it
+ * - Application::postEvent can be called from any thread; the event is still sent on the main thread
+ * - Application::observeEvents: a function called after every event, consumed or not, with who consumed it
+ * @subsection v0_5_2_editor_added Editor Addition
+ * - Window > Event Log: the last events sent, filtered by category or text, and who consumed each
+ * - Files and folders dropped onto the editor are copied into the content browser's current folder
+ * - The editor's own events: AssetMovedEvent (replaces ContentBrowserPanel::setOnMoved), SceneOpenedEvent and
+ *   SelectionChangedEvent
+ * @subsection v0_5_2_removed Removed
+ * - Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros
+ * - The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types
+ *
+ * ---
+ *
  * @section v0_5_0 v0.5.0 — (24-05-2026)
  *
  * @subsection v0_5_0_added Added

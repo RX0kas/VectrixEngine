@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['profiler_2eh_0',['Profiler.h',['../Profiler_8h.html',1,'']]]
+  ['keycodes_2eh_0',['KeyCodes.h',['../KeyCodes_8h.html',1,'']]],
+  ['keyevent_2eh_1',['KeyEvent.h',['../KeyEvent_8h.html',1,'']]],
+  ['keymods_2eh_2',['KeyMods.h',['../KeyMods_8h.html',1,'']]]
 ];

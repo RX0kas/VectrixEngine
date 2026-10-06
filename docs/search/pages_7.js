@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['categories_0',['Categories',['../tools_overview.html#autotoc_md15',1,'']]],
-  ['changed_1',['Changed',['../changelog.html#v0_5_0_changed',1,'Changed'],['../changelog.html#v0_4_2_changed',1,'Changed'],['../changelog.html#v0_4_0_changed',1,'Changed'],['../changelog.html#v0_3_0_changed',1,'Changed'],['../changelog.html#v0_2_0_changed',1,'Changed'],['../changelog.html#v0_1_0_changed',1,'Changed']]],
+  ['categories_0',['Categories',['../tools_overview.html#autotoc_md16',1,'']]],
+  ['changed_1',['Changed',['../changelog.html#v0_5_2_changed',1,'Changed'],['../changelog.html#v0_5_0_changed',1,'Changed'],['../changelog.html#v0_4_2_changed',1,'Changed'],['../changelog.html#v0_4_0_changed',1,'Changed'],['../changelog.html#v0_3_0_changed',1,'Changed'],['../changelog.html#v0_2_0_changed',1,'Changed'],['../changelog.html#v0_1_0_changed',1,'Changed']]],
   ['changelog_2',['Changelog',['../changelog.html',1,'index']]]
 ];

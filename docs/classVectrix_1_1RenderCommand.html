@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -105,8 +105,6 @@ $(function(){initNavTree('classVectrix_1_1RenderCommand.html','',''); });
 Public Static Functions</h2></td></tr>
 <tr class="memitem:a4a7883c329e82a955808454bee544756" id="r_a4a7883c329e82a955808454bee544756"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a4a7883c329e82a955808454bee544756">setClearColor</a> (const glm::vec4 &amp;color)</td></tr>
 <tr class="memdesc:a4a7883c329e82a955808454bee544756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the clear color for the render target.  <br /></td></tr>
-<tr class="memitem:ab68273671cc0dc23c7a94388c31dc2e7" id="r_ab68273671cc0dc23c7a94388c31dc2e7"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#ab68273671cc0dc23c7a94388c31dc2e7">drawIndexed</a> (const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;vertexArray)</td></tr>
-<tr class="memdesc:ab68273671cc0dc23c7a94388c31dc2e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws geometry using the provided vertex array.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides static methods for issuing rendering commands. </p>
@@ -115,46 +113,6 @@ Public Static Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00023">23</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="ab68273671cc0dc23c7a94388c31dc2e7" name="ab68273671cc0dc23c7a94388c31dc2e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab68273671cc0dc23c7a94388c31dc2e7">&#9670;&#160;</a></span>drawIndexed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Vectrix::RenderCommand::drawIndexed </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classVectrix_1_1VertexArray.html">VertexArray</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>vertexArray</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Draws geometry using the provided vertex array. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">vertexArray</td><td>The vertex array containing vertex data and indices</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section pre"><dt>Precondition</dt><dd>A frame must have been started with setupFrame() </dd>
-<dd>
-The vertex array must be properly initialized </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00050">50</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
-
-<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
-
-</div>
-</div>
 <a id="a4a7883c329e82a955808454bee544756" name="a4a7883c329e82a955808454bee544756"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a7883c329e82a955808454bee544756">&#9670;&#160;</a></span>setClearColor()</h2>
 
@@ -190,7 +148,7 @@ The vertex array must be properly initialized </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="RenderCommand_8h_source.html#l00036">36</a> of file <a class="el" href="RenderCommand_8h_source.html">RenderCommand.h</a>.</p>
 
-<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00217">VC_PROFILER_FUNCTION</a>.</p>
+<p class="reference">References <a class="el" href="Profiler_8h_source.html#l00236">VC_PROFILER_FUNCTION</a>.</p>
 
 </div>
 </div>

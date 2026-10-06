@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -103,10 +103,248 @@ $(function(){initNavTree('group__debugtools.html','',''); });
 Files</h2></td></tr>
 <tr class="memitem:Profiler_2Eh" id="r_Profiler_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Profiler_8h.html">Profiler.h</a></td></tr>
 <tr class="memdesc:Profiler_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that provides time analysis on how the application and the engine run. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga3fefdda4a2afd9fa3713c5cf95e6fd6b" id="r_ga3fefdda4a2afd9fa3713c5cf95e6fd6b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga3fefdda4a2afd9fa3713c5cf95e6fd6b">VC_PROFILER_VERSION</a>&#160;&#160;&#160;&quot;1.1&quot;</td></tr>
+<tr class="memdesc:ga3fefdda4a2afd9fa3713c5cf95e6fd6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The version of the profiler data format.  <br /></td></tr>
+<tr class="memitem:ga259ac0a68072da8f1be1b54a64340c40" id="r_ga259ac0a68072da8f1be1b54a64340c40"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga259ac0a68072da8f1be1b54a64340c40">VC_FUNC_NAME</a>&#160;&#160;&#160;&quot;VC_FUNC_NAME unknown&quot;</td></tr>
+<tr class="memdesc:ga259ac0a68072da8f1be1b54a64340c40"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the enclosing function, whatever the compiler calls it.  <br /></td></tr>
+<tr class="memitem:ga50cf83f3135ffdd727189fc23e420833" id="r_ga50cf83f3135ffdd727189fc23e420833"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga50cf83f3135ffdd727189fc23e420833">VC_PROFILER_BEGIN_SESSION</a>(name,  filepath)</td></tr>
+<tr class="memdesc:ga50cf83f3135ffdd727189fc23e420833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start recording into a profile file.  <br /></td></tr>
+<tr class="memitem:ga1bc163c81166fc90c0d2f9f39967e8f1" id="r_ga1bc163c81166fc90c0d2f9f39967e8f1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga1bc163c81166fc90c0d2f9f39967e8f1">VC_PROFILER_END_SESSION</a>()</td></tr>
+<tr class="memdesc:ga1bc163c81166fc90c0d2f9f39967e8f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop recording and close the profile file.  <br /></td></tr>
+<tr class="memitem:ga76e625d8ce841974dd3938f2e92fe08a" id="r_ga76e625d8ce841974dd3938f2e92fe08a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga76e625d8ce841974dd3938f2e92fe08a">VC_PROFILER_CONCAT_IMPL</a>(a,  b)</td></tr>
+<tr class="memdesc:ga76e625d8ce841974dd3938f2e92fe08a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure how long the enclosing scope takes, under a name of your choosing.  <br /></td></tr>
+<tr class="memitem:ga5e986678fc9d613e1cb7b80b2ff3963b" id="r_ga5e986678fc9d613e1cb7b80b2ff3963b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>()</td></tr>
+<tr class="memdesc:ga5e986678fc9d613e1cb7b80b2ff3963b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to say that this function will be measured by the profiler.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga145116055a4f4995c619d6b26cbbe65f" id="r_ga145116055a4f4995c619d6b26cbbe65f"><td class="memItemLeft">static Profiler &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ga145116055a4f4995c619d6b26cbbe65f">Vectrix::Profiler::get</a> ()</td></tr>
+<tr class="memdesc:ga145116055a4f4995c619d6b26cbbe65f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the profiler of the application.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gae79ae05ebde1a8ac02050f58f9d8f558" id="r_gae79ae05ebde1a8ac02050f58f9d8f558"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#gae79ae05ebde1a8ac02050f58f9d8f558">Vectrix::FloatingPointMicroseconds</a> = std::chrono::duration&lt;double, std::micro&gt;</td></tr>
+<tr class="memdesc:gae79ae05ebde1a8ac02050f58f9d8f558"><td class="mdescLeft">&#160;</td><td class="mdescRight">A duration in microseconds, kept as a double so it does not lose precision.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tools used to make debugging and optimizations easier. </p>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga259ac0a68072da8f1be1b54a64340c40" name="ga259ac0a68072da8f1be1b54a64340c40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga259ac0a68072da8f1be1b54a64340c40">&#9670;&#160;</a></span>VC_FUNC_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_FUNC_NAME&#160;&#160;&#160;&quot;VC_FUNC_NAME unknown&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The name of the enclosing function, whatever the compiler calls it. </p>
+<p>It is what VC_PROFILER_FUNCTION records a measurement under. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5e986678fc9d613e1cb7b80b2ff3963b" title="Used to say that this function will be measured by the profiler.">VC_PROFILER_FUNCTION</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00198">198</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
+<a id="ga50cf83f3135ffdd727189fc23e420833" name="ga50cf83f3135ffdd727189fc23e420833"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga50cf83f3135ffdd727189fc23e420833">&#9670;&#160;</a></span>VC_PROFILER_BEGIN_SESSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_PROFILER_BEGIN_SESSION</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>filepath</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_function" href="#ga145116055a4f4995c619d6b26cbbe65f">::Vectrix::Profiler::get</a>().beginSession(name, filepath)</div>
+<div class="ttc" id="agroup__debugtools_html_ga145116055a4f4995c619d6b26cbbe65f"><div class="ttname"><a href="#ga145116055a4f4995c619d6b26cbbe65f">Vectrix::Profiler::get</a></div><div class="ttdeci">static Profiler &amp; get()</div><div class="ttdoc">Return the profiler of the application.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00119">Profiler.h:119</a></div></div>
+</div><!-- fragment -->
+<p>Start recording into a profile file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the session </td></tr>
+    <tr><td class="paramname">filepath</td><td>Where the recorded data is written </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>The entry point opens a session for startup, runtime and shutdown </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1bc163c81166fc90c0d2f9f39967e8f1" title="Stop recording and close the profile file.">VC_PROFILER_END_SESSION</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00208">208</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="EntryPoint_8h_source.html#l00036">main()</a>.</p>
+
+</div>
+</div>
+<a id="ga76e625d8ce841974dd3938f2e92fe08a" name="ga76e625d8ce841974dd3938f2e92fe08a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga76e625d8ce841974dd3938f2e92fe08a">&#9670;&#160;</a></span>VC_PROFILER_CONCAT_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_PROFILER_CONCAT_IMPL</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>a</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>b</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">a##b</div>
+</div><!-- fragment -->
+<p>Measure how long the enclosing scope takes, under a name of your choosing. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name the measurement is recorded under </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5e986678fc9d613e1cb7b80b2ff3963b" title="Used to say that this function will be measured by the profiler.">VC_PROFILER_FUNCTION</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00224">224</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
+<a id="ga1bc163c81166fc90c0d2f9f39967e8f1" name="ga1bc163c81166fc90c0d2f9f39967e8f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1bc163c81166fc90c0d2f9f39967e8f1">&#9670;&#160;</a></span>VC_PROFILER_END_SESSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_PROFILER_END_SESSION</td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_function" href="#ga145116055a4f4995c619d6b26cbbe65f">::Vectrix::Profiler::get</a>().endSession()</div>
+</div><!-- fragment -->
+<p>Stop recording and close the profile file. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga50cf83f3135ffdd727189fc23e420833" title="Start recording into a profile file.">VC_PROFILER_BEGIN_SESSION</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00215">215</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="EntryPoint_8h_source.html#l00036">main()</a>.</p>
+
+</div>
+</div>
+<a id="ga5e986678fc9d613e1cb7b80b2ff3963b" name="ga5e986678fc9d613e1cb7b80b2ff3963b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5e986678fc9d613e1cb7b80b2ff3963b">&#9670;&#160;</a></span>VC_PROFILER_FUNCTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_PROFILER_FUNCTION</td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="Profiler_8h.html#a4545cbd6de7a64b3b857d7c777a10502">VC_PROFILER_SCOPE</a>(<a class="code hl_define" href="#ga259ac0a68072da8f1be1b54a64340c40">VC_FUNC_NAME</a>)</div>
+<div class="ttc" id="aProfiler_8h_html_a4545cbd6de7a64b3b857d7c777a10502"><div class="ttname"><a href="Profiler_8h.html#a4545cbd6de7a64b3b857d7c777a10502">VC_PROFILER_SCOPE</a></div><div class="ttdeci">#define VC_PROFILER_SCOPE(name)</div><div class="ttdoc">Can be used to more precicely describe what a function is doing.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00226">Profiler.h:226</a></div></div>
+<div class="ttc" id="agroup__debugtools_html_ga259ac0a68072da8f1be1b54a64340c40"><div class="ttname"><a href="#ga259ac0a68072da8f1be1b54a64340c40">VC_FUNC_NAME</a></div><div class="ttdeci">#define VC_FUNC_NAME</div><div class="ttdoc">The name of the enclosing function, whatever the compiler calls it.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00198">Profiler.h:198</a></div></div>
+</div><!-- fragment -->
+<p>Used to say that this function will be measured by the profiler. </p>
+<p>Measure how long the enclosing function takes, under its own name.</p>
+<p>The usual way to instrument a function: put it on the first line and the whole call is timed. It costs nothing on a release build. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="Profiler_8h.html#a4545cbd6de7a64b3b857d7c777a10502" title="Can be used to more precicely describe what a function is doing.">VC_PROFILER_SCOPE</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00236">236</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Application_8cpp_source.html#l00037">Vectrix::Application::Application()</a>, <a class="el" href="Renderer_8cpp_source.html#l00012">Vectrix::Renderer::beginScene()</a>, <a class="el" href="MeshManager_8cpp_source.html#l00016">Vectrix::MeshManager::createMesh()</a>, <a class="el" href="Renderer_8cpp_source.html#l00036">Vectrix::Renderer::endScene()</a>, <a class="el" href="Window_8cpp_source.html#l00071">Vectrix::Window::init()</a>, <a class="el" href="Mesh_8cpp_source.html#l00010">Vectrix::Mesh::Mesh()</a>, <a class="el" href="MeshRendererComponent_8cpp_source.html#l00008">Vectrix::MeshRendererComponent::MeshRendererComponent()</a>, <a class="el" href="Window_8cpp_source.html#l00199">Vectrix::Window::onUpdate()</a>, <a class="el" href="Application_8cpp_source.html#l00197">Vectrix::Application::PushLayer()</a>, <a class="el" href="Application_8cpp_source.html#l00203">Vectrix::Application::PushOverlay()</a>, <a class="el" href="Camera_8cpp_source.html#l00033">Vectrix::Camera::recalculateMatrices()</a>, <a class="el" href="EditorCamera_8cpp_source.html#l00025">Vectrix::EditorCamera::recalculateMatrices()</a>, <a class="el" href="Renderer_8cpp_source.html#l00056">Vectrix::Renderer::renderOutline()</a>, <a class="el" href="Renderer_8cpp_source.html#l00072">Vectrix::Renderer::resizeMask()</a>, <a class="el" href="RenderCommand_8h_source.html#l00036">Vectrix::RenderCommand::setClearColor()</a>, <a class="el" href="Camera_8cpp_source.html#l00059">Vectrix::Camera::setViewDirection()</a>, <a class="el" href="EditorCamera_8cpp_source.html#l00052">Vectrix::EditorCamera::setViewDirection()</a>, <a class="el" href="Camera_8cpp_source.html#l00084">Vectrix::Camera::setViewTarget()</a>, <a class="el" href="EditorCamera_8cpp_source.html#l00076">Vectrix::EditorCamera::setViewTarget()</a>, and <a class="el" href="Renderer_8cpp_source.html#l00047">Vectrix::Renderer::submit()</a>.</p>
+
+</div>
+</div>
+<a id="ga3fefdda4a2afd9fa3713c5cf95e6fd6b" name="ga3fefdda4a2afd9fa3713c5cf95e6fd6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3fefdda4a2afd9fa3713c5cf95e6fd6b">&#9670;&#160;</a></span>VC_PROFILER_VERSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_PROFILER_VERSION&#160;&#160;&#160;&quot;1.1&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The version of the profiler data format. </p>
+<p>Written into every profile file, so an old one can be told apart from a current one. </p>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00020">20</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="gae79ae05ebde1a8ac02050f58f9d8f558" name="gae79ae05ebde1a8ac02050f58f9d8f558"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae79ae05ebde1a8ac02050f58f9d8f558">&#9670;&#160;</a></span>FloatingPointMicroseconds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#gae79ae05ebde1a8ac02050f58f9d8f558">Vectrix::FloatingPointMicroseconds</a> = std::chrono::duration&lt;double, std::micro&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A duration in microseconds, kept as a double so it does not lose precision. </p>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00033">33</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="ga145116055a4f4995c619d6b26cbbe65f" name="ga145116055a4f4995c619d6b26cbbe65f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga145116055a4f4995c619d6b26cbbe65f">&#9670;&#160;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Profiler &amp; Vectrix::Profiler::get </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the profiler of the application. </p>
+<dl class="section return"><dt>Returns</dt><dd>The single instance, created the first time it is asked for </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Profiler_8h_source.html#l00119">119</a> of file <a class="el" href="Profiler_8h_source.html">Profiler.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

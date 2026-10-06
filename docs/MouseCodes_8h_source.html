@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -95,26 +95,49 @@ $(function(){initNavTree('MouseCodes_8h_source.html','',''); });
   <div class="headertitle"><div class="title">MouseCodes.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define VC_MOUSE_BUTTON_1         0</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#define VC_MOUSE_BUTTON_2         1</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#define VC_MOUSE_BUTTON_3         2</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#define VC_MOUSE_BUTTON_4         3</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define VC_MOUSE_BUTTON_5         4</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define VC_MOUSE_BUTTON_6         5</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define VC_MOUSE_BUTTON_7         6</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#define VC_MOUSE_BUTTON_8         7</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#define VC_MOUSE_BUTTON_LEFT      VC_MOUSE_BUTTON_1</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#define VC_MOUSE_BUTTON_RIGHT     VC_MOUSE_BUTTON_2</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#define VC_MOUSE_BUTTON_MIDDLE    VC_MOUSE_BUTTON_3</span></div>
+<a href="MouseCodes_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"></span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * @file MouseCodes.h</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * @brief The mouse button codes understood by Input::isMouseButtonPressed</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * @ingroup input</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * The values match the ones GLFW uses. The three named buttons below are aliases of the</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * numbered ones, prefer them since they say what they mean.</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * @see Input::isMouseButtonPressed</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * @see MouseButtonPressedEvent::button</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#aaf48c1ed4f5dff71f0039e36451314f2">   14</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_1         0    </span><span class="comment">///&lt; The first mouse button, the left one on a standard mouse</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a22df7df3a4ce255af15e8571c38deeda">   15</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_2         1    </span><span class="comment">///&lt; The second mouse button, the right one on a standard mouse</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a2e3f7cf0053109f7359f124c52b86e33">   16</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_3         2    </span><span class="comment">///&lt; The third mouse button, the wheel on a standard mouse</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a8fc95bfeadbe91919bd530d921232d5f">   17</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_4         3    </span><span class="comment">///&lt; The fourth mouse button</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a83631734e0fb5571a91171c8e3ed2d73">   18</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_5         4    </span><span class="comment">///&lt; The fifth mouse button</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a27f7fade56fc24307efac2ee2302eb92">   19</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_6         5    </span><span class="comment">///&lt; The sixth mouse button</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a9dd31df6d9e5eb4edca3f2d6a409c232">   20</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_7         6    </span><span class="comment">///&lt; The seventh mouse button</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="MouseCodes_8h.html#a2714fc1ccd3f0c64a3114d790094fd31">   21</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_8         7    </span><span class="comment">///&lt; The eighth mouse button</span><span class="comment"></span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> * @brief The left mouse button</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> * @ingroup input</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="group__input.html#ga5e10b760a65d4e1620c7b3230487f2c1">   26</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_LEFT      VC_MOUSE_BUTTON_1</span><span class="comment"></span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> * @brief The right mouse button</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> * @ingroup input</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"> */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="group__input.html#ga5cdbc3ea9efe54f53ee671e48c8c5ece">   31</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_RIGHT     VC_MOUSE_BUTTON_2</span><span class="comment"></span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"> * @brief The middle mouse button, the wheel pressed down</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment"> * @ingroup input</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment"> */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="group__input.html#gaaa2353b5d1368cde734e4ce5bab8b088">   36</a></span><span class="preprocessor">#define VC_MOUSE_BUTTON_MIDDLE    VC_MOUSE_BUTTON_3</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Input</b></li><li class="navelem"><b>MouseCodes.h</b></li>
+    <li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>src</b></li><li class="navelem"><b>Vectrix</b></li><li class="navelem"><b>Input</b></li><li class="navelem"><a href="MouseCodes_8h.html">MouseCodes.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -99,143 +99,259 @@ $(function(){initNavTree('Application_8cpp_source.html','',''); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="Application_8h.html">Application.h</a>&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="DeltaTime_8h.html">Core/DeltaTime.h</a>&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="Profiler_8h.html">Debug/Profiler.h</a>&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/VulkanContext.h&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;Rendering/GraphicsContext.h&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="RenderCommand_8h.html">Rendering/RenderCommand.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="ShaderManager_8h.html">Rendering/Shaders/ShaderManager.h</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="TextureManager_8h.html">Rendering/Textures/TextureManager.h</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="namespaceVectrix.html">   16</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define BIND_EVENT_FN(x) [this](auto &amp;&amp; PH1) { x(std::forward&lt;decltype(PH1)&gt;(PH1)); }</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="DeltaTime_8h.html">Core/DeltaTime.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="Profiler_8h.html">Debug/Profiler.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;GraphicAPI/Vulkan/VulkanContext.h&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;Rendering/GraphicsContext.h&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="RenderCommand_8h.html">Rendering/RenderCommand.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="Renderer_8h.html">Rendering/Renderer.h</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="TextureManager_8h.html">Rendering/Textures/TextureManager.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;Settings/SettingsManager.h&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;Utils/Folders.h&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="Path_8h.html">Vectrix/Utils/Path.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>* Application::s_instance = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    Application::Application() {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        VC_CORE_ASSERT(!s_instance, <span class="stringliteral">&quot;Application already exists!&quot;</span>);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        s_instance = <span class="keyword">this</span>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        m_window = std::unique_ptr&lt;Window&gt;(Window::create());</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        m_window-&gt;setEventCallback(BIND_EVENT_FN(onEvent));</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        m_window-&gt;init();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keyword">auto</span> tm = <span class="keyword">new</span> <a class="code hl_class" href="classVectrix_1_1TextureManager.html">TextureManager</a>();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        m_textureManager = std::unique_ptr&lt;TextureManager&gt;(tm);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keyword">auto</span> sm = <span class="keyword">new</span> <a class="code hl_class" href="classVectrix_1_1ShaderManager.html">ShaderManager</a>();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        m_shaderManager = std::unique_ptr&lt;ShaderManager&gt;(sm);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">auto</span> i = <span class="keyword">new</span> <a class="code hl_class" href="classVectrix_1_1ImGuiLayer.html">ImGuiLayer</a>();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        m_imGuiLayer = std::unique_ptr&lt;ImGuiLayer&gt;(i);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        m_imGuiLayer-&gt;OnAttach();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    Application::~Application() {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        m_layerStack.destroy();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        m_imGuiLayer.reset();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        m_shaderManager.reset();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        m_textureManager.reset();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        m_window.reset();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">void</span> Application::onEvent(<a class="code hl_class" href="classVectrix_1_1Event.html">Event</a>&amp; e) {</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <a class="code hl_class" href="classVectrix_1_1EventDispatcher.html">EventDispatcher</a> dispatcher(e);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        dispatcher.Dispatch&lt;<a class="code hl_class" href="classVectrix_1_1WindowCloseEvent.html">WindowCloseEvent</a>&gt;(VC_BIND_EVENT_FN_RETURN(onWindowClose));</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = m_layerStack.end(); it != m_layerStack.begin(); )</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            (*--it)-&gt;OnEvent(e);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="keywordflow">if</span> (e.Handled)</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        }</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span> Application::run() {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        GraphicsContext::uploadAllMeshData();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        m_window-&gt;show();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">while</span> (m_running) {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keyword">const</span> <span class="keyword">auto</span> time = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(glfwGetTime());</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            m_deltaTime = time - m_LastFrameTime;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            m_LastFrameTime = time;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; layer : m_layerStack) {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                layer-&gt;OnUpdate(m_deltaTime);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            <span class="keywordflow">if</span> (RenderCommand::canRender()) {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; layer : m_layerStack) {</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                    layer-&gt;OnRenderOffscreen();</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespaceVectrix.html">   20</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">namespace </span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="comment">// From the bottom up: the layers in the order they were pushed, then the overlays, so what is pushed later</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="comment">// draws on top. By index, re-reading the size, and holding each layer during its call: a callback that</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="comment">// pushes or pops a layer can&#39;t invalidate the loop (a layer pushed now is called this frame too)</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Fn&gt;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordtype">void</span> forEachLayer(<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1LayerStack.html">LayerStack</a>&amp; stack, Fn&amp;&amp; fn) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Layer&gt;&gt;* group : {&amp;stack.<a class="code hl_function" href="classVectrix_1_1LayerStack.html#a99ea6a0ef687b60b2574dbfc5fdb0f15">layers</a>(), &amp;stack.<a class="code hl_function" href="classVectrix_1_1LayerStack.html#ac430a6f6ed51c9a5fbb749f25ed83ac8">overlays</a>()}) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; layer : *group) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                        fn(layer);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>                }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        }</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>* Application::s_instance = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classVectrix_1_1Application.html#a5c0613b12a2a7c47fdf12f6fb6099035">   37</a></span>    <a class="code hl_function" href="classVectrix_1_1Application.html#a5c0613b12a2a7c47fdf12f6fb6099035">Application::Application</a>() {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <a class="code hl_define" href="group__core.html#gabceec7596740eeb53b644abd853390e0">VC_CORE_ASSERT</a>(!s_instance, <span class="stringliteral">&quot;Application already exists!&quot;</span>);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        s_instance = <span class="keyword">this</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="comment">// Created and loaded before the window: the graphics backend reads settings</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="comment">// during init(). A per-project load layers on top of this later (openScene).</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        m_settingsManager = std::shared_ptr&lt;SettingsManager&gt;(<span class="keyword">new</span> <a class="code hl_class" href="classVectrix_1_1SettingsManager.html">SettingsManager</a>());</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keyword">const</span> std::filesystem::path configFolder = getConfigFolder();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            std::error_code ec;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            std::filesystem::create_directories(configFolder, ec); <span class="comment">// loadGlobal tolerates a missing file, but save() needs the folder to exist</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keyword">const</span> <span class="keyword">auto</span> globalPath = configFolder / settingsFileName;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> [result, message] = m_settingsManager-&gt;loadGlobal(globalPath); result != <a class="code hl_enumvalue" href="group__utils.html#gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973">SUCCESS</a>)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                <a class="code hl_define" href="group__core.html#ga98542ca6ab1409d98945e52149e10470">VC_CORE_WARN</a>(<span class="stringliteral">&quot;Global settings not loaded ({}): {}&quot;</span>, <a class="code hl_function" href="group__tools.html#ga02d512598e8aedd24f3f65c498256e21">toUtf8</a>(globalPath), message);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment">// Apply the settings that are consumed before the graphics backend comes up.</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">JsonObject</a>&amp; startupSettings = <a class="code hl_function" href="classVectrix_1_1SettingsManager.html#aaf49c92951fe2ff4bef47f26c713e4bc">SettingsManager::getSettings</a>();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <a class="code hl_struct" href="structVectrix_1_1WindowAttributes.html">WindowAttributes</a> windowAttributes;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        std::string windowTitle;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> windowIt = startupSettings.find(<span class="stringliteral">&quot;window&quot;</span>); windowIt != startupSettings.end()) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1JsonValue.html">JsonValue</a>&amp; w = windowIt-&gt;second;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            windowAttributes.<a class="code hl_variable" href="structVectrix_1_1WindowAttributes.html#ab0841bd48e56236735502976f31bbdfa">width</a>  = w[<span class="stringliteral">&quot;width&quot;</span>].<a class="code hl_function" href="classVectrix_1_1JsonValue.html#a19619b3e6665da1d45d8cc91121c7d6c">getAs</a>&lt;uint32_t&gt;().value_or(windowAttributes.<a class="code hl_variable" href="structVectrix_1_1WindowAttributes.html#ab0841bd48e56236735502976f31bbdfa">width</a>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            windowAttributes.<a class="code hl_variable" href="structVectrix_1_1WindowAttributes.html#aa7cc7f561a01ada47702e635b655d0c8">height</a> = w[<span class="stringliteral">&quot;height&quot;</span>].<a class="code hl_function" href="classVectrix_1_1JsonValue.html#a19619b3e6665da1d45d8cc91121c7d6c">getAs</a>&lt;uint32_t&gt;().value_or(windowAttributes.<a class="code hl_variable" href="structVectrix_1_1WindowAttributes.html#aa7cc7f561a01ada47702e635b655d0c8">height</a>);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            windowTitle = w[<span class="stringliteral">&quot;title&quot;</span>].<a class="code hl_function" href="classVectrix_1_1JsonValue.html#a19619b3e6665da1d45d8cc91121c7d6c">getAs</a>&lt;std::string&gt;().value_or(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#ifdef VC_DEBUG</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="comment">// Logging is only compiled in on a debug build.</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> engineIt = startupSettings.find(<span class="stringliteral">&quot;engine&quot;</span>); engineIt != startupSettings.end()) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> level = engineIt-&gt;second[<span class="stringliteral">&quot;logging&quot;</span>][<span class="stringliteral">&quot;level&quot;</span>].getAs&lt;std::string&gt;()) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                <span class="keyword">const</span> <span class="keyword">auto</span> parsed = spdlog::level::from_str(*level);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                <span class="keywordflow">if</span> (parsed != spdlog::level::off || *level == <span class="stringliteral">&quot;off&quot;</span>) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    <a class="code hl_function" href="classVectrix_1_1Log.html#a72376cbcfa92633ab836f409bb84656e">Log::getCoreLogger</a>()-&gt;set_level(parsed);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                    <a class="code hl_function" href="classVectrix_1_1Log.html#af784bd634d9c764ef60f7a0dc66641a2">Log::getClientLogger</a>()-&gt;set_level(parsed);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                }</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                RenderCommand::beginFrame();</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer : m_layerStack) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                    layer-&gt;OnRender();</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                }</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                RenderCommand::endFrame();</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                m_imGuiLayer-&gt;OnRender();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                m_imGuiLayer-&gt;OnUpdate(m_deltaTime);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        m_window = std::unique_ptr&lt;Window&gt;(Window::create());</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        m_window-&gt;setEventQueue(&amp;m_eventQueue);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        m_window-&gt;init(windowAttributes);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">if</span> (!windowTitle.empty())</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            m_window-&gt;setTitle(windowTitle);</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                RenderCommand::sendFrame();</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            m_window-&gt;onUpdate();</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordtype">bool</span> Application::onWindowClose(<a class="code hl_class" href="classVectrix_1_1WindowCloseEvent.html">WindowCloseEvent</a>&amp; e) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        m_running = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">   99</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">Application::PushLayer</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        m_layerStack.PushLayer(layer);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        layer-&gt;OnAttach();</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        m_assetsManager = std::make_unique&lt;AssetsManager&gt;();</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keyword">auto</span> i = <span class="keyword">new</span> <a class="code hl_class" href="classVectrix_1_1ImGuiLayer.html">ImGuiLayer</a>();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        m_imGuiLayer = std::unique_ptr&lt;ImGuiLayer&gt;(i);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        m_imGuiLayer-&gt;OnAttach();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        Renderer::initOutline();</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
 </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="foldopen" id="foldopen00105" data-start="{" data-end="}">
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">  105</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">Application::PushOverlay</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        m_layerStack.PushOverlay(layer);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        layer-&gt;OnAttach();</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
-</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    Application::~Application() {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="comment">// The last frame may still be executing: nothing it uses (layers&#39; framebuffers, textures, ImGui</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="comment">// descriptors) can be destroyed before the GPU is done with it</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        GraphicsContext::waitIdle();</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        forEachLayer(m_layerStack, [](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) { layer-&gt;OnDetach(); });</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        m_layerStack.<a class="code hl_function" href="classVectrix_1_1LayerStack.html#aff913da697217d5aeb7e829941b88d8c">destroy</a>();</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        m_assetsManager.reset();</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        m_imGuiLayer.reset();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        m_window.reset();</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    }</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">void</span> Application::dispatchEvent(<a class="code hl_class" href="classVectrix_1_1Event.html">Event</a>&amp; event) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="comment">// Who consumed the event, for the observers. A copy: the layer that did can be popped by its own handler</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        std::string consumedBy;</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">void</span> Application::renderImGui() {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <a class="code hl_define" href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer : m_layerStack)</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            layer-&gt;OnImGuiRender();</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        m_imGuiLayer-&gt;OnImGuiRender();</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>}</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="comment">// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the first look so</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <span class="keywordflow">if</span> (m_imGuiLayer) {</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">if</span> (m_imGuiLayer-&gt;capturesEvent(event))</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keyword">event</span>.m_handled = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            m_imGuiLayer-&gt;notify(event);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            <span class="keywordflow">if</span> (event.m_handled)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                consumedBy = <span class="stringliteral">&quot;ImGui&quot;</span>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="comment">// From the top down: the last overlay pushed first, the first layer pushed last. By index, re-reading the</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment">// size, and holding each layer during its call: a handler that pops a layer can&#39;t invalidate the loop</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;Layer&gt;&gt;* group : {&amp;m_layerStack.overlays(), &amp;m_layerStack.layers()}) {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = group-&gt;size(); i-- &gt; 0 &amp;&amp; !event.m_handled;) {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                <span class="keywordflow">if</span> (i &gt;= group-&gt;size())</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                    <span class="keywordflow">continue</span>; <span class="comment">// a layer removed by an earlier handler</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keyword">const</span> std::shared_ptr&lt;Layer&gt; layer = (*group)[i];</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                layer-&gt;notify(event);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                <span class="keywordflow">if</span> (event.m_handled)</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                    consumedBy = layer-&gt;getName();</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        <span class="keywordflow">if</span> (!event.m_handled) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            notify(event);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordflow">if</span> (event.m_handled)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                consumedBy = <span class="stringliteral">&quot;Application&quot;</span>;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        }</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <span class="comment">// Every listener sees a close request first: one that consumes it (e.g. to ask about unsaved work) keeps</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="comment">// the application running</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="keywordflow">if</span> (!event.m_handled &amp;&amp; event.is&lt;WindowCloseEvent&gt;())</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            m_running = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        detail::EventDispatchedEvent dispatched(event, consumedBy);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        m_eventObservers.notify(dispatched);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    }</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordtype">void</span> Application::run() {</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        m_window-&gt;show();</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <a class="code hl_function" href="classVectrix_1_1Renderer.html#ab7011b2149caabc029077308a4152e6e">Renderer::resizeMask</a>({m_window-&gt;getWidth(),m_window-&gt;getHeight()});</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="keywordflow">while</span> (m_running) {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            <span class="keyword">const</span> <span class="keyword">auto</span> time = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(glfwGetTime());</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            m_deltaTime = time - m_LastFrameTime;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            m_LastFrameTime = time;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">if</span> (m_hasToSwitch) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="comment">// The previous frame can still be drawing with the old layer&#39;s resources, which go away with it</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                GraphicsContext::waitIdle();</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                <span class="comment">// The new layer takes the old one&#39;s place, so the order of the other layers doesn&#39;t change</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                <span class="keywordflow">if</span> (<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt; oldLayer = m_layerStack.ReplaceLayer(m_oldLayer, m_nextLayer))</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                    oldLayer-&gt;OnDetach();</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                <span class="keywordflow">if</span> (m_dataToNextLayer.empty()) m_nextLayer-&gt;OnAttach();</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                <span class="keywordflow">else</span> m_nextLayer-&gt;OnAttach(m_dataToNextLayer);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                m_oldLayer = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                m_nextLayer.reset();</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                m_dataToNextLayer = <a class="code hl_typedef" href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">JsonObject</a>();</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                m_hasToSwitch = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="comment">// What was posted since the last frame, the input polled at its end included</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            m_eventQueue.dispatch([<span class="keyword">this</span>](Event&amp; event) { dispatchEvent(event); });</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            <span class="keywordflow">if</span> (!m_running)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            forEachLayer(m_layerStack, [<span class="keyword">this</span>](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) { layer-&gt;OnUpdate(m_deltaTime); });</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordflow">if</span> (RenderCommand::canRender()) {</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                forEachLayer(m_layerStack, [](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) { layer-&gt;OnRenderOffscreen(); });</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                RenderCommand::beginFrame();</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                forEachLayer(m_layerStack, [](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) { layer-&gt;OnRender(); });</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                RenderCommand::endFrame();</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                m_imGuiLayer-&gt;OnRender();</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                m_imGuiLayer-&gt;OnUpdate(m_deltaTime);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                RenderCommand::sendFrame();</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            m_window-&gt;onUpdate();</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    }</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="foldopen" id="foldopen00197" data-start="{" data-end="}">
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">  197</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">Application::PushLayer</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        m_layerStack.PushLayer(layer);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        layer-&gt;OnAttach();</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    }</div>
+</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="foldopen" id="foldopen00203" data-start="{" data-end="}">
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">  203</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">Application::PushOverlay</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        m_layerStack.PushOverlay(layer);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        layer-&gt;OnAttach();</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    }</div>
+</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keywordtype">void</span> Application::renderImGui() {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <a class="code hl_define" href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a>();</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        forEachLayer(m_layerStack, [](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) { layer-&gt;OnImGuiRender(); });</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        m_imGuiLayer-&gt;OnImGuiRender();</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    }</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>}</div>
 </div>
 <div class="ttc" id="aApplication_8h_html"><div class="ttname"><a href="Application_8h.html">Application.h</a></div><div class="ttdoc">Definition of the main Application class.</div></div>
 <div class="ttc" id="aDeltaTime_8h_html"><div class="ttname"><a href="DeltaTime_8h.html">DeltaTime.h</a></div><div class="ttdoc">Definition of the DeltaTime class.</div></div>
+<div class="ttc" id="aPath_8h_html"><div class="ttname"><a href="Path_8h.html">Path.h</a></div><div class="ttdoc">Conversions between paths and the UTF-8 strings Vectrix keeps them in.</div></div>
 <div class="ttc" id="aProfiler_8h_html"><div class="ttname"><a href="Profiler_8h.html">Profiler.h</a></div><div class="ttdoc">Class that provides time analysis on how the application and the engine run.</div></div>
-<div class="ttc" id="aProfiler_8h_html_a5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="Profiler_8h.html#a5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00217">Profiler.h:217</a></div></div>
 <div class="ttc" id="aRenderCommand_8h_html"><div class="ttname"><a href="RenderCommand_8h.html">RenderCommand.h</a></div><div class="ttdoc">Defines the RenderCommand class for issuing rendering commands.</div></div>
-<div class="ttc" id="aShaderManager_8h_html"><div class="ttname"><a href="ShaderManager_8h.html">ShaderManager.h</a></div><div class="ttdoc">Definition of the class that manage the life of shaders.</div></div>
+<div class="ttc" id="aRenderer_8h_html"><div class="ttname"><a href="Renderer_8h.html">Renderer.h</a></div><div class="ttdoc">Main renderer class definition.</div></div>
 <div class="ttc" id="aTextureManager_8h_html"><div class="ttname"><a href="TextureManager_8h.html">TextureManager.h</a></div><div class="ttdoc">Definition of the class that manage the life of textures.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00033">Application.h:33</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html_a7431583a5d096ca9394c8c3927cbfc94"><div class="ttname"><a href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">Vectrix::Application::PushLayer</a></div><div class="ttdeci">void PushLayer(const std::shared_ptr&lt; Layer &gt; &amp;layer)</div><div class="ttdoc">This function add a layer that will be rendered.</div><div class="ttdef"><b>Definition</b> <a href="#l00099">Application.cpp:99</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html_ae947fe33b54dda02b9d6b65df0f89d3f"><div class="ttname"><a href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">Vectrix::Application::PushOverlay</a></div><div class="ttdeci">void PushOverlay(const std::shared_ptr&lt; Layer &gt; &amp;layer)</div><div class="ttdoc">This function add a layer that will be rendered, it will render on top of the other layer.</div><div class="ttdef"><b>Definition</b> <a href="#l00105">Application.cpp:105</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1EventDispatcher_html"><div class="ttname"><a href="classVectrix_1_1EventDispatcher.html">Vectrix::EventDispatcher</a></div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00058">Event.h:59</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Event_html"><div class="ttname"><a href="classVectrix_1_1Event.html">Vectrix::Event</a></div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00043">Event.h:43</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ImGuiLayer_html"><div class="ttname"><a href="classVectrix_1_1ImGuiLayer.html">Vectrix::ImGuiLayer</a></div><div class="ttdoc">This function is the layer responsible for drawing Dear ImGui.</div><div class="ttdef"><b>Definition</b> <a href="ImGuiLayer_8h_source.html#l00016">ImGuiLayer.h:16</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1ShaderManager_html"><div class="ttname"><a href="classVectrix_1_1ShaderManager.html">Vectrix::ShaderManager</a></div><div class="ttdoc">Manages shaders.</div><div class="ttdef"><b>Definition</b> <a href="ShaderManager_8h_source.html#l00019">ShaderManager.h:19</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1TextureManager_html"><div class="ttname"><a href="classVectrix_1_1TextureManager.html">Vectrix::TextureManager</a></div><div class="ttdoc">Manages textures.</div><div class="ttdef"><b>Definition</b> <a href="TextureManager_8h_source.html#l00018">TextureManager.h:18</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1WindowCloseEvent_html"><div class="ttname"><a href="classVectrix_1_1WindowCloseEvent.html">Vectrix::WindowCloseEvent</a></div><div class="ttdef"><b>Definition</b> <a href="WindowEvent_8h_source.html#l00005">WindowEvent.h:5</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="#l00016">Application.cpp:16</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdoc">The application itself, owning the window, the assets and the layers.</div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00074">Application.h:74</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html_a5c0613b12a2a7c47fdf12f6fb6099035"><div class="ttname"><a href="classVectrix_1_1Application.html#a5c0613b12a2a7c47fdf12f6fb6099035">Vectrix::Application::Application</a></div><div class="ttdeci">Application()</div><div class="ttdoc">Create the window, the assets manager and the ImGui overlay.</div><div class="ttdef"><b>Definition</b> <a href="#l00037">Application.cpp:37</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html_a7431583a5d096ca9394c8c3927cbfc94"><div class="ttname"><a href="classVectrix_1_1Application.html#a7431583a5d096ca9394c8c3927cbfc94">Vectrix::Application::PushLayer</a></div><div class="ttdeci">void PushLayer(const std::shared_ptr&lt; Layer &gt; &amp;layer)</div><div class="ttdoc">This function add a layer that will be rendered.</div><div class="ttdef"><b>Definition</b> <a href="#l00197">Application.cpp:197</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html_ae947fe33b54dda02b9d6b65df0f89d3f"><div class="ttname"><a href="classVectrix_1_1Application.html#ae947fe33b54dda02b9d6b65df0f89d3f">Vectrix::Application::PushOverlay</a></div><div class="ttdeci">void PushOverlay(const std::shared_ptr&lt; Layer &gt; &amp;layer)</div><div class="ttdoc">This function add a layer that will be rendered, it will render on top of the other layer.</div><div class="ttdef"><b>Definition</b> <a href="#l00203">Application.cpp:203</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Event_html"><div class="ttname"><a href="classVectrix_1_1Event.html">Vectrix::Event</a></div><div class="ttdoc">Base class of everything the engine, or the application, reports to the event listeners.</div><div class="ttdef"><b>Definition</b> <a href="Event_8h_source.html#l00088">Event.h:88</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1ImGuiLayer_html"><div class="ttname"><a href="classVectrix_1_1ImGuiLayer.html">Vectrix::ImGuiLayer</a></div><div class="ttdoc">This function is the layer responsible for drawing Dear ImGui.</div><div class="ttdef"><b>Definition</b> <a href="ImGuiLayer_8h_source.html#l00023">ImGuiLayer.h:23</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1JsonValue_html"><div class="ttname"><a href="classVectrix_1_1JsonValue.html">Vectrix::JsonValue</a></div><div class="ttdoc">Represents any JSON value (null, boolean, number, string, array, object).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00041">Json.h:41</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1JsonValue_html_a19619b3e6665da1d45d8cc91121c7d6c"><div class="ttname"><a href="classVectrix_1_1JsonValue.html#a19619b3e6665da1d45d8cc91121c7d6c">Vectrix::JsonValue::getAs</a></div><div class="ttdeci">std::optional&lt; T &gt; getAs() const</div><div class="ttdoc">Retrieves the value as T, if it holds a matching type.</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00150">Json.h:150</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html"><div class="ttname"><a href="classVectrix_1_1LayerStack.html">Vectrix::LayerStack</a></div><div class="ttdoc">Holds the layers of the application, in the order they were pushed.</div><div class="ttdef"><b>Definition</b> <a href="LayerStack_8h_source.html#l00027">LayerStack.h:27</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_a99ea6a0ef687b60b2574dbfc5fdb0f15"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#a99ea6a0ef687b60b2574dbfc5fdb0f15">Vectrix::LayerStack::layers</a></div><div class="ttdeci">const std::vector&lt; std::shared_ptr&lt; Layer &gt; &gt; &amp; layers() const</div><div class="ttdoc">The layers, from the bottom (pushed first) to the top.</div><div class="ttdef"><b>Definition</b> <a href="LayerStack_8h_source.html#l00066">LayerStack.h:66</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_ac430a6f6ed51c9a5fbb749f25ed83ac8"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#ac430a6f6ed51c9a5fbb749f25ed83ac8">Vectrix::LayerStack::overlays</a></div><div class="ttdeci">const std::vector&lt; std::shared_ptr&lt; Layer &gt; &gt; &amp; overlays() const</div><div class="ttdoc">The overlays, from the bottom (pushed first) to the top.</div><div class="ttdef"><b>Definition</b> <a href="LayerStack_8h_source.html#l00068">LayerStack.h:68</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_aff913da697217d5aeb7e829941b88d8c"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#aff913da697217d5aeb7e829941b88d8c">Vectrix::LayerStack::destroy</a></div><div class="ttdeci">void destroy()</div><div class="ttdoc">Drop every layer and overlay of the stack.</div><div class="ttdef"><b>Definition</b> <a href="LayerStack_8cpp_source.html#l00057">LayerStack.cpp:57</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Log_html_a72376cbcfa92633ab836f409bb84656e"><div class="ttname"><a href="classVectrix_1_1Log.html#a72376cbcfa92633ab836f409bb84656e">Vectrix::Log::getCoreLogger</a></div><div class="ttdeci">static std::shared_ptr&lt; spdlog::logger &gt; &amp; getCoreLogger()</div><div class="ttdoc">Return the logger the engine writes to.</div><div class="ttdef"><b>Definition</b> <a href="Log_8h_source.html#l00041">Log.h:41</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Log_html_af784bd634d9c764ef60f7a0dc66641a2"><div class="ttname"><a href="classVectrix_1_1Log.html#af784bd634d9c764ef60f7a0dc66641a2">Vectrix::Log::getClientLogger</a></div><div class="ttdeci">static std::shared_ptr&lt; spdlog::logger &gt; &amp; getClientLogger()</div><div class="ttdoc">Return the logger the application writes to.</div><div class="ttdef"><b>Definition</b> <a href="Log_8h_source.html#l00048">Log.h:48</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Renderer_html_ab7011b2149caabc029077308a4152e6e"><div class="ttname"><a href="classVectrix_1_1Renderer.html#ab7011b2149caabc029077308a4152e6e">Vectrix::Renderer::resizeMask</a></div><div class="ttdeci">static void resizeMask(glm::vec2 size)</div><div class="ttdoc">Resize the mask the outline pass draws into.</div><div class="ttdef"><b>Definition</b> <a href="Renderer_8cpp_source.html#l00072">Renderer.cpp:72</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1SettingsManager_html"><div class="ttname"><a href="classVectrix_1_1SettingsManager.html">Vectrix::SettingsManager</a></div><div class="ttdoc">Two-tier settings store owned by the Application.</div><div class="ttdef"><b>Definition</b> <a href="SettingsManager_8h_source.html#l00023">SettingsManager.h:23</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1SettingsManager_html_aaf49c92951fe2ff4bef47f26c713e4bc"><div class="ttname"><a href="classVectrix_1_1SettingsManager.html#aaf49c92951fe2ff4bef47f26c713e4bc">Vectrix::SettingsManager::getSettings</a></div><div class="ttdeci">static const JsonObject &amp; getSettings()</div><div class="ttdoc">The merged settings (global, then project overrides). Read-only.</div><div class="ttdef"><b>Definition</b> <a href="SettingsManager_8cpp_source.html#l00022">SettingsManager.cpp:22</a></div></div>
+<div class="ttc" id="agroup__core_html_ga98542ca6ab1409d98945e52149e10470"><div class="ttname"><a href="group__core.html#ga98542ca6ab1409d98945e52149e10470">VC_CORE_WARN</a></div><div class="ttdeci">#define VC_CORE_WARN(...)</div><div class="ttdoc">Report something suspicious happening inside the engine.</div><div class="ttdef"><b>Definition</b> <a href="Log_8h_source.html#l00089">Log.h:89</a></div></div>
+<div class="ttc" id="agroup__core_html_gabceec7596740eeb53b644abd853390e0"><div class="ttname"><a href="group__core.html#gabceec7596740eeb53b644abd853390e0">VC_CORE_ASSERT</a></div><div class="ttdeci">#define VC_CORE_ASSERT(x,...)</div><div class="ttdoc">Check a condition in engine code and report it when it does not hold.</div><div class="ttdef"><b>Definition</b> <a href="Core_8h_source.html#l00064">Core.h:64</a></div></div>
+<div class="ttc" id="agroup__debugtools_html_ga5e986678fc9d613e1cb7b80b2ff3963b"><div class="ttname"><a href="group__debugtools.html#ga5e986678fc9d613e1cb7b80b2ff3963b">VC_PROFILER_FUNCTION</a></div><div class="ttdeci">#define VC_PROFILER_FUNCTION()</div><div class="ttdoc">Used to say that this function will be measured by the profiler.</div><div class="ttdef"><b>Definition</b> <a href="Profiler_8h_source.html#l00236">Profiler.h:236</a></div></div>
+<div class="ttc" id="agroup__tools_html_ga02d512598e8aedd24f3f65c498256e21"><div class="ttname"><a href="group__tools.html#ga02d512598e8aedd24f3f65c498256e21">Vectrix::toUtf8</a></div><div class="ttdeci">std::string toUtf8(const std::filesystem::path &amp;path)</div><div class="ttdoc">The path as a UTF-8 string, with the platform&#39;s separators.</div><div class="ttdef"><b>Definition</b> <a href="Path_8h_source.html#l00023">Path.h:23</a></div></div>
+<div class="ttc" id="agroup__utils_html_gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973"><div class="ttname"><a href="group__utils.html#gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973">Vectrix::SUCCESS</a></div><div class="ttdeci">@ SUCCESS</div><div class="ttdoc">The operation went through.</div><div class="ttdef"><b>Definition</b> <a href="Result_8h_source.html#l00022">Result.h:22</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="#l00020">Application.cpp:20</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html_a4e5b9b27dd883839ee885ab04d027079"><div class="ttname"><a href="namespaceVectrix.html#a4e5b9b27dd883839ee885ab04d027079">Vectrix::JsonObject</a></div><div class="ttdeci">std::map&lt; std::string, JsonValue &gt; JsonObject</div><div class="ttdoc">Type alias for a JSON object (map of string to JsonValue).</div><div class="ttdef"><b>Definition</b> <a href="Json_8h_source.html#l00035">Json.h:35</a></div></div>
+<div class="ttc" id="astructVectrix_1_1WindowAttributes_html"><div class="ttname"><a href="structVectrix_1_1WindowAttributes.html">Vectrix::WindowAttributes</a></div><div class="ttdoc">The properties used to create the window.</div><div class="ttdef"><b>Definition</b> <a href="Window_8h_source.html#l00036">Window.h:37</a></div></div>
+<div class="ttc" id="astructVectrix_1_1WindowAttributes_html_aa7cc7f561a01ada47702e635b655d0c8"><div class="ttname"><a href="structVectrix_1_1WindowAttributes.html#aa7cc7f561a01ada47702e635b655d0c8">Vectrix::WindowAttributes::height</a></div><div class="ttdeci">unsigned int height</div><div class="ttdoc">The height of the window in pixel.</div><div class="ttdef"><b>Definition</b> <a href="Window_8h_source.html#l00042">Window.h:42</a></div></div>
+<div class="ttc" id="astructVectrix_1_1WindowAttributes_html_ab0841bd48e56236735502976f31bbdfa"><div class="ttname"><a href="structVectrix_1_1WindowAttributes.html#ab0841bd48e56236735502976f31bbdfa">Vectrix::WindowAttributes::width</a></div><div class="ttdeci">unsigned int width</div><div class="ttdoc">The width of the window in pixel.</div><div class="ttdef"><b>Definition</b> <a href="Window_8h_source.html#l00039">Window.h:39</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

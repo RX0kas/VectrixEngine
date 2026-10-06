@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.4.2</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -95,117 +95,98 @@ $(function(){initNavTree('MeshManager_8h_source.html','',''); });
   <div class="headertitle"><div class="title">MeshManager.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="MeshManager_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_MESH_MANAGER_H</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_MESH_MANAGER_H</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="Model_8h.html">Model.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;ObjLoader.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Vectrix/Core/Core.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;Vectrix/Utils/Hashing.h&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;Vectrix/Utils/Memory.h&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"></span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">/**</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * @file MeshManager.h</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * @brief Definition of the class that manage the life of mesh</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * @ingroup mesh</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">    /**</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">     * @brief Manages Mesh</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">     */</span></div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html">   20</a></span>    <span class="keyword">class </span>MeshManager {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"></span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment">         * @brief This function is used to get a mesh previously created</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">         * @pre A mesh with this name must exist</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">         * @param name Name of the mesh you wanna get</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">         * @return The mesh program with the name you entered</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        std::shared_ptr&lt;Model&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#af01a940e0680083390dd9f298972a0ab">get</a>(<span class="keyword">const</span> std::string&amp; name);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment"></span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment">         * @brief This function is used to get all the mesh previously created</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">         * @return The mesh programs created</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">         */</span></div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html#a4841a3cecae60fe4755c7ef8aea972b4">   36</a></span>        std::vector&lt;std::shared_ptr&lt;Model&gt;&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a4841a3cecae60fe4755c7ef8aea972b4">getAll</a>() {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">return</span> m_cache.getAllItems();</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        }</div>
+<a href="MeshManager_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef VECTRIXWORKSPACE_MESHMANAGER_H</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define VECTRIXWORKSPACE_MESHMANAGER_H</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="Mesh_8h.html">Mesh.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="Memory_8h.html">Vectrix/Utils/Memory.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"></span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">/**</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * @file MeshManager.h</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * @brief Definition of the MeshManager class</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * @ingroup mesh</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {<span class="comment"></span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment">    /**</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">     * @brief Keeps the loaded meshes, so the same model is only uploaded once</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">     *</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">     * The AssetsManager owns it and goes through it to load a mesh, reach it with</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">     * AssetsManager::getMeshManager.</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">     * @see AssetsManager</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">     * @see Mesh</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">     * @ingroup mesh</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">     */</span></div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html">   24</a></span>    <span class="keyword">class </span>MeshManager {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">public</span>:<span class="comment"></span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">            /**</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment">             * @brief This function is used to get a mesh previously created</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">             * @pre A mesh with this name must exist</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">             * @param name Name of the mesh you wanna get</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">             * @return The mesh with the name you entered</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="comment">             */</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            std::shared_ptr&lt;Mesh&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a7a32bed730c21f986e40321020e12d99">get</a>(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="comment"></span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">            /**</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">             * @brief This function is used to know if a mesh with the name given exist</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">             * @param name Name of the mesh</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="comment">             * @return True if the mesh exist in the cache</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="comment">             */</span></div>
+<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html#a690c3f85df00369016b366b6621a2b31">   39</a></span>            <span class="keywordtype">bool</span> <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a690c3f85df00369016b366b6621a2b31">exist</a>(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                <span class="keywordflow">return</span> m_cache.find(name) != m_cache.end();</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            }</div>
 </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment"></span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="comment">         * @brief This function is used to get all the mesh previously created with their names</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">         * @return The mesh programs created</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">         */</span></div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html#afd1ada0988bfdd25af0b98a61fd62714">   44</a></span>        std::vector&lt;std::pair&lt;std::string,std::shared_ptr&lt;Model&gt;&gt;&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#afd1ada0988bfdd25af0b98a61fd62714">getAllWithName</a>() {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordflow">return</span> m_cache.getAll();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment"></span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">            /**</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="comment">             * @brief This function is used to get all the mesh previously created</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">             */</span></div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html#a8059f71e291076c0e1123b1b3d8f7d8a">   46</a></span>            std::vector&lt;std::shared_ptr&lt;Mesh&gt;&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a8059f71e291076c0e1123b1b3d8f7d8a">getAll</a>() {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                <span class="keywordflow">return</span> m_cache.getAllItems();</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            }</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment"></span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">         * @brief Return a reference to the instance of this class</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">         * @return The instance of the class MeshManager</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classVectrix_1_1MeshManager.html#aefa812f7849848c21f33700d9d9468e6">   52</a></span>        <span class="keyword">static</span> MeshManager&amp; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#aefa812f7849848c21f33700d9d9468e6">instance</a>() { <span class="keywordflow">return</span> *s_instance; }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment"></span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">         * @brief Function to load a new mesh</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">         * @param name Name given to the mesh</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="comment">         * @param path Path of the mesh file (OBJ file)</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">         * @return A reference to the model that was loaded</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keyword">static</span> std::shared_ptr&lt;Model&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a0843ab894d53fa92ce56d85e22534b23">loadModel</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::string &amp;path);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment"></span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">         * @brief Function to create a new mesh</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">         * @param name Name given to the mesh</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="comment">         * @param vertices The vertices of the model</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="comment">         * @param indices The indices of the model</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">         * @return A reference to the model that was created</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">static</span> std::shared_ptr&lt;Model&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a62aff1415413968f6fd33a0a0f7654de">createModel</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices, <span class="keyword">const</span> std::vector&lt;uint32_t&gt;&amp; indices);<span class="comment"></span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">        /**</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">         * @brief Function to create a new mesh</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">         * @param name Name given to the mesh</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">         * @param vertices The vertices of the mesh</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="comment">         * @return A reference to the model that was created</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">         */</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">static</span> std::shared_ptr&lt;Model&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#a62aff1415413968f6fd33a0a0f7654de">createModel</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::vector&lt;Vertex&gt;&amp; vertices);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <a class="code hl_class" href="classVectrix_1_1MeshManager.html">~MeshManager</a>();</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Model.html">Model</a>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <a class="code hl_class" href="classVectrix_1_1MeshManager.html">MeshManager</a>();</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordtype">bool</span> remove(<span class="keyword">const</span> std::string&amp; name);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordtype">void</span> add(<span class="keyword">const</span> std::string&amp; name,std::shared_ptr&lt;Model&gt; mesh);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <a class="code hl_class" href="classVectrix_1_1Cache.html">Cache&lt;std::string,std::shared_ptr&lt;Model&gt;</a>&gt; m_cache;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        std::shared_ptr&lt;Model&gt; m_notFoundMesh;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">static</span> <a class="code hl_class" href="classVectrix_1_1MeshManager.html">MeshManager</a>* s_instance;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment"></span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">            /**</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">             * @brief Function to create a new mesh</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">             * @pre A mesh with the name given should not already exist</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">             * @param name Name given to the mesh</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">             * @param path Path of the mesh source file</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">             * @return The mesh, registered under name, or nullptr when the file can&#39;t be read as an OBJ</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">             */</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            std::shared_ptr&lt;Mesh&gt; <a class="code hl_function" href="classVectrix_1_1MeshManager.html#ab09cb3b84097508b01dd367e57f4c471">createMesh</a>(<span class="keyword">const</span> std::string &amp;name, <span class="keyword">const</span> std::string &amp;path);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <a class="code hl_class" href="classVectrix_1_1MeshManager.html">~MeshManager</a>();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Mesh.html">Mesh</a>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Scene.html">Scene</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <a class="code hl_class" href="classVectrix_1_1MeshManager.html">MeshManager</a>();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1AssetsManager.html">AssetsManager</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classVectrix_1_1Application.html">Application</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keyword">friend</span> <span class="keyword">class </span>EditorLayer;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordtype">bool</span> remove(<span class="keyword">const</span> std::string&amp; name);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordtype">void</span> add(<span class="keyword">const</span> std::string&amp; name,std::shared_ptr&lt;Mesh&gt; mesh);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            <a class="code hl_class" href="classVectrix_1_1Cache.html">Cache&lt;std::string,std::shared_ptr&lt;Mesh&gt;</a>&gt; m_cache;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    };</div>
 </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>} <span class="comment">// Vectrix</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_MESH_MANAGER_H</span></div>
-<div class="ttc" id="aModel_8h_html"><div class="ttname"><a href="Model_8h.html">Model.h</a></div><div class="ttdoc">Definition of the Model class and internal struct.</div></div>
-<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00034">Application.h:34</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Cache_html"><div class="ttname"><a href="classVectrix_1_1Cache.html">Vectrix::Cache</a></div><div class="ttdef"><b>Definition</b> <a href="Memory_8h_source.html#l00015">Memory.h:15</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html"><div class="ttname"><a href="classVectrix_1_1MeshManager.html">Vectrix::MeshManager</a></div><div class="ttdoc">Manages Mesh.</div><div class="ttdef"><b>Definition</b> <a href="#l00020">MeshManager.h:20</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a0843ab894d53fa92ce56d85e22534b23"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a0843ab894d53fa92ce56d85e22534b23">Vectrix::MeshManager::loadModel</a></div><div class="ttdeci">static std::shared_ptr&lt; Model &gt; loadModel(const std::string &amp;name, const std::string &amp;path)</div><div class="ttdoc">Function to load a new mesh.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8cpp_source.html#l00027">MeshManager.cpp:27</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a4841a3cecae60fe4755c7ef8aea972b4"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a4841a3cecae60fe4755c7ef8aea972b4">Vectrix::MeshManager::getAll</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Model &gt; &gt; getAll()</div><div class="ttdoc">This function is used to get all the mesh previously created.</div><div class="ttdef"><b>Definition</b> <a href="#l00036">MeshManager.h:36</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a62aff1415413968f6fd33a0a0f7654de"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a62aff1415413968f6fd33a0a0f7654de">Vectrix::MeshManager::createModel</a></div><div class="ttdeci">static std::shared_ptr&lt; Model &gt; createModel(const std::string &amp;name, const std::vector&lt; Vertex &gt; &amp;vertices, const std::vector&lt; uint32_t &gt; &amp;indices)</div><div class="ttdoc">Function to create a new mesh.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8cpp_source.html#l00035">MeshManager.cpp:35</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_aefa812f7849848c21f33700d9d9468e6"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#aefa812f7849848c21f33700d9d9468e6">Vectrix::MeshManager::instance</a></div><div class="ttdeci">static MeshManager &amp; instance()</div><div class="ttdoc">Return a reference to the instance of this class.</div><div class="ttdef"><b>Definition</b> <a href="#l00052">MeshManager.h:52</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_af01a940e0680083390dd9f298972a0ab"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#af01a940e0680083390dd9f298972a0ab">Vectrix::MeshManager::get</a></div><div class="ttdeci">std::shared_ptr&lt; Model &gt; get(const std::string &amp;name)</div><div class="ttdoc">This function is used to get a mesh previously created.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8cpp_source.html#l00055">MeshManager.cpp:55</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1MeshManager_html_afd1ada0988bfdd25af0b98a61fd62714"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#afd1ada0988bfdd25af0b98a61fd62714">Vectrix::MeshManager::getAllWithName</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; Model &gt; &gt; &gt; getAllWithName()</div><div class="ttdoc">This function is used to get all the mesh previously created with their names.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">MeshManager.h:44</a></div></div>
-<div class="ttc" id="aclassVectrix_1_1Model_html"><div class="ttname"><a href="classVectrix_1_1Model.html">Vectrix::Model</a></div><div class="ttdoc">Represents a 3D model with its geometry, layout, and transform.</div><div class="ttdef"><b>Definition</b> <a href="Model_8h_source.html#l00030">Model.h:30</a></div></div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>} <span class="comment">// Vectrix</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif </span><span class="comment">//VECTRIXWORKSPACE_MESHMANAGER_H</span></div>
+<div class="ttc" id="aMemory_8h_html"><div class="ttname"><a href="Memory_8h.html">Memory.h</a></div><div class="ttdoc">The Cache container and the small memory helpers built on it.</div></div>
+<div class="ttc" id="aMesh_8h_html"><div class="ttname"><a href="Mesh_8h.html">Mesh.h</a></div><div class="ttdoc">Definition of the Mesh class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1Application_html"><div class="ttname"><a href="classVectrix_1_1Application.html">Vectrix::Application</a></div><div class="ttdoc">The application itself, owning the window, the assets and the layers.</div><div class="ttdef"><b>Definition</b> <a href="Application_8h_source.html#l00074">Application.h:74</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1AssetsManager_html"><div class="ttname"><a href="classVectrix_1_1AssetsManager.html">Vectrix::AssetsManager</a></div><div class="ttdoc">Loads the assets of the project, and hands back the ones already loaded.</div><div class="ttdef"><b>Definition</b> <a href="AssetsManager_8h_source.html#l00063">AssetsManager.h:63</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Cache_html"><div class="ttname"><a href="classVectrix_1_1Cache.html">Vectrix::Cache</a></div><div class="ttdoc">A hash map tuned for the engine, used to keep loaded assets around.</div><div class="ttdef"><b>Definition</b> <a href="Memory_8h_source.html#l00042">Memory.h:42</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html"><div class="ttname"><a href="classVectrix_1_1MeshManager.html">Vectrix::MeshManager</a></div><div class="ttdoc">Keeps the loaded meshes, so the same model is only uploaded once.</div><div class="ttdef"><b>Definition</b> <a href="#l00024">MeshManager.h:24</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a690c3f85df00369016b366b6621a2b31"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a690c3f85df00369016b366b6621a2b31">Vectrix::MeshManager::exist</a></div><div class="ttdeci">bool exist(const std::string &amp;name)</div><div class="ttdoc">This function is used to know if a mesh with the name given exist.</div><div class="ttdef"><b>Definition</b> <a href="#l00039">MeshManager.h:39</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a7a32bed730c21f986e40321020e12d99"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a7a32bed730c21f986e40321020e12d99">Vectrix::MeshManager::get</a></div><div class="ttdeci">std::shared_ptr&lt; Mesh &gt; get(const std::string &amp;name)</div><div class="ttdoc">This function is used to get a mesh previously created.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8cpp_source.html#l00046">MeshManager.cpp:46</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html_a8059f71e291076c0e1123b1b3d8f7d8a"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#a8059f71e291076c0e1123b1b3d8f7d8a">Vectrix::MeshManager::getAll</a></div><div class="ttdeci">std::vector&lt; std::shared_ptr&lt; Mesh &gt; &gt; getAll()</div><div class="ttdoc">This function is used to get all the mesh previously created.</div><div class="ttdef"><b>Definition</b> <a href="#l00046">MeshManager.h:46</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1MeshManager_html_ab09cb3b84097508b01dd367e57f4c471"><div class="ttname"><a href="classVectrix_1_1MeshManager.html#ab09cb3b84097508b01dd367e57f4c471">Vectrix::MeshManager::createMesh</a></div><div class="ttdeci">std::shared_ptr&lt; Mesh &gt; createMesh(const std::string &amp;name, const std::string &amp;path)</div><div class="ttdoc">Function to create a new mesh.</div><div class="ttdef"><b>Definition</b> <a href="MeshManager_8cpp_source.html#l00016">MeshManager.cpp:16</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Mesh_html"><div class="ttname"><a href="classVectrix_1_1Mesh.html">Vectrix::Mesh</a></div><div class="ttdoc">The geometry of an object, ready to be drawn.</div><div class="ttdef"><b>Definition</b> <a href="Mesh_8h_source.html#l00025">Mesh.h:25</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Scene_html"><div class="ttname"><a href="classVectrix_1_1Scene.html">Vectrix::Scene</a></div><div class="ttdoc">Holds every entity of a level, and drives them each frame.</div><div class="ttdef"><b>Definition</b> <a href="Scene_8h_source.html#l00036">Scene.h:36</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00020">Application.cpp:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

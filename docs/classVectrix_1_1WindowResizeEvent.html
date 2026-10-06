@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,44 +92,70 @@ $(function(){initNavTree('classVectrix_1_1WindowResizeEvent.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::WindowResizeEvent Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::WindowResizeEvent Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__events.html">Events</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Sent when the window changed size.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Vectrix::WindowResizeEvent:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classVectrix_1_1WindowResizeEvent.png" usemap="#Vectrix_3A_3AWindowResizeEvent_map" alt=""/>
   <map id="Vectrix_3A_3AWindowResizeEvent_map" name="Vectrix_3A_3AWindowResizeEvent_map">
-<area href="classVectrix_1_1Event.html" alt="Vectrix::Event" shape="rect" coords="0,0,171,24"/>
+<area href="classVectrix_1_1EventBase.html" alt="Vectrix::EventBase&lt; WindowResizeEvent, &quot;WindowResize&quot;, EventCategory::Window &gt;" shape="rect" coords="0,56,498,80"/>
+<area href="classVectrix_1_1Event.html" title="Base class of everything the engine, or the application, reports to the event listeners." alt="Vectrix::Event" shape="rect" coords="0,0,498,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2e04503db8d7445d79a3644edfcab905" id="r_a2e04503db8d7445d79a3644edfcab905"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2e04503db8d7445d79a3644edfcab905">WindowResizeEvent</a> (unsigned int width, unsigned int height)</td></tr>
-<tr class="memitem:a8f4be27085dc096c814eaf1935781d57" id="r_a8f4be27085dc096c814eaf1935781d57"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#a8f4be27085dc096c814eaf1935781d57">getWidth</a> () const</td></tr>
-<tr class="memitem:a3454e8bdd0569132a1591536252732e3" id="r_a3454e8bdd0569132a1591536252732e3"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#a3454e8bdd0569132a1591536252732e3">getHeight</a> () const</td></tr>
+<tr class="memitem:a2e04503db8d7445d79a3644edfcab905" id="r_a2e04503db8d7445d79a3644edfcab905"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2e04503db8d7445d79a3644edfcab905">WindowResizeEvent</a> (unsigned int <a class="el" href="#ad72a03c86ab2014809eada85e86ba9f1">width</a>, unsigned int <a class="el" href="#acb675a077381cbad6b2687d5e307e645">height</a>)</td></tr>
 <tr class="memitem:aed1587024c580860c94a292d76f0f50b" id="r_aed1587024c580860c94a292d76f0f50b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#aed1587024c580860c94a292d76f0f50b">toString</a> () const override</td></tr>
+<tr class="inherit_header pub_methods_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; WindowResizeEvent, &quot;WindowResize&quot;, EventCategory::Window &gt;</a></td></tr>
+<tr class="memitem:ad0970ae57b37486df5f799b3f546ea74 inherit pub_methods_classVectrix_1_1EventBase" id="r_ad0970ae57b37486df5f799b3f546ea74"><td class="memItemLeft">std::string_view&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#ad0970ae57b37486df5f799b3f546ea74">getName</a> () const override</td></tr>
 <tr class="inherit_header pub_methods_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:af1163e5f0503b6d42f7a22e122541248 inherit pub_methods_classVectrix_1_1Event" id="r_af1163e5f0503b6d42f7a22e122541248"><td class="memItemLeft">
-EventType&#160;</td><td class="memItemRight"><b>getEventType</b> () const</td></tr>
-<tr class="memitem:a52882006e00df62acd43d7a154c05391 inherit pub_methods_classVectrix_1_1Event" id="r_a52882006e00df62acd43d7a154c05391"><td class="memItemLeft">
-const char *&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
-<tr class="memitem:ae24840455eb575198da37053bed2af58 inherit pub_methods_classVectrix_1_1Event" id="r_ae24840455eb575198da37053bed2af58"><td class="memItemLeft">
-int&#160;</td><td class="memItemRight"><b>getCategoryFlags</b> () const</td></tr>
-<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">
-std::string&#160;</td><td class="memItemRight"><b>toString</b> () const</td></tr>
-<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (EventCategory category) const</td></tr>
+<tr class="memitem:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event" id="r_a5264e04e8880276f9d8deaa785072f20"><td class="memItemLeft"><a class="el" href="group__events.html#ga7f2a1f8dd3e0e2d3d979ee380a4400e9">EventTypeId</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a5264e04e8880276f9d8deaa785072f20">getType</a> () const</td></tr>
+<tr class="memdesc:a5264e04e8880276f9d8deaa785072f20 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the id of the event's class, the value eventTypeId gives for it.  <br /></td></tr>
+<tr class="memitem:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event" id="r_ab6bb70663338445a7f4bd5495a7b61f3"><td class="memItemLeft">
+std::string_view&#160;</td><td class="memItemRight"><b>getName</b> () const</td></tr>
+<tr class="memdesc:ab6bb70663338445a7f4bd5495a7b61f3 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the event's class, for logging (e.g. "KeyPressed"). <br /></td></tr>
+<tr class="memitem:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event" id="r_a7fce7c15adbb6b1cd9dbe41bb7fc3935"><td class="memItemLeft"><a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a7fce7c15adbb6b1cd9dbe41bb7fc3935">getCategories</a> () const</td></tr>
+<tr class="memdesc:a7fce7c15adbb6b1cd9dbe41bb7fc3935 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return every category the event belongs to.  <br /></td></tr>
+<tr class="memitem:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event" id="r_ada3957fc3735c090bf2c3ab36065db75"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#ada3957fc3735c090bf2c3ab36065db75">isInCategory</a> (<a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a> category) const</td></tr>
+<tr class="memdesc:ada3957fc3735c090bf2c3ab36065db75 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event belongs to one of the given categories.  <br /></td></tr>
+<tr class="memitem:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event" id="r_a1d8d2ca52a93c5e7e5a273f37a79e27f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a1d8d2ca52a93c5e7e5a273f37a79e27f">isHandled</a> () const</td></tr>
+<tr class="memdesc:a1d8d2ca52a93c5e7e5a273f37a79e27f inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if a listener consumed the event.  <br /></td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event" id="r_a800a061d9c689ac3e78d546cf9e78b26"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a800a061d9c689ac3e78d546cf9e78b26">is</a> () const</td></tr>
+<tr class="memdesc:a800a061d9c689ac3e78d546cf9e78b26 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the event is a T.  <br /></td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event" id="r_a412817a45a4353b7b08a955b57d5a803"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event template"><td class="memItemLeft">const T *&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a412817a45a4353b7b08a955b57d5a803">as</a> () const</td></tr>
+<tr class="memdesc:a412817a45a4353b7b08a955b57d5a803 inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the event as a T, or nullptr when it is another event.  <br /></td></tr>
+<tr class="memitem:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event" id="r_a40ea5b48fbe3985f7a40fad605b2c32b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a40ea5b48fbe3985f7a40fad605b2c32b">toString</a> () const</td></tr>
+<tr class="memdesc:a40ea5b48fbe3985f7a40fad605b2c32b inherit pub_methods_classVectrix_1_1Event"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describe the event and its payload, for logging.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ad72a03c86ab2014809eada85e86ba9f1" id="r_ad72a03c86ab2014809eada85e86ba9f1"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#ad72a03c86ab2014809eada85e86ba9f1">width</a></td></tr>
+<tr class="memdesc:ad72a03c86ab2014809eada85e86ba9f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The new width, in screen coordinates.  <br /></td></tr>
+<tr class="memitem:acb675a077381cbad6b2687d5e307e645" id="r_acb675a077381cbad6b2687d5e307e645"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#acb675a077381cbad6b2687d5e307e645">height</a></td></tr>
+<tr class="memdesc:acb675a077381cbad6b2687d5e307e645"><td class="mdescLeft">&#160;</td><td class="mdescRight">The new height, in screen coordinates.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_classVectrix_1_1Event"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_classVectrix_1_1Event')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Attributes inherited from <a class="el" href="classVectrix_1_1Event.html">Vectrix::Event</a></td></tr>
-<tr class="memitem:a887d8d1a1c640c84eb7daf3049db7cb4 inherit pub_attribs_classVectrix_1_1Event" id="r_a887d8d1a1c640c84eb7daf3049db7cb4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Event.html#a887d8d1a1c640c84eb7daf3049db7cb4">Handled</a> = false</td></tr>
+<tr class="inherit_header pub_static_attribs_classVectrix_1_1EventBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_classVectrix_1_1EventBase')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="classVectrix_1_1EventBase.html">Vectrix::EventBase&lt; WindowResizeEvent, &quot;WindowResize&quot;, EventCategory::Window &gt;</a></td></tr>
+<tr class="memitem:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase" id="r_a6cbcb7fa15e29691a317d3e8f28ac8e4"><td class="memItemLeft">static constexpr <a class="el" href="group__events.html#ga6a12dfd75c3b1e889ec3eb377c101fab">EventCategory</a>&#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1EventBase.html#a6cbcb7fa15e29691a317d3e8f28ac8e4">staticCategories</a></td></tr>
+<tr class="memdesc:a6cbcb7fa15e29691a317d3e8f28ac8e4 inherit pub_static_attribs_classVectrix_1_1EventBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">The categories every event of this class belongs to.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00017">17</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+<div class="textblock"><p>Sent when the window changed size. </p>
+<dl class="section note"><dt>Note</dt><dd>The size is in screen coordinates, which differ from the framebuffer's pixels on a scaled display; the renderer follows the framebuffer by itself </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00033">33</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a2e04503db8d7445d79a3644edfcab905" name="a2e04503db8d7445d79a3644edfcab905"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e04503db8d7445d79a3644edfcab905">&#9670;&#160;</a></span>WindowResizeEvent()</h2>
@@ -157,66 +183,21 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="#ad72a03c86ab2014809eada85e86ba9f1" title="The new width, in screen coordinates.">width</a></td><td>The new width </td></tr>
+    <tr><td class="paramname"><a class="el" href="#acb675a077381cbad6b2687d5e307e645" title="The new height, in screen coordinates.">height</a></td><td>The new height </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00019">19</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00039">39</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+
+<p class="reference">References <a class="el" href="WindowEvent_8h_source.html#l00042">height</a>, and <a class="el" href="WindowEvent_8h_source.html#l00041">width</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="a3454e8bdd0569132a1591536252732e3" name="a3454e8bdd0569132a1591536252732e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3454e8bdd0569132a1591536252732e3">&#9670;&#160;</a></span>getHeight()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int Vectrix::WindowResizeEvent::getHeight </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00022">22</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
-
-</div>
-</div>
-<a id="a8f4be27085dc096c814eaf1935781d57" name="a8f4be27085dc096c814eaf1935781d57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f4be27085dc096c814eaf1935781d57">&#9670;&#160;</a></span>getWidth()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int Vectrix::WindowResizeEvent::getWidth </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00021">21</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
-
-</div>
-</div>
 <a id="aed1587024c580860c94a292d76f0f50b" name="aed1587024c580860c94a292d76f0f50b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aed1587024c580860c94a292d76f0f50b">&#9670;&#160;</a></span>toString()</h2>
 
@@ -240,7 +221,48 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00024">24</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00044">44</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Variables</h2>
+<a id="acb675a077381cbad6b2687d5e307e645" name="acb675a077381cbad6b2687d5e307e645"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb675a077381cbad6b2687d5e307e645">&#9670;&#160;</a></span>height</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int Vectrix::WindowResizeEvent::height</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The new height, in screen coordinates. </p>
+
+<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00042">42</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="WindowEvent_8h_source.html#l00039">WindowResizeEvent()</a>.</p>
+
+</div>
+</div>
+<a id="ad72a03c86ab2014809eada85e86ba9f1" name="ad72a03c86ab2014809eada85e86ba9f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad72a03c86ab2014809eada85e86ba9f1">&#9670;&#160;</a></span>width</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int Vectrix::WindowResizeEvent::width</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The new width, in screen coordinates. </p>
+
+<p class="definition">Definition at line <a class="el" href="WindowEvent_8h_source.html#l00041">41</a> of file <a class="el" href="WindowEvent_8h_source.html">WindowEvent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="WindowEvent_8h_source.html#l00039">WindowResizeEvent()</a>.</p>
 
 </div>
 </div>

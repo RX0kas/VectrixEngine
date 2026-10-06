@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -109,10 +109,45 @@ Files</h2></td></tr>
 <tr class="memdesc:ShaderUniformLayout_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the layout of the information sent to the GPU buffer. <br /></td></tr>
 <tr class="memitem:ShaderUniformType_2Eh" id="r_ShaderUniformType_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="ShaderUniformType_8h.html">ShaderUniformType.h</a></td></tr>
 <tr class="memdesc:ShaderUniformType_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of how to describe the different types in the GPU. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga2dc38f02307f543d8ee7d469837e6089" id="r_ga2dc38f02307f543d8ee7d469837e6089"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga2dc38f02307f543d8ee7d469837e6089">VC_VERIFY_UNIFORM_NAME</a>(name)</td></tr>
+<tr class="memdesc:ga2dc38f02307f543d8ee7d469837e6089"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refuse a uniform name the engine keeps for itself.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Shader program management. </p>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga2dc38f02307f543d8ee7d469837e6089" name="ga2dc38f02307f543d8ee7d469837e6089"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2dc38f02307f543d8ee7d469837e6089">&#9670;&#160;</a></span>VC_VERIFY_UNIFORM_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VC_VERIFY_UNIFORM_NAME</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { <span class="keywordflow">if</span> ((name)==<span class="stringliteral">&quot;vc_cameraTransform&quot;</span>) { <a class="code hl_define" href="group__core.html#ga2f6731e32db773d629e630b83d35c530">VC_CORE_ERROR</a>(<span class="stringliteral">&quot;The uniform name \&quot;{}\&quot; is reserved&quot;</span>,(name)); } } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="agroup__core_html_ga2f6731e32db773d629e630b83d35c530"><div class="ttname"><a href="group__core.html#ga2f6731e32db773d629e630b83d35c530">VC_CORE_ERROR</a></div><div class="ttdeci">#define VC_CORE_ERROR(...)</div><div class="ttdoc">Report an engine error caused by the calling code, then stop the program.</div><div class="ttdef"><b>Definition</b> <a href="Log_8h_source.html#l00075">Log.h:75</a></div></div>
+</div><!-- fragment -->
+<p>Refuse a uniform name the engine keeps for itself. </p>
+<p><span class="tt">vc_cameraTransform</span> is set by the renderer on every shader, so a shader defining its own uniform under that name would have it overwritten. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The uniform name to check </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Shader_8h_source.html#l00019">19</a> of file <a class="el" href="Shader_8h_source.html">Shader.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

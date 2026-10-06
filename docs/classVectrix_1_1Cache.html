@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,9 +92,14 @@ $(function(){initNavTree('classVectrix_1_1Cache.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::Cache&lt; K, I &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::Cache&lt; K, I &gt; Class Template Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__utils.html">Utility</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A hash map tuned for the engine, used to keep loaded assets around.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Memory_8h_source.html">Memory.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for Vectrix::Cache&lt; K, I &gt;:</div>
 <div class="dyncontent">
@@ -105,14 +110,27 @@ Inheritance diagram for Vectrix::Cache&lt; K, I &gt;:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf933c3056d02837336fe38fbd2a92f4" id="r_aaf933c3056d02837336fe38fbd2a92f4"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aaf933c3056d02837336fe38fbd2a92f4">Cache</a> (int reservedN=256, float max_load_factor.7f)</td></tr>
+<tr class="memdesc:aaf933c3056d02837336fe38fbd2a92f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the cache, reserving room up front.  <br /></td></tr>
 <tr class="memitem:ac7c95bcda7eb0ab516029d3f062a62f6" id="r_ac7c95bcda7eb0ab516029d3f062a62f6"><td class="memItemLeft">std::vector&lt; I &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac7c95bcda7eb0ab516029d3f062a62f6">getAllItems</a> ()</td></tr>
+<tr class="memdesc:ac7c95bcda7eb0ab516029d3f062a62f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return every stored value, without its key.  <br /></td></tr>
 <tr class="memitem:abc122c437656e98cff665997fd442fbe" id="r_abc122c437656e98cff665997fd442fbe"><td class="memItemLeft">std::vector&lt; std::pair&lt; K, I &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#abc122c437656e98cff665997fd442fbe">getAll</a> ()</td></tr>
+<tr class="memdesc:abc122c437656e98cff665997fd442fbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return every entry, key and value together.  <br /></td></tr>
 <tr class="memitem:a21909fd11ad811e14609610078d82648" id="r_a21909fd11ad811e14609610078d82648"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a21909fd11ad811e14609610078d82648">exist</a> (K key)</td></tr>
+<tr class="memdesc:a21909fd11ad811e14609610078d82648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if something is stored under a key.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename K, typename I&gt;<br />
-class Vectrix::Cache&lt; K, I &gt;</div>
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00015">15</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+class Vectrix::Cache&lt; K, I &gt;</div><p>A hash map tuned for the engine, used to keep loaded assets around. </p>
+<p>It is an <span class="tt">std::unordered_map</span> hashed with <a class="el" href="structXXH3.html" title="Hashes a string with xxHash, for use as a hash map hasher.">XXH3</a>, pre reserved so the usual asset count does not cause a rehash. The managers use it to hand back an asset that was already loaded rather than loading it twice. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">K</td><td>The key type, usually the name or the path of the asset </td></tr>
+    <tr><td class="paramname">I</td><td>The stored type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structXXH3.html" title="Hashes a string with xxHash, for use as a hash map hasher.">XXH3</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00042">42</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="aaf933c3056d02837336fe38fbd2a92f4" name="aaf933c3056d02837336fe38fbd2a92f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf933c3056d02837336fe38fbd2a92f4">&#9670;&#160;</a></span>Cache()</h2>
@@ -143,7 +161,16 @@ template&lt;typename K, typename I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00017">17</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+<p>Build the cache, reserving room up front. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reservedN</td><td>How many entries to make room for </td></tr>
+    <tr><td class="paramname">max_load_factor</td><td>How full it may get before it rehashes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00049">49</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 
 </div>
 </div>
@@ -159,7 +186,7 @@ template&lt;typename K, typename I&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVectrix_1_1Cache.html">Vectrix::Cache</a>&lt; K, I &gt;::~Cache </td>
+          <td class="memname"><a class="el" href="classVectrix_1_1Cache.html">Vectrix::Cache</a>&lt; K, I &gt;::~<a class="el" href="#aaf933c3056d02837336fe38fbd2a92f4">Cache</a> </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -172,7 +199,7 @@ template&lt;typename K, typename I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00022">22</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00054">54</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 
 </div>
 </div>
@@ -202,7 +229,16 @@ template&lt;typename K, typename I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00042">42</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+<p>Tell if something is stored under a key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>The key to look for </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when the key is in the cache </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00089">89</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 
 </div>
 </div>
@@ -231,7 +267,11 @@ template&lt;typename K, typename I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00034">34</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+<p>Return every entry, key and value together. </p>
+<dl class="section return"><dt>Returns</dt><dd>A copy of the entries, in no particular order </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ac7c95bcda7eb0ab516029d3f062a62f6" title="Return every stored value, without its key.">getAllItems</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00076">76</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 
 </div>
 </div>
@@ -260,7 +300,11 @@ template&lt;typename K, typename I&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00026">26</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+<p>Return every stored value, without its key. </p>
+<dl class="section return"><dt>Returns</dt><dd>A copy of the values, in no particular order </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#abc122c437656e98cff665997fd442fbe" title="Return every entry, key and value together.">getAll</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00063">63</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
 
 </div>
 </div>

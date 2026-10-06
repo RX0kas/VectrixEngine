@@ -20,11 +20,19 @@
 #include "Vectrix/Core/DeltaTime.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Layers/Layer.h"
+
+// Events
+#include "Vectrix/Events/Event.h"
+#include "Vectrix/Events/EventListener.h"
+#include "Vectrix/Events/KeyEvent.h"
+#include "Vectrix/Events/MouseEvent.h"
+#include "Vectrix/Events/WindowEvent.h"
 #include "Vectrix/Core/Log.h"
 
 #include "Vectrix/Input/Input.h"
 #include "Vectrix/Input/KeyCodes.h"
 #include "Vectrix/Input/MouseCodes.h"
+#include "Vectrix/Input/KeyMods.h"
 
 #include "Vectrix/ImGui/ImGuiLayer.h"
 #include "Vectrix/ImGui/ImGuiWidget.h"

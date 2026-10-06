@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['shaderuniformtype_0',['ShaderUniformType',['../namespaceVectrix.html#a3a908b976ab6090113b25da77b7f8f6c',1,'Vectrix']]]
+  ['displayserver_0',['DisplayServer',['../group__core.html#ga02c21c3c685a20cb8b4200012698d41e',1,'Vectrix']]]
 ];

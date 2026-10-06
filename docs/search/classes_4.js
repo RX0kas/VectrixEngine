@@ -1,6 +1,26 @@
 var searchData=
 [
-  ['entity_0',['Entity',['../classVectrix_1_1Entity.html',1,'Vectrix']]],
-  ['event_1',['Event',['../classVectrix_1_1Event.html',1,'Vectrix']]],
-  ['eventdispatcher_2',['EventDispatcher',['../classVectrix_1_1EventDispatcher.html',1,'Vectrix']]]
+  ['editorcamera_0',['EditorCamera',['../classVectrix_1_1EditorCamera.html',1,'Vectrix']]],
+  ['entity_1',['Entity',['../classVectrix_1_1Entity.html',1,'Vectrix']]],
+  ['entitycreationdata_2',['EntityCreationData',['../structVectrix_1_1EntityCreationData.html',1,'Vectrix']]],
+  ['event_3',['Event',['../classVectrix_1_1Event.html',1,'Vectrix']]],
+  ['eventbase_4',['EventBase',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20filesdroppedevent_2c_20_22filesdropped_22_2c_20eventcategory_3a_3awindow_20_3e_5',['EventBase&lt; FilesDroppedEvent, &quot;FilesDropped&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20framebufferresizeevent_2c_20_22framebufferresize_22_2c_20eventcategory_3a_3awindow_20_3e_6',['EventBase&lt; FramebufferResizeEvent, &quot;FramebufferResize&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20keypressedevent_2c_20_22keypressed_22_2c_20eventcategory_3a_3akeyboard_7ceventcategory_3a_3ainput_20_3e_7',['EventBase&lt; KeyPressedEvent, &quot;KeyPressed&quot;, EventCategory::Keyboard|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20keyreleasedevent_2c_20_22keyreleased_22_2c_20eventcategory_3a_3akeyboard_7ceventcategory_3a_3ainput_20_3e_8',['EventBase&lt; KeyReleasedEvent, &quot;KeyReleased&quot;, EventCategory::Keyboard|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20keytypedevent_2c_20_22keytyped_22_2c_20eventcategory_3a_3akeyboard_7ceventcategory_3a_3ainput_20_3e_9',['EventBase&lt; KeyTypedEvent, &quot;KeyTyped&quot;, EventCategory::Keyboard|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20mousebuttonpressedevent_2c_20_22mousebuttonpressed_22_2c_20eventcategory_3a_3amouse_7ceventcategory_3a_3amousebutton_7ceventcategory_3a_3ainput_20_3e_10',['EventBase&lt; MouseButtonPressedEvent, &quot;MouseButtonPressed&quot;, EventCategory::Mouse|EventCategory::MouseButton|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20mousebuttonreleasedevent_2c_20_22mousebuttonreleased_22_2c_20eventcategory_3a_3amouse_7ceventcategory_3a_3amousebutton_7ceventcategory_3a_3ainput_20_3e_11',['EventBase&lt; MouseButtonReleasedEvent, &quot;MouseButtonReleased&quot;, EventCategory::Mouse|EventCategory::MouseButton|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20mouseenterevent_2c_20_22mouseenter_22_2c_20eventcategory_3a_3awindow_7ceventcategory_3a_3ainput_20_3e_12',['EventBase&lt; MouseEnterEvent, &quot;MouseEnter&quot;, EventCategory::Window|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20mousemovedevent_2c_20_22mousemoved_22_2c_20eventcategory_3a_3amouse_7ceventcategory_3a_3ainput_20_3e_13',['EventBase&lt; MouseMovedEvent, &quot;MouseMoved&quot;, EventCategory::Mouse|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20mousescrolledevent_2c_20_22mousescrolled_22_2c_20eventcategory_3a_3amouse_7ceventcategory_3a_3ainput_20_3e_14',['EventBase&lt; MouseScrolledEvent, &quot;MouseScrolled&quot;, EventCategory::Mouse|EventCategory::Input &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowcloseevent_2c_20_22windowclose_22_2c_20eventcategory_3a_3awindow_20_3e_15',['EventBase&lt; WindowCloseEvent, &quot;WindowClose&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowcontentscaleevent_2c_20_22windowcontentscale_22_2c_20eventcategory_3a_3awindow_20_3e_16',['EventBase&lt; WindowContentScaleEvent, &quot;WindowContentScale&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowfocusevent_2c_20_22windowfocus_22_2c_20eventcategory_3a_3awindow_20_3e_17',['EventBase&lt; WindowFocusEvent, &quot;WindowFocus&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowminimizeevent_2c_20_22windowminimize_22_2c_20eventcategory_3a_3awindow_20_3e_18',['EventBase&lt; WindowMinimizeEvent, &quot;WindowMinimize&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowmovedevent_2c_20_22windowmoved_22_2c_20eventcategory_3a_3awindow_20_3e_19',['EventBase&lt; WindowMovedEvent, &quot;WindowMoved&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventbase_3c_20windowresizeevent_2c_20_22windowresize_22_2c_20eventcategory_3a_3awindow_20_3e_20',['EventBase&lt; WindowResizeEvent, &quot;WindowResize&quot;, EventCategory::Window &gt;',['../classVectrix_1_1EventBase.html',1,'Vectrix']]],
+  ['eventlistener_21',['EventListener',['../classVectrix_1_1EventListener.html',1,'Vectrix']]],
+  ['eventqueue_22',['EventQueue',['../classVectrix_1_1EventQueue.html',1,'Vectrix']]]
 ];

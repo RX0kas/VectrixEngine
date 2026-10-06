@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,12 +92,19 @@ $(function(){initNavTree('classVectrix_1_1Entity.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::Entity Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::Entity Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__ecs.html">Entity component system</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A handle on one object of a <a class="el" href="classVectrix_1_1Scene.html" title="Holds every entity of a level, and drives them each frame.">Scene</a>, and on the components it owns.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Entity_8h_source.html">Entity.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a4403a725853478a6fae6ffbc3ec46832" id="r_a4403a725853478a6fae6ffbc3ec46832"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> ()</td></tr>
+<tr class="memdesc:a4403a725853478a6fae6ffbc3ec46832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a handle pointing at nothing.  <br /></td></tr>
 <tr class="memitem:a5dc865f9161f9f86e5ae862ce62d40df" id="r_a5dc865f9161f9f86e5ae862ce62d40df"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Args&gt; </td></tr>
 <tr class="memitem:a5dc865f9161f9f86e5ae862ce62d40df template"><td class="memItemLeft">T &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a5dc865f9161f9f86e5ae862ce62d40df">addComponent</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:a5dc865f9161f9f86e5ae862ce62d40df"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function add a component to the entity.  <br /></td></tr>
@@ -110,18 +117,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8053205c44371d51242501e86a787314" id="r_a8053205c44371d51242501e86a787314"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a8053205c44371d51242501e86a787314 template"><td class="memItemLeft">T &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a8053205c44371d51242501e86a787314">getComponent</a> ()</td></tr>
 <tr class="memdesc:a8053205c44371d51242501e86a787314"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the component of the entity from a certain type.  <br /></td></tr>
-<tr class="memitem:a6cfa09177e16346c5e4c74e7c322116b" id="r_a6cfa09177e16346c5e4c74e7c322116b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a6cfa09177e16346c5e4c74e7c322116b">isValid</a> () const</td></tr>
-<tr class="memdesc:a6cfa09177e16346c5e4c74e7c322116b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the entity is valid.  <br /></td></tr>
 <tr class="memitem:a50baee9d8d23e96eac28f5a79ef93fc2" id="r_a50baee9d8d23e96eac28f5a79ef93fc2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a50baee9d8d23e96eac28f5a79ef93fc2">operator bool</a> () const</td></tr>
 <tr class="memdesc:a50baee9d8d23e96eac28f5a79ef93fc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the entity is valid.  <br /></td></tr>
+<tr class="memitem:a579e50a2bebb18838175a8b07664c948" id="r_a579e50a2bebb18838175a8b07664c948"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a579e50a2bebb18838175a8b07664c948">operator entt::entity</a> () const</td></tr>
+<tr class="memdesc:a579e50a2bebb18838175a8b07664c948"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to the underlying registry handle.  <br /></td></tr>
+<tr class="memitem:a3ae6163d39ebc5afa327d0f3ad236e2e" id="r_a3ae6163d39ebc5afa327d0f3ad236e2e"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3ae6163d39ebc5afa327d0f3ad236e2e">operator uint32_t</a> () const</td></tr>
+<tr class="memdesc:a3ae6163d39ebc5afa327d0f3ad236e2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to a plain number, mostly to use as an identifier in the UI.  <br /></td></tr>
+<tr class="memitem:a353ab2bac88deaf765d5eff7df1c4c1a" id="r_a353ab2bac88deaf765d5eff7df1c4c1a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a353ab2bac88deaf765d5eff7df1c4c1a">operator==</a> (const <a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> &amp;other) const</td></tr>
+<tr class="memdesc:a353ab2bac88deaf765d5eff7df1c4c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if two handles point at the same entity of the same scene.  <br /></td></tr>
+<tr class="memitem:a5f5c13043bb8120733f562af37991b16" id="r_a5f5c13043bb8120733f562af37991b16"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a5f5c13043bb8120733f562af37991b16">operator!=</a> (const <a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> &amp;other) const</td></tr>
+<tr class="memdesc:a5f5c13043bb8120733f562af37991b16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if two handles point at different entities.  <br /></td></tr>
+<tr class="memitem:a8ba97745fd3a9dd8e7931c66e9690af2" id="r_a8ba97745fd3a9dd8e7931c66e9690af2"><td class="memItemLeft">entt::entity&#160;</td><td class="memItemRight"><a class="el" href="#a8ba97745fd3a9dd8e7931c66e9690af2">getID</a> () const</td></tr>
+<tr class="memdesc:a8ba97745fd3a9dd8e7931c66e9690af2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the identifier of the entity inside its scene.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
-<tr class="memitem:a9eb98d5ef6403a43db694008aa360c28" id="r_a9eb98d5ef6403a43db694008aa360c28"><td class="memItemLeft">static Entity&#160;</td><td class="memItemRight"><a class="el" href="#a9eb98d5ef6403a43db694008aa360c28">nullEntity</a> ()</td></tr>
+<tr class="memitem:a9eb98d5ef6403a43db694008aa360c28" id="r_a9eb98d5ef6403a43db694008aa360c28"><td class="memItemLeft">static <a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a>&#160;</td><td class="memItemRight"><a class="el" href="#a9eb98d5ef6403a43db694008aa360c28">nullEntity</a> ()</td></tr>
+<tr class="memdesc:a9eb98d5ef6403a43db694008aa360c28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a handle pointing at nothing.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00021">21</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<div class="textblock"><p>A handle on one object of a <a class="el" href="classVectrix_1_1Scene.html" title="Holds every entity of a level, and drives them each frame.">Scene</a>, and on the components it owns. </p>
+<p>An entity is a lightweight handle rather than a container: it holds which scene it belongs to and an identifier, the components themselves live in the scene. Copying one is cheap and gives another handle on the same object. Build them with <a class="el" href="classVectrix_1_1Scene.html#a692f7f233bc1ec622a11d0f0431be4ee" title="It creates an entity in the scene with TransformComponent and TagComponent.">Scene::createEntity</a>. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1Scene.html#a692f7f233bc1ec622a11d0f0431be4ee" title="It creates an entity in the scene with TransformComponent and TagComponent.">Scene::createEntity</a> </dd>
+<dd>
+<a class="el" href="structVectrix_1_1InformationComponent.html" title="This component is a mandatory component of all entity.">InformationComponent</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00030">30</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a4403a725853478a6fae6ffbc3ec46832" name="a4403a725853478a6fae6ffbc3ec46832"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4403a725853478a6fae6ffbc3ec46832">&#9670;&#160;</a></span>Entity()</h2>
@@ -146,7 +166,12 @@ Public Static Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00023">23</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p>Build a handle pointing at nothing. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a9eb98d5ef6403a43db694008aa360c28" title="Return a handle pointing at nothing.">nullEntity</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00036">36</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Entity_8h_source.html#l00134">nullEntity()</a>, <a class="el" href="Entity_8h_source.html#l00125">operator!=()</a>, and <a class="el" href="Entity_8h_source.html#l00115">operator==()</a>.</p>
 
 </div>
 </div>
@@ -191,12 +216,11 @@ template&lt;typename T, typename... Args&gt; </div>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the component that was just added </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00033">33</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00047">47</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 
-<p class="reference">References <a class="el" href="Entity_8h_source.html#l00043">hasComponent()</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Scene_8cpp_source.html#l00029">Vectrix::Scene::createEntity()</a>.</p>
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00058">hasComponent()</a>, and <a class="el" href="Core_8h_source.html#l00064">VC_CORE_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -233,10 +257,11 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+<dl class="section warning"><dt>Warning</dt><dd><a class="el" href="structVectrix_1_1InformationComponent.html" title="This component is a mandatory component of all entity.">InformationComponent</a> and <a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> cannot be removed, every entity is expected to have them </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00053">53</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00070">70</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 
-<p class="reference">References <a class="el" href="Entity_8h_source.html#l00043">hasComponent()</a>.</p>
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00058">hasComponent()</a>, and <a class="el" href="Core_8h_source.html#l00064">VC_CORE_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -273,10 +298,42 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the component, valid while the entity keeps it </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a9f6e1c2d75c6b8cc6732f654f0291e8c" title="This function tell if the entity has the component.">hasComponent</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00068">68</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00087">87</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 
-<p class="reference">References <a class="el" href="Entity_8h_source.html#l00043">hasComponent()</a>.</p>
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00058">hasComponent()</a>, and <a class="el" href="Core_8h_source.html#l00064">VC_CORE_ASSERT</a>.</p>
+
+</div>
+</div>
+<a id="a8ba97745fd3a9dd8e7931c66e9690af2" name="a8ba97745fd3a9dd8e7931c66e9690af2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ba97745fd3a9dd8e7931c66e9690af2">&#9670;&#160;</a></span>getID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">entt::entity Vectrix::Entity::getID </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the identifier of the entity inside its scene. </p>
+<dl class="section return"><dt>Returns</dt><dd>The registry handle </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00140">140</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 
 </div>
 </div>
@@ -312,39 +369,11 @@ template&lt;typename T&gt; </div>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>true when the entity owns a component of that type </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00043">43</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00058">58</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Entity_8h_source.html#l00033">addComponent()</a>, <a class="el" href="Entity_8h_source.html#l00053">deleteComponent()</a>, and <a class="el" href="Entity_8h_source.html#l00068">getComponent()</a>.</p>
-
-</div>
-</div>
-<a id="a6cfa09177e16346c5e4c74e7c322116b" name="a6cfa09177e16346c5e4c74e7c322116b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cfa09177e16346c5e4c74e7c322116b">&#9670;&#160;</a></span>isValid()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Vectrix::Entity::isValid </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Checks if the entity is valid. </p>
-
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00076">76</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Entity_8h_source.html#l00047">addComponent()</a>, <a class="el" href="Entity_8h_source.html#l00070">deleteComponent()</a>, and <a class="el" href="Entity_8h_source.html#l00087">getComponent()</a>.</p>
 
 </div>
 </div>
@@ -358,7 +387,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Entity Vectrix::Entity::nullEntity </td>
+          <td class="memname"><a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> Vectrix::Entity::nullEntity </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -371,7 +400,12 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00085">85</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p>Return a handle pointing at nothing. </p>
+<dl class="section return"><dt>Returns</dt><dd>An entity that converts to false </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00134">134</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00036">Entity()</a>.</p>
 
 </div>
 </div>
@@ -393,14 +427,151 @@ template&lt;typename T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Checks if the entity is valid. </p>
+<dl class="section return"><dt>Returns</dt><dd>true when the handle points at an actual entity </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00083">83</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00096">96</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+</div>
+</div>
+<a id="a579e50a2bebb18838175a8b07664c948" name="a579e50a2bebb18838175a8b07664c948"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a579e50a2bebb18838175a8b07664c948">&#9670;&#160;</a></span>operator entt::entity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::Entity::operator entt::entity </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert to the underlying registry handle. </p>
+<dl class="section return"><dt>Returns</dt><dd>The handle the entity wraps </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00102">102</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+</div>
+</div>
+<a id="a3ae6163d39ebc5afa327d0f3ad236e2e" name="a3ae6163d39ebc5afa327d0f3ad236e2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ae6163d39ebc5afa327d0f3ad236e2e">&#9670;&#160;</a></span>operator uint32_t()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::Entity::operator uint32_t </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert to a plain number, mostly to use as an identifier in the UI. </p>
+<dl class="section return"><dt>Returns</dt><dd>The handle as an unsigned integer </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00108">108</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+</div>
+</div>
+<a id="a5f5c13043bb8120733f562af37991b16" name="a5f5c13043bb8120733f562af37991b16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f5c13043bb8120733f562af37991b16">&#9670;&#160;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::Entity::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tell if two handles point at different entities. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The entity to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when they do not describe the same object </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00125">125</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00036">Entity()</a>.</p>
+
+</div>
+</div>
+<a id="a353ab2bac88deaf765d5eff7df1c4c1a" name="a353ab2bac88deaf765d5eff7df1c4c1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a353ab2bac88deaf765d5eff7df1c4c1a">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::Entity::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="#a4403a725853478a6fae6ffbc3ec46832">Entity</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tell if two handles point at the same entity of the same scene. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The entity to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when both describe the same object </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Entity_8h_source.html#l00115">115</a> of file <a class="el" href="Entity_8h_source.html">Entity.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Entity_8h_source.html#l00036">Entity()</a>.</p>
 
 </div>
 </div>

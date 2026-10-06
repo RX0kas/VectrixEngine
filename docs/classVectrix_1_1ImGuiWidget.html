@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,7 @@ $(function(){initNavTree('classVectrix_1_1ImGuiWidget.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::ImGuiWidget Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::ImGuiWidget Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__rendering.html">Graphic rendering</a> &raquo; <a class="el" href="group__imgui.html">ImGui</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -110,11 +110,22 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
 <tr class="memdesc:ae1834f7bb24ead341a913a450bbaee79"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is what will be called every frame. <br /></td></tr>
 <tr class="memitem:a08f53f06614490799659e26c5152d8d5" id="r_a08f53f06614490799659e26c5152d8d5"><td class="memItemLeft">const std::string &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a08f53f06614490799659e26c5152d8d5">getName</a> () const</td></tr>
 <tr class="memdesc:a08f53f06614490799659e26c5152d8d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the name of the widget.  <br /></td></tr>
+<tr class="memitem:a450d82748b6a0ba1bbd6ff6d8a18de8c" id="r_a450d82748b6a0ba1bbd6ff6d8a18de8c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a450d82748b6a0ba1bbd6ff6d8a18de8c">isEnable</a> () const</td></tr>
+<tr class="memdesc:a450d82748b6a0ba1bbd6ff6d8a18de8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if the widget is currently drawn.  <br /></td></tr>
+<tr class="memitem:a73b4bcc3a120b2a8538e0abb0bc56fe0" id="r_a73b4bcc3a120b2a8538e0abb0bc56fe0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a73b4bcc3a120b2a8538e0abb0bc56fe0">setEnable</a> (bool <a class="el" href="#a1e90991110310fe9eb5255e395c6c700">enable</a>)</td></tr>
+<tr class="memdesc:a73b4bcc3a120b2a8538e0abb0bc56fe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Choose whether the widget is drawn.  <br /></td></tr>
+<tr class="memitem:a90c2d3a1a851e4e8b1eda1b5a77eb52d" id="r_a90c2d3a1a851e4e8b1eda1b5a77eb52d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a90c2d3a1a851e4e8b1eda1b5a77eb52d">disable</a> ()</td></tr>
+<tr class="memdesc:a90c2d3a1a851e4e8b1eda1b5a77eb52d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop drawing the widget.  <br /></td></tr>
+<tr class="memitem:a1e90991110310fe9eb5255e395c6c700" id="r_a1e90991110310fe9eb5255e395c6c700"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1e90991110310fe9eb5255e395c6c700">enable</a> ()</td></tr>
+<tr class="memdesc:a1e90991110310fe9eb5255e395c6c700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start drawing the widget again.  <br /></td></tr>
+<tr class="memitem:a84f6873305ac06db3d052d7243af7a5a" id="r_a84f6873305ac06db3d052d7243af7a5a"><td class="memItemLeft">bool &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a84f6873305ac06db3d052d7243af7a5a">getEnable</a> ()</td></tr>
+<tr class="memdesc:a84f6873305ac06db3d052d7243af7a5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the enabled flag itself, so it can be bound to a widget.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This function represent an ImGui widget. </p>
+<p>Derive from it and put the ImGui calls in render, then hand the widget to <a class="el" href="classVectrix_1_1ImGuiLayer.html#a995128c5e85aa01f00843e69f5034d4a" title="This function add a new ImGuiWidget.">ImGuiLayer::addWidget</a> so it is drawn every frame while it is enabled. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1ImGuiLayer.html#a995128c5e85aa01f00843e69f5034d4a" title="This function add a new ImGuiWidget.">ImGuiLayer::addWidget</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00016">16</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00021">21</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a7f2519248dd4ce2341656c39e27fc326" name="a7f2519248dd4ce2341656c39e27fc326"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f2519248dd4ce2341656c39e27fc326">&#9670;&#160;</a></span>ImGuiWidget()</h2>
@@ -139,11 +150,124 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8cpp_source.html#l00006">6</a> of file <a class="el" href="ImGuiWidget_8cpp_source.html">ImGuiWidget.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8cpp_source.html#l00009">9</a> of file <a class="el" href="ImGuiWidget_8cpp_source.html">ImGuiWidget.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="ImGuiLayer_8h_source.html#l00038">Vectrix::ImGuiLayer::addWidget()</a>, <a class="el" href="Application_8h_source.html#l00163">Vectrix::Application::imguiLayer()</a>, and <a class="el" href="Application_8h_source.html#l00172">Vectrix::Application::instance()</a>.</p>
+
+</div>
+</div>
+<a id="a12cfb15d93deaa4a8e92311a9f9f5299" name="a12cfb15d93deaa4a8e92311a9f9f5299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12cfb15d93deaa4a8e92311a9f9f5299">&#9670;&#160;</a></span>~ImGuiWidget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::ImGuiWidget::~ImGuiWidget </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8cpp_source.html#l00013">13</a> of file <a class="el" href="ImGuiWidget_8cpp_source.html">ImGuiWidget.cpp</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="a90c2d3a1a851e4e8b1eda1b5a77eb52d" name="a90c2d3a1a851e4e8b1eda1b5a77eb52d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90c2d3a1a851e4e8b1eda1b5a77eb52d">&#9670;&#160;</a></span>disable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::ImGuiWidget::disable </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stop drawing the widget. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a1e90991110310fe9eb5255e395c6c700" title="Start drawing the widget again.">enable</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00056">56</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+</div>
+</div>
+<a id="a1e90991110310fe9eb5255e395c6c700" name="a1e90991110310fe9eb5255e395c6c700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e90991110310fe9eb5255e395c6c700">&#9670;&#160;</a></span>enable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::ImGuiWidget::enable </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Start drawing the widget again. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a90c2d3a1a851e4e8b1eda1b5a77eb52d" title="Stop drawing the widget.">disable</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00062">62</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ImGuiWidget_8h_source.html#l00050">setEnable()</a>.</p>
+
+</div>
+</div>
+<a id="a84f6873305ac06db3d052d7243af7a5a" name="a84f6873305ac06db3d052d7243af7a5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84f6873305ac06db3d052d7243af7a5a">&#9670;&#160;</a></span>getEnable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool &amp; Vectrix::ImGuiWidget::getEnable </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the enabled flag itself, so it can be bound to a widget. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the flag, for example to pass to an ImGui checkbox </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00068">68</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+</div>
+</div>
 <a id="a08f53f06614490799659e26c5152d8d5" name="a08f53f06614490799659e26c5152d8d5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08f53f06614490799659e26c5152d8d5">&#9670;&#160;</a></span>getName()</h2>
 
@@ -169,7 +293,74 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
 
 <p>This function return the name of the widget. </p>
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00033">33</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00038">38</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+</div>
+</div>
+<a id="a450d82748b6a0ba1bbd6ff6d8a18de8c" name="a450d82748b6a0ba1bbd6ff6d8a18de8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a450d82748b6a0ba1bbd6ff6d8a18de8c">&#9670;&#160;</a></span>isEnable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::ImGuiWidget::isEnable </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tell if the widget is currently drawn. </p>
+<dl class="section return"><dt>Returns</dt><dd>true when the widget is enabled </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00044">44</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+</div>
+</div>
+<a id="a73b4bcc3a120b2a8538e0abb0bc56fe0" name="a73b4bcc3a120b2a8538e0abb0bc56fe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b4bcc3a120b2a8538e0abb0bc56fe0">&#9670;&#160;</a></span>setEnable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::ImGuiWidget::setEnable </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>enable</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Choose whether the widget is drawn. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="#a1e90991110310fe9eb5255e395c6c700" title="Start drawing the widget again.">enable</a></td><td>true to draw the widget, false to skip it </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00050">50</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+<p class="reference">References <a class="el" href="ImGuiWidget_8h_source.html#l00062">enable()</a>.</p>
 
 </div>
 </div>
@@ -194,7 +385,31 @@ void&#160;</td><td class="memItemRight"><b>render</b> ()</td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00035">35</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00070">70</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
+
+</div>
+</div>
+<a id="a5147aed65c7ac8982c4f1b1b6e6cb8d3" name="a5147aed65c7ac8982c4f1b1b6e6cb8d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5147aed65c7ac8982c4f1b1b6e6cb8d3">&#9670;&#160;</a></span>m_enable</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::ImGuiWidget::m_enable = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ImGuiWidget_8h_source.html#l00071">71</a> of file <a class="el" href="ImGuiWidget_8h_source.html">ImGuiWidget.h</a>.</p>
 
 </div>
 </div>

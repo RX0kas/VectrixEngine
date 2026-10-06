@@ -14,7 +14,8 @@ namespace Vectrix {
 	 * @brief This function is the layer responsible for drawing Dear ImGui
 	 *
 	 * The Application creates it and keeps it as an overlay, so it draws on top of
-	 * everything and gets the events first. Widgets registered through addWidget are
+	 * everything and gets the events first: the mouse and keyboard events ImGui wants
+	 * don't reach the layers below (see startBlockEvents). Widgets registered through addWidget are
 	 * rendered by this layer every frame.
 	 * @see ImGuiWidget
 	 * @ingroup imgui
@@ -28,7 +29,6 @@ namespace Vectrix {
 		void OnDetach() override;
 		void OnImGuiRender() override;
 		void OnUpdate(const DeltaTime& deltaTime) override;
-		void OnEvent(Event &event) override;
 		/// @endcond
 
 		/**
@@ -61,6 +61,9 @@ namespace Vectrix {
 		friend class EditorLayer;
 		friend class VulkanImGuiManager;
 		[[nodiscard]] ImGuiManager& getManager() const { return *m_manager; }
+		/// Whether ImGui wants the event for itself (mouse over a window, text field focused...), which then
+		/// doesn't reach the layers below
+		[[nodiscard]] bool capturesEvent(const Event& event) const;
 		ImGuiLayer();
 		static void setDarkThemeColors();
 		std::unique_ptr<ImGuiManager> m_manager;

@@ -1,9 +1,21 @@
 var searchData=
 [
-  ['width_0',['width',['../structVectrix_1_1FramebufferSpecification.html#ab85d29725ec7031bbdd1e8c84c61835f',1,'Vectrix::FramebufferSpecification']]],
-  ['window_1',['Window',['../classVectrix_1_1Window.html',1,'Vectrix']]],
-  ['window_2',['window',['../classVectrix_1_1Application.html#a9539d0f3266ac7335e95a1b9a7fc9511',1,'Vectrix::Application']]],
-  ['windowattributes_3',['WindowAttributes',['../structVectrix_1_1WindowAttributes.html',1,'Vectrix']]],
-  ['windowcloseevent_4',['WindowCloseEvent',['../classVectrix_1_1WindowCloseEvent.html',1,'Vectrix']]],
-  ['windowresizeevent_5',['WindowResizeEvent',['../classVectrix_1_1WindowResizeEvent.html',1,'Vectrix']]]
+  ['waswindowresized_0',['wasWindowResized',['../classVectrix_1_1Window.html#a71a839af145a3422f319feca8e07b943',1,'Vectrix::Window']]],
+  ['wayland_1',['WAYLAND',['../group__core.html#gga02c21c3c685a20cb8b4200012698d41ea91dc46d30f077ec8a693fa844db72fea',1,'Vectrix']]],
+  ['width_2',['width',['../structVectrix_1_1WindowAttributes.html#ab0841bd48e56236735502976f31bbdfa',1,'Vectrix::WindowAttributes::width'],['../classVectrix_1_1WindowResizeEvent.html#ad72a03c86ab2014809eada85e86ba9f1',1,'Vectrix::WindowResizeEvent::width'],['../classVectrix_1_1FramebufferResizeEvent.html#ae69e7ed734f99efd5bfe823782091f40',1,'Vectrix::FramebufferResizeEvent::width'],['../structVectrix_1_1FramebufferSpecification.html#ab85d29725ec7031bbdd1e8c84c61835f',1,'Vectrix::FramebufferSpecification::width']]],
+  ['window_3',['Window',['../classVectrix_1_1Window.html',1,'Vectrix::Window'],['../group__events.html#gga6a12dfd75c3b1e889ec3eb377c101fabac89686a387d2b12b3c729ce35a0bcb5b',1,'Vectrix::Window']]],
+  ['window_4',['window',['../classVectrix_1_1Application.html#a9539d0f3266ac7335e95a1b9a7fc9511',1,'Vectrix::Application']]],
+  ['window_2eh_5',['Window.h',['../Window_8h.html',1,'']]],
+  ['windowattributes_6',['WindowAttributes',['../structVectrix_1_1WindowAttributes.html',1,'Vectrix::WindowAttributes'],['../structVectrix_1_1WindowAttributes.html#ad67065a5eddccf3bd4baa2d35cbdb8f9',1,'Vectrix::WindowAttributes::WindowAttributes()']]],
+  ['windowcloseevent_7',['WindowCloseEvent',['../classVectrix_1_1WindowCloseEvent.html',1,'Vectrix']]],
+  ['windowcontentscaleevent_8',['WindowContentScaleEvent',['../classVectrix_1_1WindowContentScaleEvent.html',1,'Vectrix::WindowContentScaleEvent'],['../classVectrix_1_1WindowContentScaleEvent.html#adaf0fa55ce06c1d85fbf07b764c24616',1,'Vectrix::WindowContentScaleEvent::WindowContentScaleEvent()']]],
+  ['windowevent_2eh_9',['WindowEvent.h',['../WindowEvent_8h.html',1,'']]],
+  ['windowfocusevent_10',['WindowFocusEvent',['../classVectrix_1_1WindowFocusEvent.html',1,'Vectrix::WindowFocusEvent'],['../classVectrix_1_1WindowFocusEvent.html#a3ca52e4afb6a4447c560d58e74472675',1,'Vectrix::WindowFocusEvent::WindowFocusEvent()']]],
+  ['windowminimizeevent_11',['WindowMinimizeEvent',['../classVectrix_1_1WindowMinimizeEvent.html',1,'Vectrix::WindowMinimizeEvent'],['../classVectrix_1_1WindowMinimizeEvent.html#a6dc1cd2fe26101d65db2c6f8bd4a4725',1,'Vectrix::WindowMinimizeEvent::WindowMinimizeEvent()']]],
+  ['windowmovedevent_12',['WindowMovedEvent',['../classVectrix_1_1WindowMovedEvent.html',1,'Vectrix::WindowMovedEvent'],['../classVectrix_1_1WindowMovedEvent.html#ab74cf24f4db3fc14ebb4ed5f35f13a35',1,'Vectrix::WindowMovedEvent::WindowMovedEvent()']]],
+  ['windowresizeevent_13',['WindowResizeEvent',['../classVectrix_1_1WindowResizeEvent.html',1,'Vectrix::WindowResizeEvent'],['../classVectrix_1_1WindowResizeEvent.html#a2e04503db8d7445d79a3644edfcab905',1,'Vectrix::WindowResizeEvent::WindowResizeEvent()']]],
+  ['windows_14',['WINDOWS',['../group__core.html#gga02c21c3c685a20cb8b4200012698d41eadbdfca911747f0d78749a90f98beb14d',1,'Vectrix']]],
+  ['writeoutlinesettings_15',['writeOutlineSettings',['../namespaceVectrix.html#a17cb522de21e536eb7aad3992b9205d0',1,'Vectrix']]],
+  ['wrong_5ffile_16',['WRONG_FILE',['../group__utils.html#gga471f71ce481a7ccb01b4d784bfe9f3acac3459cc8cd44dde5f80f28241d095cbb',1,'Vectrix']]],
+  ['wrong_5ftype_17',['WRONG_TYPE',['../group__utils.html#gga471f71ce481a7ccb01b4d784bfe9f3aca7bca9cde039e9104af18ca080e564fb9',1,'Vectrix']]]
 ];

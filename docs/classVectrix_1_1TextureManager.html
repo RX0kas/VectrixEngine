@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -109,15 +109,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa0b19cc2358f723690ba6e9e089104dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the texture previously created.  <br /></td></tr>
 <tr class="memitem:a9ff1904ffa911ba90e9ce5af84f06eb4" id="r_a9ff1904ffa911ba90e9ce5af84f06eb4"><td class="memItemLeft">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; Texture &gt; &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9ff1904ffa911ba90e9ce5af84f06eb4">getAllWithName</a> ()</td></tr>
 <tr class="memdesc:a9ff1904ffa911ba90e9ce5af84f06eb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is used to get all the texture previously created with their names.  <br /></td></tr>
+<tr class="memitem:a677c13cdf8f63b25268fc6570cc85809" id="r_a677c13cdf8f63b25268fc6570cc85809"><td class="memItemLeft">std::shared_ptr&lt; Texture &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a677c13cdf8f63b25268fc6570cc85809">createTexture</a> (const std::string &amp;name, const std::string &amp;path)</td></tr>
+<tr class="memdesc:a677c13cdf8f63b25268fc6570cc85809"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new texture.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:ad0f7793a5b51178668c178aecb37469b" id="r_ad0f7793a5b51178668c178aecb37469b"><td class="memItemLeft">static std::shared_ptr&lt; Texture &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ad0f7793a5b51178668c178aecb37469b">getNotFoundTexture</a> ()</td></tr>
 <tr class="memdesc:ad0f7793a5b51178668c178aecb37469b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use when a texture can't be found or is not compatible This function return a Ref to a texture that is used by the engine when it cannot found a texture.  <br /></td></tr>
-<tr class="memitem:a1d557a7d11fe3e540836f6d35ec56611" id="r_a1d557a7d11fe3e540836f6d35ec56611"><td class="memItemLeft">static TextureManager &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a1d557a7d11fe3e540836f6d35ec56611">instance</a> ()</td></tr>
-<tr class="memdesc:a1d557a7d11fe3e540836f6d35ec56611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference to the instance of this class.  <br /></td></tr>
-<tr class="memitem:a677c13cdf8f63b25268fc6570cc85809" id="r_a677c13cdf8f63b25268fc6570cc85809"><td class="memItemLeft">static std::shared_ptr&lt; Texture &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a677c13cdf8f63b25268fc6570cc85809">createTexture</a> (const std::string &amp;name, const std::string &amp;path)</td></tr>
-<tr class="memdesc:a677c13cdf8f63b25268fc6570cc85809"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to create a new texture.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manages textures. </p>
@@ -149,9 +147,6 @@ Public Static Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::shared_ptr&lt; Texture &gt; Vectrix::TextureManager::createTexture </td>
@@ -164,11 +159,6 @@ Public Static Functions</h2></td></tr>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>&#160;)</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Function to create a new texture. </p>
@@ -180,9 +170,7 @@ Public Static Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="TextureManager_8cpp_source.html#l00018">18</a> of file <a class="el" href="TextureManager_8cpp_source.html">TextureManager.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="TextureManager_8h_source.html#l00057">instance()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TextureManager_8cpp_source.html#l00014">14</a> of file <a class="el" href="TextureManager_8cpp_source.html">TextureManager.cpp</a>.</p>
 
 </div>
 </div>
@@ -213,6 +201,8 @@ Public Static Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="TextureManager_8cpp_source.html#l00035">35</a> of file <a class="el" href="TextureManager_8cpp_source.html">TextureManager.cpp</a>.</p>
 
+<p class="reference">References <a class="el" href="Log_8h_source.html#l00075">VC_CORE_ERROR</a>.</p>
+
 </div>
 </div>
 <a id="aa0b19cc2358f723690ba6e9e089104dd" name="aa0b19cc2358f723690ba6e9e089104dd"></a>
@@ -241,7 +231,7 @@ Public Static Functions</h2></td></tr>
 <p>This function is used to get all the texture previously created. </p>
 <dl class="section return"><dt>Returns</dt><dd>The texture programs created </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TextureManager_8h_source.html#l00041">41</a> of file <a class="el" href="TextureManager_8h_source.html">TextureManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TextureManager_8h_source.html#l00039">39</a> of file <a class="el" href="TextureManager_8h_source.html">TextureManager.h</a>.</p>
 
 </div>
 </div>
@@ -271,7 +261,7 @@ Public Static Functions</h2></td></tr>
 <p>This function is used to get all the texture previously created with their names. </p>
 <dl class="section return"><dt>Returns</dt><dd>The texture programs created </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TextureManager_8h_source.html#l00049">49</a> of file <a class="el" href="TextureManager_8h_source.html">TextureManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TextureManager_8h_source.html#l00047">47</a> of file <a class="el" href="TextureManager_8h_source.html">TextureManager.h</a>.</p>
 
 </div>
 </div>
@@ -301,41 +291,9 @@ Public Static Functions</h2></td></tr>
 <p>Use when a texture can't be found or is not compatible This function return a Ref to a texture that is used by the engine when it cannot found a texture. </p>
 <dl class="section return"><dt>Returns</dt><dd>The default texture </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TextureManager_8cpp_source.html#l00043">43</a> of file <a class="el" href="TextureManager_8cpp_source.html">TextureManager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TextureManager_8cpp_source.html#l00044">44</a> of file <a class="el" href="TextureManager_8cpp_source.html">TextureManager.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="TextureManager_8h_source.html#l00057">instance()</a>.</p>
-
-</div>
-</div>
-<a id="a1d557a7d11fe3e540836f6d35ec56611" name="a1d557a7d11fe3e540836f6d35ec56611"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d557a7d11fe3e540836f6d35ec56611">&#9670;&#160;</a></span>instance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TextureManager &amp; Vectrix::TextureManager::instance </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return a reference to the instance of this class. </p>
-<dl class="section return"><dt>Returns</dt><dd>The instance of the class <a class="el" href="classVectrix_1_1TextureManager.html" title="Manages textures.">TextureManager</a> </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="TextureManager_8h_source.html#l00057">57</a> of file <a class="el" href="TextureManager_8h_source.html">TextureManager.h</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="TextureManager_8cpp_source.html#l00018">createTexture()</a>, and <a class="el" href="TextureManager_8cpp_source.html#l00043">getNotFoundTexture()</a>.</p>
+<p class="reference">References <a class="el" href="AssetsManager_8h_source.html#l00098">Vectrix::AssetsManager::instance()</a>.</p>
 
 </div>
 </div>

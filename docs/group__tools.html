@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -105,10 +105,118 @@ Topics</h2></td></tr>
 <tr class="memdesc:group__debugtools"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tools used to make debugging and optimizations easier. <br /></td></tr>
 <tr class="memitem:utilities" id="r_utilities"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__utilities.html">Utility Tools</a></td></tr>
 <tr class="memdesc:group__utilities"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tools used to simplify the creation process. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:Vectrix_3A_3AAssetFingerprint" id="r_Vectrix_3A_3AAssetFingerprint"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structVectrix_1_1AssetFingerprint.html">Vectrix::AssetFingerprint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">What identifies an asset file by its content.  <a href="structVectrix_1_1AssetFingerprint.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga02d512598e8aedd24f3f65c498256e21" id="r_ga02d512598e8aedd24f3f65c498256e21"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ga02d512598e8aedd24f3f65c498256e21">Vectrix::toUtf8</a> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memdesc:ga02d512598e8aedd24f3f65c498256e21"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path as a UTF-8 string, with the platform's separators.  <br /></td></tr>
+<tr class="memitem:gadc229a24c0d02f936a72da5b6ef18cf4" id="r_gadc229a24c0d02f936a72da5b6ef18cf4"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#gadc229a24c0d02f936a72da5b6ef18cf4">Vectrix::toGenericUtf8</a> (const std::filesystem::path &amp;path)</td></tr>
+<tr class="memdesc:gadc229a24c0d02f936a72da5b6ef18cf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path as a UTF-8 string with '/' separators, for what is written to files read on other machines.  <br /></td></tr>
+<tr class="memitem:gadf81b9745feee834ce88e93f647709f1" id="r_gadf81b9745feee834ce88e93f647709f1"><td class="memItemLeft">std::filesystem::path&#160;</td><td class="memItemRight"><a class="el" href="#gadf81b9745feee834ce88e93f647709f1">Vectrix::fromUtf8</a> (std::string_view utf8)</td></tr>
+<tr class="memdesc:gadf81b9745feee834ce88e93f647709f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The path a UTF-8 string names.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>All the tools given by the engine. </p>
-</div></div><!-- contents -->
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gadf81b9745feee834ce88e93f647709f1" name="gadf81b9745feee834ce88e93f647709f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadf81b9745feee834ce88e93f647709f1">&#9670;&#160;</a></span>fromUtf8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::filesystem::path Vectrix::fromUtf8 </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>utf8</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The path a UTF-8 string names. </p>
+
+<p class="definition">Definition at line <a class="el" href="Path_8h_source.html#l00041">41</a> of file <a class="el" href="Path_8h_source.html">Path.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ProjectSerializer_8cpp_source.html#l00054">Vectrix::ProjectSerializer::createProject()</a>, <a class="el" href="AssetsManager_8cpp_source.html#l00162">Vectrix::AssetsManager::findMovedAsset()</a>, <a class="el" href="Json_8cpp_source.html#l00258">Vectrix::Json::load()</a>, <a class="el" href="ObjLoader_8h_source.html#l00055">loadOBJ()</a>, <a class="el" href="ProjectSerializer_8cpp_source.html#l00108">Vectrix::ProjectSerializer::loadProject()</a>, <a class="el" href="SceneSerializer_8cpp_source.html#l00069">Vectrix::SceneSerializer::loadSceneFile()</a>, <a class="el" href="Memory_8h_source.html#l00101">readUTF8()</a>, <a class="el" href="SceneSerializer_8cpp_source.html#l00224">Vectrix::SceneSerializer::remapAssetIds()</a>, <a class="el" href="Json_8cpp_source.html#l00268">Vectrix::Json::save()</a>, and <a class="el" href="SceneSerializer_8cpp_source.html#l00291">Vectrix::SceneSerializer::saveScene()</a>.</p>
+
+</div>
+</div>
+<a id="gadc229a24c0d02f936a72da5b6ef18cf4" name="gadc229a24c0d02f936a72da5b6ef18cf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadc229a24c0d02f936a72da5b6ef18cf4">&#9670;&#160;</a></span>toGenericUtf8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::toGenericUtf8 </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The path as a UTF-8 string with '/' separators, for what is written to files read on other machines. </p>
+
+<p class="definition">Definition at line <a class="el" href="Path_8h_source.html#l00032">32</a> of file <a class="el" href="Path_8h_source.html">Path.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ProjectSerializer_8cpp_source.html#l00054">Vectrix::ProjectSerializer::createProject()</a>, <a class="el" href="AssetsManager_8cpp_source.html#l00129">Vectrix::AssetsManager::getFingerprint()</a>, and <a class="el" href="AssetsManager_8cpp_source.html#l00083">Vectrix::AssetsManager::moveProjectAssets()</a>.</p>
+
+</div>
+</div>
+<a id="ga02d512598e8aedd24f3f65c498256e21" name="ga02d512598e8aedd24f3f65c498256e21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga02d512598e8aedd24f3f65c498256e21">&#9670;&#160;</a></span>toUtf8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::toUtf8 </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The path as a UTF-8 string, with the platform's separators. </p>
+
+<p class="definition">Definition at line <a class="el" href="Path_8h_source.html#l00023">23</a> of file <a class="el" href="Path_8h_source.html">Path.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Application_8cpp_source.html#l00037">Vectrix::Application::Application()</a>, <a class="el" href="ProjectSerializer_8cpp_source.html#l00054">Vectrix::ProjectSerializer::createProject()</a>, <a class="el" href="AssetsManager_8cpp_source.html#l00162">Vectrix::AssetsManager::findMovedAsset()</a>, <a class="el" href="AssetsManager_8cpp_source.html#l00223">Vectrix::AssetsManager::getAssetType()</a>, <a class="el" href="Scene_8h_source.html#l00082">Vectrix::Scene::getDirectory()</a>, <a class="el" href="AssetsManager_8cpp_source.html#l00067">Vectrix::AssetsManager::getProjectAssetId()</a>, <a class="el" href="ProjectSerializer_8cpp_source.html#l00108">Vectrix::ProjectSerializer::loadProject()</a>, <a class="el" href="SceneSerializer_8cpp_source.html#l00224">Vectrix::SceneSerializer::remapAssetIds()</a>, and <a class="el" href="SettingsManager_8cpp_source.html#l00090">Vectrix::SettingsManager::save()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

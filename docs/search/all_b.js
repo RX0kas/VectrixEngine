@@ -1,7 +1,19 @@
 var searchData=
 [
-  ['find_0',['find',['../classVectrix_1_1ShaderUniformLayout.html#ab446700cb0b5f966a959be5f5415ee35',1,'Vectrix::ShaderUniformLayout']]],
-  ['fixed_1',['Fixed',['../changelog.html#v0_5_0_fixed',1,'Fixed'],['../changelog.html#v0_4_2_fixed',1,'Fixed'],['../changelog.html#v0_4_0_fixed',1,'Fixed'],['../changelog.html#v0_3_0_fixed',1,'Fixed'],['../changelog.html#v0_2_0_fixed',1,'Fixed']]],
-  ['framebuffer_2',['Framebuffer',['../classVectrix_1_1Framebuffer.html',1,'Vectrix']]],
-  ['framebufferspecification_3',['FramebufferSpecification',['../structVectrix_1_1FramebufferSpecification.html',1,'Vectrix']]]
+  ['file_5fversion_0',['file_version',['../structVectrix_1_1SceneCreationData.html#ade525bff33f9ddf115ecaec492d44328',1,'Vectrix::SceneCreationData']]],
+  ['filesdroppedevent_1',['FilesDroppedEvent',['../classVectrix_1_1FilesDroppedEvent.html',1,'Vectrix::FilesDroppedEvent'],['../classVectrix_1_1FilesDroppedEvent.html#af212fb3b5678866b8caed95f6655f9d6',1,'Vectrix::FilesDroppedEvent::FilesDroppedEvent()']]],
+  ['find_2',['find',['../classVectrix_1_1ShaderUniformLayout.html#ab446700cb0b5f966a959be5f5415ee35',1,'Vectrix::ShaderUniformLayout']]],
+  ['findmovedasset_3',['findMovedAsset',['../classVectrix_1_1AssetsManager.html#a537d60e3ad290720b2db8faef948bec6',1,'Vectrix::AssetsManager']]],
+  ['fixed_4',['Fixed',['../changelog.html#v0_5_0_fixed',1,'Fixed'],['../changelog.html#v0_4_2_fixed',1,'Fixed'],['../changelog.html#v0_4_0_fixed',1,'Fixed'],['../changelog.html#v0_3_0_fixed',1,'Fixed'],['../changelog.html#v0_2_0_fixed',1,'Fixed']]],
+  ['float_5',['Float',['../group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b',1,'Vectrix']]],
+  ['float2_6',['Float2',['../group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca6694430a2b471b5d2de071f2ef1fdc57',1,'Vectrix']]],
+  ['float3_7',['Float3',['../group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca8a8a1d211464d4bdee46db3c75bfa121',1,'Vectrix']]],
+  ['float4_8',['Float4',['../group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca33116adc6690289da9b82ea736864eeb',1,'Vectrix']]],
+  ['floatingpointmicroseconds_9',['FloatingPointMicroseconds',['../group__debugtools.html#gae79ae05ebde1a8ac02050f58f9d8f558',1,'Vectrix']]],
+  ['focused_10',['focused',['../classVectrix_1_1WindowFocusEvent.html#ae1f0bd7ba56c7cee13f0ec531ad24c67',1,'Vectrix::WindowFocusEvent']]],
+  ['formating_5ferror_11',['FORMATING_ERROR',['../group__utils.html#gga471f71ce481a7ccb01b4d784bfe9f3acab3a3d7780410a44d474fd5df8948458d',1,'Vectrix']]],
+  ['framebuffer_12',['Framebuffer',['../classVectrix_1_1Framebuffer.html',1,'Vectrix']]],
+  ['framebufferresizeevent_13',['FramebufferResizeEvent',['../classVectrix_1_1FramebufferResizeEvent.html',1,'Vectrix::FramebufferResizeEvent'],['../classVectrix_1_1FramebufferResizeEvent.html#a94533eb6e32649b2f0e5bbf70c4a9838',1,'Vectrix::FramebufferResizeEvent::FramebufferResizeEvent()']]],
+  ['framebufferspecification_14',['FramebufferSpecification',['../structVectrix_1_1FramebufferSpecification.html',1,'Vectrix']]],
+  ['fromutf8_15',['fromUtf8',['../group__tools.html#gadf81b9745feee834ce88e93f647709f1',1,'Vectrix']]]
 ];

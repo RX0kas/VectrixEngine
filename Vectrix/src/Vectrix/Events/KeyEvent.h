@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+#include "Vectrix/Input/KeyMods.h"
 
 /**
  * @file KeyEvent.h
@@ -10,86 +11,68 @@
 
 namespace Vectrix {
 	/**
-	 * @brief Base class of every event coming from the keyboard
-	 *
-	 * It carries the key involved, the concrete subclasses tell what happened to it.
-	 * @see KeyPressedEvent
-	 * @see KeyReleasedEvent
+	 * @brief Sent when a key goes down, and again while it is held (repeat)
 	 * @ingroup events
 	 */
-	class KeyEvent : public Event {
+	class KeyPressedEvent : public EventBase<KeyPressedEvent, "KeyPressed", EventCategory::Keyboard | EventCategory::Input> {
 	public:
 		/**
-		 * @brief Return the key the event is about
-		 * @return The key code, matching the `VC_KEY_*` values
-		 * @see KeyCodes.h
+		 * @param key The key that went down
+		 * @param repeat Whether it is the OS repeating a held key rather than the first press
+		 * @param mods The modifier keys held
+		 * @param scancode The platform-specific code of the physical key
 		 */
-		[[nodiscard]] int getKeyCode() const { return m_KeyCode; }
+		KeyPressedEvent(int key, bool repeat, KeyMods mods = {}, int scancode = 0)
+			: key(key), repeat(repeat), mods(mods), scancode(scancode) {}
 
-		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override { return getName(); }
-	protected:
-		/**
-		 * @brief Build a keyboard event for a given key
-		 * @param keycode The key the event is about
-		 */
-		KeyEvent(int keycode) : m_KeyCode(keycode) {}
+		int key;      ///< The key, matching the `VC_KEY_*` values (see KeyCodes.h), from the US layout
+		bool repeat;  ///< True when the key is held and the OS repeats it, false on the first press
+		KeyMods mods; ///< The modifier keys held, for shortcuts (Ctrl+S...)
+		/// The platform-specific code of the physical key, the same whatever the keyboard layout: to save a
+		/// binding to a key's position rather than to what is printed on it
+		int scancode;
 
-		/// The key the event is about
-		int m_KeyCode;
-	};
-
-	/**
-	 * @brief Sent when a key goes down, and again while it repeats
-	 * @ingroup events
-	 */
-	class KeyPressedEvent : public KeyEvent {
-	public:
-		/**
-		 * @brief Build the event for a key that has just been pressed
-		 * @param keycode The key that went down
-		 * @param repeatCount How many times the key repeated, 0 on the first press
-		 */
-		KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
-
-		/**
-		 * @brief Return how many times the key repeated
-		 * @return 0 for the initial press, then the number of repeats sent by the OS
-		 */
-		[[nodiscard]] int getRepeatCount() const { return m_RepeatCount; }
-
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override	{
-			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
-			return ss.str();
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("KeyPressed: {}{}{}", mods.toString(), key, repeat ? " (repeat)" : "");
 		}
-
-		EVENT_CLASS_TYPE(KeyPressed)
-	private:
-		int m_RepeatCount;
 	};
 
 	/**
 	 * @brief Sent when a key goes back up
 	 * @ingroup events
 	 */
-	class KeyReleasedEvent : public KeyEvent {
+	class KeyReleasedEvent : public EventBase<KeyReleasedEvent, "KeyReleased", EventCategory::Keyboard | EventCategory::Input> {
 	public:
 		/**
-		 * @brief Build the event for a key that has just been released
-		 * @param keycode The key that went up
+		 * @param key The key that went up
+		 * @param mods The modifier keys held
+		 * @param scancode The platform-specific code of the physical key
 		 */
-		KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
+		explicit KeyReleasedEvent(int key, KeyMods mods = {}, int scancode = 0) : key(key), mods(mods), scancode(scancode) {}
 
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override	{
-			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << m_KeyCode;
-			return ss.str();
+		int key;      ///< The key, matching the `VC_KEY_*` values (see KeyCodes.h), from the US layout
+		KeyMods mods; ///< The modifier keys still held
+		int scancode; ///< The platform-specific code of the physical key (see KeyPressedEvent::scancode)
+
+		[[nodiscard]] std::string toString() const override { return fmt::format("KeyReleased: {}{}", mods.toString(), key); }
+	};
+
+	/**
+	 * @brief Sent for every character typed, for text input
+	 *
+	 * Unlike KeyPressedEvent it follows the keyboard layout, the modifiers and dead keys: Shift+A gives 'A',
+	 * and keys typing nothing (arrows, Ctrl...) send none.
+	 * @ingroup events
+	 */
+	class KeyTypedEvent : public EventBase<KeyTypedEvent, "KeyTyped", EventCategory::Keyboard | EventCategory::Input> {
+	public:
+		/// @param codepoint The Unicode code point of the typed character
+		explicit KeyTypedEvent(char32_t codepoint) : codepoint(codepoint) {}
+
+		char32_t codepoint; ///< The Unicode code point of the typed character
+
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("KeyTyped: U+{:04X}", static_cast<uint32_t>(codepoint));
 		}
-
-		EVENT_CLASS_TYPE(KeyReleased)
 	};
 }

@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -96,51 +96,85 @@ $(function(){initNavTree('LayerStack_8cpp_source.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;vcpch.h&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;LayerStack.h&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="LayerStack_8h.html">LayerStack.h</a>&quot;</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    LayerStack::LayerStack() {</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    }</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceVectrix.html">Vectrix</a> {</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    LayerStack::LayerStack() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    LayerStack::~LayerStack() {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    LayerStack::~LayerStack() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    }</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keywordtype">void</span> LayerStack::PushLayer(std::shared_ptr&lt;Layer&gt; layer)</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        m_layerInsertIndex++;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">void</span> LayerStack::PushOverlay(std::shared_ptr&lt;Layer&gt; overlay)</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    {</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        m_layers.emplace_back(overlay);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordtype">bool</span> LayerStack::contains(<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Layer.html">Layer</a>* layer)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <span class="keyword">const</span> <span class="keyword">auto</span> same = [layer](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; other) { <span class="keywordflow">return</span> other.get() == layer; };</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordflow">return</span> std::ranges::any_of(m_layers, same) || std::ranges::any_of(m_overlays, same);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    }</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classVectrix_1_1LayerStack.html#a37f0e319f4ddaae5cea32232b1039fbb">   16</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1LayerStack.html#a37f0e319f4ddaae5cea32232b1039fbb">LayerStack::PushLayer</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; layer) {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordflow">if</span> (contains(layer.get())) {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            <a class="code hl_define" href="group__core.html#ga98542ca6ab1409d98945e52149e10470">VC_CORE_WARN</a>(<span class="stringliteral">&quot;Layer {} is already in the layer stack&quot;</span>, layer-&gt;getName());</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        }</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        m_layers.push_back(layer);</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    }</div>
+</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keywordtype">void</span> LayerStack::PopLayer(std::shared_ptr&lt;Layer&gt; layer)</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">auto</span> it = std::find(m_layers.begin(), m_layers.end(), layer);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">if</span> (it != m_layers.end())</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            m_layers.erase(it);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            m_layerInsertIndex--;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        }</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    }</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> LayerStack::PopOverlay(std::shared_ptr&lt;Layer&gt; overlay)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">auto</span> it = std::find(m_layers.begin(), m_layers.end(), overlay);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordflow">if</span> (it != m_layers.end())</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            m_layers.erase(it);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">void</span> LayerStack::destroy() {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        m_layers.clear();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        m_layers.shrink_to_fit();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
-<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00016">Application.cpp:16</a></div></div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classVectrix_1_1LayerStack.html#a716f5147fd29a6a65d96f49d38ba64e0">   24</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1LayerStack.html#a716f5147fd29a6a65d96f49d38ba64e0">LayerStack::PushOverlay</a>(<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; overlay) {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">if</span> (contains(overlay.get())) {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            <a class="code hl_define" href="group__core.html#ga98542ca6ab1409d98945e52149e10470">VC_CORE_WARN</a>(<span class="stringliteral">&quot;Overlay {} is already in the layer stack&quot;</span>, overlay-&gt;getName());</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        m_overlays.push_back(overlay);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
+</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classVectrix_1_1LayerStack.html#a80688456a46599f7bdf963df90ecd4c6">   32</a></span>    std::shared_ptr&lt;Layer&gt; <a class="code hl_function" href="classVectrix_1_1LayerStack.html#a80688456a46599f7bdf963df90ecd4c6">LayerStack::PopLayer</a>(<span class="keyword">const</span> std::string&amp; layer) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordflow">for</span> (std::vector&lt;std::shared_ptr&lt;Layer&gt;&gt;* group : {&amp;m_layers, &amp;m_overlays}) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keyword">const</span> <span class="keyword">auto</span> it = std::ranges::find_if(*group, [&amp;layer](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; l) { <span class="keywordflow">return</span> l-&gt;getName() == layer; });</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">if</span> (it == group-&gt;end())</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            std::shared_ptr&lt;Layer&gt; removed = std::move(*it);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            group-&gt;erase(it);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keywordflow">return</span> removed;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        }</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    }</div>
+</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classVectrix_1_1LayerStack.html#a05a8edee795b07b28037cff2e0ffaf73">   44</a></span>    std::shared_ptr&lt;Layer&gt; <a class="code hl_function" href="classVectrix_1_1LayerStack.html#a05a8edee795b07b28037cff2e0ffaf73">LayerStack::ReplaceLayer</a>(<span class="keyword">const</span> <a class="code hl_class" href="classVectrix_1_1Layer.html">Layer</a>* oldLayer, std::shared_ptr&lt;Layer&gt; newLayer) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">for</span> (std::vector&lt;std::shared_ptr&lt;Layer&gt;&gt;* group : {&amp;m_layers, &amp;m_overlays}) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keyword">const</span> <span class="keyword">auto</span> it = std::ranges::find_if(*group, [oldLayer](<span class="keyword">const</span> std::shared_ptr&lt;Layer&gt;&amp; l) { <span class="keywordflow">return</span> l.get() == oldLayer; });</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">if</span> (it == group-&gt;end())</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            std::shared_ptr&lt;Layer&gt; replaced = std::move(*it);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            *it = std::move(newLayer);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> replaced;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        m_layers.push_back(std::move(newLayer));</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
+</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classVectrix_1_1LayerStack.html#aff913da697217d5aeb7e829941b88d8c">   57</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classVectrix_1_1LayerStack.html#aff913da697217d5aeb7e829941b88d8c">LayerStack::destroy</a>() {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        m_layers.clear();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        m_overlays.clear();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }</div>
+</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="ttc" id="aLayerStack_8h_html"><div class="ttname"><a href="LayerStack_8h.html">LayerStack.h</a></div><div class="ttdoc">Definition of the LayerStack class.</div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_a05a8edee795b07b28037cff2e0ffaf73"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#a05a8edee795b07b28037cff2e0ffaf73">Vectrix::LayerStack::ReplaceLayer</a></div><div class="ttdeci">std::shared_ptr&lt; Layer &gt; ReplaceLayer(const Layer *oldLayer, std::shared_ptr&lt; Layer &gt; newLayer)</div><div class="ttdoc">Put a layer in the place of another, so the order of the others doesn&#39;t change.</div><div class="ttdef"><b>Definition</b> <a href="#l00044">LayerStack.cpp:44</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_a37f0e319f4ddaae5cea32232b1039fbb"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#a37f0e319f4ddaae5cea32232b1039fbb">Vectrix::LayerStack::PushLayer</a></div><div class="ttdeci">void PushLayer(const std::shared_ptr&lt; Layer &gt; &amp;layer)</div><div class="ttdoc">Add a layer, on top of the layers already there but under the overlays.</div><div class="ttdef"><b>Definition</b> <a href="#l00016">LayerStack.cpp:16</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_a716f5147fd29a6a65d96f49d38ba64e0"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#a716f5147fd29a6a65d96f49d38ba64e0">Vectrix::LayerStack::PushOverlay</a></div><div class="ttdeci">void PushOverlay(const std::shared_ptr&lt; Layer &gt; &amp;overlay)</div><div class="ttdoc">Add an overlay, on top of everything else.</div><div class="ttdef"><b>Definition</b> <a href="#l00024">LayerStack.cpp:24</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_a80688456a46599f7bdf963df90ecd4c6"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#a80688456a46599f7bdf963df90ecd4c6">Vectrix::LayerStack::PopLayer</a></div><div class="ttdeci">std::shared_ptr&lt; Layer &gt; PopLayer(const std::string &amp;layer)</div><div class="ttdoc">Take a layer out of the stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00032">LayerStack.cpp:32</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1LayerStack_html_aff913da697217d5aeb7e829941b88d8c"><div class="ttname"><a href="classVectrix_1_1LayerStack.html#aff913da697217d5aeb7e829941b88d8c">Vectrix::LayerStack::destroy</a></div><div class="ttdeci">void destroy()</div><div class="ttdoc">Drop every layer and overlay of the stack.</div><div class="ttdef"><b>Definition</b> <a href="#l00057">LayerStack.cpp:57</a></div></div>
+<div class="ttc" id="aclassVectrix_1_1Layer_html"><div class="ttname"><a href="classVectrix_1_1Layer.html">Vectrix::Layer</a></div><div class="ttdoc">One slice of the application, receiving the update and render callbacks, and the events it subscribes...</div><div class="ttdef"><b>Definition</b> <a href="Layer_8h_source.html#l00025">Layer.h:25</a></div></div>
+<div class="ttc" id="agroup__core_html_ga98542ca6ab1409d98945e52149e10470"><div class="ttname"><a href="group__core.html#ga98542ca6ab1409d98945e52149e10470">VC_CORE_WARN</a></div><div class="ttdeci">#define VC_CORE_WARN(...)</div><div class="ttdoc">Report something suspicious happening inside the engine.</div><div class="ttdef"><b>Definition</b> <a href="Log_8h_source.html#l00089">Log.h:89</a></div></div>
+<div class="ttc" id="anamespaceVectrix_html"><div class="ttname"><a href="namespaceVectrix.html">Vectrix</a></div><div class="ttdoc">Vectrix Engine namespace.</div><div class="ttdef"><b>Definition</b> <a href="Application_8cpp_source.html#l00020">Application.cpp:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

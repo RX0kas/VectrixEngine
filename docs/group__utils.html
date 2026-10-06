@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -103,10 +103,728 @@ $(function(){initNavTree('group__utils.html','',''); });
 Files</h2></td></tr>
 <tr class="memitem:AppInfo_2Eh" id="r_AppInfo_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="AppInfo_8h.html">AppInfo.h</a></td></tr>
 <tr class="memdesc:AppInfo_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the different version functions. <br /></td></tr>
+<tr class="memitem:Data_2Eh" id="r_Data_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Data_8h.html">Data.h</a></td></tr>
+<tr class="memdesc:Data_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">The placeholder texture, embedded in the binary. <br /></td></tr>
+<tr class="memitem:Hashing_2Eh" id="r_Hashing_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Hashing_8h.html">Hashing.h</a></td></tr>
+<tr class="memdesc:Hashing_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">The hash functions the engine uses for its caches. <br /></td></tr>
+<tr class="memitem:ImageFormat_2Eh" id="r_ImageFormat_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="ImageFormat_8h.html">ImageFormat.h</a></td></tr>
+<tr class="memdesc:ImageFormat_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">The image formats the engine exposes, and their translation to Vulkan. <br /></td></tr>
+<tr class="memitem:Math_2Eh" id="r_Math_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Math_8h.html">Math.h</a></td></tr>
+<tr class="memdesc:Math_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">How GLM is configured for the whole engine. <br /></td></tr>
+<tr class="memitem:Memory_2Eh" id="r_Memory_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Memory_8h.html">Memory.h</a></td></tr>
+<tr class="memdesc:Memory_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Cache container and the small memory helpers built on it. <br /></td></tr>
+<tr class="memitem:Result_2Eh" id="r_Result_2Eh"><td class="memItemLeft">file &#160;</td><td class="memItemRight"><a class="el" href="Result_8h.html">Result.h</a></td></tr>
+<tr class="memdesc:Result_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of VectrixResult, the value the engine reports an outcome with. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:Vectrix_3A_3AApplicationInfo" id="r_Vectrix_3A_3AApplicationInfo"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1ApplicationInfo.html">Vectrix::ApplicationInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class hold the information about the application.  <a href="classVectrix_1_1ApplicationInfo.html#details">More...</a><br /></td></tr>
+<tr class="memitem:XXH3" id="r_XXH3"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structXXH3.html">XXH3</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hashes a string with xxHash, for use as a hash map hasher.  <a href="structXXH3.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Vectrix_3A_3ACache_3C_20K_2C_20I_20_3E" id="r_Vectrix_3A_3ACache_3C_20K_2C_20I_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1Cache.html">Vectrix::Cache&lt; K, I &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A hash map tuned for the engine, used to keep loaded assets around.  <a href="classVectrix_1_1Cache.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gae71449b1cc6e6250b91f539153a7a0d3" id="r_gae71449b1cc6e6250b91f539153a7a0d3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>&#160;&#160;&#160;3.14159265358979323846</td></tr>
+<tr class="memdesc:gae71449b1cc6e6250b91f539153a7a0d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pi, defined here only when the standard library did not already.  <br /></td></tr>
+<tr class="memitem:ga2c420f1bd675b0277d7e798b1a396c6e" id="r_ga2c420f1bd675b0277d7e798b1a396c6e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga2c420f1bd675b0277d7e798b1a396c6e">ALIGN_TO</a>(offset,  align)</td></tr>
+<tr class="memdesc:ga2c420f1bd675b0277d7e798b1a396c6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Round an offset up to the next multiple of an alignment.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga7d8ad2dfe181ac4b39533ba2e4d07048" id="r_ga7d8ad2dfe181ac4b39533ba2e4d07048"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">Vectrix::VectrixImageFormat</a> { <br />
+&#160;&#160;<a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048ab274b368e500968e14d69aefbcfaa9f5">Vectrix::UNDEFINED</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048a3fb9bcebaa4016cc1f5c4f82f5179ae2">Vectrix::BGRA_SRGB</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048ada95618bbdfa453a1e1a8a289e7ab03e">Vectrix::R_UNORM</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048a70f24a91ad40966b1854d0e167b50b60">Vectrix::RGBA_UNORM</a>
+, <br />
+&#160;&#160;<a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048aba73c870606c70992eeb68b78d038bf8">Vectrix::R_SRGB</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048ad4a98a948f696240861e7e3df88e911b">Vectrix::D32_SFLOAT</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048a810b14825ab01d60adf8d1913a58cfaf">Vectrix::D32_SFLOAT_S8_UINT</a>
+, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048a877f181f8542288739bc1a79de1478c8">Vectrix::D24_UNORM_S8_UINT</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga7d8ad2dfe181ac4b39533ba2e4d07048"><td class="mdescLeft">&#160;</td><td class="mdescRight">How the pixels of an image are laid out.  <a href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">More...</a><br /></td></tr>
+<tr class="memitem:ga471f71ce481a7ccb01b4d784bfe9f3ac" id="r_ga471f71ce481a7ccb01b4d784bfe9f3ac"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">Vectrix::VectrixResult</a> { <br />
+&#160;&#160;<a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973">Vectrix::SUCCESS</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca1100fd1908bbf42f557467e6b4707cb4">Vectrix::UNKNOWN_ERROR</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3acaffe507880550c3e568c86d4381ee5bd5">Vectrix::UNKNOWN_TYPE</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3acad94c15fa51210bdf6558e32f6904e041">Vectrix::NOT_FOUND</a>
+, <br />
+&#160;&#160;<a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca7bca9cde039e9104af18ca080e564fb9">Vectrix::WRONG_TYPE</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3acac3459cc8cd44dde5f80f28241d095cbb">Vectrix::WRONG_FILE</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca5726d509cc509410a14a0c0759aa4990">Vectrix::OUTDATED</a>
+, <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3acab3a3d7780410a44d474fd5df8948458d">Vectrix::FORMATING_ERROR</a>
+, <br />
+&#160;&#160;<a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca477e5c8ac04371f5dea489d0370680a3">Vectrix::ALREADY_EXISTS</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga471f71ce481a7ccb01b4d784bfe9f3ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">What came out of an operation that can fail.  <a href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gab64c6a358bd3c9244c4415e5b4e0bac3" id="r_gab64c6a358bd3c9244c4415e5b4e0bac3"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="#gab64c6a358bd3c9244c4415e5b4e0bac3">Vectrix::isCompatible</a> (<a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version1, <a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version2)</td></tr>
+<tr class="memdesc:gab64c6a358bd3c9244c4415e5b4e0bac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if something written with one version can be read by another.  <br /></td></tr>
+<tr class="memitem:ga76be6b3a011f9cdb2628fff4ec5154a0" id="r_ga76be6b3a011f9cdb2628fff4ec5154a0"><td class="memItemLeft">constexpr unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#ga76be6b3a011f9cdb2628fff4ec5154a0">getNotFoundTextureSize</a> ()</td></tr>
+<tr class="memdesc:ga76be6b3a011f9cdb2628fff4ec5154a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return how many bytes the placeholder texture takes.  <br /></td></tr>
+<tr class="memitem:ga4ac7128cfcec40d3e34511f84ab9a86d" id="r_ga4ac7128cfcec40d3e34511f84ab9a86d"><td class="memItemLeft">constexpr const <a class="el" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a> *&#160;</td><td class="memItemRight"><a class="el" href="#ga4ac7128cfcec40d3e34511f84ab9a86d">getNotFoundTextureData</a> ()</td></tr>
+<tr class="memdesc:ga4ac7128cfcec40d3e34511f84ab9a86d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the bytes of the placeholder texture.  <br /></td></tr>
+<tr class="memitem:ga856caae918d271e1e368c452ffe7019d" id="r_ga856caae918d271e1e368c452ffe7019d"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Rest&gt; </td></tr>
+<tr class="memitem:ga856caae918d271e1e368c452ffe7019d template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ga856caae918d271e1e368c452ffe7019d">hashCombine</a> (std::size_t &amp;seed, const T &amp;v, const Rest &amp;... rest)</td></tr>
+<tr class="memdesc:ga856caae918d271e1e368c452ffe7019d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fold one or more values into an existing hash.  <br /></td></tr>
+<tr class="memitem:gaca8a07ff5b06b46251935726ef60de9f" id="r_gaca8a07ff5b06b46251935726ef60de9f"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#gaca8a07ff5b06b46251935726ef60de9f">Vectrix::toString</a> (<a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a> f)</td></tr>
+<tr class="memdesc:gaca8a07ff5b06b46251935726ef60de9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a format into its name, for logging.  <br /></td></tr>
+<tr class="memitem:ga27a95af44a50ea4a89f02f8e5ca56a02" id="r_ga27a95af44a50ea4a89f02f8e5ca56a02"><td class="memItemLeft">VkFormat&#160;</td><td class="memItemRight"><a class="el" href="#ga27a95af44a50ea4a89f02f8e5ca56a02">Vectrix::toVulkanFormat</a> (<a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a> f)</td></tr>
+<tr class="memdesc:ga27a95af44a50ea4a89f02f8e5ca56a02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translate an engine format into the Vulkan one.  <br /></td></tr>
+<tr class="memitem:gad1c093ca6053de871ae94b06defc39a1" id="r_gad1c093ca6053de871ae94b06defc39a1"><td class="memItemLeft"><a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a>&#160;</td><td class="memItemRight"><a class="el" href="#gad1c093ca6053de871ae94b06defc39a1">Vectrix::toVectrixFormat</a> (VkFormat f)</td></tr>
+<tr class="memdesc:gad1c093ca6053de871ae94b06defc39a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Translate a Vulkan format into the engine one.  <br /></td></tr>
+<tr class="memitem:gae96580ade0b639f0088451ef1c5f8ebd" id="r_gae96580ade0b639f0088451ef1c5f8ebd"><td class="memTemplParams" colspan="2">template&lt;typename T, typename F, int N&gt; </td></tr>
+<tr class="memitem:gae96580ade0b639f0088451ef1c5f8ebd template"><td class="memItemLeft">T&#160;</td><td class="memItemRight"><a class="el" href="#gae96580ade0b639f0088451ef1c5f8ebd">Vectrix::changeVecType</a> (F vec)</td></tr>
+<tr class="memdesc:gae96580ade0b639f0088451ef1c5f8ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy a vector into a vector type of another library.  <br /></td></tr>
+<tr class="memitem:gacbca95179a28cab504325eb5bd1a865b" id="r_gacbca95179a28cab504325eb5bd1a865b"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#gacbca95179a28cab504325eb5bd1a865b">Vectrix::readUTF8</a> (const std::string &amp;path)</td></tr>
+<tr class="memdesc:gacbca95179a28cab504325eb5bd1a865b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a whole text file into a string.  <br /></td></tr>
+<tr class="memitem:ga1e467dea245072cd66f9e479a89b9461" id="r_ga1e467dea245072cd66f9e479a89b9461"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ga1e467dea245072cd66f9e479a89b9461">Vectrix::toString</a> (<a class="el" href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">VectrixResult</a> r)</td></tr>
+<tr class="memdesc:ga1e467dea245072cd66f9e479a89b9461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn a result into its name, for logging.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga58b5aecbd09754843c9b8f0e3288901b" id="r_ga58b5aecbd09754843c9b8f0e3288901b"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> = std::uint32_t</td></tr>
+<tr class="memdesc:ga58b5aecbd09754843c9b8f0e3288901b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A version packed into a single number.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga7e35b07b8223fa794ed6210c3a4f06d9" id="r_ga7e35b07b8223fa794ed6210c3a4f06d9"><td class="memItemLeft">constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a> = 350</td></tr>
+<tr class="memdesc:ga7e35b07b8223fa794ed6210c3a4f06d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of the embedded placeholder texture, in bytes.  <br /></td></tr>
+<tr class="memitem:ga20bf947c24233974b7fa3a99affa366a" id="r_ga20bf947c24233974b7fa3a99affa366a"><td class="memItemLeft">constexpr <a class="el" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga20bf947c24233974b7fa3a99affa366a">notFoundTextureData</a> [<a class="el" href="#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a>]</td></tr>
+<tr class="memdesc:ga20bf947c24233974b7fa3a99affa366a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The placeholder texture itself, as a PNG file held in memory.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Helper. </p>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga2c420f1bd675b0277d7e798b1a396c6e" name="ga2c420f1bd675b0277d7e798b1a396c6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2c420f1bd675b0277d7e798b1a396c6e">&#9670;&#160;</a></span>ALIGN_TO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ALIGN_TO</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>offset</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>align</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">(((offset) + ((align) - 1)) &amp; ~((align) - 1))</div>
+</div><!-- fragment -->
+<p>Round an offset up to the next multiple of an alignment. </p>
+<p>Used when packing data for the GPU, where a member has to start on a boundary the API requires. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">offset</td><td>The offset to round up </td></tr>
+    <tr><td class="paramname">align</td><td>The alignment to respect, a power of two </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00028">28</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+
+</div>
+</div>
+<a id="gae71449b1cc6e6250b91f539153a7a0d3" name="gae71449b1cc6e6250b91f539153a7a0d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae71449b1cc6e6250b91f539153a7a0d3">&#9670;&#160;</a></span>M_PI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define M_PI&#160;&#160;&#160;3.14159265358979323846</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Pi, defined here only when the standard library did not already. </p>
+
+<p class="definition">Definition at line <a class="el" href="Math_8h_source.html#l00017">17</a> of file <a class="el" href="Math_8h_source.html">Math.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="ga58b5aecbd09754843c9b8f0e3288901b" name="ga58b5aecbd09754843c9b8f0e3288901b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga58b5aecbd09754843c9b8f0e3288901b">&#9670;&#160;</a></span>Version</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> = std::uint32_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A version packed into a single number. </p>
+<p>It holds the platform it was built for, then the major, minor and patch numbers, which is what lets a version be written to a file and compared later. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="namespaceVectrix.html#a96f38492f0dc2d759993e6b8560db6ad" title="This function create a version from the different version number.">Vectrix::makeVersion</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00022">22</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga7d8ad2dfe181ac4b39533ba2e4d07048" name="ga7d8ad2dfe181ac4b39533ba2e4d07048"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">&#9670;&#160;</a></span>VectrixImageFormat</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">Vectrix::VectrixImageFormat</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>How the pixels of an image are laid out. </p>
+<p>This is the engine side of the format, so the rest of the code does not have to name a Vulkan value. Use toVulkanFormat and toVectrixFormat to cross the boundary. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1Framebuffer.html" title="This class can be used to draw on an image.">Framebuffer</a> </dd>
+<dd>
+<a class="el" href="classVectrix_1_1Texture.html">Texture</a> </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048ab274b368e500968e14d69aefbcfaa9f5" name="gga7d8ad2dfe181ac4b39533ba2e4d07048ab274b368e500968e14d69aefbcfaa9f5"></a>UNDEFINED&#160;</td><td class="fielddoc"><p>No format, or one the engine does not expose. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048a3fb9bcebaa4016cc1f5c4f82f5179ae2" name="gga7d8ad2dfe181ac4b39533ba2e4d07048a3fb9bcebaa4016cc1f5c4f82f5179ae2"></a>BGRA_SRGB&#160;</td><td class="fielddoc"><p>Four 8 bit channels in blue green red alpha order, sRGB encoded. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048ada95618bbdfa453a1e1a8a289e7ab03e" name="gga7d8ad2dfe181ac4b39533ba2e4d07048ada95618bbdfa453a1e1a8a289e7ab03e"></a>R_UNORM&#160;</td><td class="fielddoc"><p>One 8 bit channel, normalised to the 0 to 1 range. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048a70f24a91ad40966b1854d0e167b50b60" name="gga7d8ad2dfe181ac4b39533ba2e4d07048a70f24a91ad40966b1854d0e167b50b60"></a>RGBA_UNORM&#160;</td><td class="fielddoc"><p>Four 8 bit channels, normalised to the 0 to 1 range. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048aba73c870606c70992eeb68b78d038bf8" name="gga7d8ad2dfe181ac4b39533ba2e4d07048aba73c870606c70992eeb68b78d038bf8"></a>R_SRGB&#160;</td><td class="fielddoc"><p>One 8 bit channel, sRGB encoded. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048ad4a98a948f696240861e7e3df88e911b" name="gga7d8ad2dfe181ac4b39533ba2e4d07048ad4a98a948f696240861e7e3df88e911b"></a>D32_SFLOAT&#160;</td><td class="fielddoc"><p>A 32 bit float depth buffer. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048a810b14825ab01d60adf8d1913a58cfaf" name="gga7d8ad2dfe181ac4b39533ba2e4d07048a810b14825ab01d60adf8d1913a58cfaf"></a>D32_SFLOAT_S8_UINT&#160;</td><td class="fielddoc"><p>A 32 bit float depth buffer with an 8 bit stencil. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7d8ad2dfe181ac4b39533ba2e4d07048a877f181f8542288739bc1a79de1478c8" name="gga7d8ad2dfe181ac4b39533ba2e4d07048a877f181f8542288739bc1a79de1478c8"></a>D24_UNORM_S8_UINT&#160;</td><td class="fielddoc"><p>A 24 bit normalised depth buffer with an 8 bit stencil. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="ImageFormat_8h_source.html#l00022">22</a> of file <a class="el" href="ImageFormat_8h_source.html">ImageFormat.h</a>.</p>
+
+</div>
+</div>
+<a id="ga471f71ce481a7ccb01b4d784bfe9f3ac" name="ga471f71ce481a7ccb01b4d784bfe9f3ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">&#9670;&#160;</a></span>VectrixResult</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">Vectrix::VectrixResult</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>What came out of an operation that can fail. </p>
+<p>Returned by the parts of the engine that touch the disk, so the caller can tell a missing file from a corrupted one. Always compare against <a class="el" href="#gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973" title="The operation went through.">SUCCESS</a> rather than assuming a value. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga1e467dea245072cd66f9e479a89b9461" title="Turn a result into its name, for logging.">toString(VectrixResult)</a> </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973" name="gga471f71ce481a7ccb01b4d784bfe9f3aca956c47fb1863410b82673a0175951973"></a>SUCCESS&#160;</td><td class="fielddoc"><p>The operation went through. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3aca1100fd1908bbf42f557467e6b4707cb4" name="gga471f71ce481a7ccb01b4d784bfe9f3aca1100fd1908bbf42f557467e6b4707cb4"></a>UNKNOWN_ERROR&#160;</td><td class="fielddoc"><p>Something failed and could not be pinned down. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3acaffe507880550c3e568c86d4381ee5bd5" name="gga471f71ce481a7ccb01b4d784bfe9f3acaffe507880550c3e568c86d4381ee5bd5"></a>UNKNOWN_TYPE&#160;</td><td class="fielddoc"><p>The type asked for is not one the engine knows. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3acad94c15fa51210bdf6558e32f6904e041" name="gga471f71ce481a7ccb01b4d784bfe9f3acad94c15fa51210bdf6558e32f6904e041"></a>NOT_FOUND&#160;</td><td class="fielddoc"><p>What was asked for does not exist. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3aca7bca9cde039e9104af18ca080e564fb9" name="gga471f71ce481a7ccb01b4d784bfe9f3aca7bca9cde039e9104af18ca080e564fb9"></a>WRONG_TYPE&#160;</td><td class="fielddoc"><p>What was found is not of the expected type. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3acac3459cc8cd44dde5f80f28241d095cbb" name="gga471f71ce481a7ccb01b4d784bfe9f3acac3459cc8cd44dde5f80f28241d095cbb"></a>WRONG_FILE&#160;</td><td class="fielddoc"><p>The file is not what it claims to be. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3aca5726d509cc509410a14a0c0759aa4990" name="gga471f71ce481a7ccb01b4d784bfe9f3aca5726d509cc509410a14a0c0759aa4990"></a>OUTDATED&#160;</td><td class="fielddoc"><p>The file was written by a version that is no longer supported. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3acab3a3d7780410a44d474fd5df8948458d" name="gga471f71ce481a7ccb01b4d784bfe9f3acab3a3d7780410a44d474fd5df8948458d"></a>FORMATING_ERROR&#160;</td><td class="fielddoc"><p>The content is of the right kind but is malformed. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga471f71ce481a7ccb01b4d784bfe9f3aca477e5c8ac04371f5dea489d0370680a3" name="gga471f71ce481a7ccb01b4d784bfe9f3aca477e5c8ac04371f5dea489d0370680a3"></a>ALREADY_EXISTS&#160;</td><td class="fielddoc"><p>Something is already there where a new one was about to be made. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="Result_8h_source.html#l00021">21</a> of file <a class="el" href="Result_8h_source.html">Result.h</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="gae96580ade0b639f0088451ef1c5f8ebd" name="gae96580ade0b639f0088451ef1c5f8ebd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae96580ade0b639f0088451ef1c5f8ebd">&#9670;&#160;</a></span>changeVecType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, typename F, int N&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T Vectrix::changeVecType </td>
+          <td>(</td>
+          <td class="paramtype">F</td>          <td class="paramname"><span class="paramname"><em>vec</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy a vector into a vector type of another library. </p>
+<p>Mostly used to hand a GLM vector to ImGui and the other way round. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The vector type to produce </td></tr>
+    <tr><td class="paramname">F</td><td>The vector type to read from </td></tr>
+    <tr><td class="paramname">N</td><td>How many components to copy </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vec</td><td>The vector to copy </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The same components, in the wanted type </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Math_8h_source.html#l00043">43</a> of file <a class="el" href="Math_8h_source.html">Math.h</a>.</p>
+
+</div>
+</div>
+<a id="ga4ac7128cfcec40d3e34511f84ab9a86d" name="ga4ac7128cfcec40d3e34511f84ab9a86d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4ac7128cfcec40d3e34511f84ab9a86d">&#9670;&#160;</a></span>getNotFoundTextureData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a> * getNotFoundTextureData </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the bytes of the placeholder texture. </p>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the embedded PNG, valid for the whole run </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Data_8h_source.html#l00064">64</a> of file <a class="el" href="Data_8h_source.html">Data.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Data_8h_source.html#l00027">notFoundTextureData</a>.</p>
+
+</div>
+</div>
+<a id="ga76be6b3a011f9cdb2628fff4ec5154a0" name="ga76be6b3a011f9cdb2628fff4ec5154a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga76be6b3a011f9cdb2628fff4ec5154a0">&#9670;&#160;</a></span>getNotFoundTextureSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int getNotFoundTextureSize </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return how many bytes the placeholder texture takes. </p>
+<dl class="section return"><dt>Returns</dt><dd>The size in bytes </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Data_8h_source.html#l00057">57</a> of file <a class="el" href="Data_8h_source.html">Data.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Data_8h_source.html#l00021">notFoundTextureSize</a>.</p>
+
+</div>
+</div>
+<a id="ga856caae918d271e1e368c452ffe7019d" name="ga856caae918d271e1e368c452ffe7019d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga856caae918d271e1e368c452ffe7019d">&#9670;&#160;</a></span>hashCombine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, typename... Rest&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void hashCombine </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t &amp;</td>          <td class="paramname"><span class="paramname"><em>seed</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Rest &amp;...</td>          <td class="paramname"><span class="paramname"><em>rest</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fold one or more values into an existing hash. </p>
+<p>Used to hash a compound value such as a Vertex, by combining the hash of each of its fields into a single one. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of the first value to fold in </td></tr>
+    <tr><td class="paramname">Rest</td><td>The types of the remaining values </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">seed</td><td>The hash to update, in and out </td></tr>
+    <tr><td class="paramname">v</td><td>The first value to fold in </td></tr>
+    <tr><td class="paramname">rest</td><td>The remaining values </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Hashing_8h_source.html#l00050">50</a> of file <a class="el" href="Hashing_8h_source.html">Hashing.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Hashing_8h_source.html#l00050">hashCombine()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Hashing_8h_source.html#l00050">hashCombine()</a>.</p>
+
+</div>
+</div>
+<a id="gab64c6a358bd3c9244c4415e5b4e0bac3" name="gab64c6a358bd3c9244c4415e5b4e0bac3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab64c6a358bd3c9244c4415e5b4e0bac3">&#9670;&#160;</a></span>isCompatible()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Vectrix::isCompatible </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a></td>          <td class="paramname"><span class="paramname"><em>version1</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga58b5aecbd09754843c9b8f0e3288901b">Version</a></td>          <td class="paramname"><span class="paramname"><em>version2</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tell if something written with one version can be read by another. </p>
+<p>The major numbers have to match, and the reader may not be older than the writer. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">version1</td><td>The version doing the reading </td></tr>
+    <tr><td class="paramname">version2</td><td>The version the content was written with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when version1 can handle what version2 produced </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00103">103</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+
+<p class="reference">References <a class="el" href="AppInfo_8h_source.html#l00061">getMajor()</a>, and <a class="el" href="AppInfo_8h_source.html#l00070">getMinor()</a>.</p>
+
+</div>
+</div>
+<a id="gacbca95179a28cab504325eb5bd1a865b" name="gacbca95179a28cab504325eb5bd1a865b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacbca95179a28cab504325eb5bd1a865b">&#9670;&#160;</a></span>readUTF8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::readUTF8 </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Read a whole text file into a string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The path of the file to read </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The content of the file, empty when it could not be opened </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Reading fails loudly through VC_CORE_ERROR when the file cannot be opened </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Memory_8h_source.html#l00101">101</a> of file <a class="el" href="Memory_8h_source.html">Memory.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Path_8h_source.html#l00041">fromUtf8()</a>, and <a class="el" href="Log_8h_source.html#l00082">VC_CORE_ERROR_NO_EXIT</a>.</p>
+
+</div>
+</div>
+<a id="gaca8a07ff5b06b46251935726ef60de9f" name="gaca8a07ff5b06b46251935726ef60de9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaca8a07ff5b06b46251935726ef60de9f">&#9670;&#160;</a></span>toString() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Turn a format into its name, for logging. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The format to describe </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the value, or a fallback when it is not a known one </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImageFormat_8h_source.html#l00039">39</a> of file <a class="el" href="ImageFormat_8h_source.html">ImageFormat.h</a>.</p>
+
+<p class="reference">References <a class="el" href="ImageFormat_8h_source.html#l00024">BGRA_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00030">D24_UNORM_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00028">D32_SFLOAT</a>, <a class="el" href="ImageFormat_8h_source.html#l00029">D32_SFLOAT_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00027">R_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00025">R_UNORM</a>, <a class="el" href="ImageFormat_8h_source.html#l00026">RGBA_UNORM</a>, and <a class="el" href="ImageFormat_8h_source.html#l00023">UNDEFINED</a>.</p>
+
+</div>
+</div>
+<a id="ga1e467dea245072cd66f9e479a89b9461" name="ga1e467dea245072cd66f9e479a89b9461"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1e467dea245072cd66f9e479a89b9461">&#9670;&#160;</a></span>toString() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga471f71ce481a7ccb01b4d784bfe9f3ac">VectrixResult</a></td>          <td class="paramname"><span class="paramname"><em>r</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Turn a result into its name, for logging. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">r</td><td>The result to describe </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the value, or a fallback when it is not a known one </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Result_8h_source.html#l00039">39</a> of file <a class="el" href="Result_8h_source.html">Result.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Result_8h_source.html#l00030">ALREADY_EXISTS</a>, <a class="el" href="Result_8h_source.html#l00029">FORMATING_ERROR</a>, <a class="el" href="Result_8h_source.html#l00025">NOT_FOUND</a>, <a class="el" href="Result_8h_source.html#l00028">OUTDATED</a>, <a class="el" href="Result_8h_source.html#l00022">SUCCESS</a>, <a class="el" href="Result_8h_source.html#l00023">UNKNOWN_ERROR</a>, <a class="el" href="Result_8h_source.html#l00024">UNKNOWN_TYPE</a>, <a class="el" href="Result_8h_source.html#l00027">WRONG_FILE</a>, and <a class="el" href="Result_8h_source.html#l00026">WRONG_TYPE</a>.</p>
+
+</div>
+</div>
+<a id="gad1c093ca6053de871ae94b06defc39a1" name="gad1c093ca6053de871ae94b06defc39a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad1c093ca6053de871ae94b06defc39a1">&#9670;&#160;</a></span>toVectrixFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a> Vectrix::toVectrixFormat </td>
+          <td>(</td>
+          <td class="paramtype">VkFormat</td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Translate a Vulkan format into the engine one. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The Vulkan format </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The matching engine format, <a class="el" href="#gga7d8ad2dfe181ac4b39533ba2e4d07048ab274b368e500968e14d69aefbcfaa9f5" title="No format, or one the engine does not expose.">UNDEFINED</a> when the engine does not expose it </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga27a95af44a50ea4a89f02f8e5ca56a02" title="Translate an engine format into the Vulkan one.">toVulkanFormat</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImageFormat_8h_source.html#l00081">81</a> of file <a class="el" href="ImageFormat_8h_source.html">ImageFormat.h</a>.</p>
+
+<p class="reference">References <a class="el" href="ImageFormat_8h_source.html#l00024">BGRA_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00030">D24_UNORM_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00028">D32_SFLOAT</a>, <a class="el" href="ImageFormat_8h_source.html#l00029">D32_SFLOAT_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00027">R_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00025">R_UNORM</a>, <a class="el" href="ImageFormat_8h_source.html#l00026">RGBA_UNORM</a>, and <a class="el" href="ImageFormat_8h_source.html#l00023">UNDEFINED</a>.</p>
+
+</div>
+</div>
+<a id="ga27a95af44a50ea4a89f02f8e5ca56a02" name="ga27a95af44a50ea4a89f02f8e5ca56a02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga27a95af44a50ea4a89f02f8e5ca56a02">&#9670;&#160;</a></span>toVulkanFormat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">VkFormat Vectrix::toVulkanFormat </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#ga7d8ad2dfe181ac4b39533ba2e4d07048">VectrixImageFormat</a></td>          <td class="paramname"><span class="paramname"><em>f</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Translate an engine format into the Vulkan one. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The engine format </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The matching Vulkan format, <span class="tt">VK_FORMAT_UNDEFINED</span> when there is none </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gad1c093ca6053de871ae94b06defc39a1" title="Translate a Vulkan format into the engine one.">toVectrixFormat</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="ImageFormat_8h_source.html#l00060">60</a> of file <a class="el" href="ImageFormat_8h_source.html">ImageFormat.h</a>.</p>
+
+<p class="reference">References <a class="el" href="ImageFormat_8h_source.html#l00024">BGRA_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00030">D24_UNORM_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00028">D32_SFLOAT</a>, <a class="el" href="ImageFormat_8h_source.html#l00029">D32_SFLOAT_S8_UINT</a>, <a class="el" href="ImageFormat_8h_source.html#l00027">R_SRGB</a>, <a class="el" href="ImageFormat_8h_source.html#l00025">R_UNORM</a>, <a class="el" href="ImageFormat_8h_source.html#l00026">RGBA_UNORM</a>, and <a class="el" href="ImageFormat_8h_source.html#l00023">UNDEFINED</a>.</p>
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="ga20bf947c24233974b7fa3a99affa366a" name="ga20bf947c24233974b7fa3a99affa366a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga20bf947c24233974b7fa3a99affa366a">&#9670;&#160;</a></span>notFoundTextureData</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="Data_8h.html#ae3a497195d617519e5353ea7b417940f">Byte</a> notFoundTextureData[<a class="el" href="#ga7e35b07b8223fa794ed6210c3a4f06d9">notFoundTextureSize</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">                                   = {</div>
+<div class="line">    0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,</div>
+<div class="line">    0x00,0x00,0x00,0x64,0x00,0x00,0x00,0x64,0x08,0x06,0x00,0x00,0x00,0x70,0xe2,0x95,</div>
+<div class="line">    0x54,0x00,0x00,0x00,0x04,0x73,0x42,0x49,0x54,0x08,0x08,0x08,0x08,0x7c,0x08,0x64,</div>
+<div class="line">    0x88,0x00,0x00,0x01,0x15,0x49,0x44,0x41,0x54,0x78,0x9c,0xed,0xdc,0xb1,0x0d,0xc3,</div>
+<div class="line">    0x30,0x0c,0x00,0x41,0x29,0x5b,0xc6,0x03,0x66,0x4d,0xba,0x4e,0x6f,0xc0,0x0f,0xe1,</div>
+<div class="line">    0x6e,0x02,0x12,0x0f,0xb6,0xdc,0xb3,0x66,0xd6,0x01,0xae,0xd9,0x6f,0x8f,0xf0,0x88,</div>
+<div class="line">    0xcf,0xdb,0x03,0xf0,0x4f,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,</div>
+<div class="line">    0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,</div>
+<div class="line">    0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,</div>
+<div class="line">    0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,</div>
+<div class="line">    0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,</div>
+<div class="line">    0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,</div>
+<div class="line">    0x18,0x41,0x62,0x04,0x89,0x11,0x24,0x46,0x90,0x18,0x41,0x62,0x04,0x89,0x11,0x24,</div>
+<div class="line">    0x66,0x7f,0x67,0x1d,0xf1,0x51,0xee,0xb7,0x8f,0x58,0xc3,0x85,0xd4,0x08,0x12,0x23,</div>
+<div class="line">    0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,</div>
+<div class="line">    0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,</div>
+<div class="line">    0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,</div>
+<div class="line">    0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,</div>
+<div class="line">    0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,</div>
+<div class="line">    0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,</div>
+<div class="line">    0x08,0x12,0x23,0x48,0x8c,0x20,0x31,0x82,0xc4,0xdc,0x78,0x72,0x09,0x1b,0x74,0xeb,</div>
+<div class="line">    0x01,0x79,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+<p>The placeholder texture itself, as a PNG file held in memory. </p>
+
+<p class="definition">Definition at line <a class="el" href="Data_8h_source.html#l00027">27</a> of file <a class="el" href="Data_8h_source.html">Data.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Data_8h_source.html#l00064">getNotFoundTextureData()</a>.</p>
+
+</div>
+</div>
+<a id="ga7e35b07b8223fa794ed6210c3a4f06d9" name="ga7e35b07b8223fa794ed6210c3a4f06d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7e35b07b8223fa794ed6210c3a4f06d9">&#9670;&#160;</a></span>notFoundTextureSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int notFoundTextureSize = 350</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The size of the embedded placeholder texture, in bytes. </p>
+
+<p class="definition">Definition at line <a class="el" href="Data_8h_source.html#l00021">21</a> of file <a class="el" href="Data_8h_source.html">Data.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Data_8h_source.html#l00057">getNotFoundTextureSize()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

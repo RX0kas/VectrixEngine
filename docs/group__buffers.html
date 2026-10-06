@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -97,9 +97,64 @@ $(function(){initNavTree('group__buffers.html','',''); });
 <div class="contents">
 
 <p>GPU buffer management.  
-</p>
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga7f8f52890ceb66335a86bb62f315b08c" id="r_ga7f8f52890ceb66335a86bb62f315b08c"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#ga7f8f52890ceb66335a86bb62f315b08c">Vectrix::ShaderDataType</a> { <br />
+&#160;&#160;<a class="el" href="#gga7f8f52890ceb66335a86bb62f315b08ca6adf97f83acf6453d4a6a4b1070f3754">Vectrix::ShaderDataType::None</a>
+, <a class="el" href="#gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b">Vectrix::ShaderDataType::Float</a>
+, <a class="el" href="#gga7f8f52890ceb66335a86bb62f315b08ca6694430a2b471b5d2de071f2ef1fdc57">Vectrix::ShaderDataType::Float2</a>
+, <a class="el" href="#gga7f8f52890ceb66335a86bb62f315b08ca8a8a1d211464d4bdee46db3c75bfa121">Vectrix::ShaderDataType::Float3</a>
+, <br />
+&#160;&#160;<a class="el" href="#gga7f8f52890ceb66335a86bb62f315b08ca33116adc6690289da9b82ea736864eeb">Vectrix::ShaderDataType::Float4</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga7f8f52890ceb66335a86bb62f315b08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of one piece of data inside a vertex.  <a href="#ga7f8f52890ceb66335a86bb62f315b08c">More...</a><br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>GPU buffer management. </p>
-</div></div><!-- contents -->
+</div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga7f8f52890ceb66335a86bb62f315b08c" name="ga7f8f52890ceb66335a86bb62f315b08c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7f8f52890ceb66335a86bb62f315b08c">&#9670;&#160;</a></span>ShaderDataType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ga7f8f52890ceb66335a86bb62f315b08c">Vectrix::ShaderDataType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The type of one piece of data inside a vertex. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structVectrix_1_1BufferElement.html" title="Represent a data is represented in a vertex.">BufferElement</a> </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga7f8f52890ceb66335a86bb62f315b08ca6adf97f83acf6453d4a6a4b1070f3754" name="gga7f8f52890ceb66335a86bb62f315b08ca6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"><p>No type. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b" name="gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b"></a>Float&#160;</td><td class="fielddoc"><p>A single float. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7f8f52890ceb66335a86bb62f315b08ca6694430a2b471b5d2de071f2ef1fdc57" name="gga7f8f52890ceb66335a86bb62f315b08ca6694430a2b471b5d2de071f2ef1fdc57"></a>Float2&#160;</td><td class="fielddoc"><p>Two floats, a 2D vector. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7f8f52890ceb66335a86bb62f315b08ca8a8a1d211464d4bdee46db3c75bfa121" name="gga7f8f52890ceb66335a86bb62f315b08ca8a8a1d211464d4bdee46db3c75bfa121"></a>Float3&#160;</td><td class="fielddoc"><p>Three floats, a 3D vector. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7f8f52890ceb66335a86bb62f315b08ca33116adc6690289da9b82ea736864eeb" name="gga7f8f52890ceb66335a86bb62f315b08ca33116adc6690289da9b82ea736864eeb"></a>Float4&#160;</td><td class="fielddoc"><p>Four floats, a 4D vector or a colour. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="Buffer_8h_source.html#l00020">20</a> of file <a class="el" href="Buffer_8h_source.html">Buffer.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

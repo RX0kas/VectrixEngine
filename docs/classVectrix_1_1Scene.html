@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,29 +92,102 @@ $(function(){initNavTree('classVectrix_1_1Scene.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::Scene Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::Scene Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__ecs.html">Entity component system</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Holds every entity of a level, and drives them each frame.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="Scene_8h_source.html">Scene.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:aa8cfd69b38fa5be1297d3863d72a538a" id="r_aa8cfd69b38fa5be1297d3863d72a538a"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aa8cfd69b38fa5be1297d3863d72a538a">Scene</a> (std::string name)</td></tr>
+<tr class="memdesc:aa8cfd69b38fa5be1297d3863d72a538a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty scene.  <br /></td></tr>
 <tr class="memitem:a306732ef3f21a9f001ae14407520b9a8" id="r_a306732ef3f21a9f001ae14407520b9a8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a306732ef3f21a9f001ae14407520b9a8">OnUpdate</a> (<a class="el" href="classVectrix_1_1DeltaTime.html">DeltaTime</a> dt)</td></tr>
+<tr class="memdesc:a306732ef3f21a9f001ae14407520b9a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance every entity of the scene by one frame.  <br /></td></tr>
 <tr class="memitem:a933710b661418fa91ee2d81fb51625f2" id="r_a933710b661418fa91ee2d81fb51625f2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a933710b661418fa91ee2d81fb51625f2">OnRender</a> ()</td></tr>
-<tr class="memitem:ad0ad720f0a56588b551a484299a4d224" id="r_ad0ad720f0a56588b551a484299a4d224"><td class="memItemLeft">Entity&#160;</td><td class="memItemRight"><a class="el" href="#ad0ad720f0a56588b551a484299a4d224">createEntity</a> (const std::string &amp;name=&quot;&quot;)</td></tr>
-<tr class="memdesc:ad0ad720f0a56588b551a484299a4d224"><td class="mdescLeft">&#160;</td><td class="mdescRight">It creates an entity in the scene with <a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> and TagComponent.  <br /></td></tr>
+<tr class="memdesc:a933710b661418fa91ee2d81fb51625f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw every entity of the scene that can be rendered.  <br /></td></tr>
+<tr class="memitem:a692f7f233bc1ec622a11d0f0431be4ee" id="r_a692f7f233bc1ec622a11d0f0431be4ee"><td class="memItemLeft">std::shared_ptr&lt; Entity &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a692f7f233bc1ec622a11d0f0431be4ee">createEntity</a> (const std::string &amp;name=&quot;&quot;)</td></tr>
+<tr class="memdesc:a692f7f233bc1ec622a11d0f0431be4ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">It creates an entity in the scene with <a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> and TagComponent.  <br /></td></tr>
+<tr class="memitem:adf53e53e43f050bc0ec8c2f3776430bb" id="r_adf53e53e43f050bc0ec8c2f3776430bb"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adf53e53e43f050bc0ec8c2f3776430bb">destroyEntity</a> (entt::entity entity)</td></tr>
+<tr class="memdesc:adf53e53e43f050bc0ec8c2f3776430bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove an entity and everything it owns from the scene.  <br /></td></tr>
+<tr class="memitem:ae7b5af2344a651edcc3912c3d697451d" id="r_ae7b5af2344a651edcc3912c3d697451d"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#ae7b5af2344a651edcc3912c3d697451d">getName</a> () const</td></tr>
+<tr class="memdesc:ae7b5af2344a651edcc3912c3d697451d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the scene.  <br /></td></tr>
+<tr class="memitem:a0c3c0f34f40d988149a8735fc0976aa6" id="r_a0c3c0f34f40d988149a8735fc0976aa6"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a0c3c0f34f40d988149a8735fc0976aa6">getDirectory</a> () const</td></tr>
+<tr class="memdesc:a0c3c0f34f40d988149a8735fc0976aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the folder the scene file is in.  <br /></td></tr>
+<tr class="memitem:a888e2d33f05df6a5fc31d83ec5290642" id="r_a888e2d33f05df6a5fc31d83ec5290642"><td class="memItemLeft">std::string&#160;</td><td class="memItemRight"><a class="el" href="#a888e2d33f05df6a5fc31d83ec5290642">getFileName</a> () const</td></tr>
+<tr class="memdesc:a888e2d33f05df6a5fc31d83ec5290642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the file the scene was loaded from.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Public Static Functions</h2></td></tr>
+<tr class="memitem:aba431a0ce5750ac8fae171729022d084" id="r_aba431a0ce5750ac8fae171729022d084"><td class="memItemLeft">static std::pair&lt; <a class="el" href="group__utils.html#ga471f71ce481a7ccb01b4d784bfe9f3ac">VectrixResult</a>, std::shared_ptr&lt; <a class="el" href="#aa8cfd69b38fa5be1297d3863d72a538a">Scene</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aba431a0ce5750ac8fae171729022d084">loadScene</a> (<a class="el" href="structVectrix_1_1SceneCreationData.html">SceneCreationData</a> &amp;creationData, std::vector&lt; std::string &gt; *assetErrors=nullptr)</td></tr>
+<tr class="memdesc:aba431a0ce5750ac8fae171729022d084"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a scene from what was read out of a scene file.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Scene_8h_source.html#l00016">16</a> of file <a class="el" href="Scene_8h_source.html">Scene.h</a>.</p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
-<a id="ad0ad720f0a56588b551a484299a4d224" name="ad0ad720f0a56588b551a484299a4d224"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0ad720f0a56588b551a484299a4d224">&#9670;&#160;</a></span>createEntity()</h2>
+<div class="textblock"><p>Holds every entity of a level, and drives them each frame. </p>
+<p>A scene owns the registry the entities live in, so an entity is only valid as long as its scene is. Create the entities through createEntity rather than building them by hand, that way they get the components every entity is expected to have. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1Entity.html" title="A handle on one object of a Scene, and on the components it owns.">Entity</a> </dd>
+<dd>
+<a class="el" href="classVectrix_1_1SceneSerializer.html" title="Writes a Scene to a file, and reads one back.">SceneSerializer</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8h_source.html#l00036">36</a> of file <a class="el" href="Scene_8h_source.html">Scene.h</a>.</p>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
+<a id="aa8cfd69b38fa5be1297d3863d72a538a" name="aa8cfd69b38fa5be1297d3863d72a538a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8cfd69b38fa5be1297d3863d72a538a">&#9670;&#160;</a></span>Scene()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Entity Vectrix::Scene::createEntity </td>
+          <td class="memname">Vectrix::Scene::Scene </td>
+          <td>(</td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create an empty scene. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the scene </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00146">146</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ab84af6a4728f6c8b409d6100c34ab864" name="ab84af6a4728f6c8b409d6100c34ab864"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab84af6a4728f6c8b409d6100c34ab864">&#9670;&#160;</a></span>~Scene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vectrix::Scene::~Scene </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00151">151</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Functions</h2>
+<a id="a692f7f233bc1ec622a11d0f0431be4ee" name="a692f7f233bc1ec622a11d0f0431be4ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a692f7f233bc1ec622a11d0f0431be4ee">&#9670;&#160;</a></span>createEntity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; Entity &gt; Vectrix::Scene::createEntity </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span></td><td>)</td>
           <td></td>
@@ -125,14 +198,182 @@ Public Member Functions</h2></td></tr>
 <p>It creates an entity in the scene with <a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> and TagComponent. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>The name of the <a class="el" href="classVectrix_1_1Entity.html">Entity</a> </td></tr>
+    <tr><td class="paramname">name</td><td>The name of the <a class="el" href="classVectrix_1_1Entity.html" title="A handle on one object of a Scene, and on the components it owns.">Entity</a> </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The new entity, owned by the scene </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00029">29</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00174">174</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Entity_8h_source.html#l00033">Vectrix::Entity::addComponent()</a>.</p>
+<p class="reference">References <a class="el" href="Component_8h_source.html#l00030">Vectrix::InformationComponent::name</a>.</p>
+
+</div>
+</div>
+<a id="adf53e53e43f050bc0ec8c2f3776430bb" name="adf53e53e43f050bc0ec8c2f3776430bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf53e53e43f050bc0ec8c2f3776430bb">&#9670;&#160;</a></span>destroyEntity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Vectrix::Scene::destroyEntity </td>
+          <td>(</td>
+          <td class="paramtype">entt::entity</td>          <td class="paramname"><span class="paramname"><em>entity</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove an entity and everything it owns from the scene. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>The entity to destroy (an <a class="el" href="classVectrix_1_1Entity.html" title="A handle on one object of a Scene, and on the components it owns.">Entity</a> converts to this implicitly) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Every reference to that entity becomes invalid </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00185">185</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a0c3c0f34f40d988149a8735fc0976aa6" name="a0c3c0f34f40d988149a8735fc0976aa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c3c0f34f40d988149a8735fc0976aa6">&#9670;&#160;</a></span>getDirectory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::Scene::getDirectory </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the folder the scene file is in. </p>
+<dl class="section return"><dt>Returns</dt><dd>The scene's directory (e.g. <span class="tt">&lt;project&gt;/Scenes</span>), empty until the scene is loaded or saved </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Not the project directory: asset paths are resolved against <a class="el" href="classVectrix_1_1AssetsManager.html#aabb550e0a85a88a4426e8de7af28ad15" title="Return the folder every relative project asset path is taken from.">AssetsManager::getAssetsPath</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8h_source.html#l00082">82</a> of file <a class="el" href="Scene_8h_source.html">Scene.h</a>.</p>
+
+<p class="reference">References <a class="el" href="Path_8h_source.html#l00023">Vectrix::toUtf8()</a>.</p>
+
+</div>
+</div>
+<a id="a888e2d33f05df6a5fc31d83ec5290642" name="a888e2d33f05df6a5fc31d83ec5290642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a888e2d33f05df6a5fc31d83ec5290642">&#9670;&#160;</a></span>getFileName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::Scene::getFileName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the name of the file the scene was loaded from. </p>
+<dl class="section return"><dt>Returns</dt><dd>The file name, empty when the scene was never saved </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8h_source.html#l00088">88</a> of file <a class="el" href="Scene_8h_source.html">Scene.h</a>.</p>
+
+</div>
+</div>
+<a id="ae7b5af2344a651edcc3912c3d697451d" name="ae7b5af2344a651edcc3912c3d697451d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7b5af2344a651edcc3912c3d697451d">&#9670;&#160;</a></span>getName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Vectrix::Scene::getName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the name of the scene. </p>
+<dl class="section return"><dt>Returns</dt><dd>The scene name </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8h_source.html#l00075">75</a> of file <a class="el" href="Scene_8h_source.html">Scene.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="SceneSerializer_8cpp_source.html#l00291">Vectrix::SceneSerializer::saveScene()</a>.</p>
+
+</div>
+</div>
+<a id="aba431a0ce5750ac8fae171729022d084" name="aba431a0ce5750ac8fae171729022d084"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba431a0ce5750ac8fae171729022d084">&#9670;&#160;</a></span>loadScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; <a class="el" href="group__utils.html#ga471f71ce481a7ccb01b4d784bfe9f3ac">VectrixResult</a>, std::shared_ptr&lt; <a class="el" href="#aa8cfd69b38fa5be1297d3863d72a538a">Scene</a> &gt; &gt; Vectrix::Scene::loadScene </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structVectrix_1_1SceneCreationData.html">SceneCreationData</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>creationData</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; *</td>          <td class="paramname"><span class="paramname"><em>assetErrors</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build a scene from what was read out of a scene file. </p>
+<p>An asset that can't be loaded (moved, deleted, broken) doesn't stop the scene from loading: the component referring to it keeps its path (<a class="el" href="classVectrix_1_1MeshRendererComponent.html#a28ba7fc755ef09f8398ef3819a20bda9" title="Paths of the assets the component refers to but that couldn&#39;t be loaded (moved, deleted,...">MeshRendererComponent::missingMesh</a>, ...), which saving writes back, and is disabled when it needed it to be drawn. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">creationData</td><td>The content of the file, as returned by <a class="el" href="classVectrix_1_1SceneSerializer.html#a30a1de5cde68b3121a6e7976468446ac" title="Read a scene file and return what it contains.">SceneSerializer::loadSceneFile</a> </td></tr>
+    <tr><td class="paramname">assetErrors</td><td>When not null, receives one line per asset left out ("entity: path (reason)") </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether it worked, and the scene when it did </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1SceneSerializer.html#a30a1de5cde68b3121a6e7976468446ac" title="Read a scene file and return what it contains.">SceneSerializer::loadSceneFile</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00080">80</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="CameraComponent_8h_source.html#l00026">Vectrix::CameraComponent::camera</a>, <a class="el" href="SceneSerializer_8h_source.html#l00117">Vectrix::SceneCreationData::entities</a>, <a class="el" href="SceneSerializer_8h_source.html#l00114">Vectrix::SceneCreationData::name</a>, <a class="el" href="SceneSerializer_8h_source.html#l00105">Vectrix::SceneCreationData::result</a>, <a class="el" href="Camera_8h_source.html#l00066">Vectrix::Camera::setFOV()</a>, <a class="el" href="Result_8h_source.html#l00022">Vectrix::SUCCESS</a>, and <a class="el" href="Log_8h_source.html#l00089">VC_CORE_WARN</a>.</p>
 
 </div>
 </div>
@@ -151,7 +392,12 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00016">16</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p>Draw every entity of the scene that can be rendered. </p>
+<dl class="section note"><dt>Note</dt><dd>Called by the layer owning the scene, inside its render callback </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00161">161</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="MeshRendererComponent_8h_source.html#l00033">Vectrix::MeshRendererComponent::shader</a>, and <a class="el" href="Renderer_8cpp_source.html#l00047">Vectrix::Renderer::submit()</a>.</p>
 
 </div>
 </div>
@@ -170,7 +416,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00012">12</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
+<p>Advance every entity of the scene by one frame. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dt</td><td>The time elapsed since the last frame </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Scene_8cpp_source.html#l00157">157</a> of file <a class="el" href="Scene_8cpp_source.html">Scene.cpp</a>.</p>
 
 </div>
 </div>

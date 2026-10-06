@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -99,7 +99,7 @@ $(function(){initNavTree('Buffer_8h.html','',''); });
 <p>Definition of all the buffers class and internal struct related.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="Vertex_8h_source.html">Mesh/Vertex.h</a>&quot;</code><br />
-<code>#include &quot;Vectrix/Core/Log.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="Log_8h_source.html">Vectrix/Core/Log.h</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div>
@@ -111,10 +111,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represent a data is represented in a vertex.  <a href="structVectrix_1_1BufferElement.html#details">More...</a><br /></td></tr>
 <tr class="memitem:Vectrix_3A_3ABufferLayout" id="r_Vectrix_3A_3ABufferLayout"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1BufferLayout.html">Vectrix::BufferLayout</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represent how the vertex data are sent to the shader.  <a href="classVectrix_1_1BufferLayout.html#details">More...</a><br /></td></tr>
-<tr class="memitem:Vectrix_3A_3AVertexBuffer" id="r_Vectrix_3A_3AVertexBuffer"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1VertexBuffer.html">Vectrix::VertexBuffer</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract interface for a GPU vertex buffer.  <a href="classVectrix_1_1VertexBuffer.html#details">More...</a><br /></td></tr>
-<tr class="memitem:Vectrix_3A_3AIndexBuffer" id="r_Vectrix_3A_3AIndexBuffer"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classVectrix_1_1IndexBuffer.html">Vectrix::IndexBuffer</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract interface for a GPU index buffer.  <a href="classVectrix_1_1IndexBuffer.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -123,15 +119,16 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a7f8f52890ceb66335a86bb62f315b08c" id="r_a7f8f52890ceb66335a86bb62f315b08c"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><b>ShaderDataType</b> { <br />
-&#160;&#160;<b>None</b>
-, <b>Float</b>
-, <b>Float2</b>
-, <b>Float3</b>
+<tr class="memitem:ga7f8f52890ceb66335a86bb62f315b08c" id="r_ga7f8f52890ceb66335a86bb62f315b08c"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="group__buffers.html#ga7f8f52890ceb66335a86bb62f315b08c">Vectrix::ShaderDataType</a> { <br />
+&#160;&#160;<a class="el" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca6adf97f83acf6453d4a6a4b1070f3754">Vectrix::ShaderDataType::None</a>
+, <a class="el" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca22ae0e2b89e5e3d477f988cc36d3272b">Vectrix::ShaderDataType::Float</a>
+, <a class="el" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca6694430a2b471b5d2de071f2ef1fdc57">Vectrix::ShaderDataType::Float2</a>
+, <a class="el" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca8a8a1d211464d4bdee46db3c75bfa121">Vectrix::ShaderDataType::Float3</a>
 , <br />
-&#160;&#160;<b>Float4</b>
+&#160;&#160;<a class="el" href="group__buffers.html#gga7f8f52890ceb66335a86bb62f315b08ca33116adc6690289da9b82ea736864eeb">Vectrix::ShaderDataType::Float4</a>
 <br />
  }</td></tr>
+<tr class="memdesc:ga7f8f52890ceb66335a86bb62f315b08c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of one piece of data inside a vertex.  <a href="group__buffers.html#ga7f8f52890ceb66335a86bb62f315b08c">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definition of all the buffers class and internal struct related. </p>

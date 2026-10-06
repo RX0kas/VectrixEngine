@@ -31,8 +31,8 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ]
       ] ]
@@ -41,6 +41,9 @@ var NAVTREE =
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ],
+        [ "Variables", "globals_vars.html", null ],
+        [ "Typedefs", "globals_type.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -49,8 +52,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"AppInfo_8cpp_source.html",
-"classVectrix_1_1TransformComponent.html#a61941f3f5065c6e4eafba7551ac48f28"
+"AABB_8cpp_source.html",
+"functions_f.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

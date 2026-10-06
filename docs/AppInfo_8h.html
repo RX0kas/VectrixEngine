@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -99,8 +99,8 @@ $(function(){initNavTree('AppInfo_8h.html','',''); });
 <p>Definition of the different version functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cstdint&gt;</code><br />
-<code>#include &quot;Log.h&quot;</code><br />
-<code>#include &quot;version.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="Log_8h_source.html">Log.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="version_8h_source.html">version.h</a>&quot;</code><br />
 </div>
 <p><a href="AppInfo_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -116,45 +116,31 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a58b5aecbd09754843c9b8f0e3288901b" id="r_a58b5aecbd09754843c9b8f0e3288901b"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a58b5aecbd09754843c9b8f0e3288901b">Version</a> = std::uint32_t</td></tr>
+<tr class="memitem:ga58b5aecbd09754843c9b8f0e3288901b" id="r_ga58b5aecbd09754843c9b8f0e3288901b"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> = std::uint32_t</td></tr>
+<tr class="memdesc:ga58b5aecbd09754843c9b8f0e3288901b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A version packed into a single number.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a96f38492f0dc2d759993e6b8560db6ad" id="r_a96f38492f0dc2d759993e6b8560db6ad"><td class="memItemLeft">static Version&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a96f38492f0dc2d759993e6b8560db6ad">Vectrix::makeVersion</a> (const std::uint32_t major, const std::uint32_t minor, const std::uint32_t patch)</td></tr>
+<tr class="memitem:a96f38492f0dc2d759993e6b8560db6ad" id="r_a96f38492f0dc2d759993e6b8560db6ad"><td class="memItemLeft">static <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a>&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a96f38492f0dc2d759993e6b8560db6ad">Vectrix::makeVersion</a> (const std::uint32_t major, const std::uint32_t minor, const std::uint32_t patch)</td></tr>
 <tr class="memdesc:a96f38492f0dc2d759993e6b8560db6ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function create a version from the different version number.  <br /></td></tr>
-<tr class="memitem:a1591db032e844e4f38e36eb0ed5f6dad" id="r_a1591db032e844e4f38e36eb0ed5f6dad"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a1591db032e844e4f38e36eb0ed5f6dad">Vectrix::getOS</a> (const Version version)</td></tr>
+<tr class="memitem:a1591db032e844e4f38e36eb0ed5f6dad" id="r_a1591db032e844e4f38e36eb0ed5f6dad"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a1591db032e844e4f38e36eb0ed5f6dad">Vectrix::getOS</a> (const <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version)</td></tr>
 <tr class="memdesc:a1591db032e844e4f38e36eb0ed5f6dad"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the os number of the version.  <br /></td></tr>
-<tr class="memitem:a750521f61e567d606315a3271f9093dc" id="r_a750521f61e567d606315a3271f9093dc"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a750521f61e567d606315a3271f9093dc">Vectrix::getMajor</a> (const Version version)</td></tr>
+<tr class="memitem:a750521f61e567d606315a3271f9093dc" id="r_a750521f61e567d606315a3271f9093dc"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a750521f61e567d606315a3271f9093dc">Vectrix::getMajor</a> (const <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version)</td></tr>
 <tr class="memdesc:a750521f61e567d606315a3271f9093dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the major number of the version.  <br /></td></tr>
-<tr class="memitem:a56ae7d290427ef8cb915799541a0b753" id="r_a56ae7d290427ef8cb915799541a0b753"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a56ae7d290427ef8cb915799541a0b753">Vectrix::getMinor</a> (const Version version)</td></tr>
+<tr class="memitem:a56ae7d290427ef8cb915799541a0b753" id="r_a56ae7d290427ef8cb915799541a0b753"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a56ae7d290427ef8cb915799541a0b753">Vectrix::getMinor</a> (const <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version)</td></tr>
 <tr class="memdesc:a56ae7d290427ef8cb915799541a0b753"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the minor number of the version.  <br /></td></tr>
-<tr class="memitem:a27ac7eea7e64e862ebcf219043c09e25" id="r_a27ac7eea7e64e862ebcf219043c09e25"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a27ac7eea7e64e862ebcf219043c09e25">Vectrix::getPatch</a> (const Version version)</td></tr>
+<tr class="memitem:a27ac7eea7e64e862ebcf219043c09e25" id="r_a27ac7eea7e64e862ebcf219043c09e25"><td class="memItemLeft">static constexpr std::uint32_t&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#a27ac7eea7e64e862ebcf219043c09e25">Vectrix::getPatch</a> (const <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version)</td></tr>
 <tr class="memdesc:a27ac7eea7e64e862ebcf219043c09e25"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the patch number of the version.  <br /></td></tr>
-<tr class="memitem:ae70f210e8290ec11f81695b01761853a" id="r_ae70f210e8290ec11f81695b01761853a"><td class="memItemLeft">static std::string&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">Vectrix::toString</a> (const Version version)</td></tr>
+<tr class="memitem:ae70f210e8290ec11f81695b01761853a" id="r_ae70f210e8290ec11f81695b01761853a"><td class="memItemLeft">static std::string&#160;</td><td class="memItemRight"><a class="el" href="namespaceVectrix.html#ae70f210e8290ec11f81695b01761853a">Vectrix::toString</a> (const <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version)</td></tr>
 <tr class="memdesc:ae70f210e8290ec11f81695b01761853a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return in text the version.  <br /></td></tr>
+<tr class="memitem:gab64c6a358bd3c9244c4415e5b4e0bac3" id="r_gab64c6a358bd3c9244c4415e5b4e0bac3"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="group__utils.html#gab64c6a358bd3c9244c4415e5b4e0bac3">Vectrix::isCompatible</a> (<a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version1, <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> version2)</td></tr>
+<tr class="memdesc:gab64c6a358bd3c9244c4415e5b4e0bac3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tell if something written with one version can be read by another.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definition of the different version functions. </p>
 
 <p class="definition">Definition in file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
-</div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
-<a id="a58b5aecbd09754843c9b8f0e3288901b" name="a58b5aecbd09754843c9b8f0e3288901b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58b5aecbd09754843c9b8f0e3288901b">&#9670;&#160;</a></span>Version</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using Version = std::uint32_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00014">14</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

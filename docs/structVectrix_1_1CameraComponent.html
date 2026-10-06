@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,26 +92,38 @@ $(function(){initNavTree('structVectrix_1_1CameraComponent.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::CameraComponent Struct Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::CameraComponent Struct Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__ecs.html">Entity component system</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Gives an entity a camera, so the scene can be rendered from it.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abbef5c896a4a949a5ef2146a4bf09497" id="r_abbef5c896a4a949a5ef2146a4bf09497"><td class="memItemLeft"><a id="abbef5c896a4a949a5ef2146a4bf09497" name="abbef5c896a4a949a5ef2146a4bf09497"></a>
 &#160;</td><td class="memItemRight"><b>CameraComponent</b> (const CameraComponent &amp;)=default</td></tr>
-<tr class="memitem:aaa26c0978f665968c3214153db891856" id="r_aaa26c0978f665968c3214153db891856"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#aaa26c0978f665968c3214153db891856">CameraComponent</a> (<a class="el" href="classVectrix_1_1TransformComponent.html">TransformComponent</a> &amp;transform)</td></tr>
+<tr class="memdesc:abbef5c896a4a949a5ef2146a4bf09497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the component, keeping the same camera settings. <br /></td></tr>
+<tr class="memitem:a9d1e8e5d6a9a6ffbffd95a3e04fd4579" id="r_a9d1e8e5d6a9a6ffbffd95a3e04fd4579"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9d1e8e5d6a9a6ffbffd95a3e04fd4579">CameraComponent</a> (std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Entity.html">Entity</a> &gt; entity)</td></tr>
+<tr class="memdesc:a9d1e8e5d6a9a6ffbffd95a3e04fd4579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the component and bind its camera to the entity.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ab45ecc4fc1ce5fe2784287a4fd15c65a" id="r_ab45ecc4fc1ce5fe2784287a4fd15c65a"><td class="memItemLeft"><a class="el" href="classVectrix_1_1Camera.html">Camera</a>&#160;</td><td class="memItemRight"><a class="el" href="#ab45ecc4fc1ce5fe2784287a4fd15c65a">camera</a></td></tr>
+<tr class="memdesc:ab45ecc4fc1ce5fe2784287a4fd15c65a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The camera itself, bound to the entity owning the component.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00006">6</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
+<div class="textblock"><p>Gives an entity a camera, so the scene can be rendered from it. </p>
+<p>The camera follows the <a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> of the entity it is attached to, so moving the entity moves the point of view. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classVectrix_1_1Camera.html" title="This class is the camera class.">Camera</a> </dd>
+<dd>
+<a class="el" href="classVectrix_1_1TransformComponent.html" title="This class represent the 3D information about an object.">TransformComponent</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00024">24</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
-<a id="aaa26c0978f665968c3214153db891856" name="aaa26c0978f665968c3214153db891856"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa26c0978f665968c3214153db891856">&#9670;&#160;</a></span>CameraComponent()</h2>
+<a id="a9d1e8e5d6a9a6ffbffd95a3e04fd4579" name="a9d1e8e5d6a9a6ffbffd95a3e04fd4579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d1e8e5d6a9a6ffbffd95a3e04fd4579">&#9670;&#160;</a></span>CameraComponent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -122,7 +134,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">Vectrix::CameraComponent::CameraComponent </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classVectrix_1_1TransformComponent.html">TransformComponent</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>transform</em></span></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classVectrix_1_1Entity.html">Entity</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>entity</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -133,7 +145,17 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00010">10</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
+<p>Build the component and bind its camera to the entity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>The entity the component is added to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00037">37</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
+
+<p class="reference">References <a class="el" href="CameraComponent_8h_source.html#l00026">camera</a>.</p>
 
 </div>
 </div>
@@ -150,7 +172,11 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00007">7</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
+<p>The camera itself, bound to the entity owning the component. </p>
+
+<p class="definition">Definition at line <a class="el" href="CameraComponent_8h_source.html#l00026">26</a> of file <a class="el" href="CameraComponent_8h_source.html">CameraComponent.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="CameraComponent_8h_source.html#l00037">CameraComponent()</a>, <a class="el" href="Scene_8cpp_source.html#l00080">Vectrix::Scene::loadScene()</a>, and <a class="el" href="SceneSerializer_8cpp_source.html#l00291">Vectrix::SceneSerializer::saveScene()</a>.</p>
 
 </div>
 </div>

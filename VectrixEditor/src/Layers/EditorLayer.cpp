@@ -14,6 +14,7 @@
 #include <nfd.h>
 
 #include "StartupLayer.h"
+#include "Events/EditorEvents.h"
 #include "Utils/Error.h"
 #include "Vectrix/Rendering/Camera/EditorCamera.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
@@ -47,7 +48,20 @@ namespace Vectrix {
         }
     }
 
-    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {}
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {
+    	subscribe<WindowResizeEvent>([this] {
+    		if (m_camera) m_camera->recalculateMatrices();
+    	});
+
+    	// Consuming the close request keeps the application running while the user is asked about unsaved changes
+    	subscribe<WindowCloseEvent>([this] {
+    		if (m_undoHistory.isClean()) return false;
+    		runDiscardingScene([] { Application::instance().close(); });
+    		return true;
+    	});
+
+    	subscribe<AssetMovedEvent>([this](const AssetMovedEvent& e) { onAssetMoved(e.from, e.to); });
+    }
 
 	void EditorLayer::OnAttach() {
     	FramebufferSpecification fbSpec;
@@ -63,15 +77,16 @@ namespace Vectrix {
     		static_cast<float>(settingNum({"editor", "camera", "near"}, 0.1)),
     		static_cast<float>(settingNum({"editor", "camera", "far"}, 1000.0)));
     	m_sceneHierarchyPanel = std::make_unique<SceneHierarchyPanel>();
-    	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>(AssetsManager::getAssetsPath());
-    	m_contentBrowserPanel->setOnMoved([this](const std::filesystem::path& from, const std::filesystem::path& to) { onAssetMoved(from, to); });
+    	m_contentBrowserPanel = std::make_unique<ContentBrowserPanel>(AssetsManager::getAssetsPath(), *this);
     	m_settingPanel = std::make_unique<SettingsPanel>();
+    	m_eventLogPanel = std::make_unique<EventLogPanel>();
     	m_sceneHierarchyPanel->setContext(m_activeScene);
     	m_sceneHierarchyPanel->setUndoHistory(&m_undoHistory);
 
     	applyLiveSettings();
 
     	m_settingPanel->disable(); // opt-in via the Window menu
+    	m_eventLogPanel->disable();
     	m_baseWindowTitle = Application::instance().window().getTitle();
     }
 
@@ -145,6 +160,7 @@ namespace Vectrix {
     	replaceActiveScene(newScene.second);
     	m_activeScene->m_directory = path.parent_path();
     	m_activeScene->m_fileName = toUtf8(path.filename());
+    	Application::instance().postEvent<SceneOpenedEvent>(m_activeScene, path);
 
     	// The project tier lives at the project root, not next to the scene (scenes are in <project>/Scenes):
     	// using the scene's folder read and wrote <project>/Scenes/settings.vectrix.json instead
@@ -210,6 +226,7 @@ namespace Vectrix {
     	// No file yet: the first save asks for one, starting in the project's scene folder
     	if (!m_projectDirectory.empty())
     		m_activeScene->m_directory = m_projectDirectory / "Scenes";
+    	Application::instance().postEvent<SceneOpenedEvent>(m_activeScene, std::filesystem::path{});
     }
 
 	void EditorLayer::onAssetMoved(const std::filesystem::path& from, const std::filesystem::path& to) {
@@ -338,17 +355,6 @@ namespace Vectrix {
     			"the scene (other scenes are left as they are), and replace a wrong one in the Mesh Renderer.";
     	}
     	return relinked;
-    }
-
-	void EditorLayer::OnEvent(Event &event) {
-    	if (event.getEventType()==EventType::WindowResize)
-    		m_camera->recalculateMatrices();
-
-    	// Handling the close request keeps the application running while the user is asked about unsaved changes
-    	if (event.getEventType() == EventType::WindowClose && !m_undoHistory.isClean()) {
-    		event.Handled = true;
-    		runDiscardingScene([] { Application::instance().close(); });
-    	}
     }
 
 	void EditorLayer::showOpenDialog() {
@@ -619,6 +625,7 @@ namespace Vectrix {
 			if (ImGui::BeginMenu("Window")) {
 				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
 				ImGui::MenuItem("Settings", nullptr, &m_settingPanel->getEnable());
+				ImGui::MenuItem("Event Log", nullptr, &m_eventLogPanel->getEnable());
 
 				ImGui::EndMenu();
 			}
@@ -707,6 +714,14 @@ namespace Vectrix {
     void EditorLayer::OnUpdate(const DeltaTime &dt) {
     	applyLiveSettings();
     	processPendingSceneLoad();
+
+    	// The selection changes in several places (hierarchy, viewport, undo/redo, scene change): compared once a
+    	// frame, by owner so a deleted entity still counts as the one that was selected
+    	if (const std::shared_ptr<Entity> selected = m_sceneHierarchyPanel->getSelectedEntity();
+    		selected.owner_before(m_notifiedSelection) || m_notifiedSelection.owner_before(selected)) {
+    		m_notifiedSelection = selected;
+    		Application::instance().postEvent<SelectionChangedEvent>(selected);
+    	}
     	processPendingProjectLoad();
 
     	const bool ctrlDown = Input::isKeyPressed(VC_KEY_LEFT_CONTROL) || Input::isKeyPressed(VC_KEY_RIGHT_CONTROL);

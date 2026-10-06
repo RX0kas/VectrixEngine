@@ -6,7 +6,10 @@
 #include "Core/Core.h"
 
 #include "Vectrix/Layers/LayerStack.h"
-#include "Events/Event.h"
+#include "Vectrix/Events/EventListener.h"
+#include "Vectrix/Events/EventQueue.h"
+#include "Vectrix/Events/KeyEvent.h"
+#include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
@@ -42,17 +45,33 @@ int main(int argc, char** argv);
 
 namespace Vectrix {
 	class SettingsManager;
+
+	/// @cond INTERNAL
+	namespace detail {
+		// What Application::observeEvents's observers are notified with, after each event was sent
+		class EventDispatchedEvent : public EventBase<EventDispatchedEvent, "EventDispatched"> {
+		public:
+			EventDispatchedEvent(const Event& event, std::string_view consumedBy) : event(event), consumedBy(consumedBy) {}
+			const Event& event;
+			std::string_view consumedBy;
+		};
+	}
+	/// @endcond
+
 	/**
 	 * @brief The application itself, owning the window, the assets and the layers
 	 *
 	 * Derive from it, push the layers the application needs from the constructor, and
 	 * return the instance from createApplication. The engine takes care of running it,
 	 * so there is no main loop to write.
+	 *
+	 * It is also an EventListener, the last one to receive each event (after every layer): its handlers
+	 * only get what no layer consumed.
 	 * @see createApplication
 	 * @see Layer
 	 * @ingroup core
 	 */
-	class Application {
+	class Application : public EventListener {
 	public:
 		/**
 		 * @brief Create the window, the assets manager and the ImGui overlay
@@ -60,11 +79,6 @@ namespace Vectrix {
 		 */
 		Application();
 		virtual ~Application();
-
-		/// @cond INTERNAL
-		void onEvent(Event& e);
-		bool onWindowClose(WindowCloseEvent& e);
-		/// @endcond
 
 		/**
 		 * @brief This function add a layer that will be rendered
@@ -87,6 +101,56 @@ namespace Vectrix {
 			if (!data.empty()) m_dataToNextLayer = data;
 
 			m_hasToSwitch = true;
+		}
+
+		/**
+		 * @brief Post an event, sent to the listeners at the start of the next frame
+		 *
+		 * Works for the engine's events and for the application's own (see EventBase).
+		 * @tparam T The event class
+		 * @param args The arguments of T's constructor
+		 * @note Can be called from any thread (e.g. an asset loading thread): the event is still sent on the
+		 *       main thread. The events of other threads come after the main thread's in the frame
+		 * @see sendEvent
+		 * @see EventListener::subscribe
+		 */
+		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
+		void postEvent(Args&&... args) { m_eventQueue.post<T>(std::forward<Args>(args)...); }
+
+		/**
+		 * @brief Send an event to the listeners right away, before returning
+		 *
+		 * For when the answer is needed now, e.g. to ask whether a listener objects before doing something.
+		 * The event goes through the same path as a posted one (ImGui, the layers from the top, then the
+		 * application), so an unconsumed WindowCloseEvent closes the application.
+		 * @tparam T The event class
+		 * @param args The arguments of T's constructor
+		 * @return Whether a listener consumed the event
+		 * @note Main thread only. Prefer postEvent unless the answer matters: sending from inside a handler
+		 *       nests the dispatch
+		 * @see postEvent
+		 */
+		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
+		bool sendEvent(Args&&... args) {
+			T event(std::forward<Args>(args)...);
+			dispatchEvent(event);
+			return event.isHandled();
+		}
+
+		/**
+		 * @brief Call a function after each event was sent, whether a listener consumed it or not
+		 *
+		 * Meant for tools such as an event log: unlike a subscription, an observer sees every event, those
+		 * ImGui or a layer consumed included, and is told who consumed it. It can't consume nor change it.
+		 * @param observer Called with the event and the name of the listener that consumed it: "ImGui", a
+		 *                 layer's name or "Application", empty when none did
+		 * @return The handle keeping the observer: it stops being called when the handle is destroyed
+		 * @note Main thread only, like the events. An observer may post events, which are only sent next frame
+		 */
+		template<std::invocable<const Event&, std::string_view> F>
+		[[nodiscard]] ScopedSubscription observeEvents(F&& observer) {
+			return m_eventObservers.subscribeScoped<detail::EventDispatchedEvent>(
+				[o = std::forward<F>(observer)](const detail::EventDispatchedEvent& e) mutable { std::invoke(o, e.event, e.consumedBy); });
 		}
 
 		/**
@@ -120,8 +184,8 @@ namespace Vectrix {
 
 		/**
 		 * @brief This function close the application
-		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a layer can cancel
-		 *       (see Layer::OnEvent)
+		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a listener can cancel
+		 *       by consuming it
 		 **/
 		void close() {
 			m_running = false;
@@ -142,6 +206,8 @@ namespace Vectrix {
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
+		/// Sends one event down the layer stack, then to the application's own handlers
+		void dispatchEvent(Event& event);
 
 		bool m_hasToSwitch = false;
 		std::shared_ptr<Layer> m_nextLayer;
@@ -149,6 +215,8 @@ namespace Vectrix {
 		JsonObject m_dataToNextLayer;
 
 
+		EventListener m_eventObservers; ///< See observeEvents; notified apart, after each event
+		EventQueue m_eventQueue; ///< Before m_window, which posts to it, so it is destroyed after
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;

@@ -29,9 +29,9 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="vectrix_square_no_background.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.0</span>
+   <div id="projectname">Vectrix Engine<span id="projectnumber">&#160;0.5.2</span>
    </div>
-   <div id="projectbrief">An engine made to run all of my little graphics project</div>
+   <div id="projectbrief">An engine built to be accessible to anyone, while letting those who want it retain full control</div>
   </td>
  </tr>
  </tbody>
@@ -92,7 +92,7 @@ $(function(){initNavTree('classVectrix_1_1ApplicationInfo.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Vectrix::ApplicationInfo Class Reference</div></div>
+  <div class="headertitle"><div class="title">Vectrix::ApplicationInfo Class Reference<div class="ingroups"><a class="el" href="group__core.html">Core</a> &raquo; <a class="el" href="group__utils.html">Utility</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -103,24 +103,29 @@ $(function(){initNavTree('classVectrix_1_1ApplicationInfo.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5a40f3ebda1ed60dd34b06ed8da2b113" id="r_a5a40f3ebda1ed60dd34b06ed8da2b113"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5a40f3ebda1ed60dd34b06ed8da2b113">ApplicationInfo</a> (const std::string &amp;appName, Version appVersion)</td></tr>
+<tr class="memitem:a5a40f3ebda1ed60dd34b06ed8da2b113" id="r_a5a40f3ebda1ed60dd34b06ed8da2b113"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5a40f3ebda1ed60dd34b06ed8da2b113">ApplicationInfo</a> (const std::string &amp;appName, <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> appVersion)</td></tr>
+<tr class="memdesc:a5a40f3ebda1ed60dd34b06ed8da2b113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the information from an already packed version.  <br /></td></tr>
 <tr class="memitem:a6890fd2ba50132a52a97b40a1ed614b2" id="r_a6890fd2ba50132a52a97b40a1ed614b2"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6890fd2ba50132a52a97b40a1ed614b2">ApplicationInfo</a> (const std::string &amp;appName, std::uint32_t major, std::uint32_t minor, std::uint32_t patch)</td></tr>
+<tr class="memdesc:a6890fd2ba50132a52a97b40a1ed614b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build the information from the three version numbers.  <br /></td></tr>
 <tr class="memitem:a6a0a8c547e8a5f56ae54b238afe19689" id="r_a6a0a8c547e8a5f56ae54b238afe19689"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="#a6a0a8c547e8a5f56ae54b238afe19689">getAppName</a> () const</td></tr>
 <tr class="memdesc:a6a0a8c547e8a5f56ae54b238afe19689"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the application name.  <br /></td></tr>
-<tr class="memitem:a41686b59e3f302d7b1b0cee5f4b114c3" id="r_a41686b59e3f302d7b1b0cee5f4b114c3"><td class="memItemLeft">Version&#160;</td><td class="memItemRight"><a class="el" href="#a41686b59e3f302d7b1b0cee5f4b114c3">getAppVersion</a> () const</td></tr>
+<tr class="memitem:a41686b59e3f302d7b1b0cee5f4b114c3" id="r_a41686b59e3f302d7b1b0cee5f4b114c3"><td class="memItemLeft"><a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a>&#160;</td><td class="memItemRight"><a class="el" href="#a41686b59e3f302d7b1b0cee5f4b114c3">getAppVersion</a> () const</td></tr>
 <tr class="memdesc:a41686b59e3f302d7b1b0cee5f4b114c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the application version.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Public Static Functions</h2></td></tr>
 <tr class="memitem:aa28cb92091b054135c856af742376a75" id="r_aa28cb92091b054135c856af742376a75"><td class="memItemLeft">static constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#aa28cb92091b054135c856af742376a75">getEngineName</a> ()</td></tr>
 <tr class="memdesc:aa28cb92091b054135c856af742376a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the engine name.  <br /></td></tr>
-<tr class="memitem:af3e04f1aaf3f7d10c8aa512a4059153e" id="r_af3e04f1aaf3f7d10c8aa512a4059153e"><td class="memItemLeft">static Version&#160;</td><td class="memItemRight"><a class="el" href="#af3e04f1aaf3f7d10c8aa512a4059153e">getEngineVersion</a> ()</td></tr>
+<tr class="memitem:af3e04f1aaf3f7d10c8aa512a4059153e" id="r_af3e04f1aaf3f7d10c8aa512a4059153e"><td class="memItemLeft">static <a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a>&#160;</td><td class="memItemRight"><a class="el" href="#af3e04f1aaf3f7d10c8aa512a4059153e">getEngineVersion</a> ()</td></tr>
 <tr class="memdesc:af3e04f1aaf3f7d10c8aa512a4059153e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the engine version.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This class hold the information about the application. </p>
+<p>It carries the name and the version of the application, next to the ones of the engine. Set it with VC_SET_APP_INFO rather than building one by hand. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__core.html#gab7cbc7b88f99fb680afe0280e00ec565" title="Declare the name and the version of the application.">VC_SET_APP_INFO</a> </dd>
+<dd>
+<a class="el" href="classVectrix_1_1Application.html#ae45c757a101d698f82b647a0130d5972" title="This function return the information about the current application.">Application::getAppInfo</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00081">81</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00120">120</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructors</h2>
 <a id="a5a40f3ebda1ed60dd34b06ed8da2b113" name="a5a40f3ebda1ed60dd34b06ed8da2b113"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a40f3ebda1ed60dd34b06ed8da2b113">&#9670;&#160;</a></span>ApplicationInfo() <span class="overload">[1/2]</span></h2>
@@ -136,10 +141,19 @@ Public Static Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Version</td>          <td class="paramname"><span class="paramname"><em>appVersion</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a></td>          <td class="paramname"><span class="paramname"><em>appVersion</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Build the information from an already packed version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">appName</td><td>The name of the application </td></tr>
+    <tr><td class="paramname">appVersion</td><td>The version of the application </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="AppInfo_8cpp_source.html#l00004">4</a> of file <a class="el" href="AppInfo_8cpp_source.html">AppInfo.cpp</a>.</p>
 
@@ -174,7 +188,20 @@ Public Static Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Build the information from the three version numbers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">appName</td><td>The name of the application </td></tr>
+    <tr><td class="paramname">major</td><td>The major part of its version </td></tr>
+    <tr><td class="paramname">minor</td><td>The minor part of its version </td></tr>
+    <tr><td class="paramname">patch</td><td>The patch part of its version </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="AppInfo_8cpp_source.html#l00008">8</a> of file <a class="el" href="AppInfo_8cpp_source.html">AppInfo.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="AppInfo_8h_source.html#l00034">Vectrix::makeVersion()</a>.</p>
 
 </div>
 </div>
@@ -203,6 +230,7 @@ Public Static Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function return the application name. </p>
+<dl class="section return"><dt>Returns</dt><dd>The name of the application </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AppInfo_8cpp_source.html#l00012">12</a> of file <a class="el" href="AppInfo_8cpp_source.html">AppInfo.cpp</a>.</p>
 
@@ -218,7 +246,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Version Vectrix::ApplicationInfo::getAppVersion </td>
+          <td class="memname"><a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> Vectrix::ApplicationInfo::getAppVersion </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -232,6 +260,7 @@ Public Static Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function return the application version. </p>
+<dl class="section return"><dt>Returns</dt><dd>The version of the application </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AppInfo_8cpp_source.html#l00016">16</a> of file <a class="el" href="AppInfo_8cpp_source.html">AppInfo.cpp</a>.</p>
 
@@ -261,8 +290,9 @@ Public Static Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function return the engine name. </p>
+<dl class="section return"><dt>Returns</dt><dd>The name of the engine, always <span class="tt"><a class="el" href="namespaceVectrix.html" title="Vectrix Engine namespace.">Vectrix</a></span> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00097">97</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00152">152</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
 </div>
 </div>
@@ -276,7 +306,7 @@ Public Static Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Version Vectrix::ApplicationInfo::getEngineVersion </td>
+          <td class="memname"><a class="el" href="group__utils.html#ga58b5aecbd09754843c9b8f0e3288901b">Version</a> Vectrix::ApplicationInfo::getEngineVersion </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -290,10 +320,13 @@ Public Static Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>This function return the engine version. </p>
+<dl class="section return"><dt>Returns</dt><dd>The version of the engine the application was built against </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00103">103</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AppInfo_8h_source.html#l00159">159</a> of file <a class="el" href="AppInfo_8h_source.html">AppInfo.h</a>.</p>
 
-<p class="reference">References <a class="el" href="AppInfo_8h_source.html#l00023">Vectrix::makeVersion()</a>.</p>
+<p class="reference">References <a class="el" href="AppInfo_8h_source.html#l00034">Vectrix::makeVersion()</a>, <a class="el" href="version_8h_source.html#l00019">VC_VERSION_MAJOR</a>, <a class="el" href="version_8h_source.html#l00025">VC_VERSION_MINOR</a>, and <a class="el" href="version_8h_source.html#l00031">VC_VERSION_PATCH</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="ProjectSerializer_8cpp_source.html#l00054">Vectrix::ProjectSerializer::createProject()</a>, and <a class="el" href="SceneSerializer_8cpp_source.html#l00291">Vectrix::SceneSerializer::saveScene()</a>.</p>
 
 </div>
 </div>

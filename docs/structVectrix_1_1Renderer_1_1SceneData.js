@@ -1,4 +1,4 @@
 var structVectrix_1_1Renderer_1_1SceneData =
 [
-    [ "camera", "structVectrix_1_1Renderer_1_1SceneData.html#a18efb2486421b74ce5ddfc8635a3c1f2", null ]
+    [ "transformation_matrix", "structVectrix_1_1Renderer_1_1SceneData.html#afa76b509894f75217a34bf13f143c848", null ]
 ];
