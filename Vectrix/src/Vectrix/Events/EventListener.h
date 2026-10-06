@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "Event.h"
@@ -31,6 +32,77 @@ namespace Vectrix {
 	 */
 	template<typename F, typename T>
 	concept EventHandler = std::derived_from<T, Event> && (std::invocable<F&, const T&> || std::invocable<F&>);
+
+	class EventListener;
+
+	/**
+	 * @brief A subscription that removes itself when destroyed
+	 *
+	 * For an object that isn't a listener but reacts to one's events, a panel subscribing to its layer for
+	 * example: holding the handle as a member ties the subscription to the object, so the handler never runs
+	 * on a destroyed object. Destroying the listener first is safe too, the handle then does nothing.
+	 * @code
+	 * class ViewportPanel {
+	 * public:
+	 *     explicit ViewportPanel(Layer& layer)
+	 *         : m_onResize(layer.subscribeScoped<FramebufferResizeEvent>([this](const FramebufferResizeEvent& e) {
+	 *               resize(e.width, e.height);
+	 *           })) {}
+	 * private:
+	 *     ScopedSubscription m_onResize;
+	 * };
+	 * @endcode
+	 * @note Like the listener, main thread only
+	 * @see EventListener::subscribeScoped
+	 * @ingroup events
+	 */
+	class ScopedSubscription {
+	public:
+		/// @brief An empty handle, holding no subscription
+		ScopedSubscription() = default;
+		~ScopedSubscription() { reset(); }
+
+		ScopedSubscription(const ScopedSubscription&) = delete;
+		ScopedSubscription& operator=(const ScopedSubscription&) = delete;
+
+		ScopedSubscription(ScopedSubscription&& other) noexcept
+			: m_listener(std::move(other.m_listener)), m_id(std::exchange(other.m_id, 0)) {}
+
+		/// @brief Remove the subscription held, then take other's
+		ScopedSubscription& operator=(ScopedSubscription&& other) noexcept {
+			if (this != &other) {
+				reset();
+				m_listener = std::move(other.m_listener);
+				m_id = std::exchange(other.m_id, 0);
+			}
+			return *this;
+		}
+
+		/// @brief Remove the subscription now; the handle is then empty
+		inline void reset();
+
+		/**
+		 * @brief Let go of the subscription without removing it: it then lasts as long as the listener
+		 * @return Its id, for EventListener::unsubscribe
+		 */
+		SubscriptionId release() {
+			m_listener.reset();
+			return std::exchange(m_id, 0);
+		}
+
+		/// @brief Return the id of the subscription held, 0 when empty
+		[[nodiscard]] SubscriptionId id() const { return m_id; }
+
+		/// @brief Tell if the handle holds a subscription whose listener still exists
+		[[nodiscard]] explicit operator bool() const { return m_id != 0 && !m_listener.expired(); }
+	private:
+		friend class EventListener;
+		ScopedSubscription(std::weak_ptr<EventListener* const> listener, SubscriptionId id)
+			: m_listener(std::move(listener)), m_id(id) {}
+
+		std::weak_ptr<EventListener* const> m_listener;
+		SubscriptionId m_id = 0;
+	};
 
 	/**
 	 * @brief Receives the events it subscribed to
@@ -80,6 +152,19 @@ namespace Vectrix {
 			return add(eventTypeId<T>(), [h = std::forward<F>(handler)](const Event& event) mutable {
 				return invokeHandler(h, static_cast<const T&>(event));
 			});
+		}
+
+		/**
+		 * @brief Like subscribe, but the subscription is removed when the returned handle is destroyed
+		 *
+		 * Meant for another object than the listener, which keeps the handle as a member.
+		 * @tparam T The event class, or Event to receive every event
+		 * @param handler A callable taking a `const T&`, or nothing, and returning bool or void
+		 * @return The handle owning the subscription
+		 */
+		template<std::derived_from<Event> T, typename F> requires EventHandler<std::decay_t<F>, T>
+		[[nodiscard]] ScopedSubscription subscribeScoped(F&& handler) {
+			return {m_lifetime, subscribe<T>(std::forward<F>(handler))};
 		}
 
 		/**
@@ -190,9 +275,18 @@ namespace Vectrix {
 			cleanUp();
 		}
 
+		// Expires with the listener, which is how a ScopedSubscription knows it can't unsubscribe anymore
+		std::shared_ptr<EventListener* const> m_lifetime = std::make_shared<EventListener* const>(this);
 		std::vector<std::unique_ptr<Subscription>> m_subscriptions;
 		SubscriptionId m_nextId = 1;
 		int m_sending = 0;
 		bool m_hasInactive = false;
 	};
+
+	inline void ScopedSubscription::reset() {
+		if (const auto listener = m_listener.lock())
+			(*listener)->unsubscribe(m_id);
+		m_listener.reset();
+		m_id = 0;
+	}
 }

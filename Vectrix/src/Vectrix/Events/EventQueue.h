@@ -3,7 +3,9 @@
 #include <concepts>
 #include <cstddef>
 #include <memory>
+#include <mutex>
 #include <new>
+#include <thread>
 #include <utility>
 #include <vector>
 
@@ -20,9 +22,12 @@ namespace Vectrix {
 	 * @brief Holds the events posted during a frame until they are sent, at the start of the next one
 	 *
 	 * The Application owns one: the window posts the input to it, and Application::postEvent posts there too.
-	 * The events are built in a buffer reused from frame to frame, so posting doesn't allocate once the
-	 * buffer has grown to what a frame needs.
-	 * @note Main thread only
+	 * On the thread that created the queue (the main thread), the events are built in a buffer reused from
+	 * frame to frame, so posting doesn't allocate once the buffer has grown to what a frame needs.
+	 *
+	 * Any other thread can post too: its events are allocated apart, behind a lock, and sent after the main
+	 * thread's ones. The order is kept per thread, not between threads.
+	 * @note dispatch is main thread only
 	 * @ingroup events
 	 */
 	class EventQueue {
@@ -42,6 +47,12 @@ namespace Vectrix {
 		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
 		void post(Args&&... args) {
 			static_assert(alignof(T) <= alignof(std::max_align_t), "Over-aligned events aren't supported");
+			if (std::this_thread::get_id() != m_mainThread) {
+				auto event = std::make_unique<T>(std::forward<Args>(args)...); // built outside the lock
+				const std::scoped_lock lock(m_inboxMutex);
+				m_inbox.push_back(std::move(event));
+				return;
+			}
 			Batch& batch = m_batches[m_writing];
 			void* memory = batch.arena.allocate(sizeof(T), alignof(T));
 			batch.events.push_back(new (memory) T(std::forward<Args>(args)...));
@@ -57,13 +68,26 @@ namespace Vectrix {
 		void dispatch(Fn&& send) {
 			Batch& batch = m_batches[m_writing];
 			m_writing ^= 1;
+			{
+				// Swapped with a vector that keeps its capacity: no allocation in the lock in the usual case
+				const std::scoped_lock lock(m_inboxMutex);
+				m_inbox.swap(m_inboxSending);
+			}
 			for (Event* event : batch.events)
 				send(*event);
+			for (const std::unique_ptr<Event>& event : m_inboxSending)
+				send(*event);
 			batch.clear();
+			m_inboxSending.clear();
 		}
 
 		/// @brief Tell if no event is waiting
-		[[nodiscard]] bool empty() const { return m_batches[m_writing].events.empty(); }
+		[[nodiscard]] bool empty() const {
+			if (!m_batches[m_writing].events.empty())
+				return false;
+			const std::scoped_lock lock(m_inboxMutex);
+			return m_inbox.empty();
+		}
 	private:
 		// A bump allocator: what it gives back is freed all at once by reset. Past its capacity it allocates
 		// apart, and grows by that much at the next reset
@@ -116,5 +140,11 @@ namespace Vectrix {
 		// One batch takes the posts while the other is being sent
 		Batch m_batches[2];
 		int m_writing = 0;
+		std::thread::id m_mainThread = std::this_thread::get_id();
+
+		// The events posted from other threads
+		mutable std::mutex m_inboxMutex;
+		std::vector<std::unique_ptr<Event>> m_inbox;
+		std::vector<std::unique_ptr<Event>> m_inboxSending; // only touched by dispatch, on the main thread
 	};
 }

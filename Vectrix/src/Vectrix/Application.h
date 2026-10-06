@@ -96,11 +96,33 @@ namespace Vectrix {
 		 * Works for the engine's events and for the application's own (see EventBase).
 		 * @tparam T The event class
 		 * @param args The arguments of T's constructor
-		 * @note Main thread only
+		 * @note Can be called from any thread (e.g. an asset loading thread): the event is still sent on the
+		 *       main thread. The events of other threads come after the main thread's in the frame
+		 * @see sendEvent
 		 * @see EventListener::subscribe
 		 */
 		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
 		void postEvent(Args&&... args) { m_eventQueue.post<T>(std::forward<Args>(args)...); }
+
+		/**
+		 * @brief Send an event to the listeners right away, before returning
+		 *
+		 * For when the answer is needed now, e.g. to ask whether a listener objects before doing something.
+		 * The event goes through the same path as a posted one (ImGui, the layers from the top, then the
+		 * application), so an unconsumed WindowCloseEvent closes the application.
+		 * @tparam T The event class
+		 * @param args The arguments of T's constructor
+		 * @return Whether a listener consumed the event
+		 * @note Main thread only. Prefer postEvent unless the answer matters: sending from inside a handler
+		 *       nests the dispatch
+		 * @see postEvent
+		 */
+		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
+		bool sendEvent(Args&&... args) {
+			T event(std::forward<Args>(args)...);
+			dispatchEvent(event);
+			return event.isHandled();
+		}
 
 		/**
 		 * @brief This function return the current Window instance

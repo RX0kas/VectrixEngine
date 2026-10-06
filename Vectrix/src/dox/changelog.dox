@@ -20,6 +20,9 @@
  *   button events
  * - MouseMovedEvent::dx and MouseMovedEvent::dy, the movement since the previous MouseMovedEvent
  * - FramebufferResizeEvent (size in pixels), WindowContentScaleEvent and MouseEnterEvent
+ * - ScopedSubscription and EventListener::subscribeScoped: a subscription removed when its handle is destroyed
+ * - Application::sendEvent, to send an event right away and know whether a listener consumed it
+ * - Application::postEvent can be called from any thread; the event is still sent on the main thread
  * @subsection v0_5_2_removed Removed
  * - Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros
  * - The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types
