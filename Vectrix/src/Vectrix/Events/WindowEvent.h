@@ -1,4 +1,7 @@
 #pragma once
+
+#include <vector>
+
 #include "Vectrix/Events/Event.h"
 
 /**
@@ -11,60 +14,97 @@ namespace Vectrix {
 	/**
 	 * @brief Sent when the user asks to close the window
 	 *
-	 * The Application stops its main loop once this event is handled.
+	 * The Application stops once every listener got it without consuming it: a layer whose handler returns
+	 * true keeps the application running (e.g. to ask first about unsaved work).
+	 * @see Application::close
 	 * @ingroup events
 	 */
-	class WindowCloseEvent : public Event {
+	class WindowCloseEvent : public EventBase<WindowCloseEvent, "WindowClose", EventCategory::Window> {
 	public:
 		WindowCloseEvent() = default;
-
-		EVENT_CLASS_TYPE(WindowClose)
-		EVENT_CLASS_CATEGORY(EventCategoryWindow)
-
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override	{
-			return getName();
-		}
 	};
 
 	/**
-	 * @brief Sent when the drawable area of the window changed size
-	 *
-	 * The renderer uses it to recreate the swapchain, so a layer reacting to it should
-	 * not consume the event unless it really means to.
+	 * @brief Sent when the window changed size
+	 * @note The size is in screen coordinates, which differ from the framebuffer's pixels on a scaled
+	 *       display; the renderer follows the framebuffer by itself
 	 * @ingroup events
 	 */
-	class WindowResizeEvent : public Event {
+	class WindowResizeEvent : public EventBase<WindowResizeEvent, "WindowResize", EventCategory::Window> {
 	public:
 		/**
-		 * @brief Build the event with the new window size
-		 * @param width The new width in pixel
-		 * @param height The new height in pixel
+		 * @param width The new width
+		 * @param height The new height
 		 */
-		WindowResizeEvent(unsigned int width, unsigned int height) : m_Width(width), m_Height(height) {}
+		WindowResizeEvent(unsigned int width, unsigned int height) : width(width), height(height) {}
 
+		unsigned int width;  ///< The new width, in screen coordinates
+		unsigned int height; ///< The new height, in screen coordinates
+
+		[[nodiscard]] std::string toString() const override { return fmt::format("WindowResize: {}, {}", width, height); }
+	};
+
+	/**
+	 * @brief Sent when the window gains or loses the keyboard focus
+	 * @ingroup events
+	 */
+	class WindowFocusEvent : public EventBase<WindowFocusEvent, "WindowFocus", EventCategory::Window> {
+	public:
+		/// @param focused Whether the window now has the focus
+		explicit WindowFocusEvent(bool focused) : focused(focused) {}
+
+		bool focused; ///< True when the window gained the focus, false when it lost it
+
+		[[nodiscard]] std::string toString() const override { return fmt::format("WindowFocus: {}", focused); }
+	};
+
+	/**
+	 * @brief Sent when the window moved on the screen
+	 * @note Never sent on Wayland, where a window can't know its position
+	 * @ingroup events
+	 */
+	class WindowMovedEvent : public EventBase<WindowMovedEvent, "WindowMoved", EventCategory::Window> {
+	public:
 		/**
-		 * @brief Return the new width of the window
-		 * @return The width in pixel
+		 * @param x The new position of the window's left edge
+		 * @param y The new position of the window's top edge
 		 */
-		[[nodiscard]] unsigned int getWidth() const { return m_Width; }
+		WindowMovedEvent(int x, int y) : x(x), y(y) {}
 
-		/**
-		 * @brief Return the new height of the window
-		 * @return The height in pixel
-		 */
-		[[nodiscard]] unsigned int getHeight() const { return m_Height; }
+		int x; ///< The position of the window's left edge, in screen coordinates
+		int y; ///< The position of the window's top edge, in screen coordinates
 
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override	{
-			std::stringstream ss;
-			ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
-			return ss.str();
+		[[nodiscard]] std::string toString() const override { return fmt::format("WindowMoved: {}, {}", x, y); }
+	};
+
+	/**
+	 * @brief Sent when the window is minimized, or restored from it
+	 * @note The application doesn't render while minimized
+	 * @ingroup events
+	 */
+	class WindowMinimizeEvent : public EventBase<WindowMinimizeEvent, "WindowMinimize", EventCategory::Window> {
+	public:
+		/// @param minimized Whether the window is now minimized
+		explicit WindowMinimizeEvent(bool minimized) : minimized(minimized) {}
+
+		bool minimized; ///< True when the window was minimized, false when it was restored
+
+		[[nodiscard]] std::string toString() const override { return fmt::format("WindowMinimize: {}", minimized); }
+	};
+
+	/**
+	 * @brief Sent when files or folders are dropped onto the window
+	 * @ingroup events
+	 */
+	class FilesDroppedEvent : public EventBase<FilesDroppedEvent, "FilesDropped", EventCategory::Window> {
+	public:
+		/// @param paths The dropped paths, in UTF-8
+		explicit FilesDroppedEvent(std::vector<std::string> paths) : paths(std::move(paths)) {}
+
+		std::vector<std::string> paths; ///< The absolute paths dropped, in UTF-8 (turn them into paths with fromUtf8)
+
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("FilesDropped: {} path(s)", paths.size());
 		}
-
-		EVENT_CLASS_TYPE(WindowResize)
-		EVENT_CLASS_CATEGORY(EventCategoryWindow)
-	private:
-		unsigned int m_Width, m_Height;
 	};
 }

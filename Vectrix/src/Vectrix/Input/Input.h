@@ -14,7 +14,7 @@ namespace Vectrix {
 	 * counterpart of the event system: use an Event to react to the moment something
 	 * changed, and Input to ask whether a key is held right now. The platform provides
 	 * the implementation, so nothing has to be created by hand.
-	 * @see KeyEvent
+	 * @see KeyPressedEvent
 	 * @see MouseEvent
 	 * @ingroup input
 	 */

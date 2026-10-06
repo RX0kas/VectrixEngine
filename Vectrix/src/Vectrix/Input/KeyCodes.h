@@ -2,13 +2,13 @@
 
 /**
  * @file KeyCodes.h
- * @brief The key codes understood by Input::isKeyPressed and carried by KeyEvent
+ * @brief The key codes understood by Input::isKeyPressed and carried by the keyboard events
  * @ingroup input
  *
  * The values match the ones GLFW uses, so a code coming from the windowing layer can be
  * compared to a `VC_KEY_*` macro directly.
  * @see Input::isKeyPressed
- * @see KeyEvent::getKeyCode
+ * @see KeyPressedEvent::key
  */
 
 // From GLFW

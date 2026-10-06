@@ -9,6 +9,7 @@
 namespace Vectrix {
 	static uint8_t s_GLFWWindowCount = 0;
 
+
 	/// @cond INTERNAL
 	static void errorCallback(int error, const char* description) {
 		VC_CORE_CRITICAL("GLFW Error ({0}): {1}", error, description);
@@ -47,6 +48,13 @@ namespace Vectrix {
 		shutdown();
 	}
 
+	template<std::derived_from<Event> T, typename... Args>
+	void Window::postEvent(GLFWwindow* window, Args&&... args) {
+		const auto* data = static_cast<const WindowData*>(glfwGetWindowUserPointer(window));
+		if (data && data->eventQueue)
+			data->eventQueue->post<T>(std::forward<Args>(args)...);
+	}
+
 	void Window::init(const WindowAttributes& attributes) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::getAppInfo().getAppName(), attributes.width, attributes.height);
@@ -79,83 +87,60 @@ namespace Vectrix {
 		// Set some callbacks
 		glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 
+		// Set before ImGui installs its own callbacks, which forward to these
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-
-			WindowResizeEvent event(width, height);
-			data.eventCallback(event);
+			postEvent<WindowResizeEvent>(window, static_cast<unsigned int>(width), static_cast<unsigned int>(height));
 		});
 
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-			WindowCloseEvent event;
-			data.eventCallback(event);
+			postEvent<WindowCloseEvent>(window);
+		});
+
+		glfwSetWindowFocusCallback(m_window, [](GLFWwindow* window, int focused) {
+			postEvent<WindowFocusEvent>(window, focused == GLFW_TRUE);
+		});
+
+		glfwSetWindowPosCallback(m_window, [](GLFWwindow* window, int x, int y) {
+			postEvent<WindowMovedEvent>(window, x, y);
+		});
+
+		glfwSetWindowIconifyCallback(m_window, [](GLFWwindow* window, int iconified) {
+			postEvent<WindowMinimizeEvent>(window, iconified == GLFW_TRUE);
+		});
+
+		glfwSetDropCallback(m_window, [](GLFWwindow* window, int count, const char** paths) {
+			// GLFW gives the paths in UTF-8, and frees them once this returns
+			postEvent<FilesDroppedEvent>(window, std::vector<std::string>(paths, paths + count));
 		});
 
 		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-
 			switch (action) {
-				case GLFW_PRESS:
-				{
-					KeyPressedEvent event(key, 0);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					KeyReleasedEvent event(key);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent event(key, 1);
-					data.eventCallback(event);
-					break;
-				}
-				default: {
-					VC_CORE_CRITICAL("Unknown KeyButtonCallback Action: {}",action);
-				}
+				case GLFW_PRESS:   postEvent<KeyPressedEvent>(window, key, false); break;
+				case GLFW_REPEAT:  postEvent<KeyPressedEvent>(window, key, true); break;
+				case GLFW_RELEASE: postEvent<KeyReleasedEvent>(window, key); break;
+				default: VC_CORE_ERROR_NO_EXIT("Unknown key action: {}", action);
 			}
 		});
 
-		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+		glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int codepoint) {
+			postEvent<KeyTypedEvent>(window, static_cast<char32_t>(codepoint));
+		});
 
+		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
 			switch (action) {
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent event(button);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent event(button);
-					data.eventCallback(event);
-					break;
-				}
-				default: {
-					VC_CORE_CRITICAL("Unknown MouseButtonCallback Action: {}",action);
-				}
+				case GLFW_PRESS:   postEvent<MouseButtonPressedEvent>(window, button); break;
+				case GLFW_RELEASE: postEvent<MouseButtonReleasedEvent>(window, button); break;
+				default: VC_CORE_ERROR_NO_EXIT("Unknown mouse button action: {}", action);
 			}
 		});
 
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-
-			MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
-			data.eventCallback(event);
+			postEvent<MouseScrolledEvent>(window, static_cast<float>(xOffset), static_cast<float>(yOffset));
 		});
 
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos) {
-			WindowData& data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
-
-			MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
-			data.eventCallback(event);
+			postEvent<MouseMovedEvent>(window, static_cast<float>(xPos), static_cast<float>(yPos));
 		});
-
 
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 	}

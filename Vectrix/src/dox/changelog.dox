@@ -2,6 +2,26 @@
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
  *
+ * @section v0_5_2 v0.5.2 - (06-10-2026)
+ *
+ * @subsection v0_5_2_changed Changed
+ * - Reworked the event system around subscriptions: a Layer (or the Application) calls
+ *   EventListener::subscribe<T>(handler) once, e.g. from its constructor, instead of overriding OnEvent.
+ *   A handler returning true consumes the event
+ * - Events are queued and sent once per frame, before Layer::OnUpdate, instead of from inside the GLFW callbacks
+ * - Events carry their data as public members (KeyPressedEvent::key, WindowResizeEvent::width...) and
+ *   KeyPressedEvent::repeat is a bool
+ * - EventCategory is an enum class (EventCategory::Keyboard instead of EventCategoryKeyboard)
+ * @subsection v0_5_2_added Added
+ * - EventBase, to define an application's own events, and Application::postEvent to send them
+ * - KeyTypedEvent, WindowFocusEvent, WindowMovedEvent, WindowMinimizeEvent and FilesDroppedEvent
+ * - Event::is<T> and Event::as<T>, for the handlers subscribed to every event (subscribe<Event>)
+ * @subsection v0_5_2_removed Removed
+ * - Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros
+ * - The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types
+ *
+ * ---
+ *
  * @section v0_5_0 v0.5.0 — (24-05-2026)
  *
  * @subsection v0_5_0_added Added

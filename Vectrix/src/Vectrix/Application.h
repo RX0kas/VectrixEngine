@@ -6,7 +6,10 @@
 #include "Core/Core.h"
 
 #include "Vectrix/Layers/LayerStack.h"
-#include "Events/Event.h"
+#include "Vectrix/Events/EventListener.h"
+#include "Vectrix/Events/EventQueue.h"
+#include "Vectrix/Events/KeyEvent.h"
+#include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
@@ -48,11 +51,14 @@ namespace Vectrix {
 	 * Derive from it, push the layers the application needs from the constructor, and
 	 * return the instance from createApplication. The engine takes care of running it,
 	 * so there is no main loop to write.
+	 *
+	 * It is also an EventListener, the last one to receive each event (after every layer): its handlers
+	 * only get what no layer consumed.
 	 * @see createApplication
 	 * @see Layer
 	 * @ingroup core
 	 */
-	class Application {
+	class Application : public EventListener {
 	public:
 		/**
 		 * @brief Create the window, the assets manager and the ImGui overlay
@@ -60,11 +66,6 @@ namespace Vectrix {
 		 */
 		Application();
 		virtual ~Application();
-
-		/// @cond INTERNAL
-		void onEvent(Event& e);
-		bool onWindowClose(WindowCloseEvent& e);
-		/// @endcond
 
 		/**
 		 * @brief This function add a layer that will be rendered
@@ -88,6 +89,18 @@ namespace Vectrix {
 
 			m_hasToSwitch = true;
 		}
+
+		/**
+		 * @brief Post an event, sent to the listeners at the start of the next frame
+		 *
+		 * Works for the engine's events and for the application's own (see EventBase).
+		 * @tparam T The event class
+		 * @param args The arguments of T's constructor
+		 * @note Main thread only
+		 * @see EventListener::subscribe
+		 */
+		template<std::derived_from<Event> T, typename... Args> requires std::constructible_from<T, Args...>
+		void postEvent(Args&&... args) { m_eventQueue.post<T>(std::forward<Args>(args)...); }
 
 		/**
 		 * @brief This function return the current Window instance
@@ -120,8 +133,8 @@ namespace Vectrix {
 
 		/**
 		 * @brief This function close the application
-		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a layer can cancel
-		 *       (see Layer::OnEvent)
+		 * @note Unconditional, unlike the window's close button whose WindowCloseEvent a listener can cancel
+		 *       by consuming it
 		 **/
 		void close() {
 			m_running = false;
@@ -142,6 +155,8 @@ namespace Vectrix {
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
+		/// Sends one event down the layer stack, then to the application's own handlers
+		void dispatchEvent(Event& event);
 
 		bool m_hasToSwitch = false;
 		std::shared_ptr<Layer> m_nextLayer;
@@ -149,6 +164,7 @@ namespace Vectrix {
 		JsonObject m_dataToNextLayer;
 
 
+		EventQueue m_eventQueue; ///< Before m_window, which posts to it, so it is destroyed after
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;
 		std::unique_ptr<ImGuiLayer> m_imGuiLayer;

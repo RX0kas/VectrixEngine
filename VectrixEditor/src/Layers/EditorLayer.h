@@ -24,8 +24,6 @@ namespace Vectrix {
 
 		void OnRenderOffscreen() override;
 
-		void OnEvent(Event &event) override;
-
 		void OnImGuiRender() override;
 
     	void OnAttach() override;

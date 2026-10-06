@@ -47,7 +47,18 @@ namespace Vectrix {
         }
     }
 
-    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {}
+    EditorLayer::EditorLayer() : Layer("VC_Editor"), m_viewportSize(1, 1) {
+    	subscribe<WindowResizeEvent>([this] {
+    		if (m_camera) m_camera->recalculateMatrices();
+    	});
+
+    	// Consuming the close request keeps the application running while the user is asked about unsaved changes
+    	subscribe<WindowCloseEvent>([this] {
+    		if (m_undoHistory.isClean()) return false;
+    		runDiscardingScene([] { Application::instance().close(); });
+    		return true;
+    	});
+    }
 
 	void EditorLayer::OnAttach() {
     	FramebufferSpecification fbSpec;
@@ -338,17 +349,6 @@ namespace Vectrix {
     			"the scene (other scenes are left as they are), and replace a wrong one in the Mesh Renderer.";
     	}
     	return relinked;
-    }
-
-	void EditorLayer::OnEvent(Event &event) {
-    	if (event.getEventType()==EventType::WindowResize)
-    		m_camera->recalculateMatrices();
-
-    	// Handling the close request keeps the application running while the user is asked about unsaved changes
-    	if (event.getEventType() == EventType::WindowClose && !m_undoHistory.isClean()) {
-    		event.Handled = true;
-    		runDiscardingScene([] { Application::instance().close(); });
-    	}
     }
 
 	void EditorLayer::showOpenDialog() {

@@ -51,7 +51,7 @@
  * @ingroup core
  *
  * @defgroup events Events
- * @brief Window, input and editor events dispatched through the layer stack
+ * @brief Window, input and application events, queued and sent once per frame to the listeners that subscribed to them (see EventListener)
  * @ingroup core
  *
  * @defgroup input Input

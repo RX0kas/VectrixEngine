@@ -8,7 +8,7 @@
  * The values match the ones GLFW uses. The three named buttons below are aliases of the
  * numbered ones, prefer them since they say what they mean.
  * @see Input::isMouseButtonPressed
- * @see MouseButtonEvent::getMouseButton
+ * @see MouseButtonPressedEvent::button
  */
 
 #define VC_MOUSE_BUTTON_1         0    ///< The first mouse button, the left one on a standard mouse

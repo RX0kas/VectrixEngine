@@ -4,7 +4,7 @@
 
 #include "vcpch.h"
 
-#include "Vectrix/Events/Event.h"
+#include "Vectrix/Events/EventQueue.h"
 
 /**
  * @file Window.h
@@ -63,9 +63,6 @@ namespace Vectrix {
 	 */
 	class Window {
 	public:
-		/// The signature of the callback the window uses to report its events
-		using EventCallbackFn = std::function<void(Event&)>;
-
 		/**
 		 * @brief Create the underlying window and its graphics context
 		 * @param data The size the window should be created with
@@ -128,11 +125,11 @@ namespace Vectrix {
 		[[nodiscard]] GraphicsContext& getGraphicContext() const { return *m_context;}
 
 		/**
-		 * @brief Set the function the window calls whenever an event happens
-		 * @param callback The function receiving the events
-		 * @note The Application sets it, so it can dispatch the events to the layer stack
+		 * @brief Set the queue the window posts its events to
+		 * @param queue The queue, which has to outlive the window
+		 * @note The Application sets it, and sends the queued events to the layers every frame
 		 */
-		void setEventCallback(const EventCallbackFn& callback) { m_data.eventCallback = callback; }
+		void setEventQueue(EventQueue* queue) { m_data.eventQueue = queue; }
 
 
 		/**
@@ -188,7 +185,7 @@ namespace Vectrix {
 			std::string title;
 			unsigned int width, height; ///< Framebuffer size, in pixels
 			bool windowResized;
-			EventCallbackFn eventCallback;
+			EventQueue* eventQueue = nullptr;
 			bool visible;
 			DisplayServer displayServer;
 		};
@@ -196,6 +193,9 @@ namespace Vectrix {
 		void shutdown();
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+		/// Posts an event from a GLFW callback to the queue the Application gave the window
+		template<std::derived_from<Event> T, typename... Args>
+		static void postEvent(GLFWwindow* window, Args&&... args);
 
 		GLFWwindow* m_window;
 		std::unique_ptr<GraphicsContext> m_context;

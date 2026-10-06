@@ -565,7 +565,7 @@ namespace Vectrix {
         VC_PROFILER_FUNCTION();
         createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-        createInfo.messageSeverity = VulkanContext::instance().settings().device.validationSeverity;
+        createInfo.messageSeverity = VulkanContext::settings().device.validationSeverity;
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
         createInfo.pUserData = nullptr;  // Optional

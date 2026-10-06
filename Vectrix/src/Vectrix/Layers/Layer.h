@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vectrix/Core/DeltaTime.h"
-#include "Vectrix/Events/Event.h"
+#include "Vectrix/Events/EventListener.h"
 #include "Vectrix/Utils/Json.h"
 
 /**
@@ -12,15 +12,17 @@
 
 namespace Vectrix {
 	/**
-	 * @brief One slice of the application, receiving the update, render and event callbacks
+	 * @brief One slice of the application, receiving the update and render callbacks, and the events it subscribes to
 	 *
 	 * Derive from it and override only what is needed, every callback has an empty default.
-	 * The layers are held by a LayerStack, which decides in what order they are called.
+	 * The layers are held by a LayerStack, which decides in what order they are called. A layer is an
+	 * EventListener: it reacts to events by subscribing to them (see EventListener::subscribe), and only
+	 * receives them while it is in the stack.
 	 * @see LayerStack
 	 * @see Application::pushLayer
 	 * @ingroup layers
 	 */
-	class Layer {
+	class Layer : public EventListener {
 	public:
 		/**
 		 * @brief Layer constructor
@@ -63,14 +65,6 @@ namespace Vectrix {
 		 * @brief The function called every time we draw all the ImGui widget
 		 */
 		virtual void OnImGuiRender() {}
-
-		/**
-		 * @brief Called every time an event occurre
-		 * @param event The event that occurred
-		 * @note A WindowCloseEvent reaches the layers before the application closes: setting its Handled
-		 *       flag cancels the close (e.g. to ask first about unsaved work)
-		 */
-		virtual void OnEvent(Event& event) {}
 
 		/**
 		 * @brief This function return the name of the Layer

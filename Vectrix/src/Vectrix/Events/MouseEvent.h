@@ -1,6 +1,5 @@
 #pragma once
 
-#include "vcpch.h"
 #include "Event.h"
 
 /**
@@ -14,148 +13,67 @@ namespace Vectrix {
 	 * @brief Sent when the cursor moved over the window
 	 * @ingroup events
 	 */
-	class MouseMovedEvent : public Event {
+	class MouseMovedEvent : public EventBase<MouseMovedEvent, "MouseMoved", EventCategory::Mouse | EventCategory::Input> {
 	public:
 		/**
-		 * @brief Build the event with the new cursor position
-		 * @param x The horizontal position, in pixel from the left of the window
-		 * @param y The vertical position, in pixel from the top of the window
+		 * @param x The horizontal position, from the left of the window
+		 * @param y The vertical position, from the top of the window
 		 */
-		MouseMovedEvent(float x, float y) : m_MouseX(x), m_MouseY(y) {}
+		MouseMovedEvent(float x, float y) : x(x), y(y) {}
 
-		/**
-		 * @brief Return the horizontal position of the cursor
-		 * @return The position in pixel from the left of the window
-		 */
-		float getX() const { return m_MouseX; }
+		float x; ///< The horizontal position, in screen coordinates from the left of the window
+		float y; ///< The vertical position, in screen coordinates from the top of the window
 
-		/**
-		 * @brief Return the vertical position of the cursor
-		 * @return The position in pixel from the top of the window
-		 */
-		float getY() const { return m_MouseY; }
-
-		/// @copydoc Event::toString
-		std::string toString() const override {
-			std::stringstream ss;
-			ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
-			return ss.str();
-		}
-
-		EVENT_CLASS_TYPE(MouseMoved)
-			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-	private:
-		float m_MouseX, m_MouseY;
+		[[nodiscard]] std::string toString() const override { return fmt::format("MouseMoved: {}, {}", x, y); }
 	};
 
 	/**
 	 * @brief Sent when the wheel is scrolled, or when a touchpad reports a scroll
 	 * @ingroup events
 	 */
-	class MouseScrolledEvent : public Event {
+	class MouseScrolledEvent : public EventBase<MouseScrolledEvent, "MouseScrolled", EventCategory::Mouse | EventCategory::Input> {
 	public:
 		/**
-		 * @brief Build the event with the scroll amount
 		 * @param xOffset The horizontal scroll, negative to the left
 		 * @param yOffset The vertical scroll, negative when scrolling down
 		 */
-		MouseScrolledEvent(float xOffset, float yOffset) : m_XOffset(xOffset), m_YOffset(yOffset) {}
+		MouseScrolledEvent(float xOffset, float yOffset) : xOffset(xOffset), yOffset(yOffset) {}
 
-		/**
-		 * @brief Return how much was scrolled horizontally
-		 * @return The offset, negative to the left
-		 */
-		float getXOffset() const { return m_XOffset; }
+		float xOffset; ///< The horizontal scroll, negative to the left
+		float yOffset; ///< The vertical scroll, negative when scrolling down
 
-		/**
-		 * @brief Return how much was scrolled vertically
-		 * @return The offset, negative when scrolling down
-		 */
-		float getYOffset() const { return m_YOffset; }
-
-		/// @copydoc Event::toString
-		std::string toString() const override {
-			std::stringstream ss;
-			ss << "MouseScrolledEvent: " << getXOffset() << ", " << getYOffset();
-			return ss.str();
+		[[nodiscard]] std::string toString() const override {
+			return fmt::format("MouseScrolled: {}, {}", xOffset, yOffset);
 		}
-
-		EVENT_CLASS_TYPE(MouseScrolled)
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
-	private:
-		float m_XOffset, m_YOffset;
-	};
-
-	/**
-	 * @brief Base class of the events about a mouse button
-	 *
-	 * It carries the button involved, the concrete subclasses tell what happened to it.
-	 * @see MouseButtonPressedEvent
-	 * @see MouseButtonReleasedEvent
-	 * @ingroup events
-	 */
-	class MouseButtonEvent : public Event {
-	public:
-		/**
-		 * @brief Return the button the event is about
-		 * @return The button code, matching the `VC_MOUSE_BUTTON_*` values
-		 * @see MouseCodes.h
-		 */
-		int getMouseButton() const { return m_Button; }
-
-		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryMouseButton | EventCategoryInput)
-	protected:
-		/**
-		 * @brief Build a mouse button event for a given button
-		 * @param button The button the event is about
-		 */
-		explicit MouseButtonEvent(int button) : m_Button(button) {}
-
-		/// The button the event is about
-		int m_Button;
 	};
 
 	/**
 	 * @brief Sent when a mouse button goes down
 	 * @ingroup events
 	 */
-	class MouseButtonPressedEvent : public MouseButtonEvent	{
+	class MouseButtonPressedEvent : public EventBase<MouseButtonPressedEvent, "MouseButtonPressed",
+			EventCategory::Mouse | EventCategory::MouseButton | EventCategory::Input> {
 	public:
-		/**
-		 * @brief Build the event for a button that has just been pressed
-		 * @param button The button that went down
-		 */
-		explicit MouseButtonPressedEvent(int button)	: MouseButtonEvent(button) {}
+		/// @param button The button that went down
+		explicit MouseButtonPressedEvent(int button) : button(button) {}
 
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override {
-			std::stringstream ss;
-			ss << "MouseButtonPressedEvent: " << m_Button;
-			return ss.str();
-		}
+		int button; ///< The button, matching the `VC_MOUSE_BUTTON_*` values (see MouseCodes.h)
 
-		EVENT_CLASS_TYPE(MouseButtonPressed)
+		[[nodiscard]] std::string toString() const override { return fmt::format("MouseButtonPressed: {}", button); }
 	};
 
 	/**
 	 * @brief Sent when a mouse button goes back up
 	 * @ingroup events
 	 */
-	class MouseButtonReleasedEvent : public MouseButtonEvent {
+	class MouseButtonReleasedEvent : public EventBase<MouseButtonReleasedEvent, "MouseButtonReleased",
+			EventCategory::Mouse | EventCategory::MouseButton | EventCategory::Input> {
 	public:
-		/**
-		 * @brief Build the event for a button that has just been released
-		 * @param button The button that went up
-		 */
-		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+		/// @param button The button that went up
+		explicit MouseButtonReleasedEvent(int button) : button(button) {}
 
-		/// @copydoc Event::toString
-		[[nodiscard]] std::string toString() const override {
-			std::stringstream ss;
-			ss << "MouseButtonReleasedEvent: " << m_Button;
-			return ss.str();
-		}
+		int button; ///< The button, matching the `VC_MOUSE_BUTTON_*` values (see MouseCodes.h)
 
-		EVENT_CLASS_TYPE(MouseButtonReleased)
+		[[nodiscard]] std::string toString() const override { return fmt::format("MouseButtonReleased: {}", button); }
 	};
 }
