@@ -23,6 +23,12 @@
  * - ScopedSubscription and EventListener::subscribeScoped: a subscription removed when its handle is destroyed
  * - Application::sendEvent, to send an event right away and know whether a listener consumed it
  * - Application::postEvent can be called from any thread; the event is still sent on the main thread
+ * - Application::observeEvents: a function called after every event, consumed or not, with who consumed it
+ * @subsection v0_5_2_editor_added Editor Addition
+ * - Window > Event Log: the last events sent, filtered by category or text, and who consumed each
+ * - Files and folders dropped onto the editor are copied into the content browser's current folder
+ * - The editor's own events: AssetMovedEvent (replaces ContentBrowserPanel::setOnMoved), SceneOpenedEvent and
+ *   SelectionChangedEvent
  * @subsection v0_5_2_removed Removed
  * - Layer::OnEvent, EventDispatcher, EventType, Event::Handled, the EVENT_CLASS_* and VC_BIND_EVENT_FN* macros
  * - The KeyEvent and MouseButtonEvent intermediate classes, and the unused AppTick/AppUpdate/AppRender types

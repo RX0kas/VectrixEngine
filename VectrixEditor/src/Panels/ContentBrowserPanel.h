@@ -2,11 +2,12 @@
 #define VECTRIXWORKSPACE_CONTENTBROWSERPANEL_H
 
 #include <filesystem>
-#include <functional>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "imgui.h"
+#include "Vectrix/Events/EventListener.h"
 #include "Vectrix/ImGui/ImGuiWidget.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 
@@ -16,15 +17,16 @@ namespace Vectrix {
     public:
         /**
          * @param assetRoot The folder to browse, e.g. the open project's `Assets` folder
+         * @param events The listener the panel receives the files dropped onto the window from (its layer)
+         * @note Sends an AssetMovedEvent for every file or folder it moves or renames
          */
-        explicit ContentBrowserPanel(const std::filesystem::path& assetRoot);
+        ContentBrowserPanel(const std::filesystem::path& assetRoot, EventListener& events);
 
         void render() override;
 
-        /// Called with the old and new path of a file or folder the panel moved or renamed, once it's done
-        using MovedCallback = std::function<void(const std::filesystem::path& from, const std::filesystem::path& to)>;
-        /// Set what follows a move (EditorLayer updates the scenes that use the asset)
-        void setOnMoved(MovedCallback callback) { m_onMoved = std::move(callback); }
+        /// Copies files or folders into the current folder, under a free name; used for the files dropped onto
+        /// the window. Those already in the current folder are left alone
+        void importFiles(const std::vector<std::string>& paths);
 
     private:
         void drawToolbar();
@@ -46,7 +48,7 @@ namespace Vectrix {
         void startRename(const std::filesystem::path& path);
         void drawRenamePopup();
         void renameEntry(const std::filesystem::path& path, const std::string& newName);
-        /// Updates what points at a moved file or folder (selection, current folder, clipboard), then calls m_onMoved
+        /// Updates what points at a moved file or folder (selection, current folder, clipboard), then sends AssetMovedEvent
         void entryMoved(const std::filesystem::path& from, const std::filesystem::path& to);
         void handleDoubleClick(std::filesystem::path path);
 
@@ -68,7 +70,7 @@ namespace Vectrix {
         bool m_openRenamePopup = false;
         char m_renameBuffer[256] = "";
 
-        MovedCallback m_onMoved;
+        ScopedSubscription m_onFilesDropped;
 
         std::shared_ptr<Texture> m_directoryIcon;
         std::shared_ptr<Texture> m_fileIcon;
@@ -86,6 +88,7 @@ namespace Vectrix {
         std::string m_lastDeleteErrorMessage;
         std::string m_lastFlushPendingMoveErrorMessage;
         std::string m_lastRenameErrorMessage;
+        std::string m_lastImportErrorMessage;
     };
 
 } // namespace Vectrix

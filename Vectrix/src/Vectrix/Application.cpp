@@ -106,12 +106,17 @@ namespace Vectrix {
 
 	void Application::dispatchEvent(Event& event) {
 		VC_PROFILER_FUNCTION();
+		// Who consumed the event, for the observers. A copy: the layer that did can be popped by its own handler
+		std::string consumedBy;
+
 		// The ImGuiLayer is owned apart from the stack but sits on top of everything: it gets the first look so
 		// it can swallow the mouse/keyboard events ImGui wants (see startBlockEvents)
 		if (m_imGuiLayer) {
 			if (m_imGuiLayer->capturesEvent(event))
 				event.m_handled = true;
 			m_imGuiLayer->notify(event);
+			if (event.m_handled)
+				consumedBy = "ImGui";
 		}
 
 		// From the top down: the last overlay pushed first, the first layer pushed last. By index, re-reading the
@@ -122,15 +127,24 @@ namespace Vectrix {
 					continue; // a layer removed by an earlier handler
 				const std::shared_ptr<Layer> layer = (*group)[i];
 				layer->notify(event);
+				if (event.m_handled)
+					consumedBy = layer->getName();
 			}
 		}
 
-		notify(event);
+		if (!event.m_handled) {
+			notify(event);
+			if (event.m_handled)
+				consumedBy = "Application";
+		}
 
 		// Every listener sees a close request first: one that consumes it (e.g. to ask about unsaved work) keeps
 		// the application running
 		if (!event.m_handled && event.is<WindowCloseEvent>())
 			m_running = false;
+
+		detail::EventDispatchedEvent dispatched(event, consumedBy);
+		m_eventObservers.notify(dispatched);
 	}
 
 	void Application::run() {

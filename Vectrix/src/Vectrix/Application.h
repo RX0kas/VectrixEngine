@@ -45,6 +45,19 @@ int main(int argc, char** argv);
 
 namespace Vectrix {
 	class SettingsManager;
+
+	/// @cond INTERNAL
+	namespace detail {
+		// What Application::observeEvents's observers are notified with, after each event was sent
+		class EventDispatchedEvent : public EventBase<EventDispatchedEvent, "EventDispatched"> {
+		public:
+			EventDispatchedEvent(const Event& event, std::string_view consumedBy) : event(event), consumedBy(consumedBy) {}
+			const Event& event;
+			std::string_view consumedBy;
+		};
+	}
+	/// @endcond
+
 	/**
 	 * @brief The application itself, owning the window, the assets and the layers
 	 *
@@ -125,6 +138,22 @@ namespace Vectrix {
 		}
 
 		/**
+		 * @brief Call a function after each event was sent, whether a listener consumed it or not
+		 *
+		 * Meant for tools such as an event log: unlike a subscription, an observer sees every event, those
+		 * ImGui or a layer consumed included, and is told who consumed it. It can't consume nor change it.
+		 * @param observer Called with the event and the name of the listener that consumed it: "ImGui", a
+		 *                 layer's name or "Application", empty when none did
+		 * @return The handle keeping the observer: it stops being called when the handle is destroyed
+		 * @note Main thread only, like the events. An observer may post events, which are only sent next frame
+		 */
+		template<std::invocable<const Event&, std::string_view> F>
+		[[nodiscard]] ScopedSubscription observeEvents(F&& observer) {
+			return m_eventObservers.subscribeScoped<detail::EventDispatchedEvent>(
+				[o = std::forward<F>(observer)](const detail::EventDispatchedEvent& e) mutable { std::invoke(o, e.event, e.consumedBy); });
+		}
+
+		/**
 		 * @brief This function return the current Window instance
 		 */
 		[[nodiscard]] Window &window() const { return *m_window; }
@@ -186,6 +215,7 @@ namespace Vectrix {
 		JsonObject m_dataToNextLayer;
 
 
+		EventListener m_eventObservers; ///< See observeEvents; notified apart, after each event
 		EventQueue m_eventQueue; ///< Before m_window, which posts to it, so it is destroyed after
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<AssetsManager> m_assetsManager;
