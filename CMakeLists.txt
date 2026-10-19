@@ -309,6 +309,12 @@ if (${VECTRIX_BUILD_EDITOR})
   if(MSVC)
     target_compile_options(VectrixEditor PRIVATE /utf-8)
   endif()
+
+  # MinGW (what the Windows CI builds with): its C++ runtime is linked in, else the .exe needs libstdc++-6.dll,
+  # libgcc_s_seh-1.dll and libwinpthread-1.dll next to it to start
+  if(MINGW)
+    target_link_options(VectrixEditor PRIVATE -static)
+  endif()
 else ()
   message(STATUS "Skipping VectrixEditor")
 endif()

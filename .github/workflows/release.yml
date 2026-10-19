@@ -103,6 +103,24 @@ jobs:
         cp -r run/assets "dist/${name}/"
         cp LICENSE README.md "dist/${name}/"
 
+        # What the executable loads at startup, in the log. On Windows, a DLL that isn't the system's (found next
+        # to the compiler, e.g. MinGW's runtime) goes in the archive too. Vulkan isn't listed: volk loads it at run time
+        echo "Runtime dependencies:"
+        if [[ "${RUNNER_OS}" == "Windows" ]]; then
+          compiler_dir=$(dirname "$(command -v g++ || command -v cl || echo .)")
+          for dll in $(objdump -p "dist/${name}/VectrixEditor.exe" | awk '/DLL Name/ {print $3}'); do
+            echo "  ${dll}"
+            if [[ -f "${compiler_dir}/${dll}" ]]; then
+              cp "${compiler_dir}/${dll}" "dist/${name}/"
+              echo "    copied from ${compiler_dir}"
+            fi
+          done
+        elif [[ "${RUNNER_OS}" == "macOS" ]]; then
+          otool -L "dist/${name}/VectrixEditor"
+        else
+          ldd "dist/${name}/VectrixEditor"
+        fi
+
         cd dist
         if [[ "${RUNNER_OS}" == "Windows" ]]; then
           archive="${name}.zip"
