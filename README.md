@@ -16,7 +16,7 @@
 - [CMake >=3.28](https://cmake.org/download/)
 - [Lunar Vulkan SDK >=1.4.335.0](https://vulkan.lunarg.com/sdk/home)
 - [Python 3](https://www.python.org/downloads/)
-- Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested)
+- Window 10/11 or Linux (Ubuntu and PopOs were the only distros tested, and MacOS support is very basic) 
 - A GPU compatible with Vulkan 1.3 and SPIRV 1.6
 
 ## Installation
