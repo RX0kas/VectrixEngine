@@ -76,6 +76,8 @@ namespace Vectrix {
 		m_data.visible = false;
 #ifdef VC_PLATFORM_WINDOWS
 		m_data.displayServer = WINDOWS;
+#elif defined(VC_PLATFORM_APPLE)
+		m_data.displayServer = MACOS;
 #else
 		m_data.displayServer = detectLinuxDisplayServer();
 #endif

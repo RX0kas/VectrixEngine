@@ -11,7 +11,7 @@
  * @see Vectrix::createApplication
  */
 
-#if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX)
+#if defined(VC_PLATFORM_WINDOWS) || defined(VC_PLATFORM_LINUX) || defined(VC_PLATFORM_APPLE)
 
 #include <string>
 #include <vector>
@@ -56,5 +56,5 @@ int main(int argc, char** argv) {
 }
 
 #else
-#error Vectrix only supports windows and Linux
+#error Vectrix only supports Windows, Linux and macOS
 #endif // VC_PLATFORM_WINDOWS

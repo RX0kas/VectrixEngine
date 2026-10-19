@@ -24,6 +24,8 @@
  * - Application::sendEvent, to send an event right away and know whether a listener consumed it
  * - Application::postEvent can be called from any thread; the event is still sent on the main thread
  * - Application::observeEvents: a function called after every event, consumed or not, with who consumed it
+ * - Started the macOS port (VC_PLATFORM_APPLE, Platform/Apple, DisplayServer::MACOS); Vulkan portability drivers
+ *   (KosmicKrisp, MoltenVK) are enabled when present
  * @subsection v0_5_2_editor_added Editor Addition
  * - Window > Event Log: the last events sent, filtered by category or text, and who consumed each
  * - Files and folders dropped onto the editor are copied into the content browser's current folder

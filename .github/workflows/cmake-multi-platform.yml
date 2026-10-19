@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         config: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
@@ -60,6 +60,13 @@ jobs:
         echo "VULKAN_SDK=C:\VulkanSDK\1.4.335.0" >> $env:GITHUB_ENV
         echo "C:\VulkanSDK\1.4.335.0\Bin" >> $env:GITHUB_PATH
 
+
+    # Headers and loader only: the runner has no GPU, so nothing is run. VULKAN_SDK points FindVulkan at them
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install ninja vulkan-headers vulkan-loader
+        echo "VULKAN_SDK=$(brew --prefix)" >> $GITHUB_ENV
 
     - name: Install Ninja (Windows)
       if: runner.os == 'Windows'

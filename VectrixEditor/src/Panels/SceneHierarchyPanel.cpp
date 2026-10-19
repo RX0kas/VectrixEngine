@@ -148,11 +148,11 @@ namespace Vectrix {
             payloadHovered = true;
 
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(payloadType)) {
-#ifdef VC_PLATFORM_LINUX
-                const char* path = static_cast<const char*>(payload->Data);
+#ifdef VC_PLATFORM_WINDOWS
+                const wchar_t* path = static_cast<const wchar_t*>(payload->Data);
                 std::filesystem::path assetPath = path;
 #else
-                const wchar_t* path = static_cast<const wchar_t*>(payload->Data);
+                const char* path = static_cast<const char*>(payload->Data);
                 std::filesystem::path assetPath = path;
 #endif
 

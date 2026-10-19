@@ -17,7 +17,7 @@
 /**
  * @brief The identifier of the platform the engine was built for
  *
- * It is 1 on Windows and 0 on Linux.
+ * It is 1 on Windows and 0 on Linux and macOS.
  * @ingroup core
  */
 	#define VC_PLATFORM_ID 1
@@ -33,12 +33,17 @@
 /**
  * @brief The identifier of the platform the engine was built for
  *
- * It is 1 on Windows and 0 on Linux.
+ * It is 1 on Windows and 0 on Linux and macOS.
  * @ingroup core
  */
 		#define VC_PLATFORM_ID 0
+	#elif defined(VC_PLATFORM_APPLE)
+		#define VC_DEBUGBREAK() __builtin_debugtrap()
+		// The id takes one bit in the file versions (see ProjectSerializer, SceneSerializer): macOS shares
+		// Linux's, both being POSIX with UTF-8 paths
+		#define VC_PLATFORM_ID 0
 	#else
-		#error Vectrix only support windows and Linux
+		#error Vectrix only supports Windows, Linux and macOS
 	#endif
 #endif
 

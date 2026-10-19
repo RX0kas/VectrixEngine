@@ -144,8 +144,14 @@ if (WIN32)
             Vectrix/src/Platform/Windows/*.cpp
             Vectrix/src/Platform/Windows/*.h
     )
+elseif (APPLE)
+  message(STATUS "Apple Platform detected")
 
-elseif (UNIX AND NOT APPLE)
+  file(GLOB_RECURSE PLATFORM_SOURCES
+          Vectrix/src/Platform/Apple/*.cpp
+          Vectrix/src/Platform/Apple/*.h
+  )
+elseif (UNIX)
   message(STATUS "Linux Platform detected")
 
   file(GLOB_RECURSE PLATFORM_SOURCES
@@ -267,10 +273,11 @@ if(WIN32)
             VC_PLATFORM_WINDOWS
             GLFW_INCLUDE_NONE
     )
-elseif(UNIX AND NOT APPLE)
+elseif(APPLE)
+  target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_APPLE)
+elseif(UNIX)
     target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_LINUX)
 endif()
-
 ##########
 # Editor #
 ##########

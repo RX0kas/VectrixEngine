@@ -62,12 +62,12 @@ namespace Vectrix {
 
     static void beginDragDropSource(const std::string& type, const std::filesystem::path& path) {
         if (ImGui::BeginDragDropSource()) {
-#ifdef VC_PLATFORM_LINUX
-            const char* itemPath = path.c_str();
-            ImGui::SetDragDropPayload(type.c_str(), itemPath, (strlen(itemPath) + 1) * sizeof(char));
-#else
+#ifdef VC_PLATFORM_WINDOWS
             const wchar_t* itemPath = path.c_str();
             ImGui::SetDragDropPayload(type.c_str(), itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
+#else
+            const char* itemPath = path.c_str();
+            ImGui::SetDragDropPayload(type.c_str(), itemPath, (strlen(itemPath) + 1) * sizeof(char));
 #endif
             ImGui::TextColored(colorTextPrimary, "%s", toUtf8(path.filename()).c_str());
             ImGui::EndDragDropSource();
@@ -76,10 +76,10 @@ namespace Vectrix {
 
     // Rebuilds the asset-relative path carried by a content browser payload.
     static std::filesystem::path payloadToRelativePath(const ImGuiPayload* payload) {
-#ifdef VC_PLATFORM_LINUX
-        return {static_cast<const char*>(payload->Data)};
-#else
+#ifdef VC_PLATFORM_WINDOWS
         return {static_cast<const wchar_t*>(payload->Data)};
+#else
+        return {static_cast<const char*>(payload->Data)};
 #endif
     }
 
