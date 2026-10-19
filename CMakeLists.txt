@@ -18,6 +18,12 @@ if (APPLE)
   enable_language(OBJC)
 endif()
 
+# MinGW's COFF objects are limited to 32767 sections: a Debug build of a file heavy on templates (EnTT, ImGui,
+# spdlog, e.g. EditorLayer.cpp) goes over it ("too many sections", "file too big"). The big-obj format lifts it
+if (MINGW)
+  add_compile_options(-Wa,-mbig-obj)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

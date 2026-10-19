@@ -63,7 +63,7 @@ Required tools/dependencies:
 - Vulkan SDK / Vulkan development files. README targets Lunar Vulkan SDK `>= 1.4.335.0`.
 - Vulkan 1.3 capable GPU with SPIR-V 1.6 support for runtime execution.
 - Linux builds require X11 and GTK3 development packages in addition to Vulkan/GLFW-related packages.
-- CI (`.github/workflows/cmake-multi-platform.yml`) builds Ubuntu, Windows and macOS (arm64, Homebrew Vulkan headers/loader, no GPU) with Ninja in Debug and Release, editor included; it runs on pushes/PRs to main/master or by hand (`workflow_dispatch`). `release.yml` builds the editor in Release on a `v*` tag, packages each platform (executable + `assets/` + LICENSE/README) and publishes a GitHub release; macOS is labelled experimental and unsigned. On macOS, the root CMake enables `OBJC` because GLFW and NativeFileDialog have `.m` sources.
+- CI (`.github/workflows/cmake-multi-platform.yml`) builds Ubuntu, Windows and macOS (arm64, Homebrew Vulkan headers/loader, no GPU) with Ninja in Debug and Release, editor included; it runs on pushes/PRs to main/master or by hand (`workflow_dispatch`). `release.yml` builds the editor in Release on a `v*` tag, packages each platform (executable + `assets/` + LICENSE/README) and publishes a GitHub release; macOS is labelled experimental and unsigned. On macOS, the root CMake enables `OBJC` because GLFW and NativeFileDialog have `.m` sources. The Windows CI compiles with MinGW GCC (no MSVC environment): the root CMake adds `-Wa,-mbig-obj` (Debug objects such as `EditorLayer.cpp` exceed COFF's 32767 sections) and links the editor with `-static` (no MinGW runtime DLLs to ship).
 
 Common configure/build commands:
 
