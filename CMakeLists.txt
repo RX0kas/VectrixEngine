@@ -139,7 +139,6 @@ list(APPEND Vectrix_SOURCES
         Vectrix/src/vcpch.cpp
         Vectrix/src/vcpch.h
         Vectrix/src/Vectrix.h
-        Vectrix/extern/Volk/volk.c
 )
 
 
