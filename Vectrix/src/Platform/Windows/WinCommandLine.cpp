@@ -24,4 +24,19 @@ namespace Vectrix {
 		LocalFree(wide);
 		return arguments;
 	}
+
+	std::filesystem::path getExecutablePath() {
+		// Grown until the path fits: GetModuleFileNameW truncates silently to the buffer
+		std::wstring path(MAX_PATH, L'\0');
+		for (;;) {
+			const DWORD length = GetModuleFileNameW(nullptr, path.data(), static_cast<DWORD>(path.size()));
+			if (length == 0)
+				return {};
+			if (length < path.size()) {
+				path.resize(length);
+				return path;
+			}
+			path.resize(path.size() * 2);
+		}
+	}
 }

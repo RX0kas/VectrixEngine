@@ -1,5 +1,6 @@
 #ifndef VECTRIXWORKSPACE_COMMANDLINE_H
 #define VECTRIXWORKSPACE_COMMANDLINE_H
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -25,6 +26,16 @@ namespace Vectrix {
      * @ingroup core
      */
     std::vector<std::string> getCommandLineArguments(int argc, char** argv);
+
+    /**
+     * @brief The absolute path of the running executable
+     *
+     * Unlike argv[0], it doesn't depend on how the program was started (a relative path, the PATH, a
+     * double-click), so files shipped next to it can be found from any working directory.
+     * @return The executable's path, empty if the platform couldn't give it
+     * @ingroup core
+     */
+    std::filesystem::path getExecutablePath();
 }
 
 #endif //VECTRIXWORKSPACE_COMMANDLINE_H

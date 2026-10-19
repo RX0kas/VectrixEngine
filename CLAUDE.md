@@ -30,7 +30,7 @@
   - `Panels/`: `SceneHierarchyPanel` (hierarchy + properties), `ContentBrowserPanel`, `SettingsPanel`.
   - `Undo/`: command-pattern undo/redo (`UndoHistory`, owned by `EditorLayer`, cleared on scene change; `markClean`/`markModified`/`isClean` drive the unsaved `*` in the title).
   - `Utils/`: `Gizmo.h` (ImGuizmo), `Error.h` (error popups).
-- `run/assets/`: the engine's own assets (`icons/`, `shaders/`), found through `AssetsManager::getEngineAssetsPath()` = `./assets`, hence running from `run/`. Game assets live in the project's `Assets/` folder.
+- `run/assets/`: the engine's own assets (`icons/`, `shaders/`), found through `AssetsManager::getEngineAssetsPath()`. `findEngineAssetsPath()` (`AssetsManager.cpp`, at construction) looks for an `assets` folder next to the executable (`getExecutablePath()`, `Core/CommandLine.h`, one implementation per platform), then in `../Resources/assets` (macOS bundle), then in the working directory: packaged builds work from anywhere, a build-tree executable still needs to run from `run/`. Game assets live in the project's `Assets/` folder.
 - `demoProject/`: sample project (`demoProject.vcproj`, `Assets/{models,shaders,textures}`, `Scenes/demoProject.vctx`) used for manual testing.
 - `docs/`: generated Doxygen HTML output. Prefer editing source comments or `Vectrix/src/dox`; regenerate docs only when requested.
 - `Vectrix/extern/`: third-party library directory and git submodules. Do not edit vendored dependencies unless the user explicitly asks.
@@ -63,7 +63,7 @@ Required tools/dependencies:
 - Vulkan SDK / Vulkan development files. README targets Lunar Vulkan SDK `>= 1.4.335.0`.
 - Vulkan 1.3 capable GPU with SPIR-V 1.6 support for runtime execution.
 - Linux builds require X11 and GTK3 development packages in addition to Vulkan/GLFW-related packages.
-- CI builds Ubuntu and Windows with Ninja in Debug and Release.
+- CI (`.github/workflows/cmake-multi-platform.yml`) builds Ubuntu, Windows and macOS (arm64, Homebrew Vulkan headers/loader, no GPU) with Ninja in Debug and Release, editor included; it runs on pushes/PRs to main/master or by hand (`workflow_dispatch`). `release.yml` builds the editor in Release on a `v*` tag, packages each platform (executable + `assets/` + LICENSE/README) and publishes a GitHub release; macOS is labelled experimental and unsigned. On macOS, the root CMake enables `OBJC` because GLFW and NativeFileDialog have `.m` sources.
 
 Common configure/build commands:
 

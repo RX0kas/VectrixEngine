@@ -26,6 +26,8 @@
  * - Application::observeEvents: a function called after every event, consumed or not, with who consumed it
  * - Started the macOS port (VC_PLATFORM_APPLE, Platform/Apple, DisplayServer::MACOS); Vulkan portability drivers
  *   (KosmicKrisp, MoltenVK) are enabled when present
+ * - getExecutablePath(); the engine's assets are found next to the executable, so a packaged build runs from any
+ *   working directory
  * @subsection v0_5_2_editor_added Editor Addition
  * - Window > Event Log: the last events sent, filtered by category or text, and who consumed each
  * - Files and folders dropped onto the editor are copied into the content browser's current folder
