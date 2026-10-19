@@ -5,6 +5,7 @@
 #include "Vectrix/Utils/Hashing.h"
 
 #include <fstream>
+#include "Vectrix/Core/CommandLine.h"
 #include "Vectrix/Utils/Path.h"
 
 namespace Vectrix {
@@ -20,9 +21,38 @@ namespace Vectrix {
     };
 
 
+    // The engine's own assets: next to the executable in a package (in Contents/Resources inside a macOS bundle,
+    // the executable being in Contents/MacOS), else in the working directory, which is how a build is run during
+    // development (from run/, the executable staying in the build tree)
+    static std::filesystem::path findEngineAssetsPath() {
+        std::vector<std::filesystem::path> candidates;
+        if (const std::filesystem::path executable = getExecutablePath(); !executable.empty()) {
+            candidates.push_back(executable.parent_path() / "assets");
+            candidates.push_back(executable.parent_path().parent_path() / "Resources" / "assets");
+        }
+        std::error_code ec;
+        const std::filesystem::path workingDirectory = std::filesystem::current_path(ec);
+        if (!ec)
+            candidates.push_back(workingDirectory / "assets");
+
+        for (const std::filesystem::path& candidate : candidates) {
+            if (std::filesystem::is_directory(candidate, ec)) {
+                VC_CORE_INFO("Engine assets: {}", toUtf8(candidate));
+                return candidate;
+            }
+        }
+        VC_CORE_WARN("Engine assets not found next to the executable nor in the working directory ({})", toUtf8(workingDirectory));
+        return "./assets";
+    }
+
     AssetsManager::AssetsManager() {
         VC_CORE_ASSERT(!s_instance, "AssetsManager already exists");
         s_instance = this;
+
+        s_engineAssetsPath = findEngineAssetsPath();
+        // Without a project the relative paths are taken from the engine's assets too (see getAssetsPath)
+        if (s_assetsPath == "./assets")
+            s_assetsPath = s_engineAssetsPath;
 
         auto* s = new ShaderManager();
         m_shaderManager = std::unique_ptr<ShaderManager>(s);

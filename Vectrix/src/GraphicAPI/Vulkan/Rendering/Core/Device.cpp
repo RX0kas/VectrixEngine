@@ -2,6 +2,7 @@
 #include "Device.h"
 
 #include <algorithm>
+#include <cstring>
 
 #include "GraphicAPI/Vulkan/Enum_str.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
@@ -14,6 +15,25 @@
 namespace Vectrix {
 
     bool Device::enableValidationLayers = true;
+
+    // Not in vulkan_core.h (it's in vulkan_beta.h), hence the literal
+    static constexpr const char* k_portabilitySubsetExtensionName = "VK_KHR_portability_subset";
+
+    static bool hasInstanceExtension(const char* name) {
+        uint32_t count = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
+        std::vector<VkExtensionProperties> extensions(count);
+        vkEnumerateInstanceExtensionProperties(nullptr, &count, extensions.data());
+        return std::ranges::any_of(extensions, [name](const VkExtensionProperties& e) { return std::strcmp(e.extensionName, name) == 0; });
+    }
+
+    static bool hasDeviceExtension(VkPhysicalDevice device, const char* name) {
+        uint32_t count = 0;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &count, nullptr);
+        std::vector<VkExtensionProperties> extensions(count);
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &count, extensions.data());
+        return std::ranges::any_of(extensions, [name](const VkExtensionProperties& e) { return std::strcmp(e.extensionName, name) == 0; });
+    }
 
     // local callback functions
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
@@ -242,7 +262,13 @@ namespace Vectrix {
         VkInstanceCreateInfo createInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         createInfo.pApplicationInfo = &appInfo;
 
-        const auto extensions = getRequiredExtensions();
+        auto extensions = getRequiredExtensions();
+        // A driver running on top of another API (on macOS: KosmicKrisp or MoltenVK, over Metal) may be a
+        // "portability" implementation, only listed when asked for. Asking changes nothing for the other drivers
+        if (hasInstanceExtension(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME)) {
+            extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+            createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+        }
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 
@@ -383,8 +409,12 @@ namespace Vectrix {
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
-        createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+        // A portability implementation has to be told the application knows it isn't fully conformant
+        std::vector<const char*> extensions = deviceExtensions;
+        if (hasDeviceExtension(m_physicalDevice, k_portabilitySubsetExtensionName))
+            extensions.push_back(k_portabilitySubsetExtensionName);
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+        createInfo.ppEnabledExtensionNames = extensions.data();
 
         createInfo.enabledLayerCount = 0;
         createInfo.ppEnabledLayerNames = nullptr;

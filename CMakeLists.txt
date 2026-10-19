@@ -12,6 +12,12 @@ endif()
 
 project(VectrixWorkspace VERSION 0.5.2 LANGUAGES CXX C)
 
+# GLFW and NativeFileDialog have Objective-C sources (.m) on macOS. GLFW enables OBJC in its own directory only and
+# NativeFileDialog not at all, so nfd_cocoa.m found no compile rule: enabled here, every subdirectory gets it
+if (APPLE)
+  enable_language(OBJC)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -133,7 +139,6 @@ list(APPEND Vectrix_SOURCES
         Vectrix/src/vcpch.cpp
         Vectrix/src/vcpch.h
         Vectrix/src/Vectrix.h
-        Vectrix/extern/Volk/volk.c
 )
 
 
@@ -144,8 +149,14 @@ if (WIN32)
             Vectrix/src/Platform/Windows/*.cpp
             Vectrix/src/Platform/Windows/*.h
     )
+elseif (APPLE)
+  message(STATUS "Apple Platform detected")
 
-elseif (UNIX AND NOT APPLE)
+  file(GLOB_RECURSE PLATFORM_SOURCES
+          Vectrix/src/Platform/Apple/*.cpp
+          Vectrix/src/Platform/Apple/*.h
+  )
+elseif (UNIX)
   message(STATUS "Linux Platform detected")
 
   file(GLOB_RECURSE PLATFORM_SOURCES
@@ -267,10 +278,11 @@ if(WIN32)
             VC_PLATFORM_WINDOWS
             GLFW_INCLUDE_NONE
     )
-elseif(UNIX AND NOT APPLE)
+elseif(APPLE)
+  target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_APPLE)
+elseif(UNIX)
     target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_LINUX)
 endif()
-
 ##########
 # Editor #
 ##########

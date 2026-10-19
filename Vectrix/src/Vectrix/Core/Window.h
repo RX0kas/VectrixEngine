@@ -26,6 +26,7 @@ namespace Vectrix {
 		X11,                    ///< X11, on Linux
 		WAYLAND,                ///< Wayland, on Linux
 		WINDOWS,                ///< The Windows desktop
+		MACOS,                  ///< The macOS desktop
 	};
 
 	/**

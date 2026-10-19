@@ -657,10 +657,10 @@ namespace Vectrix {
 			useGizmo(m_sceneHierarchyPanel->getSelectedEntity(),*m_camera,m_gizmoType,{m_viewportPos.x, m_viewportPos.y},{m_viewportSize.x,m_viewportSize.y},m_undoHistory,m_gizmoTranslationSnap,m_gizmoRotationSnap);
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_SCENE")) {
-#ifdef VC_PLATFORM_LINUX
-					const char* path = static_cast<const char *>(payload->Data);
-#else
+#ifdef VC_PLATFORM_WINDOWS
 					const auto* path = static_cast<const wchar_t *>(payload->Data);
+#else
+					const char* path = static_cast<const char *>(payload->Data);
 #endif
 					runDiscardingScene([this, scenePath = AssetsManager::getAssetsPath() / path] { openScene(scenePath); });
 				}

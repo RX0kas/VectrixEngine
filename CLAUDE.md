@@ -23,14 +23,14 @@
   - `Physics/`, `Events/`, `Input/`, `Layers/`, `Debug/`, `Settings/`: supporting engine systems.
   - `EntryPoint.h`: defines `main`, rebuilds a UTF-8 `argv` (`Core/CommandLine.h`) and calls the app's `createApplication(argc, argv)`. Apps name themselves with `VC_SET_APP_INFO(name, major, minor, patch)` — the name also picks the settings folder (see Settings System).
 - `Vectrix/src/GraphicAPI/Vulkan/`: Vulkan backend implementation for the renderer, shaders, buffers, framebuffers, textures, swapchain, device, and ImGui integration (custom ImGui GLFW/Vulkan backends live in `GraphicAPI/Vulkan/ImGui/`; they are project code, not vendored).
-- `Vectrix/src/Platform/Linux/` and `Vectrix/src/Platform/Windows/`: platform-specific input and command line (`LinCommandLine.cpp`/`WinCommandLine.cpp`). CMake globs only the current OS's folder, so every function declared for both platforms needs a file in each.
+- `Vectrix/src/Platform/Linux/`, `Vectrix/src/Platform/Windows/` and `Vectrix/src/Platform/Apple/` (macOS port, in progress): platform-specific input and command line (`LinCommandLine.cpp`/`WinCommandLine.cpp`/`AppleCommandLine.cpp`). CMake globs only the current OS's folder, so every function declared for every platform needs a file in each. Platform macros: `VC_PLATFORM_WINDOWS`/`VC_PLATFORM_LINUX`/`VC_PLATFORM_APPLE` (`Core.h`); macOS shares `VC_PLATFORM_ID` 0 with Linux (one bit in the file versions). Code that differs only on Windows (wide `wchar_t` paths) tests `VC_PLATFORM_WINDOWS`, not `VC_PLATFORM_LINUX`. On macOS Vulkan runs through a Metal-layered driver (KosmicKrisp is the target, MoltenVK also works): `Device` enables `VK_KHR_portability_enumeration` / `VK_KHR_portability_subset` only when the loader/GPU offers them.
 - `Vectrix/src/dox/`: Doxygen source pages (`changelog.dox` records public API changes).
 - `VectrixEditor/src/`: the editor.
   - `Layers/StartupLayer`: start screen (recent projects, new/open project); switches to `Layers/EditorLayer` (scene editing, menus, viewport, save/unsaved prompts, relinking moved assets) via `Application::switchToLayer<T>`.
   - `Panels/`: `SceneHierarchyPanel` (hierarchy + properties), `ContentBrowserPanel`, `SettingsPanel`.
   - `Undo/`: command-pattern undo/redo (`UndoHistory`, owned by `EditorLayer`, cleared on scene change; `markClean`/`markModified`/`isClean` drive the unsaved `*` in the title).
   - `Utils/`: `Gizmo.h` (ImGuizmo), `Error.h` (error popups).
-- `run/assets/`: the engine's own assets (`icons/`, `shaders/`), found through `AssetsManager::getEngineAssetsPath()` = `./assets`, hence running from `run/`. Game assets live in the project's `Assets/` folder.
+- `run/assets/`: the engine's own assets (`icons/`, `shaders/`), found through `AssetsManager::getEngineAssetsPath()`. `findEngineAssetsPath()` (`AssetsManager.cpp`, at construction) looks for an `assets` folder next to the executable (`getExecutablePath()`, `Core/CommandLine.h`, one implementation per platform), then in `../Resources/assets` (macOS bundle), then in the working directory: packaged builds work from anywhere, a build-tree executable still needs to run from `run/`. Game assets live in the project's `Assets/` folder.
 - `demoProject/`: sample project (`demoProject.vcproj`, `Assets/{models,shaders,textures}`, `Scenes/demoProject.vctx`) used for manual testing.
 - `docs/`: generated Doxygen HTML output. Prefer editing source comments or `Vectrix/src/dox`; regenerate docs only when requested.
 - `Vectrix/extern/`: third-party library directory and git submodules. Do not edit vendored dependencies unless the user explicitly asks.
@@ -63,7 +63,7 @@ Required tools/dependencies:
 - Vulkan SDK / Vulkan development files. README targets Lunar Vulkan SDK `>= 1.4.335.0`.
 - Vulkan 1.3 capable GPU with SPIR-V 1.6 support for runtime execution.
 - Linux builds require X11 and GTK3 development packages in addition to Vulkan/GLFW-related packages.
-- CI builds Ubuntu and Windows with Ninja in Debug and Release.
+- CI (`.github/workflows/cmake-multi-platform.yml`) builds Ubuntu, Windows and macOS (arm64, Homebrew Vulkan headers/loader, no GPU) with Ninja in Debug and Release, editor included; it runs on pushes/PRs to main/master or by hand (`workflow_dispatch`). `release.yml` builds the editor in Release on a `v*` tag, packages each platform (executable + `assets/` + LICENSE/README) and publishes a GitHub release; macOS is labelled experimental and unsigned. On macOS, the root CMake enables `OBJC` because GLFW and NativeFileDialog have `.m` sources.
 
 Common configure/build commands:
 
