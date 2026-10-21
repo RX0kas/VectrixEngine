@@ -50,6 +50,7 @@ jobs:
       if: runner.os == 'Windows'
       shell: powershell
       run: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Invoke-WebRequest `
           -Uri https://sdk.lunarg.com/sdk/download/1.4.335.0/windows/vulkan-sdk.exe `
           -OutFile vulkan-sdk.exe
