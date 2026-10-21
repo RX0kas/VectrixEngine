@@ -132,7 +132,7 @@ namespace Vectrix {
     void SwapChain::createSwapChain() {
         auto [capabilities, formats, presentModes] = m_device.getSwapChainSupport();
 
-        const VulkanSettings::Swapchain& scSettings = VulkanContext::instance().settings().swapchain;
+        const VulkanSettings::Swapchain& scSettings = VulkanContext::settings().swapchain;
 
         const auto [format, colorSpace] = chooseSwapSurfaceFormat(formats);
         const VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes, scSettings.presentMode);
