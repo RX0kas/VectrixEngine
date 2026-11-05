@@ -110,6 +110,7 @@
 #ifndef IMGUI_DISABLE
 #include "imgui_impl_vulkan.h"
 #include "Vectrix/Rendering/Shaders/ImguiShader.h"
+#include "Vectrix/Rendering/Shaders/Shader.h"
 
 #include <filesystem>
 #include <stdio.h>
@@ -822,26 +823,8 @@ void ImGui_ImplVulkan_UpdateTexture(ImTextureData* tex)
         ImGui_ImplVulkan_DestroyTexture(tex);
 }
 
-std::pair<std::string, std::string> parse(const std::string &source) {
-    std::istringstream file(source);
-    std::stringstream vertex, fragment;
-    std::stringstream* current = nullptr;
-
-    std::string line;
-    while (std::getline(file, line)) {
-        if (line.find("#shader vert") != std::string::npos)
-            current = &vertex;
-        else if (line.find("#shader frag") != std::string::npos)
-            current = &fragment;
-        else if (current)
-            *current << line << '\n';
-    }
-
-    return {vertex.str(), fragment.str()};
-}
-
 static std::pair<std::vector<uint32_t>,std::vector<uint32_t>> CompileImGuiShader() {
-    auto src = parse(Vectrix::EmbeddedShaders::k_ImguiShader);
+    auto src = Vectrix::Shader::parseSource(Vectrix::EmbeddedShaders::k_ImguiShader);
     Vectrix::VulkanShaderCompiler &compiler = Vectrix::VulkanContext::instance().getCompiler();
     auto vert = compiler.compile_file("vc_imgui_vert", Vectrix::VertexShader,src.first.c_str(),true);
     auto frag = compiler.compile_file("vc_imgui_frag", Vectrix::FragmentShader,src.second.c_str(),true);

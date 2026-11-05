@@ -2,6 +2,21 @@
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
  *
+ * @section v0_5_3 v0.5.3 - (unreleased)
+ *
+ * @subsection v0_5_3_added Added
+ * - Shader::parseSource is public: it splits a .vcshader into its two stages
+ * @subsection v0_5_3_fixed Fixed
+ * - Shaders: a line starts a stage only when it begins with `#shader vert|frag`, so the marker inside a comment
+ *   no longer switches stage. Each stage keeps the file's line numbers, so compiler errors point at the
+ *   .vcshader's lines
+ * - Shaders: the uniform block (set 0, binding 0) is read whatever its layout (header over several lines,
+ *   qualifiers in any order, members on the `{`/`}` lines, comments, `float a, b;`). A member the engine can't set
+ *   (array, struct, other types), different blocks in the two stages or a vc_cameraTransform that isn't a mat4
+ *   now refuse the shader with a clear error, instead of silently giving wrong offsets
+ *
+ * ---
+ *
  * @section v0_5_2 v0.5.2 - (06-10-2026)
  *
  * @subsection v0_5_2_changed Changed

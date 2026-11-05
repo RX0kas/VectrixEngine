@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 
 #include "ShaderUniformLayout.h"
@@ -342,6 +343,17 @@ namespace Vectrix {
 		}
 
 		/**
+		 * @brief Split a .vcshader file into the GLSL of its two stages
+		 *
+		 * A stage starts at a line beginning with `#shader vert` or `#shader frag` (spaces before it allowed, not
+		 * code nor a comment). Each stage's text has as many lines as the file, the other stage's and the marker
+		 * lines left blank, so a compiler error's line number is the .vcshader's.
+		 * @param source The whole .vcshader file's text
+		 * @return The vertex stage's source, then the fragment stage's
+		 */
+		static std::pair<std::string, std::string> parseSource(const std::string& source);
+
+		/**
 		 * @brief Return if the shader is set up to receives the camera
 		 */
 		[[nodiscard]] virtual bool isAffectedByCamera() const = 0;
@@ -356,8 +368,6 @@ namespace Vectrix {
 		static void finalize(ShaderUniformLayout* s) {
 			s->finalize();
 		}
-		// VertexSRC, FragmentSRC — `source` is the whole .vcshader file's text, already in memory
-		static std::pair<std::string, std::string> parseSource(const std::string& source);
 		///  @endcond
 	private:
 		virtual void sendCameraUniform(const glm::mat4& camera) const = 0;
@@ -368,6 +378,8 @@ namespace Vectrix {
 		virtual void setID(std::string id) = 0;
 		static std::shared_ptr<Shader> create(const std::string& name, const std::string& path,const BufferLayout& bufferLayout);
 		static std::shared_ptr<Shader> createFromSource(const std::string& name, const std::string& source,const BufferLayout& bufferLayout);
-		static ShaderUniformLayout findShaderUniformLayoutFromSource(const std::string& source,bool& isAffectedByCamera);
+		/// The uniforms of a .vcshader (its buffer at set 0, binding 0), nullopt (reported) when the engine can't set
+		/// them: a member it has no type for, different blocks in the two stages, a vc_cameraTransform that isn't a mat4
+		static std::optional<ShaderUniformLayout> findShaderUniformLayoutFromSource(const std::string& name, const std::string& source, bool& isAffectedByCamera);
 	};
 }

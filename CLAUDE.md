@@ -3,7 +3,8 @@
 ## Project Overview
 
 - VectrixEngine is a C++20 game engine workspace built with a single root `CMakeLists.txt` (`CMAKE_CXX_STANDARD 20`, `CMAKE_CXX_STANDARD_REQUIRED ON` — raised from C++17 in commit `21eeb26`; concepts such as `std::derived_from` are used in public APIs, e.g. `Application::PushLayer<T>()`).
-- The root project is `VectrixWorkspace` version `0.5.1`.
+- The root project is `VectrixWorkspace` version `0.5.3`.
+- The version is written in `CMakeLists.txt`, `Core/version.h`, `Doxyfile`, this file and the changelog: change it with `python3 Vectrix/scripts/set_version.py <X.Y.Z|major|minor|patch>` (adds an "unreleased" changelog section; `--release [--date DD-MM-YYYY]` dates it once published, `--dry-run` writes nothing), not by hand.
 - Targets:
   - `Vectrix`: static engine library.
   - `VectrixEditor`: editor executable linked against `Vectrix`. Only built with `-DVECTRIX_BUILD_EDITOR=ON` (the option is `OFF` by default so apps using the engine as a library don't build it; the `CMakePresets.json` presets turn it on).
@@ -165,10 +166,10 @@ Adjust the binary directory for the actual build type, OS, processor, and build 
 
 ## Shaders
 
-- `.vcshader` files contain multiple sections marked with `#shader frag` and `#shader vert`. Engine shaders live in `run/assets/shaders/`; a project's shaders are assets in its `Assets/` folder (e.g. `demoProject/Assets/shaders/viewport.vcshader`).
+- `.vcshader` files contain multiple sections marked with `#shader frag` and `#shader vert` (`Shader::parseSource`, also used by the ImGui backend): only a line *beginning* with the marker starts a stage, and each stage's text keeps the file's line count (other lines blank), so compiler error lines are the file's. Engine shaders live in `run/assets/shaders/`; a project's shaders are assets in its `Assets/` folder (e.g. `demoProject/Assets/shaders/viewport.vcshader`).
 - Shader code is GLSL 450 and is compiled at runtime through shaderc for Vulkan 1.3 / SPIR-V 1.6.
 - Descriptor layout every shader follows (`ShaderSSBO`, `DynamicSSBO`, `VulkanShader::createPipelineLayout`):
-  - set 0, binding 0: `readonly buffer FrameSSBO { ... } frame;` — the shader's uniforms. Its member list is parsed from the GLSL source (`Shader::findShaderUniformLayoutFromSource`) with std430 rules, so the C++ offsets come from that text: `vec3` takes 16 bytes, and the block must be declared identically in both stages. Set values with `setUniform*`; a name or type mismatch logs and does nothing.
+  - set 0, binding 0: `readonly buffer FrameSSBO { ... } frame;` — the shader's uniforms. Its member list is parsed from the GLSL source (`Shader::findShaderUniformLayoutFromSource`, a small tokenizer: comments, line breaks and qualifier order don't matter) with std430 rules, so the C++ offsets come from that text: `vec3` takes 16 bytes. Members can only be `int`/`uint`/`float`/`bool`/`vec2`/`vec3`/`vec4`/`mat4`; an array, a struct, blocks that differ between the two stages or a non-`mat4` `vc_cameraTransform` make `Shader::createFromSource` refuse the shader (error logged, `nullptr`). Set values with `setUniform*`; a name or type mismatch logs and does nothing.
   - set 0, binding 1: `uniform sampler2D u_Textures[128];` (`Texture::getMaxTexturePerShader()`), indexed with `nonuniformEXT` (needs `#extension GL_EXT_nonuniform_qualifier : enable`). `Shader::useTexture`/`useFramebuffer` return the slot to read; slot 0 is always the not_found texture (what you get when all slots are taken), and slots of destroyed textures are reused. Never hard-code a slot index in GLSL — pass it in, as the outline does with `u_MaskIndex`.
   - set 1, binding 0: `readonly buffer ObjectSSBO` — per-object data for batched draws (`DynamicSSBO`), read with the instance/object index.
 - `vc_cameraTransform` is a reserved uniform name: a `FrameSSBO` containing it marks the shader as camera-affected and the renderer fills it. Do not use it for custom uniforms.
