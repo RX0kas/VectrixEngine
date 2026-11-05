@@ -51,16 +51,25 @@ jobs:
       shell: powershell
       run: |
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $sdk = "C:\VulkanSDK\1.4.335.0"
         Invoke-WebRequest `
           -Uri https://sdk.lunarg.com/sdk/download/1.4.335.0/windows/vulkan-sdk.exe `
           -OutFile vulkan-sdk.exe
 
-        Start-Process .\vulkan-sdk.exe `
-          -ArgumentList "--accept-licenses --default-answer --confirm-command install" `
-          -Wait
+        $installer = Start-Process .\vulkan-sdk.exe `
+          -ArgumentList "--root $sdk --accept-licenses --default-answer --confirm-command install" `
+          -Wait -PassThru
+        if ($installer.ExitCode -ne 0) { throw "Vulkan SDK installer failed ($($installer.ExitCode))" }
 
-        echo "VULKAN_SDK=C:\VulkanSDK\1.4.335.0" >> $env:GITHUB_ENV
-        echo "C:\VulkanSDK\1.4.335.0\Bin" >> $env:GITHUB_PATH
+        # The installer can return while its child processes still copy files: the build then found
+        # vulkan.h at configure time but not vk_platform.h. Wait for them, then check the headers are all there
+        Get-Process | Where-Object { $_.Path -like "$sdk*" -or $_.Name -like "vulkan-sdk*" } | Wait-Process -Timeout 600
+        foreach ($header in "vulkan\vulkan.h", "vulkan\vk_platform.h", "vulkan\vulkan_core.h") {
+          if (-not (Test-Path "$sdk\Include\$header")) { throw "Vulkan SDK incomplete: $header missing" }
+        }
+
+        echo "VULKAN_SDK=$sdk" >> $env:GITHUB_ENV
+        echo "$sdk\Bin" >> $env:GITHUB_PATH
 
 
     # Headers and loader only: the runner has no GPU, so nothing is run. VULKAN_SDK points FindVulkan at them
