@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/RX0kas/VectrixEngine/settings.vectrix.schema.json",
+  "title": "Vectrix settings",
+  "description": "settings.vectrix.json: the global file (<config folder>/Vectrix/<App>/) and a project's file (at its root, overriding the global one key by key). Every key is optional, a missing one keeps its default. Kept in sync with the code that reads each key (see the $comment of each section).",
+  "type": "object",
+  "properties": {
+    "engine": {
+      "type": "object",
+      "properties": {
+        "graphicAPI": {
+          "type": "object",
+          "properties": {
+            "vulkan": {
+              "$comment": "VulkanSettings::load (GraphicAPI/Vulkan/VulkanSettings.cpp), called once by VulkanContext::init at start-up",
+              "description": "Vulkan backend options. Read once at start-up, before a project is opened: only the global settings file applies them.",
+              "type": "object",
+              "properties": {
+                "startingDescriptorPoolConfig": {
+                  "description": "Sizes of the descriptor pool every shader, texture and framebuffer allocates from. It doesn't grow: raise them if a project has many textures.",
+                  "type": "object",
+                  "properties": {
+                    "uboCount": { "description": "Uniform buffer descriptors.", "type": "integer", "minimum": 1, "default": 256 },
+                    "ssboCount": { "description": "Storage buffer descriptors.", "type": "integer", "minimum": 1, "default": 256 },
+                    "samplerCount": { "description": "Combined image sampler descriptors (each shader takes 128, each texture/framebuffer one more for ImGui).", "type": "integer", "minimum": 1, "default": 4096 },
+                    "maxSets": { "description": "Descriptor sets.", "type": "integer", "minimum": 1, "default": 512 }
+                  },
+                  "additionalProperties": false
+                },
+                "swapchain": {
+                  "type": "object",
+                  "properties": {
+                    "presentMode": {
+                      "description": "fifo: vsync. mailbox: no tearing, lowest latency. immediate: no vsync, may tear. fifoRelaxed: vsync that tears when late. Case-insensitive.",
+                      "type": "string",
+                      "enum": ["fifo", "mailbox", "immediate", "fifoRelaxed"],
+                      "default": "mailbox"
+                    },
+                    "imageCount": { "description": "Swapchain images, 0 = automatic (the surface's minimum + 1).", "type": "integer", "minimum": 0, "maximum": 8, "default": 0 }
+                  },
+                  "additionalProperties": false
+                },
+                "device": {
+                  "type": "object",
+                  "properties": {
+                    "preferDiscreteGpu": { "description": "Pick a dedicated GPU over an integrated one.", "type": "boolean", "default": true },
+                    "preferredGpuName": { "description": "Pick the GPU whose name contains this text, empty = ignored.", "type": "string", "default": "" },
+                    "validationLayers": { "description": "Enable the Vulkan validation layers (when installed).", "type": "boolean", "default": true },
+                    "validationLayerSeverity": {
+                      "description": "Lowest severity of the validation messages logged. Case-insensitive.",
+                      "type": "string",
+                      "enum": ["verbose", "info", "warning", "error"],
+                      "default": "warning"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "textures": {
+                  "type": "object",
+                  "properties": {
+                    "filter": { "description": "Texture sampling filter. Case-insensitive.", "type": "string", "enum": ["linear", "nearest"], "default": "linear" },
+                    "wrapMode": {
+                      "description": "What a texture coordinate outside [0, 1] reads. Case-insensitive.",
+                      "type": "string",
+                      "enum": ["repeat", "mirroredRepeat", "clampEdge", "clampBorder"],
+                      "default": "repeat"
+                    },
+                    "anisotropy": { "description": "Anisotropic filtering level, 0 = off. Clamped to the GPU's limit.", "type": "number", "minimum": 0, "maximum": 16, "default": 16 }
+                  },
+                  "additionalProperties": false
+                },
+                "shaders": {
+                  "type": "object",
+                  "properties": {
+                    "optimize": { "description": "Compile shaders with shaderc's performance optimizations.", "type": "boolean", "default": true }
+                  },
+                  "additionalProperties": false
+                },
+                "rendering": {
+                  "type": "object",
+                  "properties": {
+                    "backfaceCulling": { "description": "Skip the faces turned away from the camera.", "type": "boolean", "default": true },
+                    "wireframe": { "description": "Draw meshes as lines.", "type": "boolean", "default": false }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "rendering": {
+          "type": "object",
+          "properties": {
+            "clearColor": {
+              "$comment": "EditorLayer::applyLiveSettings",
+              "description": "Background color of the viewport, [r, g, b, a] from 0 to 1. Applied live.",
+              "type": "array",
+              "items": { "type": "number", "minimum": 0, "maximum": 1 },
+              "minItems": 4,
+              "maxItems": 4,
+              "default": [0, 0, 0, 1]
+            }
+          },
+          "additionalProperties": false
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "$comment": "Application::Application",
+              "description": "Lowest level logged. Debug builds only (Release has no logging). Read at start-up: only the global settings file applies it.",
+              "type": "string",
+              "enum": ["trace", "debug", "info", "warning", "error", "critical", "off"],
+              "default": "trace"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "window": {
+      "$comment": "Application::Application, VulkanContext::init",
+      "description": "The main window. Read at start-up: only the global settings file applies it.",
+      "type": "object",
+      "properties": {
+        "resizable": { "type": "boolean", "default": true },
+        "width": { "description": "In screen coordinates.", "type": "integer", "minimum": 320, "maximum": 7680, "default": 1280 },
+        "height": { "description": "In screen coordinates.", "type": "integer", "minimum": 240, "maximum": 4320, "default": 720 },
+        "title": { "description": "Empty = the application's name.", "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "editor": {
+      "description": "VectrixEditor's options.",
+      "type": "object",
+      "properties": {
+        "general": {
+          "$comment": "StartupLayer",
+          "type": "object",
+          "properties": {
+            "autoProjectRemove": { "description": "Remove the projects that no longer exist from the recent projects list.", "type": "boolean", "default": false }
+          },
+          "additionalProperties": false
+        },
+        "camera": {
+          "$comment": "EditorLayer (constructor for fov/near/far, applyLiveSettings for the speeds)",
+          "type": "object",
+          "properties": {
+            "moveSpeed": { "description": "Applied live.", "type": "number", "minimum": 0, "maximum": 100, "default": 1.5 },
+            "rotationSpeed": { "description": "Degrees per second. Applied live.", "type": "number", "minimum": 0, "maximum": 720, "default": 50 },
+            "fov": { "description": "Vertical field of view in degrees. Applied when the editor opens a project.", "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 180, "default": 50 },
+            "near": { "description": "Near clip plane. Applied when the editor opens a project.", "type": "number", "exclusiveMinimum": 0, "default": 0.1 },
+            "far": { "description": "Far clip plane. Applied when the editor opens a project.", "type": "number", "exclusiveMinimum": 0, "default": 1000 }
+          },
+          "additionalProperties": false
+        },
+        "gizmo": {
+          "$comment": "EditorLayer::applyLiveSettings",
+          "type": "object",
+          "properties": {
+            "translationSnap": { "description": "Step of a snapped move or scale (Ctrl held). Applied live.", "type": "number", "minimum": 0, "default": 0.5 },
+            "rotationSnap": { "description": "Step of a snapped rotation, in degrees. Applied live.", "type": "number", "minimum": 0, "maximum": 180, "default": 45 }
+          },
+          "additionalProperties": false
+        },
+        "contentBrowser": {
+          "$comment": "ContentBrowserPanel",
+          "description": "Applied when the editor opens a project.",
+          "type": "object",
+          "properties": {
+            "thumbnailSize": { "description": "In pixels.", "type": "number", "minimum": 48, "maximum": 160, "default": 84 },
+            "padding": { "description": "Space between thumbnails, in pixels.", "type": "number", "minimum": 0, "maximum": 64, "default": 12 }
+          },
+          "additionalProperties": false
+        },
+        "ui": {
+          "$comment": "VulkanImGuiManager::initImGui; theme also in EditorLayer::applyLiveSettings",
+          "type": "object",
+          "properties": {
+            "theme": { "description": "Applied live.", "type": "string", "enum": ["dark", "light"], "default": "dark" },
+            "docking": { "description": "Dockable panels. Read at start-up: only the global settings file applies it.", "type": "boolean", "default": true },
+            "viewports": { "description": "Panels can leave the main window. Always off on Wayland. Read at start-up: only the global settings file applies it.", "type": "boolean", "default": true },
+            "dpiScaling": { "description": "Scale the fonts with the monitor's DPI. Read at start-up: only the global settings file applies it.", "type": "boolean", "default": true },
+            "settingsCategory": { "$comment": "SettingsPanel", "description": "The category the Settings window last showed. Written by the editor.", "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "outline": {
+          "$comment": "readOutlineSettings (Settings/Outline.h)",
+          "description": "Outline of the selected entity. Applied live.",
+          "type": "object",
+          "properties": {
+            "color": { "description": "[r, g, b, a] from 0 to 1.", "type": "array", "items": { "type": "number", "minimum": 0, "maximum": 1 }, "minItems": 4, "maxItems": 4, "default": [1, 1, 1, 1] },
+            "thickness": { "type": "number", "minimum": 0, "maximum": 64, "default": 0.1 },
+            "texelSize": { "description": "[x, y] size of a sampling step.", "type": "array", "items": { "type": "number", "minimum": 0 }, "minItems": 2, "maxItems": 2, "default": [1, 1] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$comment": "No additionalProperties at the root: an application built on the engine can keep its own keys in the same file"
+}
