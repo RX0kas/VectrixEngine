@@ -18,7 +18,7 @@ namespace Vectrix {
          * @brief Build a delta time from a duration in seconds
          * @param time The elapsed time in seconds
          */
-        DeltaTime(float time = 0.0f) : m_Time(time) {}
+        DeltaTime(double time = 0.0f) : m_Time(time) {}
 
         /**
          * @brief Convert to a float, so it can be used directly in a computation
@@ -26,18 +26,20 @@ namespace Vectrix {
          * @see getSeconds
          */
 
-        operator float() const { return m_Time; }
+        operator double() const { return m_Time; }
 
         /**
          * @brief This function return how much time as past in seconds
          */
-        [[nodiscard]] float getSeconds() const { return m_Time; }
+        [[nodiscard]] double getSeconds() const { return m_Time; }
         /**
          * @brief This function return how much time as past in milliseconds
          */
-        [[nodiscard]] float getMilliseconds() const { return m_Time * 1000.0f; }
+        [[nodiscard]] double getMilliseconds() const { return m_Time * 1000.0f; }
+
+        [[nodiscard]] double getFPS() const { return 1/m_Time; }
     private:
-        float m_Time;
+        double m_Time;
     };
 }
 #endif //VECTRIXWORKSPACE_TIMESTEP_H
