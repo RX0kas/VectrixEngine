@@ -30,6 +30,22 @@ jobs:
       with:
         submodules: recursive
 
+    # A tag publishes: refuse it when the engine still says it is a work in progress, or isn't the tag's version
+    - name: Check version
+      if: github.ref_type == 'tag'
+      shell: bash
+      run: |
+        version=$(sed -n 's/^#define VC_VERSION "\(.*\)"/\1/p' Vectrix/src/Vectrix/Core/version.h)
+        echo "Engine version: ${version}, tag: ${GITHUB_REF_NAME}"
+        if [[ "${version}" == *-WIP ]]; then
+          echo "::error::${version} is still a work in progress: run 'python3 Vectrix/scripts/set_version.py --release', commit, then tag"
+          exit 1
+        fi
+        if [[ "v${version}" != "${GITHUB_REF_NAME}" ]]; then
+          echo "::error::The tag ${GITHUB_REF_NAME} doesn't match the engine version ${version}"
+          exit 1
+        fi
+
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'

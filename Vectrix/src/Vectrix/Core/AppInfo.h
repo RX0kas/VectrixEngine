@@ -159,6 +159,19 @@ namespace Vectrix {
         [[nodiscard]] static Version getEngineVersion() {
             return makeVersion(VC_VERSION_MAJOR,VC_VERSION_MINOR,VC_VERSION_PATCH);
         }
+        /**
+         * @brief This function return the engine version as text, e.g. `0.5.3`
+         * @return #VC_VERSION, ending in `-WIP` for a build of a version still in development
+         */
+        [[nodiscard]] static constexpr const char* getEngineVersionString() {
+            return VC_VERSION;
+        }
+        /**
+         * @brief Whether the engine version is still in development (#VC_VERSION_WIP)
+         */
+        [[nodiscard]] static constexpr bool isEngineVersionWip() {
+            return VC_VERSION_WIP != 0;
+        }
     private:
         void init(const std::string &appName, Version appVersion);
         std::string m_appName;

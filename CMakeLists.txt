@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.5.3 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.6.0 LANGUAGES CXX C)
 
 # GLFW and NativeFileDialog have Objective-C sources (.m) on macOS. GLFW enables OBJC in its own directory only and
 # NativeFileDialog not at all, so nfd_cocoa.m found no compile rule: enabled here, every subdirectory gets it

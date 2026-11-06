@@ -2,10 +2,16 @@
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
  *
+ * @section v0_6_0 v0.6.0 - (unreleased)
+ *
+ * ---
+ *
  * @section v0_5_3 v0.5.3 - (unreleased)
  *
  * @subsection v0_5_3_added Added
  * - Shader::parseSource is public: it splits a .vcshader into its two stages
+ * - VC_VERSION_WIP, ApplicationInfo::getEngineVersionString and ApplicationInfo::isEngineVersionWip: a version in
+ *   development ends in "-WIP" and a build of it shows it in its window title
  * @subsection v0_5_3_fixed Fixed
  * - Shaders: a line starts a stage only when it begins with `#shader vert|frag`, so the marker inside a comment
  *   no longer switches stage. Each stage keeps the file's line numbers, so compiler errors point at the
