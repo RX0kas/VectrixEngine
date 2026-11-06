@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "vcpch.h"
-#include "Vectrix/Application.h"
+#include "Vectrix/Core/DeltaTime.h"
 
 #include "Vectrix/Events/EventQueue.h"
 
@@ -180,8 +180,15 @@ namespace Vectrix {
 		 */
 		[[nodiscard]] DisplayServer getDisplayServer() const { return m_data.displayServer; }
 
-		static DeltaTime getDeltaTime() { return Application::instance().m_deltaTime; }
-		static double getFPS() { return Application::instance().m_deltaTime.getFPS(); }
+		/**
+		 * @brief Return the time the last frame took
+		 * @note Defined in Window.cpp: Application.h includes this header, so it can't be included back here
+		 */
+		static DeltaTime getDeltaTime();
+		/**
+		 * @brief Return the frames per second, from the last frame's duration
+		 */
+		static double getFPS();
 
 	private:
 		Window();

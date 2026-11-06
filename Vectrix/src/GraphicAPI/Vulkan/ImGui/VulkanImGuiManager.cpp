@@ -82,7 +82,7 @@ namespace Vectrix {
             ImGui::Text("Application name: %s",info.getAppName());
             ImGui::Text("Application version: %s",toString(info.getAppVersion()).c_str());
             ImGui::Text("Engine name: %s",ApplicationInfo::getEngineName());
-            ImGui::Text("Engine version: %s",toString(ApplicationInfo::getEngineVersion()).c_str());
+            ImGui::Text("Engine version: %s (%s)",toString(ApplicationInfo::getEngineVersion()).c_str(),ApplicationInfo::getEngineVersionString());
             ImGui::Text("FPS: %f",1/Application::instance().getDeltaTime().getSeconds());
         }
         ImGui::Separator();

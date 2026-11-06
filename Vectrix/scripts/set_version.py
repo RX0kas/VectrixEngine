@@ -4,10 +4,12 @@
 Usage: set_version.py <X.Y.Z | major | minor | patch> [--dry-run] [--force]
        set_version.py --release [--date DD-MM-YYYY] [--dry-run]
 
-The first form sets the version (or bumps one part of the current one, the lower parts going back to 0) in
-CMakeLists.txt, Vectrix/src/Vectrix/Core/version.h, Doxyfile and CLAUDE.md, and adds an empty
-"vX.Y.Z - (unreleased)" section at the top of Vectrix/src/dox/changelog.dox.
-The second form dates the current version's changelog section (today by default), once it is published.
+The first form starts a new version (or bumps one part of the current one, the lower parts going back to 0): it
+is written in CMakeLists.txt, Vectrix/src/Vectrix/Core/version.h, Doxyfile and CLAUDE.md, marked as a work in
+progress (VC_VERSION "X.Y.Z-WIP", VC_VERSION_WIP 1: a build of it says so in its window title), and an empty
+"vX.Y.Z - (unreleased)" section is added at the top of Vectrix/src/dox/changelog.dox.
+The second form, once the version is ready to publish, drops the WIP mark and dates its changelog section
+(today by default).
 
 Every file is checked before any is written: if one of them doesn't have the expected line, nothing changes.
 """
@@ -20,15 +22,18 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 VERSION_H = "Vectrix/src/Vectrix/Core/version.h"
 CHANGELOG = "Vectrix/src/dox/changelog.dox"
+VERSION = r"\d+\.\d+\.\d+(?:-WIP)?"
 
-# (file, pattern, replacement): each pattern must match exactly once. {v} is "X.Y.Z", {major} {minor} {patch} its parts
+# (file, pattern, replacement): each pattern must match exactly once. {v} is "X.Y.Z", {shown} the version the
+# engine reports ("X.Y.Z-WIP" while in progress), {wip} 1 or 0, {major} {minor} {patch} the parts of {v}
 REPLACEMENTS = [
-    ("CMakeLists.txt", r"(project\(VectrixWorkspace VERSION )\d+\.\d+\.\d+", r"\g<1>{v}"),
-    (VERSION_H, r'(#define VC_VERSION )"\d+\.\d+\.\d+"', r'\g<1>"{v}"'),
+    ("CMakeLists.txt", r"(project\(VectrixWorkspace VERSION )\d+\.\d+\.\d+", r"\g<1>{v}"),  # CMake only takes numbers
+    (VERSION_H, rf'(#define VC_VERSION )"{VERSION}"', r'\g<1>"{shown}"'),
     (VERSION_H, r"(#define VC_VERSION_MAJOR )\d+", r"\g<1>{major}"),
     (VERSION_H, r"(#define VC_VERSION_MINOR )\d+", r"\g<1>{minor}"),
     (VERSION_H, r"(#define VC_VERSION_PATCH )\d+", r"\g<1>{patch}"),
-    ("Doxyfile", r"(PROJECT_NUMBER\s*=\s*)\d+\.\d+\.\d+", r"\g<1>{v}"),
+    (VERSION_H, r"(#define VC_VERSION_WIP )[01]", r"\g<1>{wip}"),
+    ("Doxyfile", rf"(PROJECT_NUMBER\s*=\s*){VERSION}", r"\g<1>{shown}"),
     ("CLAUDE.md", r"(The root project is `VectrixWorkspace` version `)\d+\.\d+\.\d+", r"\g<1>{v}"),
 ]
 
@@ -37,11 +42,12 @@ def read(path: str) -> str:
     return (ROOT / path).read_text(encoding="utf-8")
 
 
-def current_version() -> tuple[int, int, int]:
-    match = re.search(r'#define VC_VERSION "(\d+)\.(\d+)\.(\d+)"', read(VERSION_H))
+def current_version() -> tuple[tuple[int, int, int], bool]:
+    """The version in version.h, and whether it is still a work in progress."""
+    match = re.search(r'#define VC_VERSION "(\d+)\.(\d+)\.(\d+)(-WIP)?"', read(VERSION_H))
     if not match:
         sys.exit(f"error: no VC_VERSION in {VERSION_H}")
-    return tuple(int(part) for part in match.groups())
+    return tuple(int(part) for part in match.groups()[:3]), match.group(4) is not None
 
 
 def target_version(arg: str, current: tuple[int, int, int]) -> tuple[int, int, int]:
@@ -56,6 +62,19 @@ def target_version(arg: str, current: tuple[int, int, int]) -> tuple[int, int, i
     if not match:
         sys.exit(f"error: '{arg}' is not X.Y.Z, major, minor or patch")
     return tuple(int(part) for part in match.groups())
+
+
+def with_version(files: dict[str, str], version: tuple[int, int, int], wip: bool) -> dict[str, str]:
+    major, minor, patch = version
+    v = f"{major}.{minor}.{patch}"
+    values = dict(v=v, shown=f"{v}-WIP" if wip else v, wip=int(wip), major=major, minor=minor, patch=patch)
+    for path, pattern, replacement in REPLACEMENTS:
+        text = files.get(path, read(path))
+        text, count = re.subn(pattern, replacement.format(**values), text)
+        if count != 1:
+            sys.exit(f"error: {path}: expected one match of {pattern!r}, found {count}; nothing was changed")
+        files[path] = text
+    return files
 
 
 def changelog_with_section(text: str, v: str) -> str:
@@ -82,40 +101,41 @@ def write_all(files: dict[str, str], dry_run: bool) -> None:
 
 
 def set_version(arg: str, dry_run: bool, force: bool) -> None:
-    current = current_version()
-    major, minor, patch = target_version(arg, current)
-    if (major, minor, patch) <= current and not force:
-        sys.exit(f"error: {major}.{minor}.{patch} is not after the current {'.'.join(map(str, current))} "
+    current, current_wip = current_version()
+    version = target_version(arg, current)
+    if version <= current and not force:
+        sys.exit(f"error: {'.'.join(map(str, version))} is not after the current {'.'.join(map(str, current))} "
                  f"(--force to set it anyway)")
-    v = f"{major}.{minor}.{patch}"
+    if current_wip and not force:
+        print(f"warning: {'.'.join(map(str, current))} was never released (still WIP)")
+    v = ".".join(map(str, version))
 
-    files: dict[str, str] = {}
-    for path, pattern, replacement in REPLACEMENTS:
-        text = files.get(path, read(path))
-        text, count = re.subn(pattern, replacement.format(v=v, major=major, minor=minor, patch=patch), text)
-        if count != 1:
-            sys.exit(f"error: {path}: expected one match of {pattern!r}, found {count}; nothing was changed")
-        files[path] = text
+    files = with_version({}, version, wip=True)
     files[CHANGELOG] = changelog_with_section(read(CHANGELOG), v)
-
     write_all(files, dry_run)
-    print(f"version {'.'.join(map(str, current))} -> {v}")
+    print(f"version {'.'.join(map(str, current))} -> {v}-WIP")
 
 
 def release(date: str, dry_run: bool) -> None:
-    v = ".".join(map(str, current_version()))
+    version, wip = current_version()
+    v = ".".join(map(str, version))
     text = read(CHANGELOG)
     heading = f"@section v{v.replace('.', '_')} v{v} - (unreleased)"
+    if not wip and heading not in text:
+        sys.exit(f"error: v{v} is already released")
     if heading not in text:
         sys.exit(f"error: {CHANGELOG} has no unreleased section for v{v}")
-    write_all({CHANGELOG: text.replace(heading, f"@section v{v.replace('.', '_')} v{v} - ({date})", 1)}, dry_run)
-    print(f"v{v} dated {date}")
+
+    files = with_version({}, version, wip=False)
+    files[CHANGELOG] = text.replace(heading, f"@section v{v.replace('.', '_')} v{v} - ({date})", 1)
+    write_all(files, dry_run)
+    print(f"v{v} released, dated {date}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Change the Vectrix engine version in every file that holds it.")
     parser.add_argument("version", nargs="?", help="X.Y.Z, or major/minor/patch to bump that part")
-    parser.add_argument("--release", action="store_true", help="date the current version's changelog section")
+    parser.add_argument("--release", action="store_true", help="drop the WIP mark and date the changelog section")
     parser.add_argument("--date", default=datetime.date.today().strftime("%d-%m-%Y"), help="DD-MM-YYYY, for --release")
     parser.add_argument("--dry-run", action="store_true", help="show the files that would change, write nothing")
     parser.add_argument("--force", action="store_true", help="allow a version that isn't after the current one")

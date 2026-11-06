@@ -47,7 +47,8 @@ namespace Vectrix {
         const ApplicationInfo appInfo = Application::getAppInfo();
         m_outputStream << R"("profiler_version": ")" << VC_PROFILER_VERSION << "\",";
         m_outputStream << R"("engine_name": ")" << ApplicationInfo::getEngineName() << "\",";
-        m_outputStream << R"("engine_build": ")" << toString(ApplicationInfo::getEngineVersion()) << "\",";
+        m_outputStream << R"("engine_build": ")" << toString(ApplicationInfo::getEngineVersion())
+                       << (ApplicationInfo::isEngineVersionWip() ? "-WIP" : "") << "\",";
         m_outputStream << R"("app_name": ")" << appInfo.getAppName() << "\",";
         m_outputStream << R"("app_build": ")" << toString(appInfo.getAppVersion()) << "\",";
         const char* rendererAPI = RendererAPI::getAPI()==RendererAPI::API::Vulkan ? "Vulkan" : "None";

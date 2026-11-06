@@ -759,7 +759,7 @@ namespace Vectrix {
     		if (glm::length(moveDir) > 0.0f && !ctrlDown) {
     			moveDir = glm::normalize(moveDir);
 
-    			glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * dt.getSeconds();
+    			glm::vec3 delta = (right * moveDir.x + forward * moveDir.z + up * moveDir.y) * m_cameraMoveSpeed * static_cast<float>(dt.getSeconds()); // glm vectors are float, DeltaTime is double
 
     			m_camera->m_position = m_camera->m_position + delta;
     		}

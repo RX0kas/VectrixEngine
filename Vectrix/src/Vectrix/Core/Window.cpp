@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "Vectrix/Application.h"
+
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Events/KeyEvent.h"
 #include "Vectrix/Events/MouseEvent.h"
@@ -68,6 +70,15 @@ namespace Vectrix {
 			data->eventQueue->post<T>(std::forward<Args>(args)...);
 	}
 
+	// A build of an engine version still in development says so in the title, so it can't pass for a release.
+	// Only on screen: getTitle gives back the title the application set
+	static std::string shownTitle(const std::string& title) {
+		if constexpr (ApplicationInfo::isEngineVersionWip())
+			return std::format("{} [Vectrix {}]", title, ApplicationInfo::getEngineVersionString());
+		else
+			return title;
+	}
+
 	void Window::init(const WindowAttributes& attributes) {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Creating window {0} ({1}, {2})", Application::getAppInfo().getAppName(), attributes.width, attributes.height);
@@ -85,7 +96,7 @@ namespace Vectrix {
 
 
 		glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
-		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), m_data.title.c_str(), nullptr, nullptr);
+		m_window = glfwCreateWindow(static_cast<int>(attributes.width), static_cast<int>(attributes.height), shownTitle(m_data.title).c_str(), nullptr, nullptr);
 		if (m_window == nullptr) {
 			VC_CORE_CRITICAL("Failed to create the GLFW window");
 			return;
@@ -180,9 +191,17 @@ namespace Vectrix {
 		m_context = std::unique_ptr<GraphicsContext>(createGraphicContext(m_window));
 	}
 
+	DeltaTime Window::getDeltaTime() {
+		return Application::instance().m_deltaTime;
+	}
+
+	double Window::getFPS() {
+		return Application::instance().m_deltaTime.getFPS();
+	}
+
 	void Window::setTitle(const std::string &title) {
-		m_data.title = title; // so getTitle reports what is shown
-		glfwSetWindowTitle(m_window,title.c_str());
+		m_data.title = title; // so getTitle reports what was set, without the WIP mark
+		glfwSetWindowTitle(m_window,shownTitle(title).c_str());
 	}
 
 	void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
