@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "vcpch.h"
+#include "Vectrix/Application.h"
 
 #include "Vectrix/Events/EventQueue.h"
 
@@ -178,6 +179,10 @@ namespace Vectrix {
 		 * @see DisplayServer
 		 */
 		[[nodiscard]] DisplayServer getDisplayServer() const { return m_data.displayServer; }
+
+		static DeltaTime getDeltaTime() { return Application::instance().m_deltaTime; }
+		static double getFPS() { return Application::instance().m_deltaTime.getFPS(); }
+
 	private:
 		Window();
 

@@ -203,6 +203,7 @@ namespace Vectrix {
 		void PushOverlay() { PushOverlay(std::make_shared<T>()); }
 	private:
 		friend class VulkanImGuiManager;
+		friend class Window;
 		friend int ::main(int argc, char** argv);
 		void renderImGui();
 		void run();
