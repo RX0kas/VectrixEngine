@@ -7,6 +7,12 @@
 #include <fstream>
 #include "Vectrix/Core/CommandLine.h"
 #include "Vectrix/Utils/Path.h"
+#include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Rendering/Mesh/ObjLoader.h"
+#include "Vectrix/Rendering/Shaders/Shader.h"
+#include "Vectrix/Threading/BackgroundWorker.h"
+#include "Vectrix/Threading/JobSystem.h"
+#include "Vectrix/Threading/Thread.h"
 
 namespace Vectrix {
     AssetsManager* AssetsManager::s_instance = nullptr;
@@ -65,6 +71,9 @@ namespace Vectrix {
     }
 
     AssetsManager::~AssetsManager() {
+        // The Application waited for the jobs (JobSystem::waitIdle): what they finished is dropped
+        m_finished.clear();
+        m_loading.clear();
         m_shaderManager.reset();
         m_textureManager.reset();
         m_meshManager.reset();
@@ -90,8 +99,11 @@ namespace Vectrix {
         s_assetsPath = path;
         // Ids are relative to the folder: another project's "shaders/a.vcshader" would otherwise be taken for
         // (or collide with) the previous project's
-        if (!sameFolder && s_instance)
+        if (!sameFolder && s_instance) {
             s_instance->forgetProjectAssets();
+            // A load still running for the previous folder delivers its asset but doesn't register it
+            ++s_instance->m_assetsFolderGeneration;
+        }
     }
 
     std::optional<std::string> AssetsManager::getProjectAssetId(const std::filesystem::path& path) {
@@ -257,3 +269,155 @@ namespace Vectrix {
         return UNKNOWN;
     }
 } // Vectrix
+namespace Vectrix {
+    std::shared_ptr<detail::AssetLoadState> AssetsManager::startLoad(const std::string& path, const AssetType type) {
+        VC_PROFILER_FUNCTION();
+        VC_CORE_ASSERT_MAIN_THREAD();
+        auto state = std::make_shared<detail::AssetLoadState>();
+        const auto [file, id, inAssetsFolder] = resolve(path);
+        state->type = type;
+        state->id = id;
+        state->cacheKey = toGenericUtf8(file);
+        state->inAssetsFolder = inAssetsFolder;
+        state->assetsFolderGeneration = m_assetsFolderGeneration;
+
+        const auto finished = [&state](const VectrixResult result, std::shared_ptr<void> asset) {
+            state->done = true;
+            state->result = result;
+            state->asset = std::move(asset);
+            return state;
+        };
+        if (!std::filesystem::exists(file))
+            return finished(NOT_FOUND, nullptr);
+        if (getAssetType(file) != type)
+            return finished(WRONG_TYPE, nullptr);
+
+        if (const auto it = m_cache.find(state->cacheKey); it != m_cache.end()) {
+            // Registered under its id again if the type's manager was cleared, as load does
+            switch (type) {
+                case TEXTURE: if (!m_textureManager->m_cache.contains(id)) m_textureManager->add(id, std::static_pointer_cast<Texture>(it->second)); break;
+                case SHADER: if (!m_shaderManager->exist(id)) m_shaderManager->add(id, std::static_pointer_cast<Shader>(it->second)); break;
+                case MESH: if (!m_meshManager->exist(id)) m_meshManager->add(id, std::static_pointer_cast<Mesh>(it->second)); break;
+                default: break;
+            }
+            return finished(SUCCESS, it->second);
+        }
+        if (const auto it = m_loading.find(state->cacheKey); it != m_loading.end())
+            return it->second;
+
+        m_loading.emplace(state->cacheKey, state);
+        // The job only gets what it reads: the state's fields set above, and the file
+        state->job = JobSystem::get().submit([this, state, file = toUtf8(file)] {
+            VC_PROFILER_SCOPE("AssetsManager load job");
+            std::function<std::pair<VectrixResult, std::shared_ptr<void>>()> finish;
+            try {
+                switch (state->type) {
+                    case TEXTURE: {
+                        // Decoded, uploaded and given its ImGui descriptor here: the device allows it on any thread
+                        std::shared_ptr<Texture> texture = Texture::create(state->id, file);
+                        finish = [texture] { return std::pair<VectrixResult, std::shared_ptr<void>>{texture ? SUCCESS : FORMATING_ERROR, texture}; };
+                        break;
+                    }
+                    case SHADER: {
+                        // Compiled and its pipeline built here
+                        std::shared_ptr<Shader> shader = Shader::create(state->id, file, getTinyObjLayout());
+                        finish = [shader] { return std::pair<VectrixResult, std::shared_ptr<void>>{shader ? SUCCESS : FORMATING_ERROR, shader}; };
+                        break;
+                    }
+                    case MESH: {
+                        // Only parsed here: its buffers come from the MeshRegistry, which is the main thread's
+                        auto vertices = std::make_shared<std::vector<Vertex>>();
+                        auto indices = std::make_shared<std::vector<uint32_t>>();
+                        const bool parsed = loadOBJ(file, *vertices, *indices);
+                        finish = [parsed, vertices, indices, id = state->id]() -> std::pair<VectrixResult, std::shared_ptr<void>> {
+                            if (!parsed)
+                                return {FORMATING_ERROR, nullptr};
+                            auto mesh = std::make_shared<Mesh>(*vertices, *indices);
+                            mesh->m_id = id;
+                            return {SUCCESS, mesh};
+                        };
+                        break;
+                    }
+                    default:
+                        finish = [] { return std::pair<VectrixResult, std::shared_ptr<void>>{UNKNOWN_TYPE, nullptr}; };
+                }
+            } catch (const std::exception& exception) {
+                VC_CORE_ERROR_NO_EXIT("Loading {} failed: {}", state->id, exception.what());
+                finish = [] { return std::pair<VectrixResult, std::shared_ptr<void>>{UNKNOWN_ERROR, nullptr}; };
+            }
+            state->finish = std::move(finish);
+            {
+                const std::scoped_lock lock(m_finishedMutex);
+                m_finished.push_back(state);
+            }
+            detail::wakeMainLoop();
+        });
+        return state;
+    }
+
+    void AssetsManager::processLoadedAssets() {
+        VC_PROFILER_FUNCTION();
+        std::vector<std::shared_ptr<detail::AssetLoadState>> finished;
+        {
+            const std::scoped_lock lock(m_finishedMutex);
+            finished.swap(m_finished);
+        }
+        for (const std::shared_ptr<detail::AssetLoadState>& state : finished)
+            finishLoad(state);
+    }
+
+    void AssetsManager::finishLoad(const std::shared_ptr<detail::AssetLoadState>& state) {
+        if (state->done)
+            return;
+        auto [result, asset] = state->finish();
+        state->finish = nullptr;
+        if (const auto it = m_loading.find(state->cacheKey); it != m_loading.end() && it->second == state)
+            m_loading.erase(it);
+
+        // Registered as load registers it, unless the assets folder changed meanwhile: its id meant the previous
+        // folder's file. A failure isn't cached, so a fixed file can be loaded again
+        if (result == SUCCESS && state->assetsFolderGeneration == m_assetsFolderGeneration && !m_cache.contains(state->cacheKey)) {
+            m_cache.emplace(state->cacheKey, asset);
+            switch (static_cast<AssetType>(state->type)) {
+                case TEXTURE: m_textureManager->add(state->id, std::static_pointer_cast<Texture>(asset)); break;
+                case SHADER: if (!m_shaderManager->exist(state->id)) m_shaderManager->add(state->id, std::static_pointer_cast<Shader>(asset)); break;
+                case MESH: if (!m_meshManager->exist(state->id)) m_meshManager->add(state->id, std::static_pointer_cast<Mesh>(asset)); break;
+                default: break;
+            }
+            if (state->inAssetsFolder)
+                m_projectAssets.push_back({static_cast<AssetType>(state->type), state->id, state->cacheKey});
+        }
+
+        state->done = true;
+        state->result = result;
+        state->asset = std::move(asset);
+        // Moved out first: a callback may start other loads, or wait for one
+        std::vector<std::function<void()>> callbacks = std::move(state->callbacks);
+        state->callbacks.clear();
+        for (std::function<void()>& callback : callbacks)
+            callback();
+    }
+
+    void AssetsManager::waitForRunningLoad(const std::string& cacheKey) {
+        if (!s_instance)
+            return;
+        const auto it = s_instance->m_loading.find(cacheKey);
+        if (it == s_instance->m_loading.end())
+            return;
+        const std::shared_ptr<detail::AssetLoadState> state = it->second; // the map entry goes when it finishes
+        detail::waitForAssetLoad(state);
+    }
+
+    namespace detail {
+        void waitForAssetLoad(const std::shared_ptr<AssetLoadState>& state) {
+            VC_PROFILER_FUNCTION();
+            VC_CORE_ASSERT_MAIN_THREAD();
+            if (state->done)
+                return;
+            // Runs queued jobs meanwhile, this one included if no worker took it yet
+            JobSystem::get().wait(state->job);
+            AssetsManager::instance().processLoadedAssets();
+            VC_CORE_ASSERT(state->done, "Asset load {} not finished after its job", state->id);
+        }
+    }
+}

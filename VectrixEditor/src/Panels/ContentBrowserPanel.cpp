@@ -933,9 +933,11 @@ namespace Vectrix {
 
         std::shared_ptr<Texture> icon = isDirectory ? m_directoryIcon : m_fileIcon;
         if (type == AssetType::TEXTURE) {
-            auto t = AssetsManager::load<Texture>(toUtf8(relativePath));
-            if (t.first == SUCCESS)
-                icon = t.second;
+            // Loaded on the workers: a folder of big images no longer freezes the editor, each thumbnail shows the
+            // file icon until its texture is there. Cheap once loaded (a cache lookup, as load was)
+            const AssetLoad<Texture> thumbnail = AssetsManager::loadAsync<Texture>(toUtf8(relativePath));
+            if (thumbnail.isReady())
+                icon = thumbnail.get();
         }
 
         const bool isCutSource = m_clipboardIsCut && path == m_clipboardPath;

@@ -35,6 +35,11 @@
  *   and every queue use is locked; the descriptor pool is locked too. A pipeline cache is shared by all pipelines
  *   and kept between runs (`<StateDir>/Vectrix/<AppName>/pipeline-cache.bin`). The two stages of a shader compile
  *   at the same time
+ * - AssetsManager::loadAsync<T> and AssetLoad<T>: an asset loads on the worker threads (a texture is decoded and
+ *   uploaded, a shader compiled, a mesh parsed there) and is registered at the start of a frame; isReady, get,
+ *   then and wait. Asking twice for a file being loaded gives the same load, and load() on it waits for it
+ * - Opening a scene loads all its assets at the same time on the workers, instead of one after the other
+ * - Editor: the content browser's thumbnails load in the background, showing the file icon until they are there
  * @subsection v0_6_0_changed Changed
  * - The profiler only records when asked (`--vc-profile`), into `<StateDir>/Vectrix/<AppName>/profiles/`, no
  *   longer into the working directory on every run of a Debug build

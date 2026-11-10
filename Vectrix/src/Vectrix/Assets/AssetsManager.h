@@ -14,6 +14,13 @@
 #include "Vectrix/Utils/Result.h"
 #include "Vectrix/Utils/Path.h"
 #include "Vectrix/Assets/AssetFingerprint.h"
+#include "Vectrix/Assets/AssetLoad.h"
+
+#include <cstdint>
+#include <type_traits>
+#include <mutex>
+#include <unordered_map>
+#include <vector>
 
 /**
  * @file AssetsManager.h
@@ -87,6 +94,38 @@ namespace Vectrix {
         static std::pair<VectrixResult, std::shared_ptr<T>> load(const std::filesystem::path& path)
         {
             return load<T>(toUtf8(path));
+        }
+
+        /**
+         * @brief Start loading an asset on the worker threads, and return at once
+         *
+         * The file is read and decoded on a worker (a texture is also uploaded and a shader compiled there); the
+         * asset is registered on the main thread at the start of a frame, like load would have. Asking again for
+         * a file being loaded gives the same load, and asking for one already loaded gives a handle that is
+         * already done. load() on a file being loaded waits for that load.
+         * @tparam T Texture, Shader or Mesh
+         * @param path As for load
+         * @return The handle telling when the asset is there
+         * @note Main thread only
+         * @see AssetLoad
+         */
+        template<typename T>
+        static AssetLoad<T> loadAsync(const std::string& path) {
+            return AssetLoad<T>(s_instance->startLoad(path, assetTypeOf<T>()));
+        }
+
+        template<typename T>
+        static AssetLoad<T> loadAsync(const std::filesystem::path& path) {
+            return loadAsync<T>(toUtf8(path));
+        }
+
+        /// @brief The AssetType of an asset class
+        template<typename T>
+        static constexpr AssetType assetTypeOf() {
+            if constexpr (std::is_same_v<T, Texture>) return TEXTURE;
+            else if constexpr (std::is_same_v<T, Shader>) return SHADER;
+            else if constexpr (std::is_same_v<T, Mesh>) return MESH;
+            else static_assert(sizeof(T) == 0, "Only Texture, Shader and Mesh load through the AssetsManager");
         }
 
 
@@ -244,6 +283,24 @@ namespace Vectrix {
 
         friend class TextureManager;
         friend class ShaderManager;
+        friend class Application;
+        friend void detail::waitForAssetLoad(const std::shared_ptr<detail::AssetLoadState>& state);
+
+        /// The load of a file: a finished one at once (in the cache, missing, wrong type), the one already
+        /// running for it, or a new one started on the job system
+        std::shared_ptr<detail::AssetLoadState> startLoad(const std::string& path, AssetType type);
+        /// On the main thread, for each load whose job is done: what's left of it, then the registration
+        /// (Application calls it every frame, waitForAssetLoad when it has to)
+        void processLoadedAssets();
+        void finishLoad(const std::shared_ptr<detail::AssetLoadState>& state);
+        /// Wait for the load of this file if one runs (load<T> calls it so a file isn't loaded twice)
+        static void waitForRunningLoad(const std::string& cacheKey);
+
+        std::unordered_map<std::string, std::shared_ptr<detail::AssetLoadState>> m_loading; ///< By cacheKey, main thread
+        std::mutex m_finishedMutex;
+        std::vector<std::shared_ptr<detail::AssetLoadState>> m_finished; ///< Jobs done, waiting for processLoadedAssets
+        std::uint64_t m_assetsFolderGeneration = 0; ///< Incremented when the assets folder changes
+
         Cache<std::string, std::shared_ptr<void>> m_cache;
         std::vector<ProjectAsset> m_projectAssets;
 
@@ -278,6 +335,7 @@ namespace Vectrix {
         }
 
         const std::string cacheKey = toGenericUtf8(p);
+        waitForRunningLoad(cacheKey);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto texture = std::static_pointer_cast<Texture>(it->second);
@@ -305,6 +363,7 @@ namespace Vectrix {
         }
 
         const std::string cacheKey = toGenericUtf8(p);
+        waitForRunningLoad(cacheKey);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto shader = std::static_pointer_cast<Shader>(it->second);
@@ -334,6 +393,7 @@ namespace Vectrix {
         }
 
         const std::string cacheKey = toGenericUtf8(p);
+        waitForRunningLoad(cacheKey);
         auto it = s_instance->m_cache.find(cacheKey);
         if (it != s_instance->m_cache.end()) {
             auto mesh = std::static_pointer_cast<Mesh>(it->second);

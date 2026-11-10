@@ -249,6 +249,8 @@ namespace Vectrix {
 
 			// What other threads handed over (runOnMainThread), before the events: it may post some
 			runMainThreadTasks();
+			// The assets the workers finished loading (AssetsManager::loadAsync) are registered
+			m_assetsManager->processLoadedAssets();
 
 			// What was posted since the last frame, the input polled at its end included
 			m_eventQueue.dispatch([this](Event& event) { dispatchEvent(event); });

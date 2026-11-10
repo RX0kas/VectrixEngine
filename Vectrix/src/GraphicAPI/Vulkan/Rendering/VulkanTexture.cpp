@@ -13,7 +13,7 @@
 
 namespace Vectrix {
 
-    uint32_t VulkanTexture::s_numberTexture = 1;
+    std::atomic<uint32_t> VulkanTexture::s_numberTexture{1};
 
     static VkDescriptorSet createImGuiTextureDescriptor(Device& device, VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout) {
         VkDescriptorSetLayout layout = ImGui_ImplVulkan_GetTextureDescriptorSetLayout();
