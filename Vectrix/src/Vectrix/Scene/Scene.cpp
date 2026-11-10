@@ -158,6 +158,10 @@ namespace Vectrix {
 
     }
 
+    void Scene::OnFixedUpdate(DeltaTime fixedDt) {
+
+    }
+
     void Scene::OnRender() {
         auto view = m_registry.view<MeshRendererComponent, TransformComponent>();
 

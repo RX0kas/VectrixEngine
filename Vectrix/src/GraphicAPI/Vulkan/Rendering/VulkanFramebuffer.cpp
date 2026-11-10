@@ -15,7 +15,7 @@ namespace Vectrix {
         allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = &layout;
 
-        if (vkAllocateDescriptorSets(device.device(), &allocInfo, &descriptorSet) != VK_SUCCESS) {
+        if (device.allocateDescriptorSets(allocInfo, &descriptorSet) != VK_SUCCESS) {
             VC_CORE_ERROR("Failed to allocate ImGui framebuffer descriptor set");
             return VK_NULL_HANDLE;
         }
@@ -26,7 +26,7 @@ namespace Vectrix {
 
     static void destroyImGuiTextureDescriptor(Device& device, VkDescriptorSet descriptorSet) {
         if (descriptorSet == VK_NULL_HANDLE) return;
-        vkFreeDescriptorSets(device.device(), device.descriptorPool(), 1, &descriptorSet);
+        device.freeDescriptorSets(1, &descriptorSet);
     }
 
     VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification &spec) : m_device(VulkanContext::instance().getDevice()), m_specification(spec) {

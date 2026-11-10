@@ -29,6 +29,7 @@
 #pragma once
 #ifndef IMGUI_DISABLE
 #include "imgui.h"      // IMGUI_IMPL_API
+#include <mutex>         // Vectrix: ImGui_ImplVulkan_InitInfo::QueueMutex
 #include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 
@@ -115,6 +116,7 @@ struct ImGui_ImplVulkan_InitInfo
     uint32_t                        MinImageCount;              // >= 2
     uint32_t                        ImageCount;                 // >= MinImageCount
     VkPipelineCache                 PipelineCache;              // Optional
+    std::mutex*                     QueueMutex;                 // Vectrix: optional, locked around every use of Queue (other threads submit to it too)
 
     // Pipeline
     ImGui_ImplVulkan_PipelineInfo   PipelineInfoMain;           // Infos for Main Viewport (created by app/user)

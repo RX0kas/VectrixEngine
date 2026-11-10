@@ -33,7 +33,7 @@ namespace Vectrix {
     }
 
     void SwapChain::cleanup() {
-        vkDeviceWaitIdle(m_device.device());
+        m_device.waitIdle();
 
         for (const auto imageView : m_swapChainImageViews) {
             vkDestroyImageView(m_device.device(), imageView, nullptr);
@@ -109,7 +109,7 @@ namespace Vectrix {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        if (vkQueueSubmit(m_device.graphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]) != VK_SUCCESS) {
+        if (m_device.submit(submitInfo, m_inFlightFences[m_currentFrame]) != VK_SUCCESS) {
             VC_CORE_CRITICAL("vkQueueSubmit failed");
         }
 
@@ -125,7 +125,7 @@ namespace Vectrix {
         presentInfo.pSwapchains = &m_swapChain;
         presentInfo.pImageIndices = imageIndex;
 
-        return vkQueuePresentKHR(m_device.presentQueue(), &presentInfo);
+        return m_device.present(presentInfo);
     }
 
 

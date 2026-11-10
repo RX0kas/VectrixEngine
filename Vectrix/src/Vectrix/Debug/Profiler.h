@@ -6,8 +6,10 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <string_view>
 #include <thread>
 
+#include <unordered_map>
 #include <unordered_set>
 #include "Vectrix/Application.h"
 #include "Vectrix/Utils/Json.h"
@@ -19,7 +21,7 @@
  * Written into every profile file, so an old one can be told apart from a current one.
  * @ingroup debugtools
  */
-#define VC_PROFILER_VERSION "1.1"
+#define VC_PROFILER_VERSION "1.2"
 
 /**
 * @file Profiler.h
@@ -130,12 +132,21 @@ namespace Vectrix {
             static Profiler instance;
             return instance;
         }
+
+        /// @cond INTERNAL
+        // Name the calling thread in the profile files (setCurrentThreadName calls it). Kept across sessions, and
+        // written at the end of each one, under "threads"
+        void setThreadName(std::string_view name);
+        // The id a thread's results are written with ("threadID")
+        static uint32_t currentThreadID();
+        /// @endcond
     private:
         Profiler() : m_currentSession(nullptr), m_profileCount(0) {}
         friend class Timer;
 
         std::mutex m_mutex{};
         std::unordered_set<Timer*> m_activeTimers{};
+        std::unordered_map<uint32_t, std::string> m_threadNames{}; ///< By threadID, see setThreadName
 
         void registerTimer(Timer* timer);
         void unregisterTimer(Timer* timer);
@@ -150,11 +161,7 @@ namespace Vectrix {
             m_outputStream.flush();
         }
 
-        void writeFooter() {
-            if (!m_outputStream.is_open()) return;
-            m_outputStream << "]}";
-            m_outputStream.flush();
-        }
+        void writeFooter();
 
         void writeData();
 

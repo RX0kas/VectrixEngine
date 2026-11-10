@@ -49,6 +49,14 @@ namespace Vectrix {
         void OnUpdate(DeltaTime dt);
 
         /**
+         * @brief Advance the scene's simulation (physics) by one fixed step
+         * @param fixedDt The fixed step (Application::getFixedTimestep)
+         * @note Called by the layer owning the scene, from its Layer::OnFixedUpdate. Nothing to simulate yet: the
+         *       physics engine will step its world here
+         */
+        void OnFixedUpdate(DeltaTime fixedDt);
+
+        /**
          * @brief Draw every entity of the scene that can be rendered
          * @note Called by the layer owning the scene, inside its render callback
          */

@@ -13,7 +13,13 @@
 #include "Vectrix/Events/WindowEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
+#include "Core/FixedTimestep.h"
+#include "Threading/JobSystem.h"
 #include "Utils/Json.h"
+
+#include <functional>
+#include <mutex>
+#include <vector>
 
 
 /**
@@ -182,6 +188,42 @@ namespace Vectrix {
 		}
 
 		/**
+		 * @brief Run a function on the main thread, at the start of the next frame (before the events are sent)
+		 *
+		 * For a worker or a job whose result has to reach what is main thread only (ImGui, the scene, the
+		 * assets managers...). The functions run in the order they were given, and the loop is woken if it waits.
+		 * @param function What to run. It must not use what may be gone by the next frame (capture by value,
+		 *                 or a weak_ptr)
+		 * @note Any thread. From the main thread too: it then runs next frame, not now
+		 */
+		void runOnMainThread(std::function<void()> function);
+
+		/**
+		 * @brief Wake the main loop if it is waiting for events (e.g. while the window is minimized)
+		 * @note Any thread
+		 */
+		void wakeUp() const;
+
+		/**
+		 * @brief The engine's pool of worker threads
+		 * @see JobSystem
+		 */
+		[[nodiscard]] JobSystem& jobSystem() const { return *m_jobSystem; }
+
+		/**
+		 * @brief The time between two Layer::OnFixedUpdate calls, in seconds (`engine.physics.fixedTimestep`)
+		 */
+		[[nodiscard]] double getFixedTimestep() const { return m_fixedStep.step(); }
+
+		/**
+		 * @brief How far the frame being drawn is between the last fixed step and the next one, from 0 to 1
+		 *
+		 * To draw something the fixed steps move without it stuttering: show
+		 * `mix(previousState, currentState, alpha)`.
+		 */
+		[[nodiscard]] double getFixedStepAlpha() const { return m_fixedStep.alpha(); }
+
+		/**
 		 * @brief This function return the current Window instance
 		 */
 		[[nodiscard]] Window &window() const { return *m_window; }
@@ -243,6 +285,18 @@ namespace Vectrix {
 		Layer* m_oldLayer = nullptr; ///< The layer switchToLayer replaces, only compared (it's still in the stack until then)
 		JsonObject m_dataToNextLayer;
 
+
+		/// First: destroyed after everything else, which may still wait for jobs while being destroyed
+		std::unique_ptr<JobSystem> m_jobSystem;
+		/// See runOnMainThread
+		std::mutex m_mainThreadTasksMutex;
+		std::vector<std::function<void()>> m_mainThreadTasks;
+		std::vector<std::function<void()>> m_mainThreadTasksRunning; ///< Main thread only
+		void runMainThreadTasks();
+
+		FixedTimestep m_fixedStep; ///< engine.physics.fixedTimestep / maxStepsPerFrame
+		/// Run the fixed steps the frame's time adds up to
+		void runFixedSteps();
 
 		EventListener m_eventObservers; ///< See observeEvents; notified apart, after each event
 		EventQueue m_eventQueue; ///< Before m_window, which posts to it, so it is destroyed after

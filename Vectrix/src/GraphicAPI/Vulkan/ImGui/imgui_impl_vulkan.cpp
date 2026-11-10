@@ -333,6 +333,18 @@ static ImGui_ImplVulkan_Data* ImGui_ImplVulkan_GetBackendData()
     return ImGui::GetCurrentContext() ? (ImGui_ImplVulkan_Data*)ImGui::GetIO().BackendRendererUserData : nullptr;
 }
 
+// Vectrix: run a call that uses the queue (or vkDeviceWaitIdle, which needs every queue) with InitInfo::QueueMutex
+// held, when there is one: the engine's other threads submit to the same queue
+template<typename F>
+static auto ImGui_ImplVulkan_WithQueueLocked(F&& call)
+{
+    ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
+    std::unique_lock<std::mutex> lock;
+    if (bd && bd->VulkanInitInfo.QueueMutex)
+        lock = std::unique_lock<std::mutex>(*bd->VulkanInitInfo.QueueMutex);
+    return call();
+}
+
 static uint32_t ImGui_ImplVulkan_MemoryType(VkMemoryPropertyFlags properties, uint32_t type_bits)
 {
     ImGui_ImplVulkan_Data* bd = ImGui_ImplVulkan_GetBackendData();
@@ -807,11 +819,11 @@ void ImGui_ImplVulkan_UpdateTexture(ImTextureData* tex)
             end_info.pCommandBuffers = &bd->TexCommandBuffer;
             err = vkEndCommandBuffer(bd->TexCommandBuffer);
             check_vk_result(err);
-            err = vkQueueSubmit(v->Queue, 1, &end_info, VK_NULL_HANDLE);
+            err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkQueueSubmit(v->Queue, 1, &end_info, VK_NULL_HANDLE); });
             check_vk_result(err);
         }
 
-        err = vkQueueWaitIdle(v->Queue); // FIXME-OPT: Suboptimal!
+        err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkQueueWaitIdle(v->Queue); }); // FIXME-OPT: Suboptimal!
         check_vk_result(err);
         vkDestroyBuffer(v->Device, upload_buffer, v->Allocator);
         vkFreeMemory(v->Device, upload_buffer_memory, v->Allocator);
@@ -825,10 +837,8 @@ void ImGui_ImplVulkan_UpdateTexture(ImTextureData* tex)
 
 static std::pair<std::vector<uint32_t>,std::vector<uint32_t>> CompileImGuiShader() {
     auto src = Vectrix::Shader::parseSource(Vectrix::EmbeddedShaders::k_ImguiShader);
-    Vectrix::VulkanShaderCompiler &compiler = Vectrix::VulkanContext::instance().getCompiler();
-    auto vert = compiler.compile_file("vc_imgui_vert", Vectrix::VertexShader,src.first.c_str(),true);
-    auto frag = compiler.compile_file("vc_imgui_frag", Vectrix::FragmentShader,src.second.c_str(),true);
-    return {vert,frag};
+    const Vectrix::VulkanShaderCompiler &compiler = Vectrix::VulkanContext::instance().getCompiler();
+    return compiler.compileStages("vc_imgui", src.first.c_str(), src.second.c_str(), true);
 }
 
 static void ImGui_ImplVulkan_CreateShaderModules(VkDevice device, const VkAllocationCallbacks* allocator)
@@ -1298,7 +1308,7 @@ void ImGui_ImplVulkan_SetMinImageCount(uint32_t min_image_count)
 
     IM_ASSERT(0); // FIXME-VIEWPORT: Unsupported. Need to recreate all swap chains!
     ImGui_ImplVulkan_InitInfo* v = &bd->VulkanInitInfo;
-    VkResult err = vkDeviceWaitIdle(v->Device);
+    VkResult err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkDeviceWaitIdle(v->Device); });
     check_vk_result(err);
     ImGui_ImplVulkanH_DestroyAllViewportsRenderBuffers(v->Device, v->Allocator);
 
@@ -1577,7 +1587,7 @@ void ImGui_ImplVulkanH_CreateWindowSwapChain(VkPhysicalDevice physical_device, V
     VkResult err;
     VkSwapchainKHR old_swapchain = wd->Swapchain;
     wd->Swapchain = VK_NULL_HANDLE;
-    err = vkDeviceWaitIdle(device);
+    err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkDeviceWaitIdle(device); });
     check_vk_result(err);
 
     // We don't use ImGui_ImplVulkanH_DestroyWindow() because we want to preserve the old swapchain to create the new one.
@@ -1803,7 +1813,7 @@ void ImGui_ImplVulkanH_CreateOrResizeWindow(VkInstance instance, VkPhysicalDevic
 
     VkQueue queue;
     vkGetDeviceQueue(device, queue_family, 0, &queue);
-    err = vkQueueSubmit(queue, 1, &submit_info, fence);
+    err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkQueueSubmit(queue, 1, &submit_info, fence); });
     check_vk_result(err);
     err = vkWaitForFences(device, 1, &fence, VK_TRUE, UINT64_MAX);
     check_vk_result(err);
@@ -1826,7 +1836,7 @@ void ImGui_ImplVulkanH_CreateOrResizeWindow(VkInstance instance, VkPhysicalDevic
 void ImGui_ImplVulkanH_DestroyWindow(VkInstance instance, VkDevice device, ImGui_ImplVulkanH_Window* wd, const VkAllocationCallbacks* allocator)
 {
     IM_UNUSED(instance);
-    vkDeviceWaitIdle(device); // FIXME: We could wait on the Queue if we had the queue in wd-> (otherwise VulkanH functions can't use globals)
+    ImGui_ImplVulkan_WithQueueLocked([&] { return vkDeviceWaitIdle(device); }); // FIXME: We could wait on the Queue if we had the queue in wd-> (otherwise VulkanH functions can't use globals)
     //vkQueueWaitIdle(bd->Queue);
 
     for (uint32_t i = 0; i < wd->ImageCount; i++)
@@ -2132,7 +2142,7 @@ static void ImGui_ImplVulkan_RenderWindow(ImGuiViewport* viewport, void*)
             check_vk_result(err);
             err = vkResetFences(v->Device, 1, &fd->Fence);
             check_vk_result(err);
-            err = vkQueueSubmit(v->Queue, 1, &info, fd->Fence);
+            err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkQueueSubmit(v->Queue, 1, &info, fd->Fence); });
             check_vk_result(err);
         }
     }
@@ -2161,7 +2171,7 @@ static void ImGui_ImplVulkan_SwapBuffers(ImGuiViewport* viewport, void*)
     info.swapchainCount = 1;
     info.pSwapchains = &wd->Swapchain;
     info.pImageIndices = &present_index;
-    err = vkQueuePresentKHR(v->Queue, &info);
+    err = ImGui_ImplVulkan_WithQueueLocked([&] { return vkQueuePresentKHR(v->Queue, &info); });
     if (err == VK_ERROR_OUT_OF_DATE_KHR)
     {
         vd->SwapChainNeedRebuild = true;

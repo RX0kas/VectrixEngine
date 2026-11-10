@@ -22,6 +22,9 @@
 #include "Vectrix/Rendering/Shaders/OutlineShader.h"
 #include "Vectrix/Scene/Entity.h"
 
+#include <algorithm>
+#include <iterator>
+
 namespace Vectrix {
 	VulkanRenderer::VulkanRenderer(Window& window, Device& device) : m_window{ window }, m_device{ device } {
 		VC_PROFILER_FUNCTION();
@@ -32,7 +35,7 @@ namespace Vectrix {
 
 	VulkanRenderer::~VulkanRenderer() {
 		VC_PROFILER_FUNCTION();
-		vkDeviceWaitIdle(m_device.device());
+		m_device.waitIdle();
 		for (auto& released : m_releasedAfterFrame)
 			released.clear();
 		m_maskFramebuffer.reset();
@@ -47,13 +50,13 @@ namespace Vectrix {
 			extent = {m_window.getWidth(),m_window.getHeight()};
 			glfwWaitEvents();
 		}
-		vkDeviceWaitIdle(m_device.device());
+		m_device.waitIdle();
 
 		if (m_swapChain == nullptr) {
 			m_swapChain = std::make_unique<SwapChain>(m_device, extent, m_vsync);
 		}
 		else {
-			vkDeviceWaitIdle(m_device.device());
+			m_device.waitIdle();
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_swapChain);
 			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain, m_vsync);
 
@@ -117,7 +120,14 @@ namespace Vectrix {
 		VkResult result = m_swapChain->acquireNextImage(&m_currentImageIndex);
 		// acquireNextImage waited on this frame slot's fence, even when it fails: the frame that last used the
 		// slot is done, and so is everything released during it
-		m_releasedAfterFrame[static_cast<size_t>(m_swapChain->getFrameIndex())].clear();
+		std::vector<std::shared_ptr<void>>& released = m_releasedAfterFrame[static_cast<size_t>(m_swapChain->getFrameIndex())];
+		released.clear();
+		{
+			// What other threads released waits for this frame too: it may have been used by any frame before it
+			const std::scoped_lock lock(m_releasedFromOtherThreadsMutex);
+			std::ranges::move(m_releasedFromOtherThreads, std::back_inserter(released));
+			m_releasedFromOtherThreads.clear();
+		}
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			recreateSwapChain();
