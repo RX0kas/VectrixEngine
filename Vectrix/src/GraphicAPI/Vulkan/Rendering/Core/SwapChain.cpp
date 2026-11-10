@@ -6,13 +6,13 @@
 
 
 namespace Vectrix {
-    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent)
-        : m_device{ deviceRef }, m_windowExtent{ extent } {
+    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, std::optional<bool> vsync)
+        : m_device{ deviceRef }, m_windowExtent{ extent }, m_vsync{ vsync } {
         init();
     }
 
-    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous)
-        : m_device{ deviceRef }, m_windowExtent{ extent }, m_oldSwapChain{ std::move(previous) } {
+    SwapChain::SwapChain(Device& deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous, std::optional<bool> vsync)
+        : m_device{ deviceRef }, m_windowExtent{ extent }, m_oldSwapChain{ std::move(previous) }, m_vsync{ vsync } {
         init();
 
         // clean up old swap chain because we no longer need it
@@ -135,7 +135,9 @@ namespace Vectrix {
         const VulkanSettings::Swapchain& scSettings = VulkanContext::settings().swapchain;
 
         const auto [format, colorSpace] = chooseSwapSurfaceFormat(formats);
-        const VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes, scSettings.presentMode);
+        const VkPresentModeKHR presentMode = m_vsync ? chooseVSyncPresentMode(presentModes, *m_vsync)
+                                                     : chooseSwapPresentMode(presentModes, scSettings.presentMode);
+        m_presentMode = presentMode;
         const VkExtent2D extent = chooseSwapExtent(capabilities);
 
         uint32_t imageCount = scSettings.imageCount != 0 ? scSettings.imageCount : capabilities.minImageCount + 1;
@@ -323,6 +325,26 @@ namespace Vectrix {
         // FIFO is the only mode the spec guarantees is always available.
         if (report) VC_CORE_WARN("Present mode '{}' not supported by the surface, falling back to fifo (V-Sync)", presentModeToString(preferred));
         return VK_PRESENT_MODE_FIFO_KHR;
+    }
+
+    VkPresentModeKHR SwapChain::chooseVSyncPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, const bool vsync) const {
+        const auto isAvailable = [&](const VkPresentModeKHR mode) {
+            return std::ranges::find(availablePresentModes, mode) != availablePresentModes.end();
+        };
+        // Reported when the request changes, not on every resize
+        const bool report = m_oldSwapChain == nullptr || m_oldSwapChain->m_vsync != m_vsync;
+        VkPresentModeKHR chosen = VK_PRESENT_MODE_FIFO_KHR; // V-Sync, always available
+        if (!vsync) {
+            // Uncapped: mailbox doesn't tear; immediate may, but V-Sync off was asked for explicitly
+            if (isAvailable(VK_PRESENT_MODE_MAILBOX_KHR))
+                chosen = VK_PRESENT_MODE_MAILBOX_KHR;
+            else if (isAvailable(VK_PRESENT_MODE_IMMEDIATE_KHR))
+                chosen = VK_PRESENT_MODE_IMMEDIATE_KHR;
+            else if (report)
+                VC_CORE_WARN("V-Sync can't be turned off: the surface only offers fifo");
+        }
+        if (report) VC_CORE_INFO("V-Sync {}, present mode: {}", vsync ? "on" : "off", presentModeToString(chosen));
+        return chosen;
     }
 
     VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const {

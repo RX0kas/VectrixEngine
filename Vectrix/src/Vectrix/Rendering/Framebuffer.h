@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include <optional>
+#include <string>
 
 #include "imgui.h"
 #include "glm/vec2.hpp"
@@ -43,6 +44,12 @@ namespace Vectrix {
          * @note Left unset, it follows the renderer's clear colour (RenderCommand::setClearColor)
          */
         std::optional<glm::vec4> clearColor;
+
+        /**
+         * @brief The name GPU debuggers (RenderDoc, Nsight Graphics) show for its images and its pass
+         * @note Empty: "Framebuffer"
+         */
+        std::string debugName;
     };
 
     /**

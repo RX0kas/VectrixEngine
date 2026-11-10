@@ -4,6 +4,7 @@
 #include "Vectrix/Settings/Outline.h"
 #include "GraphicAPI/Vulkan/Rendering/Shaders/VulkanShader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
 #include "GraphicAPI/Vulkan/VulkanRendererAPI.h"
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
@@ -49,12 +50,12 @@ namespace Vectrix {
 		vkDeviceWaitIdle(m_device.device());
 
 		if (m_swapChain == nullptr) {
-			m_swapChain = std::make_unique<SwapChain>(m_device, extent);
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent, m_vsync);
 		}
 		else {
 			vkDeviceWaitIdle(m_device.device());
 			std::shared_ptr<SwapChain> oldSwapChain = std::move(m_swapChain);
-			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain);
+			m_swapChain = std::make_unique<SwapChain>(m_device, extent, oldSwapChain, m_vsync);
 
 			if (!oldSwapChain->compareSwapFormats(*m_swapChain)) {
 				VC_CORE_ERROR("Swap chain image(or depth) format has changed");
@@ -62,6 +63,20 @@ namespace Vectrix {
 			oldSwapChain->cleanup();
 			oldSwapChain.reset();
 		}
+	}
+
+	void VulkanRenderer::setVSync(const bool enabled) {
+		if (m_vsync == enabled)
+			return;
+		m_vsync = enabled;
+		m_presentModeChanged = true;
+	}
+
+	bool VulkanRenderer::isVSync() const {
+		if (m_presentModeChanged && m_vsync)
+			return *m_vsync; // Asked this frame, the swap chain follows at its end
+		const VkPresentModeKHR mode = m_swapChain->getPresentMode();
+		return mode == VK_PRESENT_MODE_FIFO_KHR || mode == VK_PRESENT_MODE_FIFO_RELAXED_KHR;
 	}
 
 	void VulkanRenderer::cleanupSwapChain() {
@@ -150,7 +165,10 @@ namespace Vectrix {
 		// and rebuilding on every frame costs a device wait plus a new swap chain each time
 		const VkExtent2D extent = m_swapChain->getSwapChainExtent();
 		const bool sizeChanged = extent.width != m_window.getWidth() || extent.height != m_window.getHeight();
-		if (outOfDate || ((suboptimal || resized) && sizeChanged)) {
+		if (m_presentModeChanged) {
+			m_presentModeChanged = false;
+			recreateSwapChain();
+		} else if (outOfDate || ((suboptimal || resized) && sizeChanged)) {
 			VC_CORE_INFO("Recreating the swap chain ({}): {}x{} -> {}x{}", outOfDate ? "out of date" : suboptimal ? "suboptimal" : "window resized",
 				extent.width, extent.height, m_window.getWidth(), m_window.getHeight());
 			recreateSwapChain();
@@ -165,6 +183,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_ASSERT(m_isFrameStarted, "Can't call beginSwapChainRenderPass if frame is not in progress");
 		VC_CORE_ASSERT(commandBuffer == getCurrentCommandBuffer(), "Can't begin render pass on command buffer from a different frame");
+		DebugUtils::beginLabel(commandBuffer, "Swapchain pass", 0.3f, 0.8f, 0.3f); // Closed in endDynamicRendering
 
 		VkImageMemoryBarrier colorBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
 		colorBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -242,6 +261,7 @@ namespace Vectrix {
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
 			0, 0, nullptr, 0, nullptr, 1, &barrier);
+		DebugUtils::endLabel(commandBuffer);
 	}
 
 	static std::vector<std::unique_ptr<VulkanBuffer>> createIndirectBuffers() {
@@ -334,6 +354,7 @@ namespace Vectrix {
 	}
 
 	void VulkanRenderer::drawBatch(VkCommandBuffer cmd, const VulkanShader& shader, BatchInfo& batch, uint32_t frameIndex) {
+		const DebugUtils::ScopedLabel label(cmd, shader.m_name);
 		VC_CORE_ASSERT(shader.m_pipelineLayout != VK_NULL_HANDLE, "PipelineLayout is null for shader '{}'", shader.m_name);
 
 		VkDescriptorSet objectSet = batch.objectDataSSBO.descriptorSet(frameIndex);
@@ -452,6 +473,7 @@ namespace Vectrix {
 		spec.width = m_window.getWidth();
 		spec.hasDepth = false;
 		spec.clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f); // A mask: nothing drawn has to read as 0, whatever the scene clear colour
+		spec.debugName = "Outline mask";
 		m_maskFramebuffer = std::static_pointer_cast<VulkanFramebuffer>(Framebuffer::create(spec));
 	}
 

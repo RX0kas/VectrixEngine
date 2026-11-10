@@ -3,6 +3,7 @@
 
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
 #include "../Data/VulkanBuffer.h"
 
 #include "Vectrix/Debug/Profiler.h"
@@ -91,6 +92,12 @@ namespace Vectrix {
 
 
         VC_VK_CHECK(vkCreateGraphicsPipelines(m_device.device(),VK_NULL_HANDLE,1,&pipelineInfo,nullptr,&m_graphicsPipeline), "failed to create graphics pipeline");
+    }
+
+    void Pipeline::setDebugName(const std::string& name) const {
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_PIPELINE, m_graphicsPipeline, "Pipeline " + name);
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_SHADER_MODULE, m_vertShaderModule, name + " vert");
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_SHADER_MODULE, m_fragShaderModule, name + " frag");
     }
 
     void Pipeline::bind(VkCommandBuffer commandBuffer) const {

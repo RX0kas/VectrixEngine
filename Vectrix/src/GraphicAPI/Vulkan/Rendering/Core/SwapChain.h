@@ -1,6 +1,8 @@
 #pragma once
 #include "Vectrix/Core/Log.h"
 
+#include <optional>
+
 #include "Device.h"
 
 namespace Vectrix {
@@ -8,8 +10,9 @@ namespace Vectrix {
     public:
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-        SwapChain(Device& deviceRef, VkExtent2D windowExtent);
-        SwapChain(Device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous);
+        /// @param vsync Overrides the present mode of the settings: true for fifo, false for mailbox (or immediate)
+        SwapChain(Device& deviceRef, VkExtent2D windowExtent, std::optional<bool> vsync = std::nullopt);
+        SwapChain(Device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous, std::optional<bool> vsync = std::nullopt);
 
         ~SwapChain();
 
@@ -25,6 +28,8 @@ namespace Vectrix {
 	    [[nodiscard]] VkImage getDepthImage(uint32_t index) const { return m_depthImages[index]; }
         [[nodiscard]] VkFormat getSwapChainImageFormat() const { return m_swapChainImageFormat; }
         [[nodiscard]] VkExtent2D getSwapChainExtent() const { return m_swapChainExtent; }
+        /// The present mode the swap chain was created with (what the surface allowed of the one asked for)
+        [[nodiscard]] VkPresentModeKHR getPresentMode() const { return m_presentMode; }
 
         [[nodiscard]] float extentAspectRatio() const {
             return static_cast<float>(m_swapChainExtent.width) / static_cast<float>(m_swapChainExtent.height);
@@ -60,6 +65,8 @@ namespace Vectrix {
         static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, VkPresentModeKHR preferred) const;
+        /// The present mode for an explicit V-Sync request (setVSync), else the settings' one
+        VkPresentModeKHR chooseVSyncPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes, bool vsync) const;
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) const;
 
         VkFormat m_swapChainImageFormat;
@@ -78,6 +85,8 @@ namespace Vectrix {
 
         VkSwapchainKHR m_swapChain{};
 		std::shared_ptr<SwapChain> m_oldSwapChain;
+        std::optional<bool> m_vsync;
+        VkPresentModeKHR m_presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
         std::vector<VkSemaphore> m_imageAvailableSemaphores; // par frame
         std::vector<VkSemaphore> m_renderFinishedSemaphores; // par image

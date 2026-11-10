@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstring>
 
+#include "DebugUtils.h"
 #include "GraphicAPI/Vulkan/Enum_str.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Application.h"
@@ -18,6 +19,9 @@ namespace Vectrix {
 
     // Not in vulkan_core.h (it's in vulkan_beta.h), hence the literal
     static constexpr const char* k_portabilitySubsetExtensionName = "VK_KHR_portability_subset";
+
+    // Whether VK_EXT_debug_utils is enabled on the instance (getRequiredExtensions)
+    static bool s_debugUtilsEnabled = false;
 
     static bool hasInstanceExtension(const char* name) {
         uint32_t count = 0;
@@ -85,9 +89,11 @@ namespace Vectrix {
         setupDebugMessenger();
 
         volkLoadInstance(m_instance);
+        DebugUtils::init(s_debugUtilsEnabled);
 
         createSurface();
         pickPhysicalDevice();
+        DebugUtils::detectTools(m_physicalDevice);
         createLogicalDevice();
 
         // VMA
@@ -526,7 +532,10 @@ namespace Vectrix {
 
         std::vector extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (enableValidationLayers) {
+        // Debug utils also without validation: RenderDoc's and Nsight's layers offer it, and the names and labels
+        // it gives objects and passes (DebugUtils) make their captures readable
+        s_debugUtilsEnabled = enableValidationLayers || hasInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        if (s_debugUtilsEnabled) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 

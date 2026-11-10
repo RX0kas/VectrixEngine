@@ -202,6 +202,7 @@ namespace Vectrix {
 			return; // No pipeline: Shader::createFromSource reports the shader as failed
 
 		m_pipeline = std::make_unique<Pipeline>(m_device,vertCode,fragCode,pipelineConfig);
+		m_pipeline->setDebugName(m_name);
 	}
 
 	void VulkanShader::createPipelineLayout() {

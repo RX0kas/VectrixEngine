@@ -51,6 +51,8 @@ namespace Vectrix {
         void bind(VkCommandBuffer commandBuffer) const;
 
         [[nodiscard]] VkPipeline getPipeline() const { return m_graphicsPipeline; }
+        /// Name the pipeline and its shader modules for GPU debuggers (DebugUtils)
+        void setDebugName(const std::string& name) const;
         static void enableAlphaBlending(PipelineConfigInfo& configInfo);
 
     private:

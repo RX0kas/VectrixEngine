@@ -99,6 +99,12 @@ namespace Vectrix {
         static void submit(const std::shared_ptr<Shader>& shader,const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4 &modelMatrix,std::uint32_t textureIndex=0);
         void renderOutline(const std::shared_ptr<Entity>& entity, const std::shared_ptr<Framebuffer>& framebuffer);
         void resizeMask(glm::vec2 size) { m_maskFramebuffer->resize(size); }
+
+        /// Ask for V-Sync on or off: the swap chain is rebuilt with the matching present mode after this frame
+        void setVSync(bool enabled);
+        /// Whether the current present mode waits for the vertical blank (fifo or fifo relaxed)
+        [[nodiscard]] bool isVSync() const;
+        [[nodiscard]] VkPresentModeKHR getPresentMode() const { return m_swapChain->getPresentMode(); }
     private:
         friend class VulkanRendererAPI;
         friend class Renderer;
@@ -142,6 +148,8 @@ namespace Vectrix {
         Window& m_window;
         Device& m_device;
         std::shared_ptr<SwapChain> m_swapChain;
+        std::optional<bool> m_vsync; ///< setVSync's request, none to follow the settings' present mode
+        bool m_presentModeChanged = false; ///< setVSync was called: rebuild the swap chain after the frame
         std::vector<VkCommandBuffer> m_commandBuffers;
 
         uint32_t m_currentImageIndex{ 0 };

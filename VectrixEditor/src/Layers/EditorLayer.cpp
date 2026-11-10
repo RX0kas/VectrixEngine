@@ -67,6 +67,7 @@ namespace Vectrix {
     	FramebufferSpecification fbSpec;
     	fbSpec.width = 1;
     	fbSpec.height = 1;
+    	fbSpec.debugName = "Viewport";
     	m_framebuffer = Framebuffer::create(fbSpec);
 
     	m_activeScene = std::make_shared<Scene>("EditorScene");
@@ -623,7 +624,11 @@ namespace Vectrix {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Window")) {
-				if (ImGui::MenuItem("Graphics Debug", nullptr, m_graphicDebugWidgetEnable)) m_graphicDebugWidgetEnable = !m_graphicDebugWidgetEnable;
+				ImGuiLayer& imguiLayer = Application::instance().imguiLayer();
+				if (ImGui::MenuItem("Graphics Debug", "F3", imguiLayer.isGraphicsDebugVisible()))
+					imguiLayer.setGraphicsDebugVisible(!imguiLayer.isGraphicsDebugVisible());
+				if (ImGui::MenuItem("V-Sync", nullptr, Window::isVSync()))
+					Window::setVSync(!Window::isVSync());
 				ImGui::MenuItem("Settings", nullptr, &m_settingPanel->getEnable());
 				ImGui::MenuItem("Event Log", nullptr, &m_eventLogPanel->getEnable());
 
@@ -678,10 +683,6 @@ namespace Vectrix {
 			else
 				m_sceneHierarchyPanel->resetSelectedEntity();
 		}
-
-    	if (m_graphicDebugWidgetEnable) {
-    		Application::instance().imguiLayer().getManager().renderDebugGraphicWidget(m_graphicDebugWidgetEnable);
-    	}
 
     	renderErrorMessage("ERROR_LOADING_SCENE_FILE",m_lastLoadSceneFileErrorMessage);
     	renderErrorMessage("ERROR_LOADING_SCENE",m_lastLoadSceneErrorMessage);

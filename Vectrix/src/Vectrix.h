@@ -18,6 +18,7 @@
 #endif
 
 #include "Vectrix/Core/DeltaTime.h"
+#include "Vectrix/Core/EngineOptions.h"
 #include "Vectrix/Application.h"
 #include "Vectrix/Layers/Layer.h"
 

@@ -3,6 +3,7 @@
 #include "volk.h"
 #include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
 
 namespace Vectrix {
     static VkDescriptorSet createImGuiTextureDescriptor(Device& device, VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout) {
@@ -93,6 +94,14 @@ namespace Vectrix {
 
         m_descriptorSet = createImGuiTextureDescriptor(m_device, m_sampler, m_imageView,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
+        const std::string name = m_specification.debugName.empty() ? "Framebuffer" : m_specification.debugName;
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_IMAGE, m_image, name + " color");
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_IMAGE_VIEW, m_imageView, name + " color");
+        if (m_specification.hasDepth) {
+            DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_IMAGE, m_depthImage, name + " depth");
+            DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_IMAGE_VIEW, m_depthImageView, name + " depth");
+        }
+
         m_currentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         m_currentDepthLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     }
@@ -131,6 +140,9 @@ namespace Vectrix {
         VC_CORE_ASSERT(cmd != VK_NULL_HANDLE, "No active command buffer!");
 
         s_currentFramebuffer = this;
+
+        // Closed in unbind: the pass and its layout transitions are one region in a capture
+        DebugUtils::beginLabel(cmd, m_specification.debugName.empty() ? std::string_view("Framebuffer") : std::string_view(m_specification.debugName), 0.9f, 0.6f, 0.2f);
 
         VkImageMemoryBarrier preBarrier{ VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
         preBarrier.image = m_image;
@@ -223,6 +235,7 @@ namespace Vectrix {
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             0, 0, nullptr, 0, nullptr, 1, &postBarrier);
+        DebugUtils::endLabel(cmd);
 
         m_bind = false;
         m_currentLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <csignal>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <thread>
@@ -10,6 +11,7 @@
 #include <unordered_set>
 #include "Vectrix/Application.h"
 #include "Vectrix/Utils/Json.h"
+#include "Vectrix/Utils/Path.h"
 
 /**
  * @brief The version of the profiler data format
@@ -86,10 +88,17 @@ namespace Vectrix {
         }
 
         /// @cond INTERNAL
-        void beginSession(const char* name, const char* filepath = "results.json") {
+        void beginSession(const char* name, const std::filesystem::path& filepath = "results.json") {
             if (m_currentSession)
                 endSession(); // otherwise the previous session leaks and its file is never closed
+            std::error_code error;
+            if (filepath.has_parent_path())
+                std::filesystem::create_directories(filepath.parent_path(), error);
             m_outputStream.open(filepath);
+            if (!m_outputStream.is_open()) {
+                VC_CORE_WARN("Can't write the profile file {}, the session isn't recorded", toUtf8(filepath));
+                return;
+            }
             writeHeader();
             m_currentSession = new ProfilerSession{ name };
         }

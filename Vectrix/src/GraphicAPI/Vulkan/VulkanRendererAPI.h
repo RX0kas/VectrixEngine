@@ -12,6 +12,8 @@ namespace Vectrix {
 		void beginFrame() override;
 		void endFrame() override;
 		void sendFrame() override;
+		void setVSync(bool enabled) override;
+		bool isVSync() override;
 	};
 
 
