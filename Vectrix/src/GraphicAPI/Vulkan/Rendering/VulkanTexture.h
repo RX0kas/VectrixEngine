@@ -1,5 +1,7 @@
 #ifndef VECTRIXWORKSPACE_VULKANTEXTURE_H
 #define VECTRIXWORKSPACE_VULKANTEXTURE_H
+#include <atomic>
+
 #include "Core/Device.h"
 #include "stb_image.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
@@ -52,7 +54,7 @@ namespace Vectrix {
 
         std::string m_name;
 
-        static uint32_t s_numberTexture;
+        static std::atomic<uint32_t> s_numberTexture; ///< Textures are built on worker threads too (AssetsManager::loadAsync)
     };
 } // Vectrix
 

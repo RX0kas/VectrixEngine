@@ -2,11 +2,17 @@
 
 #include <algorithm>
 #include <format>
+#include <optional>
+#include <string>
+#include <tuple>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include "Component.h"
 #include "Entity.h"
 #include "Vectrix/Assets/AssetsManager.h"
+#include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Renderer.h"
 
 namespace Vectrix {
@@ -52,17 +58,70 @@ namespace Vectrix {
             return {FORMATING_ERROR, nullptr};
         }
 
+        /// The scene's assets, loaded together on the worker threads before the entities are built, by
+        /// "<AssetType>:<id>"
+        using PreloadedAssets = std::unordered_map<std::string, std::pair<VectrixResult, std::shared_ptr<void>>>;
+
+        std::string preloadKey(const AssetType type, const std::string& id) {
+            return std::to_string(static_cast<int>(type)) + ":" + id;
+        }
+
+        /// Start loading every asset the scene's components refer to, then wait for them all: the files are
+        /// read, decoded, uploaded and compiled at the same time instead of one after the other
+        PreloadedAssets preloadSceneAssets(const SceneCreationData& creationData) {
+            VC_PROFILER_FUNCTION();
+            std::vector<AssetLoad<Mesh>> meshes;
+            std::vector<AssetLoad<Texture>> textures;
+            std::vector<AssetLoad<Shader>> shaders;
+            for (const auto& entityData : creationData.entities) {
+                for (const auto& componentData : entityData.components) {
+                    if (entt::type_hash<MeshRendererComponent>::value() != componentData.type_id)
+                        continue;
+                    ComponentReader reader(componentData.data);
+                    std::string meshId, textureId, shaderId;
+                    if (!reader.readString(meshId) || !reader.readString(textureId) || !reader.readString(shaderId))
+                        continue; // Reported as malformed when the entities are built
+                    for (std::string* id : {&meshId, &textureId, &shaderId})
+                        std::ranges::replace(*id, '\\', '/');
+                    if (!meshId.empty()) meshes.push_back(AssetsManager::loadAsync<Mesh>(meshId));
+                    if (!textureId.empty()) textures.push_back(AssetsManager::loadAsync<Texture>(textureId));
+                    if (!shaderId.empty()) shaders.push_back(AssetsManager::loadAsync<Shader>(shaderId));
+                }
+            }
+
+            PreloadedAssets preloaded;
+            const auto collect = [&preloaded](const auto& loads, const AssetType type) {
+                for (const auto& load : loads) {
+                    auto [result, asset] = load.wait();
+                    preloaded[preloadKey(type, load.getId())] = {result, std::move(asset)};
+                }
+            };
+            collect(meshes, MESH);
+            collect(textures, TEXTURE);
+            collect(shaders, SHADER);
+            return preloaded;
+        }
+
         /// Loads the asset a MeshRendererComponent refers to. An empty id is an asset that was never set
         /// (the component was saved half configured): it stays null. An asset that can't be loaded is reported
         /// and its id kept in missingId, so saving writes the reference back: one moved or deleted file must
         /// neither make the whole scene unopenable nor be dropped from it
         template<typename T>
         void loadComponentAsset(std::string id, std::shared_ptr<T>& out, std::string& missingId, const std::string& entityName,
-                                const std::string& sceneName, std::vector<std::string>* assetErrors) {
+                                const std::string& sceneName, std::vector<std::string>* assetErrors, const PreloadedAssets& preloaded) {
             if (id.empty()) return;
             // Scenes saved on Windows before ids were normalised hold '\' separators, a plain character elsewhere
             std::ranges::replace(id, '\\', '/');
-            auto [result, asset] = AssetsManager::load<T>(id);
+            // Loaded by preloadSceneAssets in most cases, under the id the path resolves to
+            VectrixResult result;
+            std::shared_ptr<T> asset;
+            const std::optional<std::string> resolvedId = AssetsManager::getProjectAssetId(fromUtf8(id));
+            if (const auto it = preloaded.find(preloadKey(AssetsManager::assetTypeOf<T>(), resolvedId.value_or(id))); it != preloaded.end()) {
+                result = it->second.first;
+                asset = std::static_pointer_cast<T>(it->second.second);
+            } else {
+                std::tie(result, asset) = AssetsManager::load<T>(id);
+            }
             if (result != SUCCESS) {
                 VC_CORE_WARN("Can't load {} for entity {} of scene {}: {}", id, entityName, sceneName, toString(result));
                 if (assetErrors)
@@ -82,6 +141,7 @@ namespace Vectrix {
             return {creationData.result,nullptr};
         }
         std::shared_ptr<Scene> scene = std::make_shared<Scene>(creationData.name);
+        const PreloadedAssets preloaded = preloadSceneAssets(creationData);
 
         for (const auto& entityData : creationData.entities) {
             auto entity = scene->createEntity(entityData.name);
@@ -109,9 +169,9 @@ namespace Vectrix {
                     }
 
                     auto& m = entity->addComponent<MeshRendererComponent>();
-                    loadComponentAsset(meshId, m.mesh, m.missingMesh, entityData.name, creationData.name, assetErrors);
-                    loadComponentAsset(textureId, m.texture, m.missingTexture, entityData.name, creationData.name, assetErrors);
-                    loadComponentAsset(shaderId, m.shader, m.missingShader, entityData.name, creationData.name, assetErrors);
+                    loadComponentAsset(meshId, m.mesh, m.missingMesh, entityData.name, creationData.name, assetErrors, preloaded);
+                    loadComponentAsset(textureId, m.texture, m.missingTexture, entityData.name, creationData.name, assetErrors, preloaded);
+                    loadComponentAsset(shaderId, m.shader, m.missingShader, entityData.name, creationData.name, assetErrors, preloaded);
 
                     // Kept for the missing ones: saved back, and what finds them again if they were moved
                     const std::array<const std::string*, 3> missing = {&m.missingMesh, &m.missingTexture, &m.missingShader};
