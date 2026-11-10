@@ -32,6 +32,8 @@ namespace Vectrix {
 		virtual void beginFrame() = 0;
 		virtual void endFrame() = 0;
 		virtual void sendFrame() = 0;
+		virtual void setVSync(bool enabled) = 0;
+		virtual bool isVSync() = 0;
 		/// @endcond
 
 		/**

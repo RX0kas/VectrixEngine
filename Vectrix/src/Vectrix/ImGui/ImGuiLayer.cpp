@@ -61,6 +61,21 @@ namespace Vectrix {
 			if (w != nullptr && w->isEnable())
 				w->render();
 		}
+
+		if (m_graphicsDebugShortcut && !ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(ImGuiKey_F3, false))
+			m_graphicsDebugVisible = !m_graphicsDebugVisible;
+		if (m_graphicsDebugVisible)
+			m_manager->renderDebugGraphicWidget(m_graphicsDebugVisible);
+	}
+
+	void ImGuiLayer::saveSettings() {
+		if (!m_attached || ImGui::GetCurrentContext() == nullptr)
+			return;
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.IniFilename == nullptr)
+			return;
+		ImGui::SaveIniSettingsToDisk(io.IniFilename);
+		io.IniFilename = nullptr; // ImGui::DestroyContext would save it again, calling handlers of destroyed layers
 	}
 
 	void ImGuiLayer::removeWidget(ImGuiWidget* widget) {

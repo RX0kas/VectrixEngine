@@ -190,6 +190,24 @@ namespace Vectrix {
 		 */
 		static double getFPS();
 
+		/**
+		 * @brief Turn V-Sync on or off while the application runs
+		 *
+		 * On: the frame rate follows the monitor's refresh rate, no tearing. Off: frames are not capped (mailbox
+		 * when the GPU offers it, which doesn't tear, else immediate, which may). Applied at the end of the
+		 * current frame. Not saved: at start-up the present mode comes from the
+		 * `engine.graphicAPI.vulkan.swapchain.presentMode` setting.
+		 * @param enabled Whether to wait for the vertical blank
+		 * @note Needs the renderer: call it once the application is constructed (from a layer, for example)
+		 * @see RenderCommand::setVSync
+		 */
+		static void setVSync(bool enabled);
+		/**
+		 * @brief Whether V-Sync is on
+		 * @return true when the frames wait for the vertical blank (fifo or fifo relaxed present mode)
+		 */
+		[[nodiscard]] static bool isVSync();
+
 	private:
 		Window();
 

@@ -19,4 +19,4 @@ namespace Vectrix {
 }
 
 
-VC_SET_APP_INFO("VectrixEditor",0,4,1);
+VC_SET_APP_INFO_FROM_PROJECT("VectrixEditor") // The workspace version, see vectrix_set_app_version in CMakeLists.txt

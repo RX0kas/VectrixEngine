@@ -7,6 +7,7 @@
 #include "Vectrix/Events/MouseEvent.h"
 #include "Vectrix/Events/WindowEvent.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
+#include "Vectrix/Rendering/RenderCommand.h"
 
 namespace Vectrix {
 	static uint8_t s_GLFWWindowCount = 0;
@@ -37,6 +38,21 @@ namespace Vectrix {
 			VC_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			VC_CORE_ASSERT(success, "Could not intialize GLFW!");
+#ifdef VC_PLATFORM_LINUX
+			// A Vulkan layer may hide VK_KHR_wayland_surface: RenderDoc only supports xlib/xcb windows, so under it a
+			// Wayland window can't get a surface. GLFW then reports no surface extension: start it again on X11
+			// (XWayland), which the layer handles
+			uint32_t surfaceExtensionCount = 0;
+			if (success && glfwGetPlatform() == GLFW_PLATFORM_WAYLAND && glfwVulkanSupported()
+				&& glfwGetRequiredInstanceExtensions(&surfaceExtensionCount) == nullptr
+				&& glfwPlatformSupported(GLFW_PLATFORM_X11)) {
+				VC_CORE_WARN("Vulkan offers no Wayland surface (a layer such as RenderDoc's hides it): using X11 (XWayland)");
+				glfwTerminate();
+				glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+				success = glfwInit();
+				VC_CORE_ASSERT(success, "Could not intialize GLFW on X11!");
+			}
+#endif
 
 			glfwSetErrorCallback(errorCallback);
 
@@ -197,6 +213,14 @@ namespace Vectrix {
 
 	double Window::getFPS() {
 		return Application::instance().m_deltaTime.getFPS();
+	}
+
+	void Window::setVSync(const bool enabled) {
+		RenderCommand::setVSync(enabled);
+	}
+
+	bool Window::isVSync() {
+		return RenderCommand::isVSync();
 	}
 
 	void Window::setTitle(const std::string &title) {

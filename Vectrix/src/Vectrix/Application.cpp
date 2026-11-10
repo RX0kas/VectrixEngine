@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Core/DeltaTime.h"
+#include "Core/EngineOptions.h"
 #include "Debug/Profiler.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Rendering/GraphicsContext.h"
@@ -97,6 +98,10 @@ namespace Vectrix {
 		// The last frame may still be executing: nothing it uses (layers' framebuffers, textures, ImGui
 		// descriptors) can be destroyed before the GPU is done with it
 		GraphicsContext::waitIdle();
+		// ImGui writes imgui.ini when it is destroyed, after the layers: a layer's own ImGui settings handler
+		// (ImGui::AddSettingsHandler) would then be called on a destroyed layer. Written while they still exist
+		if (m_imGuiLayer)
+			m_imGuiLayer->saveSettings();
 		forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnDetach(); });
 		m_layerStack.destroy();
 		m_assetsManager.reset();
@@ -151,7 +156,13 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		m_window->show();
 		Renderer::resizeMask({m_window->getWidth(),m_window->getHeight()});
+		const std::optional<std::uint64_t> frameLimit = getEngineOptions().frameLimit; // --vc-frames
+		std::uint64_t frameCount = 0;
 		while (m_running) {
+			if (frameLimit && frameCount++ >= *frameLimit) {
+				VC_CORE_INFO("Stopping after {} frames (--vc-frames)", *frameLimit);
+				break;
+			}
 			const auto time = static_cast<float>(glfwGetTime());
 			m_deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;

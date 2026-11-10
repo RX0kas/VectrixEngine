@@ -87,7 +87,6 @@ namespace Vectrix {
     	std::unique_ptr<ContentBrowserPanel> m_contentBrowserPanel;
     	std::unique_ptr<SettingsPanel> m_settingPanel;
     	std::unique_ptr<EventLogPanel> m_eventLogPanel;
-    	bool m_graphicDebugWidgetEnable = false;
 
     	UndoHistory m_undoHistory;
     	bool m_ctrlUndoWasDown = false;

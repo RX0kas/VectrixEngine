@@ -41,6 +41,34 @@ extern AppInfoFunc g_getAppInfo;
  */
 #define VC_SET_APP_INFO(name,major,minor,patch) AppInfoFunc g_getAppInfo = []() {return Vectrix::ApplicationInfo(name, major, minor, patch);};
 
+/**
+ * @brief Declare the name of the application, its version coming from its CMake project()
+ *
+ * Same as VC_SET_APP_INFO, without writing the version a second time: the target's CMakeLists.txt calls
+ * `vectrix_set_app_version(<target>)`, which passes the `VERSION` of its `project()` as VC_APP_VERSION_MAJOR,
+ * VC_APP_VERSION_MINOR and VC_APP_VERSION_PATCH.
+ * @code
+ * # CMakeLists.txt
+ * project(MyGame VERSION 0.1.0)
+ * add_executable(MyGame ...)
+ * target_link_libraries(MyGame PRIVATE Vectrix)
+ * vectrix_set_app_version(MyGame)
+ * @endcode
+ * @code
+ * // MyGame.cpp
+ * VC_SET_APP_INFO_FROM_PROJECT("MyGame")
+ * @endcode
+ * @param name The name of the application
+ * @note Without vectrix_set_app_version on the target, it doesn't compile (static_assert)
+ * @see VC_SET_APP_INFO
+ * @ingroup core
+ */
+#if defined(VC_APP_VERSION_MAJOR) && defined(VC_APP_VERSION_MINOR) && defined(VC_APP_VERSION_PATCH)
+	#define VC_SET_APP_INFO_FROM_PROJECT(name) VC_SET_APP_INFO(name, VC_APP_VERSION_MAJOR, VC_APP_VERSION_MINOR, VC_APP_VERSION_PATCH)
+#else
+	#define VC_SET_APP_INFO_FROM_PROJECT(name) static_assert(false, "VC_SET_APP_INFO_FROM_PROJECT needs vectrix_set_app_version(<target>) in the target's CMakeLists.txt");
+#endif
+
 int main(int argc, char** argv);
 
 namespace Vectrix {

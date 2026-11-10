@@ -4,6 +4,32 @@
  *
  * @section v0_6_0 v0.6.0 - (unreleased)
  *
+ * @subsection v0_6_0_added Added
+ * - Engine command line options, taken out of the arguments before createApplication (EngineOptions):
+ *   `--vc-profile[=<folder>]` (or `VC_PROFILE`) records the profiler sessions, `--vc-frames=<N>` stops after N frames
+ *   and returns 0, for a start-up test
+ * - Window::setVSync / Window::isVSync (and RenderCommand::setVSync / isVSync): V-Sync on or off while running
+ * - ImGuiLayer::setGraphicsDebugVisible / isGraphicsDebugVisible / setGraphicsDebugShortcut: the engine draws the
+ *   graphics debug window itself, F3 toggles it. It shows the present mode, a V-Sync switch and the attached tools
+ * - GPU debuggers (RenderDoc, Nsight Graphics): the attached tools are detected and logged
+ *   (vkGetPhysicalDeviceToolProperties); textures, framebuffers, pipelines and shader modules are named and the
+ *   passes labelled (VK_EXT_debug_utils, enabled whenever available). FramebufferSpecification::debugName names a
+ *   framebuffer
+ * - CMake `vectrix_set_app_version(<target>)` and VC_SET_APP_INFO_FROM_PROJECT(name): an application's version
+ *   comes from its project(... VERSION ...), written once
+ * @subsection v0_6_0_changed Changed
+ * - The profiler only records when asked (`--vc-profile`), into `<StateDir>/Vectrix/<AppName>/profiles/`, no
+ *   longer into the working directory on every run of a Debug build
+ * - Third-party headers (spdlog, glm, ImGui, ImGuizmo, GLFW, EnTT, VMA...) reach the targets linking Vectrix as
+ *   SYSTEM includes: their warnings no longer mix with the application's. Linking Vectrix is enough, without
+ *   copying its include folders and definitions
+ * - shaderc, SPIRV-Tools and glslang are built without their tools, tests and copyright check: a rebuild without
+ *   changes does nothing
+ * - VectrixEditor has the workspace's version (it said 0.4.1)
+ * @subsection v0_6_0_fixed Fixed
+ * - imgui.ini is written before the layers are detached: a layer's own ImGui settings handler is no longer called
+ *   once the layer is destroyed
+ *
  * ---
  *
  * @section v0_5_3 v0.5.3 - (unreleased)

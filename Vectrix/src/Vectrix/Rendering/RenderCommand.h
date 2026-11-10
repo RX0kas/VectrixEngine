@@ -39,6 +39,21 @@ namespace Vectrix
 			s_rendererAPI->setClearColor(color);
 		}
 
+		/**
+		 * @brief Turn V-Sync on or off while the application runs
+		 *
+		 * On: frames are shown at the monitor's refresh rate (fifo), no tearing. Off: frames are not capped,
+		 * mailbox when the surface has it (no tearing), else immediate (may tear). Takes effect at the end of the
+		 * current frame. Not saved: the present mode at start-up is the `presentMode` setting.
+		 * @param enabled Whether to wait for the vertical blank
+		 * @see Window::setVSync
+		 */
+		static void setVSync(const bool enabled) { s_rendererAPI->setVSync(enabled); }
+		/**
+		 * @brief Whether V-Sync is on (the present mode is fifo or fifo relaxed, or was just asked to be)
+		 */
+		[[nodiscard]] static bool isVSync() { return s_rendererAPI->isVSync(); }
+
 	private:
 		static bool canRender() {
 			VC_PROFILER_FUNCTION();

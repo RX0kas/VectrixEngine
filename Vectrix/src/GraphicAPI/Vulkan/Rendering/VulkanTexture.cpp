@@ -7,6 +7,7 @@
 #include "stb_image.h"
 #include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Utils/Data.h"
 
@@ -131,6 +132,7 @@ namespace Vectrix {
         if (vmaCreateImage(VulkanContext::instance().getTextureAllocator(),&imageInfo,&allocationCreateInfo,&m_image,&m_allocation,nullptr) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to create texture image");
         }
+        DebugUtils::setName(m_device.device(), VK_OBJECT_TYPE_IMAGE, m_image, "Texture " + m_name);
 
         uploadPixels(stagingBuffer);
 

@@ -49,12 +49,22 @@ set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
+# Only the shaderc library is used. Its tools, examples and copyright check (a custom target run on every build, like
+# glslc's "build-version") would make each no-change rebuild run steps; the same for SPIRV-Tools' and glslang's tools
+set(SHADERC_SKIP_EXAMPLES ON CACHE BOOL "" FORCE)
+set(SHADERC_SKIP_EXECUTABLES ON CACHE BOOL "" FORCE)
+set(SHADERC_SKIP_COPYRIGHT_CHECK ON CACHE BOOL "" FORCE)
+set(SHADERC_SKIP_INSTALL ON CACHE BOOL "" FORCE)
+set(SPIRV_SKIP_EXECUTABLES ON CACHE BOOL "" FORCE)
+set(SPIRV_SKIP_TESTS ON CACHE BOOL "" FORCE)
+set(ENABLE_GLSLANG_BINARIES OFF CACHE BOOL "" FORCE)
+set(GLSLANG_TESTS OFF CACHE BOOL "" FORCE)
 
 find_package(Vulkan REQUIRED)
 # Volk
 message(VERBOSE "Initializing Volk")
 set(VOLK_STATIC_DEFINES)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Vectrix/extern/Volk)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Vectrix/extern/Volk SYSTEM)
 
 # Compiling Shader
 # Setup SPIRV-Tools
@@ -64,32 +74,38 @@ set(SHADERC_SPIRV_HEADERS_DIR SPIRV-Headers_SOURCE_DIR)
 message(VERBOSE "Initializing SPIRV-Tools")
 set(tools_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/SPIRV-Tools)
 set(glslang_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/glslang)
-add_subdirectory(Vectrix/extern/SPIRV-Tools)
+add_subdirectory(Vectrix/extern/SPIRV-Tools SYSTEM)
 
 message(VERBOSE "Initializing glslang")
-add_subdirectory(Vectrix/extern/glslang)
+add_subdirectory(Vectrix/extern/glslang SYSTEM)
 
-add_subdirectory(Vectrix/extern/shaderc)
+add_subdirectory(Vectrix/extern/shaderc SYSTEM)
+# shaderc writes its pkg-config files (for an install) in targets built by default, rerun on every build
+foreach(pc shaderc shaderc_static shaderc_combined)
+  if(TARGET ${pc}-pkg-config)
+    set_target_properties(${pc}-pkg-config PROPERTIES EXCLUDE_FROM_ALL ON)
+  endif()
+endforeach()
 # VulkanMemoryAllocator
 message(VERBOSE "Initializing VulkanMemoryAllocator")
-add_subdirectory(Vectrix/extern/VulkanMemoryAllocator)
+add_subdirectory(Vectrix/extern/VulkanMemoryAllocator SYSTEM)
 
 # GLFW
 message(VERBOSE "Initializing GLFW")
-add_subdirectory(Vectrix/extern/GLFW)
+add_subdirectory(Vectrix/extern/GLFW SYSTEM)
 
 # spdlog
 message(VERBOSE "Initializing spdlog")
-add_subdirectory(Vectrix/extern/spdlog)
+add_subdirectory(Vectrix/extern/spdlog SYSTEM)
 
 # xxHash
 message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
-add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
+add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL SYSTEM)
 
 # EnTT
 message(VERBOSE "Initializing EnTT")
-add_subdirectory(Vectrix/extern/EnTT)
+add_subdirectory(Vectrix/extern/EnTT SYSTEM)
 
 # ImGui
 message(VERBOSE "Initializing ImGui")
@@ -103,7 +119,7 @@ add_library(imgui STATIC
 target_compile_definitions(imgui PRIVATE IMGUI_IMPL_VULKAN_USE_VOLK)
 target_link_libraries(imgui volk::volk glfw)
 
-target_include_directories(imgui PUBLIC Vectrix/extern/imgui)
+target_include_directories(imgui SYSTEM PUBLIC Vectrix/extern/imgui)
 
 # ImGuizmo
 message(VERBOSE "Initializing ImGuizmo")
@@ -113,7 +129,7 @@ add_library(imguizmo STATIC
 )
 
 target_link_libraries(imguizmo PUBLIC imgui)
-target_include_directories(imguizmo PUBLIC Vectrix/extern/imgui)
+target_include_directories(imguizmo SYSTEM PUBLIC Vectrix/extern/imgui)
 
 # nativefiledialog-extended
 message(VERBOSE "Initializing nativefiledialog-extended")
@@ -127,11 +143,11 @@ if (UNIX AND NOT APPLE)
     message(FATAL_ERROR "GTK3 not found, install libgtk-3-dev")
   endif()
 endif()
-add_subdirectory(Vectrix/extern/NativeFileDialog)
+add_subdirectory(Vectrix/extern/NativeFileDialog SYSTEM)
 
 # PlatformFolders
 message(VERBOSE "Initialising PlatformFolders")
-add_subdirectory(Vectrix/extern/PlatformFolders)
+add_subdirectory(Vectrix/extern/PlatformFolders SYSTEM)
 
 # Vectrix
 message(STATUS "Initializing Vectrix")
@@ -219,12 +235,16 @@ endif()
 
 target_include_directories(Vectrix PUBLIC
         Vectrix/src
+        ${CMAKE_BINARY_DIR}/generated
+)
+# Third-party headers are SYSTEM, for the engine and for what links it: their warnings don't mix with the
+# application's own (-Wall -Wextra...). The libraries added with add_subdirectory(... SYSTEM) above already are
+target_include_directories(Vectrix SYSTEM PUBLIC
         Vectrix/extern/spdlog/include
         Vectrix/extern/glm
         Vectrix/extern/imgui
         Vectrix/extern/include
         Vectrix/extern/ImGuizmo/src
-        ${CMAKE_BINARY_DIR}/generated
         ${Vulkan_INCLUDE_DIRS}
 )
 
@@ -289,6 +309,27 @@ elseif(APPLE)
 elseif(UNIX)
     target_compile_definitions(Vectrix PUBLIC VC_PLATFORM_LINUX)
 endif()
+# Gives <target> the version of the project() it is declared in (PROJECT_VERSION), as VC_APP_VERSION_MAJOR/MINOR/PATCH:
+# the application then names itself with VC_SET_APP_INFO_FROM_PROJECT(name), its version being written only once
+function(vectrix_set_app_version target)
+  if(NOT PROJECT_VERSION)
+    message(FATAL_ERROR "vectrix_set_app_version(${target}): the project() has no VERSION")
+  endif()
+  set(patch ${PROJECT_VERSION_PATCH})
+  if(patch STREQUAL "")
+    set(patch 0) # project(App VERSION 1.2)
+  endif()
+  set(minor ${PROJECT_VERSION_MINOR})
+  if(minor STREQUAL "")
+    set(minor 0)
+  endif()
+  target_compile_definitions(${target} PRIVATE
+          VC_APP_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
+          VC_APP_VERSION_MINOR=${minor}
+          VC_APP_VERSION_PATCH=${patch}
+  )
+endfunction()
+
 ##########
 # Editor #
 ##########
@@ -301,16 +342,12 @@ if (${VECTRIX_BUILD_EDITOR})
 
   add_executable(VectrixEditor ${EDITOR_SOURCES})
 
+  # Linking Vectrix brings its include folders (third-party ones as SYSTEM) and its public definitions
   target_link_libraries(VectrixEditor PRIVATE Vectrix)
 
-  target_include_directories(VectrixEditor PRIVATE
-          $<TARGET_PROPERTY:Vectrix,INTERFACE_INCLUDE_DIRECTORIES>
-          VectrixEditor/src/
-  )
-
-  target_compile_definitions(VectrixEditor PRIVATE
-          $<TARGET_PROPERTY:Vectrix,INTERFACE_COMPILE_DEFINITIONS>
-  )
+  target_include_directories(VectrixEditor PRIVATE VectrixEditor/src/)
+  # The editor ships with the engine: it has the workspace's version
+  vectrix_set_app_version(VectrixEditor)
 
   if(MSVC)
     target_compile_options(VectrixEditor PRIVATE /utf-8)

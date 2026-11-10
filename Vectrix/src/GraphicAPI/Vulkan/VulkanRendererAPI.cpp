@@ -32,6 +32,14 @@ namespace Vectrix {
 		renderer.endDynamicRendering(renderer.getCurrentCommandBuffer());
 	}
 
+	void VulkanRendererAPI::setVSync(const bool enabled) {
+		VulkanContext::instance().getRenderer().setVSync(enabled);
+	}
+
+	bool VulkanRendererAPI::isVSync() {
+		return VulkanContext::instance().getRenderer().isVSync();
+	}
+
 	void VulkanRendererAPI::sendFrame() {
 		VC_PROFILER_FUNCTION();
 		VulkanContext::instance().getRenderer().endFrame();

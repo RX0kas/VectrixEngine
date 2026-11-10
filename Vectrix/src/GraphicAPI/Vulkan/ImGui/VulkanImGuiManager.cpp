@@ -10,6 +10,7 @@
 
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
+#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
 #include "Vectrix/Settings/SettingsManager.h"
 
 
@@ -92,7 +93,20 @@ namespace Vectrix {
         const std::vector<DebugMemoryHeapInfo> memoryTexture = collectMemoryInfo(VulkanContext::instance().getTextureAllocator());
         ImGui::Text("Frame Index: %u", frame.frameIndex);
         ImGui::Text("Swapchain Image: %u", frame.swapchainImageIndex);
+        ImGui::Text("Present mode: %s", presentModeToString(VulkanContext::instance().getRenderer().getPresentMode()));
+        if (bool vsync = Window::isVSync(); ImGui::Checkbox("V-Sync", &vsync))
+            Window::setVSync(vsync);
         ImGui::Separator();
+
+        // RenderDoc, Nsight Graphics, the validation layers...: what the driver reports as attached
+        if (ImGui::CollapsingHeader("Attached Tools")) {
+            const std::vector<DebugUtils::Tool>& tools = DebugUtils::getTools();
+            if (tools.empty())
+                ImGui::TextDisabled("None");
+            for (const DebugUtils::Tool& tool : tools)
+                ImGui::BulletText("%s %s (%s)", tool.name.c_str(), tool.version.c_str(), tool.purposes.c_str());
+            ImGui::Text("Object names and labels: %s", DebugUtils::isEnabled() ? "on (VK_EXT_debug_utils)" : "off (VK_EXT_debug_utils unavailable)");
+        }
 
         if (ImGui::CollapsingHeader("Frame Stats")) {
             ImGui::Text("Draw Calls: %u", frame.drawCalls);
@@ -202,6 +216,7 @@ namespace Vectrix {
 		renderingInfo.colorAttachmentCount = 1;
 		renderingInfo.pColorAttachments = &colorAttachment;
 
+		DebugUtils::beginLabel(cmd, "ImGui", 0.8f, 0.4f, 0.8f);
 		vkCmdBeginRenderingKHR(cmd, &renderingInfo);
 
 		ImGui_ImplVulkan_NewFrame();
@@ -213,6 +228,7 @@ namespace Vectrix {
 		ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), cmd);
 
 		vkCmdEndRenderingKHR(cmd);
+		DebugUtils::endLabel(cmd);
 
 		barrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		barrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
