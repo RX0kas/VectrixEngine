@@ -3,6 +3,8 @@
 #include "ShaderSSBO.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 
+#include <mutex>
+
 namespace Vectrix {
     VkDescriptorSetLayout DynamicSSBO::s_descriptorSetLayout = nullptr;
 
@@ -31,7 +33,7 @@ namespace Vectrix {
         alloc.descriptorPool = m_device.descriptorPool();
         alloc.descriptorSetCount = m_framesInFlight;
         alloc.pSetLayouts = layouts.data();
-        vkAllocateDescriptorSets(m_device.device(), &alloc, m_descriptorSets.data());
+        m_device.allocateDescriptorSets(alloc, m_descriptorSets.data());
 
         updateDescriptorSets();
     }
@@ -122,14 +124,14 @@ namespace Vectrix {
     void DynamicSSBO::freeDescriptorSets() {
         if (m_descriptorSets.empty()) return;
         // Frames still in flight bind these sets: they can only be freed once the GPU is done
-        vkDeviceWaitIdle(m_device.device());
+        m_device.waitIdle();
         // The device pool is created with VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
-        vkFreeDescriptorSets(m_device.device(), m_device.descriptorPool(), static_cast<uint32_t>(m_descriptorSets.size()), m_descriptorSets.data());
+        m_device.freeDescriptorSets(static_cast<uint32_t>(m_descriptorSets.size()), m_descriptorSets.data());
         m_descriptorSets.clear();
     }
 
     void DynamicSSBO::grow() {
-        vkDeviceWaitIdle(m_device.device());
+        m_device.waitIdle();
         const size_t oldFrameSize = frameSize();
         m_capacity *= 4;
 
@@ -165,6 +167,16 @@ namespace Vectrix {
 
         vmaMapMemory(VulkanContext::instance().getSSBOAllocator(), m_allocation, &m_mapped);
         memset(m_mapped, 0, bufferSize);
+    }
+
+    namespace {
+        std::mutex s_descriptorSetLayoutMutex;
+    }
+
+    VkDescriptorSetLayout DynamicSSBO::getStaticDescriptorSetLayout() {
+        const std::scoped_lock lock(s_descriptorSetLayoutMutex);
+        createDescriptorSetLayout();
+        return s_descriptorSetLayout;
     }
 
     void DynamicSSBO::createDescriptorSetLayout() {

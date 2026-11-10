@@ -39,7 +39,7 @@ namespace Vectrix {
         alloc.descriptorSetCount = m_framesInFlight;
         alloc.pSetLayouts = layouts.data();
 
-        if (vkAllocateDescriptorSets(m_device.device(), &alloc, m_descriptorSets.data()) != VK_SUCCESS) {
+        if (m_device.allocateDescriptorSets(alloc, m_descriptorSets.data()) != VK_SUCCESS) {
             VC_CORE_CRITICAL("Failed to allocate SSBO descriptor sets");
         }
 

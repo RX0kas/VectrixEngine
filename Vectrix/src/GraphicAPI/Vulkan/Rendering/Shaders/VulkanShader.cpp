@@ -26,7 +26,7 @@ namespace Vectrix {
 		VC_PROFILER_FUNCTION();
 		// The pipeline and descriptor sets may still be in use by a frame in flight. Shaders are only destroyed
 		// with their project or the application, so a full wait is fine (it used to be hidden in destroyBuffer)
-		vkDeviceWaitIdle(m_device.device());
+		m_device.waitIdle();
 		m_ssbo.reset();
 		m_pipeline.reset();
 		m_layout.reset();
@@ -194,10 +194,10 @@ namespace Vectrix {
 			pipelineConfig.depthStencilInfo.depthWriteEnable = VK_FALSE;
 		}
 
-		VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
+		const VulkanShaderCompiler &compiler = VulkanContext::instance().getCompiler();
 		const bool optimize = VulkanContext::settings().shaders.optimize;
-		auto vertCode = compiler.compile_file(m_name.c_str(),VertexShader,m_vertSRC.c_str(),optimize);
-		auto fragCode = compiler.compile_file(m_name.c_str(),FragmentShader,m_fragSRC.c_str(),optimize);
+		// The two stages compile at the same time
+		auto [vertCode, fragCode] = compiler.compileStages(m_name.c_str(), m_vertSRC.c_str(), m_fragSRC.c_str(), optimize);
 		if (vertCode.empty() || fragCode.empty())
 			return; // No pipeline: Shader::createFromSource reports the shader as failed
 

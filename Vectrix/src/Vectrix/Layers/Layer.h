@@ -51,6 +51,16 @@ namespace Vectrix {
 		virtual void OnUpdate(const DeltaTime& deltaTime) {}
 
 		/**
+		 * @brief The function called at a fixed rate, for the simulation (physics, gameplay that must not depend on the frame rate)
+		 *
+		 * Called zero, one or several times per frame, before OnUpdate, so that over time it runs once per
+		 * `engine.physics.fixedTimestep` seconds whatever the frame rate. To draw between two steps, interpolate with
+		 * Application::getFixedStepAlpha.
+		 * @param fixedDeltaTime The fixed step, always the same (Application::getFixedTimestep)
+		 */
+		virtual void OnFixedUpdate(const DeltaTime& fixedDeltaTime) {}
+
+		/**
 		 * @brief The function called every frame
 		 * @note Use Layer::OnRenderOffscreen if you want to render to a framebuffer for example
 		 */

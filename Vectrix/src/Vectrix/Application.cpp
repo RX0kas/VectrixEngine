@@ -2,6 +2,7 @@
 
 #include "Application.h"
 
+#include <atomic>
 #include <filesystem>
 #include <memory>
 
@@ -34,6 +35,52 @@ namespace Vectrix {
 	}
 
 	Application* Application::s_instance = nullptr;
+
+	namespace {
+		// Whether wakeUp may post to GLFW: other threads read it, the window exists between the two stores
+		std::atomic<bool> s_canWake{false};
+	}
+
+	namespace detail {
+		void wakeMainLoop() {
+			if (s_canWake.load(std::memory_order_acquire))
+				glfwPostEmptyEvent(); // thread-safe in GLFW
+		}
+	}
+
+	void Application::wakeUp() const {
+		detail::wakeMainLoop();
+	}
+
+	void Application::runOnMainThread(std::function<void()> function) {
+		{
+			const std::scoped_lock lock(m_mainThreadTasksMutex);
+			m_mainThreadTasks.push_back(std::move(function));
+		}
+		wakeUp();
+	}
+
+	void Application::runMainThreadTasks() {
+		VC_PROFILER_FUNCTION();
+		{
+			const std::scoped_lock lock(m_mainThreadTasksMutex);
+			m_mainThreadTasksRunning.swap(m_mainThreadTasks);
+		}
+		// A task that calls runOnMainThread queues for the next frame
+		for (std::function<void()>& task : m_mainThreadTasksRunning)
+			task();
+		m_mainThreadTasksRunning.clear();
+	}
+
+	void Application::runFixedSteps() {
+		VC_PROFILER_FUNCTION();
+		// Too far behind (a hitch, a breakpoint), the steps past maxStepsPerFrame are dropped instead of making
+		// the next frame slower still
+		const uint32_t steps = m_fixedStep.advance(m_deltaTime.getSeconds());
+		const DeltaTime step(m_fixedStep.step());
+		for (uint32_t i = 0; i < steps; ++i)
+			forEachLayer(m_layerStack, [&step](const std::shared_ptr<Layer>& layer) { layer->OnFixedUpdate(step); });
+	}
 
 	Application::Application() {
 		VC_PROFILER_FUNCTION();
@@ -78,6 +125,17 @@ namespace Vectrix {
 		}
 #endif
 
+		uint32_t workerCount = 0;
+		if (const auto engineIt = startupSettings.find("engine"); engineIt != startupSettings.end()) {
+			const JsonValue& engine = engineIt->second;
+			workerCount = engine["threading"]["workerCount"].getAs<uint32_t>().value_or(0);
+			// Out of range values keep the defaults
+			m_fixedStep.configure(engine["physics"]["fixedTimestep"].getAs<double>().value_or(0.0),
+				engine["physics"]["maxStepsPerFrame"].getAs<uint32_t>().value_or(0));
+		}
+		// Before the window: the graphics backend may already give it work
+		m_jobSystem = std::make_unique<JobSystem>(workerCount);
+
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventQueue(&m_eventQueue);
 		m_window->init(windowAttributes);
@@ -91,10 +149,14 @@ namespace Vectrix {
 		m_imGuiLayer->OnAttach();
 
 		Renderer::initOutline();
+		s_canWake.store(true, std::memory_order_release);
 	}
 
 	Application::~Application() {
 		VC_PROFILER_FUNCTION();
+		s_canWake.store(false, std::memory_order_release);
+		// The jobs still queued or running may use the graphics context or the window, which go below
+		m_jobSystem->waitIdle();
 		// The last frame may still be executing: nothing it uses (layers' framebuffers, textures, ImGui
 		// descriptors) can be destroyed before the GPU is done with it
 		GraphicsContext::waitIdle();
@@ -104,6 +166,7 @@ namespace Vectrix {
 			m_imGuiLayer->saveSettings();
 		forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnDetach(); });
 		m_layerStack.destroy();
+		m_jobSystem->waitIdle(); // what the layers submitted while detaching
 		m_assetsManager.reset();
 		m_imGuiLayer.reset();
 		m_window.reset();
@@ -158,6 +221,8 @@ namespace Vectrix {
 		Renderer::resizeMask({m_window->getWidth(),m_window->getHeight()});
 		const std::optional<std::uint64_t> frameLimit = getEngineOptions().frameLimit; // --vc-frames
 		std::uint64_t frameCount = 0;
+		// The first frame's time starts now, not at GLFW's start: the start-up isn't a frame (it would be many fixed steps)
+		m_LastFrameTime = static_cast<float>(glfwGetTime());
 		while (m_running) {
 			if (frameLimit && frameCount++ >= *frameLimit) {
 				VC_CORE_INFO("Stopping after {} frames (--vc-frames)", *frameLimit);
@@ -182,11 +247,15 @@ namespace Vectrix {
 				m_hasToSwitch = false;
 			}
 
+			// What other threads handed over (runOnMainThread), before the events: it may post some
+			runMainThreadTasks();
+
 			// What was posted since the last frame, the input polled at its end included
 			m_eventQueue.dispatch([this](Event& event) { dispatchEvent(event); });
 			if (!m_running)
 				break;
 
+			runFixedSteps();
 			forEachLayer(m_layerStack, [this](const std::shared_ptr<Layer>& layer) { layer->OnUpdate(m_deltaTime); });
 			if (RenderCommand::canRender()) {
 				forEachLayer(m_layerStack, [](const std::shared_ptr<Layer>& layer) { layer->OnRenderOffscreen(); });

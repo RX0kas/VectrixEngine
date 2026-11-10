@@ -19,6 +19,7 @@
 
 #include "Vectrix/Core/CommandLine.h"
 #include "Vectrix/Core/EngineOptions.h"
+#include "Vectrix/Threading/Thread.h"
 #include "Vectrix/Utils/Path.h"
 
 extern Vectrix::Application* Vectrix::createApplication(int argc, char** argv);
@@ -38,6 +39,7 @@ extern Vectrix::Application* Vectrix::createApplication(int argc, char** argv);
  * @ingroup core
  */
 int main(int argc, char** argv) {
+	Vectrix::detail::setMainThread();
 	Vectrix::Log::init();
 	// Alive until main returns, as the application may keep argv's pointers
 	std::vector<std::string> arguments = Vectrix::getCommandLineArguments(argc, argv);

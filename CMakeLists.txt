@@ -35,6 +35,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ./bin/${OUTPUT_DIR})
 
 # Options
 option(VECTRIX_BUILD_EDITOR "Build VectrixEditor" OFF)
+option(VECTRIX_BUILD_TESTS "Build the engine's tests (VectrixTests, run with ctest)" OFF)
 
 message(STATUS "Initializing Vectrix dependencies")
 
@@ -330,6 +331,23 @@ function(vectrix_set_app_version target)
   )
 endfunction()
 
+#########
+# Tests #
+#########
+# No test framework: Vectrix/tests/Test.h is a small harness. `ctest -LE gpu` skips the tests that open a window
+if (${VECTRIX_BUILD_TESTS})
+  message(STATUS "Creating VectrixTests project")
+  enable_testing()
+  file(GLOB_RECURSE TEST_SOURCES
+          Vectrix/tests/*.cpp
+          Vectrix/tests/*.h
+  )
+  add_executable(VectrixTests ${TEST_SOURCES})
+  target_link_libraries(VectrixTests PRIVATE Vectrix)
+  add_test(NAME VectrixTests COMMAND VectrixTests)
+  set_tests_properties(VectrixTests PROPERTIES TIMEOUT 120)
+endif()
+
 ##########
 # Editor #
 ##########
@@ -348,6 +366,12 @@ if (${VECTRIX_BUILD_EDITOR})
   target_include_directories(VectrixEditor PRIVATE VectrixEditor/src/)
   # The editor ships with the engine: it has the workspace's version
   vectrix_set_app_version(VectrixEditor)
+
+  if (${VECTRIX_BUILD_TESTS})
+    # Start-up test: 120 frames then exit 0. Needs a display and a Vulkan GPU, hence the label
+    add_test(NAME VectrixEditorStartup COMMAND VectrixEditor --vc-frames=120 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/run)
+    set_tests_properties(VectrixEditorStartup PROPERTIES TIMEOUT 120 LABELS gpu)
+  endif()
 
   if(MSVC)
     target_compile_options(VectrixEditor PRIVATE /utf-8)

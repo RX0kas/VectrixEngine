@@ -23,7 +23,7 @@ namespace Vectrix {
             {0, "General"},{1, "Outline"}, {2, "Camera"}, {3, "Gizmo"}, {4, "Content Browser"}, {5, "Editor UI"}
         };
         constexpr Leaf kEngineLeaves[] = {
-            {6, "Rendering"}, {7, "Window"}, {8, "Logging"}
+            {6, "Rendering"}, {7, "Window"}, {8, "Logging"}, {14, "Threading"}, {15, "Physics"}
         };
         constexpr Leaf kVulkanLeaves[] = {
             {9, "Swapchain"}, {10, "Device"}, {11, "Textures"}, {12, "Shaders"}, {13, "Pipeline"}
@@ -353,6 +353,44 @@ namespace Vectrix {
             return changed;
         }
 
+        bool drawThreading(const JsonObject& r, JsonObject& w) {
+            ImGui::SeparatorText("Threading");
+            const std::vector<const char*> base = {"engine", "threading"};
+
+            bool changed = dragInt(r, w, keyPath(base, "workerCount"), "Worker threads (0 = auto)", 0, 0, 256);
+            ImGui::TextDisabled("Auto: %u on this machine (one per hardware thread, minus the main one).",
+                                JobSystem::defaultWorkerCount());
+            ImGui::TextDisabled("Running now: %u.", Application::instance().jobSystem().getWorkerCount());
+            restartNote();
+
+            ImGui::Spacing();
+            if (ImGui::SmallButton("Reset to defaults##threading")) {
+                writeAt(w, keyPath(base, "workerCount")) = 0.0;
+                changed = true;
+            }
+            return changed;
+        }
+
+        bool drawPhysics(const JsonObject& r, JsonObject& w) {
+            ImGui::SeparatorText("Fixed update");
+            const std::vector<const char*> base = {"engine", "physics"};
+
+            bool changed = dragFloat(r, w, keyPath(base, "fixedTimestep"), "Fixed timestep (s)", 1.0 / 60.0, 0.0005f, 0.001f, 1.0f);
+            const double step = readAt(r, keyPath(base, "fixedTimestep")).getAs<double>().value_or(1.0 / 60.0);
+            if (step > 0.0)
+                ImGui::TextDisabled("%.1f steps per second.", 1.0 / step);
+            changed |= dragInt(r, w, keyPath(base, "maxStepsPerFrame"), "Max steps per frame", 8, 1, 64);
+            restartNote();
+
+            ImGui::Spacing();
+            if (ImGui::SmallButton("Reset to defaults##physics")) {
+                writeAt(w, keyPath(base, "fixedTimestep")) = 1.0 / 60.0;
+                writeAt(w, keyPath(base, "maxStepsPerFrame")) = 8.0;
+                changed = true;
+            }
+            return changed;
+        }
+
         bool drawSwapchain(const JsonObject& r, JsonObject& w) {
             ImGui::SeparatorText("Swapchain");
             const std::vector<const char*> base = {"engine", "graphicAPI", "vulkan", "swapchain"};
@@ -561,6 +599,8 @@ namespace Vectrix {
             case 11: dirty = drawTextures(shown, target); break;
             case 12: dirty = drawShaders(shown, target); break;
             case 13: dirty = drawPipeline(shown, target); break;
+            case 14: dirty = drawThreading(shown, target); break;
+            case 15: dirty = drawPhysics(shown, target); break;
             default: break;
         }
         ImGui::EndChild();

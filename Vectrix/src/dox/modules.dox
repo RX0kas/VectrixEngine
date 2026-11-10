@@ -73,4 +73,9 @@
  * @defgroup settings Settings
  * @brief Engine wide settings that tweak how a feature behaves
  * @ingroup core
+ *
+ * @defgroup threading Threading
+ * @brief Worker threads: the JobSystem for computations split over the cores, BackgroundWorker for slow tasks
+ *        whose results go back to the main thread, and which thread is the main one
+ * @ingroup core
  */

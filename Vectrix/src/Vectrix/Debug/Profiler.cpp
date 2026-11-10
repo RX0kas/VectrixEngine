@@ -43,6 +43,32 @@ namespace Vectrix {
         // down; the stream is flushed when the session ends (writeFooter/close)
     }
 
+    uint32_t Profiler::currentThreadID() {
+        return static_cast<uint32_t>(std::hash<std::thread::id>{}(std::this_thread::get_id()));
+    }
+
+    void Profiler::setThreadName(const std::string_view name) {
+        std::lock_guard lock(m_mutex);
+        m_threadNames[currentThreadID()] = std::string(name);
+    }
+
+    void Profiler::writeFooter() {
+        if (!m_outputStream.is_open()) return;
+        m_outputStream << "],\"threads\":{";
+        bool first = true;
+        {
+            std::lock_guard lock(m_mutex);
+            for (const auto& [id, name] : m_threadNames) {
+                std::string escaped = name;
+                std::replace(escaped.begin(), escaped.end(), '"', '\'');
+                m_outputStream << (first ? "" : ",") << '"' << id << "\":\"" << escaped << '"';
+                first = false;
+            }
+        }
+        m_outputStream << "}}";
+        m_outputStream.flush();
+    }
+
     void Profiler::writeData() {
         const ApplicationInfo appInfo = Application::getAppInfo();
         m_outputStream << R"("profiler_version": ")" << VC_PROFILER_VERSION << "\",";
@@ -75,7 +101,7 @@ namespace Vectrix {
         auto highResStart = FloatingPointMicroseconds{ m_startTimepoint.time_since_epoch() };
         auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_startTimepoint).time_since_epoch();
 
-        const uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        const uint32_t threadID = Profiler::currentThreadID();
 
         if (internal)
             Profiler::get().writeResultInternal({ m_name, highResStart, elapsedTime, threadID });

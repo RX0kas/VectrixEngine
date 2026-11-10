@@ -17,6 +17,24 @@
  *   framebuffer
  * - CMake `vectrix_set_app_version(<target>)` and VC_SET_APP_INFO_FROM_PROJECT(name): an application's version
  *   comes from its project(... VERSION ...), written once
+ * - JobSystem (Application::jobSystem, JobSystem::get): a pool of worker threads (`engine.threading.workerCount`,
+ *   one per hardware thread minus the main one by default) with submit, wait and parallelFor. A thread waiting for
+ *   jobs runs queued ones meanwhile
+ * - BackgroundWorker<Request, Result>: a thread of its own handling requests one after the other, whose results
+ *   the main thread collects with poll (the network service pattern), with a stop flag for long requests
+ * - Application::runOnMainThread (any thread hands work to the start of the next frame) and Application::wakeUp
+ * - isMainThread, setCurrentThreadName and VC_CORE_ASSERT_MAIN_THREAD (Threading/Thread.h). The worker threads are
+ *   named for debuggers, and the profile files name the threads (`"threads"`, profiler format 1.2)
+ * - Layer::OnFixedUpdate and Scene::OnFixedUpdate, called at a fixed rate before OnUpdate
+ *   (`engine.physics.fixedTimestep`, 1/60 s by default, at most `engine.physics.maxStepsPerFrame` per frame);
+ *   Application::getFixedTimestep and getFixedStepAlpha to interpolate what is drawn. FixedTimestep is the
+ *   accumulator behind it
+ * - CMake option VECTRIX_BUILD_TESTS: the engine's tests (VectrixTests) and an editor start-up test, run with
+ *   ctest (`ctest -LE gpu` leaves out the one that opens a window)
+ * - Vulkan backend: uploads (single-time commands) work from any thread, each thread having its own command pool,
+ *   and every queue use is locked; the descriptor pool is locked too. A pipeline cache is shared by all pipelines
+ *   and kept between runs (`<StateDir>/Vectrix/<AppName>/pipeline-cache.bin`). The two stages of a shader compile
+ *   at the same time
  * @subsection v0_6_0_changed Changed
  * - The profiler only records when asked (`--vc-profile`), into `<StateDir>/Vectrix/<AppName>/profiles/`, no
  *   longer into the working directory on every run of a Debug build
@@ -26,6 +44,9 @@
  * - shaderc, SPIRV-Tools and glslang are built without their tools, tests and copyright check: a rebuild without
  *   changes does nothing
  * - VectrixEditor has the workspace's version (it said 0.4.1)
+ * - The first frame's DeltaTime starts when the application starts running, not when GLFW was initialized (it
+ *   counted the whole start-up)
+ * - Profiler data format 1.2: the file ends with `"threads"`, the name of each thread id
  * @subsection v0_6_0_fixed Fixed
  * - imgui.ini is written before the layers are detached: a layer's own ImGui settings handler is no longer called
  *   once the layer is destroyed

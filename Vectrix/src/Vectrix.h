@@ -22,6 +22,11 @@
 #include "Vectrix/Application.h"
 #include "Vectrix/Layers/Layer.h"
 
+// Threading
+#include "Vectrix/Threading/Thread.h"
+#include "Vectrix/Threading/JobSystem.h"
+#include "Vectrix/Threading/BackgroundWorker.h"
+
 // Events
 #include "Vectrix/Events/Event.h"
 #include "Vectrix/Events/EventListener.h"

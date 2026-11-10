@@ -6,6 +6,7 @@
 
 #include <array>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 #include <glm/vec4.hpp>
@@ -17,6 +18,7 @@
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"
+#include "Vectrix/Threading/Thread.h"
 
 namespace Vectrix {
     class VulkanFramebuffer;
@@ -72,6 +74,12 @@ namespace Vectrix {
          * @param resource The resource, dropped once every frame recorded so far has finished executing
          */
         void releaseAfterFrame(std::shared_ptr<void> resource) {
+            if (!isMainThread()) {
+                // The frame state is the main thread's: handed over, and placed by the next beginFrame
+                const std::scoped_lock lock(m_releasedFromOtherThreadsMutex);
+                m_releasedFromOtherThreads.push_back(std::move(resource));
+                return;
+            }
             // A slot's list is emptied when that slot's fence has been waited on again. During a frame, that is the
             // fence of this frame; between frames, the frame just submitted (the slot before the current one) is the
             // last that may use it
@@ -161,6 +169,9 @@ namespace Vectrix {
         Cache<std::string,BatchInfo> m_batchCache;
         /// Resources waiting for their frame slot's fence, see releaseAfterFrame
         std::array<std::vector<std::shared_ptr<void>>, SwapChain::MAX_FRAMES_IN_FLIGHT> m_releasedAfterFrame;
+        /// releaseAfterFrame's calls from other threads, waiting for the next beginFrame
+        std::mutex m_releasedFromOtherThreadsMutex;
+        std::vector<std::shared_ptr<void>> m_releasedFromOtherThreads;
         std::shared_ptr<VulkanShader> m_maskShader;
         std::shared_ptr<VulkanShader> m_outlineShader;
         std::shared_ptr<VulkanFramebuffer> m_maskFramebuffer;

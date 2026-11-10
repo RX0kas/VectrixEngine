@@ -91,7 +91,7 @@ namespace Vectrix {
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
 
-        VC_VK_CHECK(vkCreateGraphicsPipelines(m_device.device(),VK_NULL_HANDLE,1,&pipelineInfo,nullptr,&m_graphicsPipeline), "failed to create graphics pipeline");
+        VC_VK_CHECK(vkCreateGraphicsPipelines(m_device.device(),m_device.pipelineCache(),1,&pipelineInfo,nullptr,&m_graphicsPipeline), "failed to create graphics pipeline");
     }
 
     void Pipeline::setDebugName(const std::string& name) const {

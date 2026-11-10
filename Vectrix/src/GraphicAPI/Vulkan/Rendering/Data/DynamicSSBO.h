@@ -19,12 +19,8 @@ namespace Vectrix {
         [[nodiscard]] uint32_t capacity() const { return m_capacity; }
 
         [[nodiscard]] std::uint32_t getSetCountID() const { return 1; }
-        static VkDescriptorSetLayout getStaticDescriptorSetLayout() {
-            if (s_descriptorSetLayout==nullptr) {
-                createDescriptorSetLayout();
-            }
-            return s_descriptorSetLayout;
-        }
+        /// Created on first use, from whichever thread builds the first shader
+        static VkDescriptorSetLayout getStaticDescriptorSetLayout();
     private:
         static VkDescriptorSetLayout s_descriptorSetLayout;
         static void createDescriptorSetLayout();

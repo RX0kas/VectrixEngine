@@ -3,6 +3,8 @@
 
 #include <algorithm>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 
 #include "DebugUtils.h"
 #include "GraphicAPI/Vulkan/Enum_str.h"
@@ -11,6 +13,9 @@
 #include "Vectrix/Core/AppInfo.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Debug/Profiler.h"
+#include "Vectrix/Threading/Thread.h"
+#include "Vectrix/Utils/Folders.h"
+#include "Vectrix/Utils/Path.h"
 
 
 namespace Vectrix {
@@ -117,11 +122,123 @@ namespace Vectrix {
 
         createCommandPool();
         createDescriptorPool(cfg);
+        createPipelineCache();
         VC_CORE_INFO("Device created");
+    }
+
+    VkResult Device::submit(const VkSubmitInfo& submitInfo, VkFence fence) {
+        const std::scoped_lock lock(m_queueMutex);
+        return vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, fence);
+    }
+
+    VkResult Device::present(const VkPresentInfoKHR& presentInfo) {
+        const std::scoped_lock lock(m_queueMutex);
+        return vkQueuePresentKHR(m_presentQueue, &presentInfo);
+    }
+
+    void Device::waitIdle() {
+        VC_PROFILER_FUNCTION();
+        const std::scoped_lock lock(m_queueMutex);
+        vkDeviceWaitIdle(m_device);
+    }
+
+    VkResult Device::allocateDescriptorSets(const VkDescriptorSetAllocateInfo& allocateInfo, VkDescriptorSet* sets) {
+        const std::scoped_lock lock(m_descriptorPoolMutex);
+        return vkAllocateDescriptorSets(m_device, &allocateInfo, sets);
+    }
+
+    void Device::freeDescriptorSets(const uint32_t count, const VkDescriptorSet* sets) {
+        const std::scoped_lock lock(m_descriptorPoolMutex);
+        vkFreeDescriptorSets(m_device, m_descriptorPool, count, sets);
+    }
+
+    VkCommandPool Device::threadCommandPool() {
+        if (isMainThread())
+            return m_commandPool;
+        const std::scoped_lock lock(m_threadPoolsMutex);
+        VkCommandPool& pool = m_threadCommandPools[std::this_thread::get_id()];
+        if (pool == VK_NULL_HANDLE) {
+            // Kept until the device goes: a thread loads again later, and there are only a few threads
+            VkCommandPoolCreateInfo poolInfo{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};
+            poolInfo.queueFamilyIndex = findPhysicalQueueFamilies().graphicsFamily;
+            poolInfo.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+            if (vkCreateCommandPool(m_device, &poolInfo, nullptr, &pool) != VK_SUCCESS) {
+                VC_CORE_ERROR_NO_EXIT("Failed to create a command pool for a worker thread");
+                pool = VK_NULL_HANDLE;
+            }
+        }
+        return pool;
+    }
+
+    namespace {
+        std::filesystem::path pipelineCachePath() {
+            return getVectrixStateFolder() / fromUtf8(Application::getAppInfo().getAppName()) / "pipeline-cache.bin";
+        }
+    }
+
+    void Device::createPipelineCache() {
+        VC_PROFILER_FUNCTION();
+        // The driver checks the data's header (vendor, device, driver version) and ignores what isn't its own,
+        // so a cache from another GPU or driver only costs the rebuild it would have cost anyway
+        std::vector<char> data;
+        if (std::ifstream file(pipelineCachePath(), std::ios::binary | std::ios::ate); file) {
+            const std::streamsize size = file.tellg();
+            if (size > 0) {
+                data.resize(static_cast<size_t>(size));
+                file.seekg(0);
+                if (!file.read(data.data(), size))
+                    data.clear();
+            }
+        }
+
+        VkPipelineCacheCreateInfo info{VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO};
+        info.initialDataSize = data.size();
+        info.pInitialData = data.empty() ? nullptr : data.data();
+        if (vkCreatePipelineCache(m_device, &info, nullptr, &m_pipelineCache) != VK_SUCCESS) {
+            // Bad data: start empty rather than without a cache
+            info.initialDataSize = 0;
+            info.pInitialData = nullptr;
+            if (vkCreatePipelineCache(m_device, &info, nullptr, &m_pipelineCache) != VK_SUCCESS)
+                m_pipelineCache = VK_NULL_HANDLE;
+        }
+        VC_CORE_INFO("Pipeline cache: {} bytes loaded", data.size());
+    }
+
+    void Device::savePipelineCache() const {
+        VC_PROFILER_FUNCTION();
+        if (m_pipelineCache == VK_NULL_HANDLE)
+            return;
+        size_t size = 0;
+        if (vkGetPipelineCacheData(m_device, m_pipelineCache, &size, nullptr) != VK_SUCCESS || size == 0)
+            return;
+        std::vector<char> data(size);
+        if (vkGetPipelineCacheData(m_device, m_pipelineCache, &size, data.data()) != VK_SUCCESS)
+            return;
+
+        const std::filesystem::path path = pipelineCachePath();
+        std::error_code error;
+        std::filesystem::create_directories(path.parent_path(), error);
+        // Written aside then renamed: a run killed while writing doesn't leave half a file
+        std::filesystem::path temporary = path;
+        temporary += ".tmp";
+        {
+            std::ofstream file(temporary, std::ios::binary | std::ios::trunc);
+            if (!file || !file.write(data.data(), static_cast<std::streamsize>(size))) {
+                VC_CORE_WARN("Can't write the pipeline cache {}", toUtf8(temporary));
+                return;
+            }
+        }
+        std::filesystem::rename(temporary, path, error);
+        if (error)
+            VC_CORE_WARN("Can't write the pipeline cache {}: {}", toUtf8(path), error.message());
     }
 
     Device::~Device() {
         VC_PROFILER_FUNCTION();
+        savePipelineCache();
+        vkDestroyPipelineCache(m_device, m_pipelineCache, nullptr);
+        for (const auto& [thread, pool] : m_threadCommandPools)
+            vkDestroyCommandPool(m_device, pool, nullptr);
         vkDestroyCommandPool(m_device, m_commandPool, nullptr);
         vkDestroyDescriptorPool(m_device,m_descriptorPool,nullptr);
         vmaDestroyAllocator(m_textureAllocator);
@@ -186,7 +303,7 @@ namespace Vectrix {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = m_commandPool;
+        allocInfo.commandPool = threadCommandPool();
         allocInfo.commandBufferCount = 1;
 
         VkCommandBuffer commandBuffer;
@@ -209,10 +326,16 @@ namespace Vectrix {
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
 
-        vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(m_graphicsQueue);
+        // A fence of its own instead of vkQueueWaitIdle: that would need the queue locked while waiting, blocking
+        // every other thread's submits (the frames included) until this upload is done
+        VkFenceCreateInfo fenceInfo{VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};
+        VkFence fence = VK_NULL_HANDLE;
+        vkCreateFence(m_device, &fenceInfo, nullptr, &fence);
+        VC_VK_CHECK(submit(submitInfo, fence), "Failed to submit single-time commands");
+        vkWaitForFences(m_device, 1, &fence, VK_TRUE, UINT64_MAX);
+        vkDestroyFence(m_device, fence, nullptr);
 
-        vkFreeCommandBuffers(m_device, m_commandPool, 1, &commandBuffer);
+        vkFreeCommandBuffers(m_device, threadCommandPool(), 1, &commandBuffer);
     }
 
     void Device::createImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags memoryProperties, VkImage& image, VmaAllocation& allocation) {

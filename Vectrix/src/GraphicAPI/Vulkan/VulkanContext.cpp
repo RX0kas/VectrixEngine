@@ -22,7 +22,7 @@ namespace Vectrix {
 	VulkanContext::~VulkanContext() {
 		VC_PROFILER_FUNCTION();
 		VC_CORE_INFO("Destroying Graphic context");
-		vkDeviceWaitIdle(m_device->device());
+		m_device->waitIdle();
 		m_renderer->m_batchCache.clear();
 
 		VkDescriptorSetLayout dsl = DynamicSSBO::getStaticDescriptorSetLayout();
@@ -78,12 +78,12 @@ namespace Vectrix {
 			return;
 		}
 		if (s_instance)
-			vkDeviceWaitIdle(s_instance->m_device->device());
+			s_instance->m_device->waitIdle();
 		destroy();
 	}
 
 	void VulkanContext::waitIdle() {
 		VulkanContext& i = instance();
-		vkDeviceWaitIdle(i.m_device->device());
+		i.m_device->waitIdle();
 	}
 }

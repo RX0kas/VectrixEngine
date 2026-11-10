@@ -173,7 +173,7 @@ namespace Vectrix {
     }
 
     void VulkanImGuiManager::cleanup() {
-		vkDeviceWaitIdle(m_device.device());
+		m_device.waitIdle();
 		VC_CORE_INFO("Destroying ImGui");
 
 		ImGui_ImplVulkan_Shutdown();
@@ -306,6 +306,8 @@ namespace Vectrix {
     	init_info.Device = m_device.device();
     	init_info.QueueFamily = m_device.findPhysicalQueueFamilies().graphicsFamily;
     	init_info.Queue = m_device.graphicsQueue();
+    	init_info.QueueMutex = &m_device.queueMutex(); // worker threads submit uploads to the same queue
+    	init_info.PipelineCache = m_device.pipelineCache();
     	init_info.DescriptorPool = createImGuiDescriptorPool();
     	init_info.MinImageCount = 2;
     	init_info.ImageCount = m_renderer->getSwapChainImageCount();
