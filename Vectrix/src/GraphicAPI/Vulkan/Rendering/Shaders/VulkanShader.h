@@ -3,7 +3,7 @@
 
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Data/ShaderSSBO.h"
+#include "GraphicAPI/Vulkan/Data/ShaderSSBO.h"
 
 namespace Vectrix {
     class Pipeline;

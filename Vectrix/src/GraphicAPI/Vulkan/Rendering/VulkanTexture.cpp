@@ -3,11 +3,11 @@
 #include <algorithm>
 #include <filesystem>
 
-#include "Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
 #include "stb_image.h"
 #include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
+#include "GraphicAPI/Vulkan/Core/DebugUtils.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Utils/Data.h"
 

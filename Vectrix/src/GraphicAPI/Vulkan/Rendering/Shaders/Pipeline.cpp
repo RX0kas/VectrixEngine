@@ -3,8 +3,8 @@
 
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
-#include "../Data/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Core/DebugUtils.h"
+#include "GraphicAPI/Vulkan/Data/VulkanBuffer.h"
 
 #include "Vectrix/Debug/Profiler.h"
 
@@ -114,7 +114,7 @@ namespace Vectrix {
         createInfo.codeSize = code.size() * sizeof(uint32_t);
         createInfo.pCode = code.data();
 
-        if (vkCreateShaderModule(m_device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
+        if (vkCreateShaderModule(VulkanContext::instance().getDevice().device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
             VC_CORE_ERROR("Failed to create shader module");
         }
     }

@@ -5,8 +5,8 @@
 #include "Enum_str.h"
 #include "VulkanSettings.h"
 #include "Vectrix/Rendering/GraphicsContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Core/Device.h"
-#include "Rendering/Core/VulkanRenderer.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
+#include "Core/VulkanRenderer.h"
 #include "Rendering/Shaders/VulkanShaderCompiler.h"
 #include "Vectrix/Scene/Components/MeshRendererComponent.h"
 

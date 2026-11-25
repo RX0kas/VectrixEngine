@@ -1,6 +1,6 @@
 #include "vcpch.h"
 
-#include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Data/VulkanBuffer.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
 #include "Vectrix/Debug/Profiler.h"
 

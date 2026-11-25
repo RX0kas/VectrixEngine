@@ -24,6 +24,7 @@ namespace Vectrix {
         {".obj",  MESH},
         {".vcshader", SHADER},
         {".vctx", SCENE},
+        {".vccompute",COMPUTE_SHADER}
     };
 
 
@@ -63,6 +64,9 @@ namespace Vectrix {
         auto* s = new ShaderManager();
         m_shaderManager = std::unique_ptr<ShaderManager>(s);
 
+        auto* c = new ComputeShaderManager();
+        m_computeShaderManager = std::unique_ptr<ComputeShaderManager>(c);
+
         auto* t = new TextureManager();
         m_textureManager = std::unique_ptr<TextureManager>(t);
 
@@ -75,6 +79,7 @@ namespace Vectrix {
         m_finished.clear();
         m_loading.clear();
         m_shaderManager.reset();
+        m_computeShaderManager.reset();
         m_textureManager.reset();
         m_meshManager.reset();
         m_cache.clear();
@@ -158,6 +163,12 @@ namespace Vectrix {
                     mesh->m_id = *movedId;
                     m_meshManager->remove(asset.id);
                     m_meshManager->add(*movedId, mesh);
+                    break;
+                }
+                case COMPUTE_SHADER: {
+                    // No id kept on the shader itself: only its registration follows the file
+                    m_computeShaderManager->remove(asset.id);
+                    m_computeShaderManager->add(*movedId, std::static_pointer_cast<ComputeShader>(object));
                     break;
                 }
                 default: break;
@@ -254,6 +265,7 @@ namespace Vectrix {
                 case TEXTURE: m_textureManager->remove(id); break;
                 case SHADER: m_shaderManager->remove(id); break;
                 case MESH: m_meshManager->remove(id); break;
+                case COMPUTE_SHADER: m_computeShaderManager->remove(id); break;
                 default: break;
             }
         }
@@ -298,6 +310,7 @@ namespace Vectrix {
                 case TEXTURE: if (!m_textureManager->m_cache.contains(id)) m_textureManager->add(id, std::static_pointer_cast<Texture>(it->second)); break;
                 case SHADER: if (!m_shaderManager->exist(id)) m_shaderManager->add(id, std::static_pointer_cast<Shader>(it->second)); break;
                 case MESH: if (!m_meshManager->exist(id)) m_meshManager->add(id, std::static_pointer_cast<Mesh>(it->second)); break;
+                case COMPUTE_SHADER: if (!m_computeShaderManager->exist(id)) m_computeShaderManager->add(id, std::static_pointer_cast<ComputeShader>(it->second)); break;
                 default: break;
             }
             return finished(SUCCESS, it->second);
@@ -321,6 +334,12 @@ namespace Vectrix {
                     case SHADER: {
                         // Compiled and its pipeline built here
                         std::shared_ptr<Shader> shader = Shader::create(state->id, file, getTinyObjLayout());
+                        finish = [shader] { return std::pair<VectrixResult, std::shared_ptr<void>>{shader ? SUCCESS : FORMATING_ERROR, shader}; };
+                        break;
+                    }
+                    case COMPUTE_SHADER: {
+                        // Compiled and its pipeline built here, like a Shader
+                        std::shared_ptr<ComputeShader> shader = ComputeShader::create(state->id, file);
                         finish = [shader] { return std::pair<VectrixResult, std::shared_ptr<void>>{shader ? SUCCESS : FORMATING_ERROR, shader}; };
                         break;
                     }
@@ -382,6 +401,7 @@ namespace Vectrix {
                 case TEXTURE: m_textureManager->add(state->id, std::static_pointer_cast<Texture>(asset)); break;
                 case SHADER: if (!m_shaderManager->exist(state->id)) m_shaderManager->add(state->id, std::static_pointer_cast<Shader>(asset)); break;
                 case MESH: if (!m_meshManager->exist(state->id)) m_meshManager->add(state->id, std::static_pointer_cast<Mesh>(asset)); break;
+                case COMPUTE_SHADER: if (!m_computeShaderManager->exist(state->id)) m_computeShaderManager->add(state->id, std::static_pointer_cast<ComputeShader>(asset)); break;
                 default: break;
             }
             if (state->inAssetsFolder)

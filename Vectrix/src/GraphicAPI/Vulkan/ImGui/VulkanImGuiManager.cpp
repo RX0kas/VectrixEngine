@@ -10,7 +10,7 @@
 
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
+#include "GraphicAPI/Vulkan/Core/DebugUtils.h"
 #include "Vectrix/Settings/SettingsManager.h"
 
 
