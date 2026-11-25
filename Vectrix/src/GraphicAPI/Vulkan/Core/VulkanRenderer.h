@@ -13,8 +13,8 @@
 
 #include "GraphicAPI/Vulkan/ImGui/VulkanImGuiManager.h"
 #include "GraphicAPI/Vulkan/Rendering/VulkanFramebuffer.h"
-#include "GraphicAPI/Vulkan/Rendering/Data/DynamicSSBO.h"
-#include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Data/DynamicSSBO.h"
+#include "GraphicAPI/Vulkan/Data/VulkanBuffer.h"
 #include "Vectrix/Rendering/Mesh/VertexArray.h"
 #include "Vectrix/Rendering/Shaders/Shader.h"
 #include "Vectrix/Scene/Components/TransformComponent.h"

@@ -4,7 +4,7 @@
 #include <optional>
 #include <vector>
 
-#include "GraphicAPI/Vulkan/Rendering/Data/VulkanBuffer.h"
+#include "GraphicAPI/Vulkan/Data/VulkanBuffer.h"
 #include "Vectrix/Rendering/Mesh/Vertex.h"
 
 namespace Vectrix {

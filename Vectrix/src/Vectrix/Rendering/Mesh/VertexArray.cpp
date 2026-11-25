@@ -1,7 +1,7 @@
 #include "VertexArray.h"
 
 #include "../Renderer.h"
-#include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Mesh/VulkanVertexArray.h"
 
 namespace Vectrix {
     std::shared_ptr<VertexArray> VertexArray::create() {

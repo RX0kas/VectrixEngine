@@ -21,6 +21,7 @@
  * @ingroup mesh
  */
 
+// TODO IN NEXT UPDATE: Use lib like Assimp
 namespace Vectrix {
     /**
      * @brief Return the vertex layout an OBJ file is loaded into

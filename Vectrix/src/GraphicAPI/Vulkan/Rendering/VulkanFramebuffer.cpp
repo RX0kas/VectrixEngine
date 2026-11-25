@@ -3,7 +3,7 @@
 #include "volk.h"
 #include "GraphicAPI/Vulkan/ImGui/imgui_impl_vulkan.h"
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Core/DebugUtils.h"
+#include "GraphicAPI/Vulkan/Core/DebugUtils.h"
 
 namespace Vectrix {
     static VkDescriptorSet createImGuiTextureDescriptor(Device& device, VkSampler sampler, VkImageView imageView, VkImageLayout imageLayout) {

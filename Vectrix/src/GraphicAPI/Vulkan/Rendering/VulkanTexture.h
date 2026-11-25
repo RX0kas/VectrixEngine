@@ -2,7 +2,7 @@
 #define VECTRIXWORKSPACE_VULKANTEXTURE_H
 #include <atomic>
 
-#include "Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
 #include "stb_image.h"
 #include "Vectrix/Rendering/Textures/Texture.h"
 

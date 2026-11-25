@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
 #include "Vectrix/Rendering/Mesh/Vertex.h"
 
 #include <vector>
@@ -58,7 +58,7 @@ namespace Vectrix {
     private:
         void createGraphicsPipeline(const std::vector<uint32_t>& vertCode,const std::vector<uint32_t>& fragCode,const PipelineConfigInfo& configInfo);
 
-        void createShaderModule(const std::vector<uint32_t>& code,VkShaderModule* shaderModule);
+        static void createShaderModule(const std::vector<uint32_t>& code,VkShaderModule* shaderModule);
 
         Device& m_device;
         VkPipeline m_graphicsPipeline{};

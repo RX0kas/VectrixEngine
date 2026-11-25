@@ -1,7 +1,7 @@
 #ifndef VECTRIXWORKSPACE_VULKANFRAMEBUFFER_H
 #define VECTRIXWORKSPACE_VULKANFRAMEBUFFER_H
 #include "imgui.h"
-#include "Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Rendering/Framebuffer.h"
 

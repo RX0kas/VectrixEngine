@@ -50,7 +50,7 @@ namespace Vectrix {
          * @param path Path of the shader source file
          * @param affectedByCamera Tell if we need to send the information of the camera to the GPU
          */
-        std::shared_ptr<Shader> createShader(const std::string &name, const std::string &path, const bool affectedByCamera=true);
+        std::shared_ptr<Shader> createShader(const std::string &name, const std::string &path, bool affectedByCamera=true);
 
         /**
          * @brief Create a new shader from source text already in memory (e.g. embedded)
@@ -59,7 +59,7 @@ namespace Vectrix {
          * @param source The whole .vcshader file's text
          * @param affectedByCamera Tell if we need to send the information of the camera to the GPU
          */
-        std::shared_ptr<Shader> createShaderFromSource(const std::string &name, const std::string &source, const bool affectedByCamera=true);
+        std::shared_ptr<Shader> createShaderFromSource(const std::string &name, const std::string &source, bool affectedByCamera=true);
         ~ShaderManager();
     private:
         friend class Shader;

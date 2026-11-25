@@ -14,13 +14,15 @@ namespace Vectrix {
 
     typedef enum {
         VertexShader,
-        FragmentShader
+        FragmentShader,
+        ComputeStage ///< Not ComputeShader: that is the class (Vectrix::ComputeShader), which the value would hide
     } ShaderType;
 
     inline shaderc_shader_kind shaderTypeToShaderCKind(ShaderType t) {
         switch (t) {
             case VertexShader:   return shaderc_vertex_shader;
             case FragmentShader: return shaderc_fragment_shader;
+            case ComputeStage:   return shaderc_compute_shader;
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
@@ -31,6 +33,7 @@ namespace Vectrix {
         switch (t) {
             case VertexShader:   return "Vertex shader";
             case FragmentShader: return "Fragment shader";
+            case ComputeStage:   return "Compute shader";
             default:
                 VC_CORE_ERROR("Unknown shader type");
         }
@@ -51,6 +54,9 @@ namespace Vectrix {
         /// Both stages of a shader at the same time (the fragment shader on a worker of the JobSystem when there is one)
         /// @return The vertex then the fragment SPIR-V, each empty when it doesn't compile
         std::pair<std::vector<uint32_t>, std::vector<uint32_t>> compileStages(const char* name, const char* vertexSource, const char* fragmentSource, bool optimize = false) const;
+        /// A compute shader (a whole .vccompute file)
+        /// @return The SPIR-V, empty when it doesn't compile (the error is logged)
+        std::vector<uint32_t> compileCompute(const char* name, const char* computeSource, bool optimize = false) const;
     private:
         shaderc::Compiler m_compiler;
         shaderc::CompileOptions m_options;          ///< Without optimization

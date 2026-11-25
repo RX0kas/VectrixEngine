@@ -25,8 +25,7 @@ namespace Vectrix {
         setCommonOptions(m_optimizedOptions, shaderc_optimization_level_performance);
     }
 
-    std::pair<std::vector<uint32_t>, std::vector<uint32_t>> VulkanShaderCompiler::compileStages(const char* name, const char* vertexSource,
-                                                                                         const char* fragmentSource, const bool optimize) const {
+    std::pair<std::vector<uint32_t>, std::vector<uint32_t>> VulkanShaderCompiler::compileStages(const char* name, const char* vertexSource, const char* fragmentSource, const bool optimize) const {
         VC_PROFILER_FUNCTION();
         std::vector<uint32_t> vertex;
         std::vector<uint32_t> fragment;
@@ -41,6 +40,11 @@ namespace Vectrix {
             compileFragment();
         }
         return {std::move(vertex), std::move(fragment)};
+    }
+
+    std::vector<uint32_t> VulkanShaderCompiler::compileCompute(const char *name, const char *computeSource, bool optimize) const {
+        // One stage: nothing to overlap (a job waited on at once would run on this thread anyway)
+        return compile_file(name, ComputeStage, computeSource, optimize);
     }
 
     std::vector<uint32_t> VulkanShaderCompiler::compile_file(const char *src_name, ShaderType type,const char *src,bool optimize) const {

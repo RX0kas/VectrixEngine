@@ -1,8 +1,8 @@
 #include "Mesh.h"
 
 #include "GraphicAPI/Vulkan/VulkanContext.h"
-#include "GraphicAPI/Vulkan/Rendering/Mesh/MeshRegistry.h"
-#include "GraphicAPI/Vulkan/Rendering/Mesh/VulkanVertexArray.h"
+#include "GraphicAPI/Vulkan/Mesh/MeshRegistry.h"
+#include "GraphicAPI/Vulkan/Mesh/VulkanVertexArray.h"
 #include "Vectrix/Debug/Profiler.h"
 #include "Vectrix/Rendering/Renderer.h"
 

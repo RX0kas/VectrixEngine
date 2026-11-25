@@ -1,10 +1,10 @@
 #ifndef VECTRIXWORKSPACE_SSBO_H
 #define VECTRIXWORKSPACE_SSBO_H
-#include "../Core/Device.h"
-#include "../Core/SwapChain.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/SwapChain.h"
 #include <vector>
 
-#include "../VulkanTexture.h"
+#include "GraphicAPI/Vulkan/Rendering/VulkanTexture.h"
 #include "Vectrix/Rendering/Buffer.h"
 #include "Vectrix/Rendering/Shaders/ShaderUniformLayout.h"
 

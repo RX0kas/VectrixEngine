@@ -1,6 +1,6 @@
 #pragma once
 #include "Vectrix/ImGui/ImGuiManager.h"
-#include "../Rendering/Core/Device.h"
+#include "GraphicAPI/Vulkan/Core/Device.h"
 #include <string>
 
 namespace Vectrix {

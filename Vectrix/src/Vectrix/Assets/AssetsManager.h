@@ -9,6 +9,7 @@
 #include "Vectrix/Rendering/Mesh/Mesh.h"
 #include "Vectrix/Rendering/Shaders/ShaderManager.h"
 #include "Vectrix/Rendering/Textures/TextureManager.h"
+#include "Vectrix/Physics/ComputeShaderManager.h"
 #include "Vectrix/Rendering/Mesh/MeshManager.h"
 #include "Vectrix/Utils/Memory.h"
 #include "Vectrix/Utils/Result.h"
@@ -21,6 +22,8 @@
 #include <mutex>
 #include <unordered_map>
 #include <vector>
+
+#include "Vectrix/Physics/ComputeShader.h"
 
 /**
  * @file AssetsManager.h
@@ -53,7 +56,8 @@ namespace Vectrix {
         TEXTURE, ///< An image, loaded as a Texture
         SHADER,  ///< A `.vcshader` file, loaded as a Shader
         MESH,    ///< A model file, loaded as a Mesh
-        SCENE    ///< A scene file, loaded through SceneSerializer
+        SCENE,    ///< A scene file, loaded through SceneSerializer
+        COMPUTE_SHADER ///< A `.vccompute` file, loaded as a ComputeShader
     };
 
     /**
@@ -103,7 +107,7 @@ namespace Vectrix {
          * asset is registered on the main thread at the start of a frame, like load would have. Asking again for
          * a file being loaded gives the same load, and asking for one already loaded gives a handle that is
          * already done. load() on a file being loaded waits for that load.
-         * @tparam T Texture, Shader or Mesh
+         * @tparam T Texture, Shader, ComputeShader or Mesh
          * @param path As for load
          * @return The handle telling when the asset is there
          * @note Main thread only
@@ -125,7 +129,8 @@ namespace Vectrix {
             if constexpr (std::is_same_v<T, Texture>) return TEXTURE;
             else if constexpr (std::is_same_v<T, Shader>) return SHADER;
             else if constexpr (std::is_same_v<T, Mesh>) return MESH;
-            else static_assert(sizeof(T) == 0, "Only Texture, Shader and Mesh load through the AssetsManager");
+            else if constexpr (std::is_same_v<T, ComputeShader>) return COMPUTE_SHADER;
+            else static_assert(sizeof(T) == 0, "Only Texture, Shader, ComputeShader and Mesh load through the AssetsManager");
         }
 
 
@@ -313,6 +318,7 @@ namespace Vectrix {
         std::unordered_map<std::string, CachedFingerprint> m_fingerprints; ///< Keyed by the file's absolute path
         std::unique_ptr<TextureManager> m_textureManager;
         std::unique_ptr<ShaderManager> m_shaderManager;
+        std::unique_ptr<ComputeShaderManager> m_computeShaderManager;
         std::unique_ptr<MeshManager> m_meshManager;
         static std::filesystem::path s_assetsPath;
         static std::filesystem::path s_engineAssetsPath;
@@ -378,6 +384,36 @@ namespace Vectrix {
         s_instance->m_cache.emplace(cacheKey, shader);
         if (inAssetsFolder)
             s_instance->m_projectAssets.push_back({SHADER, id, cacheKey});
+        return {VectrixResult::SUCCESS, shader};
+    }
+
+    template<>
+    inline std::pair<VectrixResult, std::shared_ptr<ComputeShader>> AssetsManager::load(const std::string& path) {
+        const auto [p, id, inAssetsFolder] = resolve(path);
+
+        if (!std::filesystem::exists(p))
+            return {VectrixResult::NOT_FOUND, nullptr};
+
+        if (getAssetType(p)!=COMPUTE_SHADER) {
+            return {VectrixResult::WRONG_TYPE,nullptr};
+        }
+
+        const std::string cacheKey = toGenericUtf8(p);
+        waitForRunningLoad(cacheKey);
+        auto it = s_instance->m_cache.find(cacheKey);
+        if (it != s_instance->m_cache.end()) {
+            auto shader = std::static_pointer_cast<ComputeShader>(it->second);
+            if (!s_instance->m_computeShaderManager->exist(id))
+                s_instance->m_computeShaderManager->add(id, shader);
+            return {VectrixResult::SUCCESS, shader};
+        }
+
+        auto shader = s_instance->m_computeShaderManager->createShader(id, toUtf8(p));
+        if (!shader)
+            return {VectrixResult::FORMATING_ERROR, nullptr}; // Doesn't compile. Not cached, so a fixed file can be loaded again
+        s_instance->m_cache.emplace(cacheKey, shader);
+        if (inAssetsFolder)
+            s_instance->m_projectAssets.push_back({COMPUTE_SHADER, id, cacheKey});
         return {VectrixResult::SUCCESS, shader};
     }
 
