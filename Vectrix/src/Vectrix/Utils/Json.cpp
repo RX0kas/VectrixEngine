@@ -7,6 +7,12 @@
 #include <sstream>
 #include <variant>
 
+#ifdef VC_PLATFORM_APPLE
+#include <cerrno>
+#include <cstdlib>
+#include <xlocale.h>
+#endif
+
 #include "Vectrix/Core/Log.h"
 #include "Vectrix/Utils/Path.h"
 
@@ -127,12 +133,22 @@ namespace Vectrix {
                 }
                 if (start == m_pos) return fail("Unexpected character");
 
-                // from_chars ignores the C locale: strtod/stod would read "0.5" as 0 under a locale whose
+                // The number must be read without the C locale: strtod/stod would read "0.5" as 0 under a locale whose
                 // decimal separator is a comma (e.g. fr_FR, which GTK installs on Linux once a file dialog opened)
                 double value = 0.0;
                 const char* last = m_src.data() + m_pos;
+#ifdef VC_PLATFORM_APPLE
+                // Apple's libc++ has no floating-point from_chars (deleted overload): strtod_l with the "C"
+                // locale instead. m_src is a std::string, so the text is null terminated
+                static const locale_t s_cLocale = newlocale(LC_ALL_MASK, "C", nullptr);
+                char* ptr = nullptr;
+                errno = 0;
+                value = strtod_l(m_src.data() + start, &ptr, s_cLocale);
+                if (errno == ERANGE || ptr != last) {
+#else
                 const auto [ptr, ec] = std::from_chars(m_src.data() + start, last, value);
                 if (ec != std::errc() || ptr != last) {
+#endif
                     m_pos = start;
                     return fail("Invalid number");
                 }
