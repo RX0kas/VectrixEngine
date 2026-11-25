@@ -1,7 +1,3 @@
-[submodule "Vectrix/extern/spdlog"]
-	path = Vectrix/extern/spdlog
-	url = https://github.com/gabime/spdlog
-	branch = v1.x
 [submodule "Vectrix/extern/GLFW"]
 	path = Vectrix/extern/GLFW
 	url = https://github.com/glfw/glfw
