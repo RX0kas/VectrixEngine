@@ -10,7 +10,7 @@
  * @brief The full engine version, as a string
  * @ingroup core
  */
-#define VC_VERSION "0.5.3"
+#define VC_VERSION "0.5.4"
 
 /**
  * @brief The major part of the engine version, bumped by a breaking change
@@ -28,4 +28,4 @@
  * @brief The patch part of the engine version, bumped by a fix
  * @ingroup core
  */
-#define VC_VERSION_PATCH 3
+#define VC_VERSION_PATCH 4

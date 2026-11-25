@@ -3,7 +3,7 @@
 ## Project Overview
 
 - VectrixEngine is a C++20 game engine workspace built with a single root `CMakeLists.txt` (`CMAKE_CXX_STANDARD 20`, `CMAKE_CXX_STANDARD_REQUIRED ON` — raised from C++17 in commit `21eeb26`; concepts such as `std::derived_from` are used in public APIs, e.g. `Application::PushLayer<T>()`).
-- The root project is `VectrixWorkspace` version `0.5.3`.
+- The root project is `VectrixWorkspace` version `0.5.4`.
 - The version is written in `CMakeLists.txt`, `Core/version.h`, `Doxyfile`, this file and the changelog: change it with `python3 Vectrix/scripts/set_version.py <X.Y.Z|major|minor|patch>` (adds an "unreleased" changelog section; `--release [--date DD-MM-YYYY]` dates it once published, `--dry-run` writes nothing), not by hand.
 - Targets:
   - `Vectrix`: static engine library.

@@ -89,9 +89,9 @@ namespace Vectrix {
 		// Tabs
 		colors[ImGuiCol_Tab] = { 0.15f, 0.1505f, 0.151f, 1.0f};
 		colors[ImGuiCol_TabHovered] = { 0.38f, 0.3805f, 0.381f, 1.0f};
-		colors[ImGuiCol_TabActive] = { 0.28f, 0.2805f, 0.281f, 1.0f};
-		colors[ImGuiCol_TabUnfocused] = { 0.15f, 0.1505f, 0.151f, 1.0f};
-		colors[ImGuiCol_TabUnfocusedActive] = { 0.2f, 0.205f, 0.21f, 1.0f};
+		colors[ImGuiCol_TabSelected] = { 0.28f, 0.2805f, 0.281f, 1.0f};
+		colors[ImGuiCol_TabDimmed] = { 0.15f, 0.1505f, 0.151f, 1.0f};
+		colors[ImGuiCol_TabDimmedSelected] = { 0.2f, 0.205f, 0.21f, 1.0f};
 
 		// Title
 		colors[ImGuiCol_TitleBg] = { 0.15f, 0.1505f, 0.151f, 1.0f};

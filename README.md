@@ -1,6 +1,6 @@
 ![VectrixLogo](/docs/images/vectrix_banner_no_background.svg)
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.1-green.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-0.5.4-green.svg)
 
 #### An engine built to be accessible to anyone, while letting those who want it retain full control
 

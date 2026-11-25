@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-project(VectrixWorkspace VERSION 0.5.3 LANGUAGES CXX C)
+project(VectrixWorkspace VERSION 0.5.4 LANGUAGES CXX C)
 
 # GLFW and NativeFileDialog have Objective-C sources (.m) on macOS. GLFW enables OBJC in its own directory only and
 # NativeFileDialog not at all, so nfd_cocoa.m found no compile rule: enabled here, every subdirectory gets it
@@ -45,10 +45,6 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 # Vulkan
 message(VERBOSE "Initializing Vulkan")
 
-set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
-set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
-set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
 
 find_package(Vulkan REQUIRED)
 # Volk
@@ -67,8 +63,16 @@ set(glslang_SOURCE_DIR ${PROJECT_SOURCE_DIR}/Vectrix/extern/glslang)
 add_subdirectory(Vectrix/extern/SPIRV-Tools)
 
 message(VERBOSE "Initializing glslang")
+set(ENABLE_HLSL OFF CACHE BOOL "" FORCE)
 add_subdirectory(Vectrix/extern/glslang)
 
+message(VERBOSE "Initializing shaderc")
+set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
+set(SHADERC_ENABLE_HLSL OFF CACHE BOOL "" FORCE)
 add_subdirectory(Vectrix/extern/shaderc)
 # VulkanMemoryAllocator
 message(VERBOSE "Initializing VulkanMemoryAllocator")
@@ -85,7 +89,7 @@ add_subdirectory(Vectrix/extern/spdlog)
 # xxHash
 message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
-add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL)
+add_subdirectory(Vectrix/extern/xxHash/build/cmake EXCLUDE_FROM_ALL)
 
 # EnTT
 message(VERBOSE "Initializing EnTT")

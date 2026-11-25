@@ -1,8 +1,11 @@
 /**
  * @page changelog Changelog
  * @brief History of changes, fixes and new features across all versions
+ * @section v0_5_4 v0.5.4 - (25-11-2026)
+ * @subsection v0_5_4_changed Changed
+ * Updated submodules to latest version
  *
- * @section v0_5_3 v0.5.3 - (unreleased)
+ * @section v0_5_3 v0.5.3 - (05-11-2026)
  *
  * @subsection v0_5_3_added Added
  * - Shader::parseSource is public: it splits a .vcshader into its two stages
