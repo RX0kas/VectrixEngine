@@ -80,15 +80,7 @@ add_subdirectory(Vectrix/extern/SPIRV-Tools SYSTEM)
 message(VERBOSE "Initializing glslang")
 add_subdirectory(Vectrix/extern/glslang SYSTEM)
 set(ENABLE_HLSL OFF CACHE BOOL "" FORCE)
-add_subdirectory(Vectrix/extern/glslang)
 
-add_subdirectory(Vectrix/extern/shaderc SYSTEM)
-# shaderc writes its pkg-config files (for an install) in targets built by default, rerun on every build
-foreach(pc shaderc shaderc_static shaderc_combined)
-  if(TARGET ${pc}-pkg-config)
-    set_target_properties(${pc}-pkg-config PROPERTIES EXCLUDE_FROM_ALL ON)
-  endif()
-endforeach()
 message(VERBOSE "Initializing shaderc")
 set(SHADERC_SKIP_TESTS ON CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_TESTS OFF CACHE BOOL "" FORCE)
@@ -96,7 +88,14 @@ set(SHADERC_ENABLE_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_SHARED_CRT OFF CACHE BOOL "" FORCE)
 set(SHADERC_ENABLE_HLSL OFF CACHE BOOL "" FORCE)
-add_subdirectory(Vectrix/extern/shaderc)
+add_subdirectory(Vectrix/extern/shaderc SYSTEM)
+# shaderc writes its pkg-config files (for an install) in targets built by default, rerun on every build
+foreach(pc shaderc shaderc_static shaderc_combined)
+  if(TARGET ${pc}-pkg-config)
+    set_target_properties(${pc}-pkg-config PROPERTIES EXCLUDE_FROM_ALL ON)
+  endif()
+endforeach()
+
 # VulkanMemoryAllocator
 message(VERBOSE "Initializing VulkanMemoryAllocator")
 add_subdirectory(Vectrix/extern/VulkanMemoryAllocator SYSTEM)
@@ -112,7 +111,7 @@ add_subdirectory(Vectrix/extern/spdlog SYSTEM)
 # xxHash
 message(VERBOSE "Initializing xxHash")
 set(XXHASH_BUILD_XXHSUM OFF)
-add_subdirectory(Vectrix/extern/xxHash/cmake_unofficial EXCLUDE_FROM_ALL SYSTEM)
+add_subdirectory(Vectrix/extern/xxHash/build/cmake EXCLUDE_FROM_ALL SYSTEM)
 
 # EnTT
 message(VERBOSE "Initializing EnTT")
